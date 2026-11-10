@@ -242,6 +242,7 @@ class _Validator {
 
   void _node(String id, Node node) {
     final at = 'nodes.$id';
+    if (node.draft) warn(at, 'draft page, not written yet');
     _image('$at.image', node.image);
     if (node.music != null && node.music != stopMusic) {
       _file('$at.music', node.music!, 'music');

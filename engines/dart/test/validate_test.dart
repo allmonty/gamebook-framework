@@ -538,6 +538,18 @@ void main() {
     });
   });
 
+  test('each draft page is a warning', () {
+    expect(
+      warnings((j) {
+        j['schema'] = 6;
+        node(j, 'foot')
+          ..['draft'] = true
+          ..remove('choices');
+      }),
+      contains('warning: nodes.foot: draft page, not written yet'),
+    );
+  });
+
   group('compareTranslations', () {
     Story story(void Function(Map<String, Object?>) mutate) {
       final json = validJson();

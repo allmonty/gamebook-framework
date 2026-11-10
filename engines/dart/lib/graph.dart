@@ -132,6 +132,7 @@ String toDot(Story story) {
     final attrs = [
       'label="${_dotEscape(_nodeLabel(node))}"',
       if (node.id == story.start) 'penwidth=3',
+      if (node.draft) 'style="rounded,dashed"',
       if (node.combat != null) 'style="rounded,filled", fillcolor="#f4c7c3"',
       if (node.ending == Ending.victory)
         'style="rounded,filled", fillcolor="#c8e6c9"',

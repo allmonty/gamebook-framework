@@ -445,6 +445,7 @@ class Node {
     this.title,
     this.note,
     this.chapter,
+    this.draft = false,
   });
 
   factory Node.fromJson(String id, Object? json, String path) {
@@ -458,12 +459,14 @@ class Node {
       throw obj.error('ending', 'expected "victory" or "death"');
     }
     final choices = obj.list('choices', Choice.fromJson, optional: true);
-    if ([
-          choices.isNotEmpty,
-          combat != null,
-          ending != null,
-        ].where((present) => present).length !=
-        1) {
+    final draft = obj.optBool('draft');
+    if (!draft &&
+        [
+              choices.isNotEmpty,
+              combat != null,
+              ending != null,
+            ].where((present) => present).length !=
+            1) {
       throw StoryFormatException(
         path,
         'needs exactly one of non-empty "choices", "combat" or "ending"',
@@ -476,10 +479,13 @@ class Node {
         for (var i = 0; i < list.length; i++)
           TextPart.fromJson(list[i], '${obj.childPath('text')}[$i]'),
       ],
+      null when draft => const <TextPart>[],
       null => throw obj.error('text', 'missing'),
       _ => throw obj.error('text', 'expected a string or a list of parts'),
     };
-    if (parts.isEmpty) throw obj.error('text', 'needs at least one part');
+    if (parts.isEmpty && rawText != null) {
+      throw obj.error('text', 'needs at least one part');
+    }
     final title = obj.optString('title');
     if (title != null && title.trim().isEmpty) {
       throw obj.error('title', 'must not be empty');
@@ -489,6 +495,7 @@ class Node {
       id: id,
       title: title,
       note: obj.optString('note'),
+      draft: draft,
       chapter: chapter == null
           ? null
           : checkId(chapter, obj.childPath('chapter')),
@@ -539,6 +546,10 @@ class Node {
 
   /// The id of the chapter this page belongs to (schema 6).
   final String? chapter;
+
+  /// Not written yet (schema 6): may lack text and a way out, and offers no
+  /// choices, fight or ending when entered.
+  final bool draft;
 }
 
 /// A whole story file. See spec/framework.md B3.
@@ -643,6 +654,7 @@ class Story {
       if (value.title != null) return 'nodes.$key.title';
       if (value.note != null) return 'nodes.$key.note';
       if (value.chapter != null) return 'nodes.$key.chapter';
+      if (value.draft) return 'nodes.$key.draft';
     }
     return null;
   }

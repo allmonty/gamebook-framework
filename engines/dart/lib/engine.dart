@@ -214,6 +214,8 @@ class GameEngine {
   /// Set once the player has died (health at 0) or reached an ending node.
   Ending? get ending => (_state.stats[rules.health]?.value ?? 0) <= 0
       ? Ending.death
+      : node.draft
+      ? null
       : node.ending;
 
   /// The paragraphs of the current page: the parts whose condition holds, with
@@ -244,7 +246,7 @@ class GameEngine {
   /// The choices to show: locked ones included unless `hideIfLocked`, and
   /// once-only choices already taken left out.
   List<ChoiceView> get choices {
-    if (ending != null) return const [];
+    if (ending != null || node.draft) return const [];
     final shown = <ChoiceView>[];
     for (var i = 0; i < node.choices.length; i++) {
       if (_isTaken(i)) continue;
@@ -306,6 +308,9 @@ class GameEngine {
 
   /// Takes the choice at [index] of [node].
   List<GameEvent> choose(int index) {
+    if (node.draft && ending == null) {
+      throw StateError('the page is not written yet');
+    }
     _requireNoFightOrEnd();
     if (index < 0 || index >= node.choices.length) {
       throw RangeError.index(index, node.choices, 'index');
@@ -581,7 +586,7 @@ class GameEngine {
     }
     if (next.sound case final sound?) events.add(SoundPlayed(sound));
     _state = _state.withCombat(
-      next.combat == null ? null : startCombat(next.combat!),
+      next.combat == null || next.draft ? null : startCombat(next.combat!),
     );
     events.add(NodeEntered(id));
   }

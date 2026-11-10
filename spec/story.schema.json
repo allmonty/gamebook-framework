@@ -833,9 +833,6 @@
     "node": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "text"
-      ],
       "properties": {
         "text": {
           "description": "A string, or (schema 4) a list of parts. In schema 4, {stat} and {stat.max} are replaced by values; {{ and }} are literal braces.",
@@ -900,25 +897,44 @@
         "chapter": {
           "description": "Schema 6. A key of the story's chapters",
           "$ref": "#/$defs/id"
+        },
+        "draft": {
+          "description": "Schema 6. Not written yet: text and a way out may be missing",
+          "type": "boolean"
         }
       },
-      "oneOf": [
-        {
-          "required": [
-            "choices"
-          ]
-        },
-        {
-          "required": [
-            "combat"
-          ]
-        },
-        {
-          "required": [
-            "ending"
-          ]
+      "if": {
+        "required": [
+          "draft"
+        ],
+        "properties": {
+          "draft": {
+            "const": true
+          }
         }
-      ]
+      },
+      "else": {
+        "required": [
+          "text"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "choices"
+            ]
+          },
+          {
+            "required": [
+              "combat"
+            ]
+          },
+          {
+            "required": [
+              "ending"
+            ]
+          }
+        ]
+      }
     },
     "itemUse": {
       "description": "Schema 2 only (the parser rejects it in a schema 1 story). combatCost only with combat in when.",

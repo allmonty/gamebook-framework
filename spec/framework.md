@@ -469,6 +469,7 @@ Ids of chapters match `[A-Za-z0-9_-]+` and, like node ids, must be the same in e
 
 ### Draft pages
 A node with `"draft": true` is a page not written yet. For a draft the rule "exactly one of `choices`, `combat`, `ending`" does not apply and `text` may be missing; any field that is present must still be valid, and choices may lead to drafts. So the Builder (and an LLM writing part of a story) can always save a file.
+- An engine enters a draft page as usual (it counts as visited and its `effects` apply), but offers **nothing** from it: no choices, no fight and no ending, whatever fields it has. The game cannot go on from there except by undo or editor tools.
 - The validator reports each draft as a **warning** ("draft page, not written yet"), so `--strict` fails while any remain.
 - The app does **not list** a story with drafts in release builds. Debug builds and the Builder's playtest do; entering a draft page there shows its text (or nothing) and a "Not written yet" notice with no choices; undo or the playtest tools lead out.
 - Removing `draft` makes the node an ordinary page with every usual rule.

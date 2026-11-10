@@ -64,6 +64,47 @@ Story arena() => Story.fromJson(
 );
 
 void main() {
+  group('draft pages (schema 6)', () {
+    Story drafted() => Story.fromJson(
+      jsonDecode('''
+{
+  "schema": 6, "id": "d", "lang": "en", "title": "D",
+  "rules": { "preset": "fighting-fantasy" },
+  "start": "hall",
+  "nodes": {
+    "hall": { "text": "Hall", "choices": [
+      { "text": "Cellar", "to": "cellar" }, { "text": "Ring", "to": "ring" } ] },
+    "cellar": { "draft": true, "text": "Dark.", "effects": [ { "set": "dark" } ],
+      "choices": [ { "text": "Back", "to": "hall" } ], "ending": "victory" },
+    "ring": { "draft": true,
+      "combat": { "enemies": [ { "name": "Rat", "attack": 1, "health": 1 } ], "win": "hall" } }
+  }
+}
+''') as Map<String, Object?>,
+    );
+
+    test('entering one applies its effects and offers nothing', () {
+      final (engine, _) = start(drafted());
+      engine.choose(0);
+
+      expect(engine.node.id, 'cellar');
+      expect(engine.state.flags, {'dark'});
+      expect(engine.paragraphs, ['Dark.']);
+      expect(engine.choices, isEmpty);
+      expect(engine.ending, isNull);
+      expect(() => engine.choose(0), throwsStateError);
+    });
+
+    test('a draft fight does not start', () {
+      final (engine, _) = start(drafted());
+      engine.choose(1);
+
+      expect(engine.combat, isNull);
+      expect(engine.state.combat, isNull);
+      expect(() => engine.fight(), throwsStateError);
+    });
+  });
+
   group('rusty door walkthrough', () {
     final story = rustyDoor();
 

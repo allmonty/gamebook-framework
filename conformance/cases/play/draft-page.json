@@ -1,0 +1,70 @@
+{
+  "description": "A draft page is entered as usual (its effects apply) but offers no choices, fight or ending, whatever fields it has.",
+  "spec": [
+    "B13"
+  ],
+  "story": {
+    "schema": 6,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "On",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "draft": true,
+        "text": "Not yet.",
+        "effects": [
+          {
+            "set": "seen"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Back",
+            "to": "a"
+          }
+        ],
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0,
+      "rejected": true
+    }
+  ],
+  "expect": {
+    "node": "b",
+    "ending": null,
+    "choices": [],
+    "flags": [
+      "seen"
+    ],
+    "paragraphs": [
+      "Not yet."
+    ],
+    "combat": null
+  }
+}

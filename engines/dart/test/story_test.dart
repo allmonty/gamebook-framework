@@ -188,6 +188,61 @@ void main() {
     }
   });
 
+  group('draft pages (schema 6)', () {
+    test('a draft may have no text and no way out', () {
+      final json = validJson()..['schema'] = 6;
+      (json['nodes']! as Map<String, Object?>)['foot'] = {
+        'draft': true,
+        'title': 'Hurt foot',
+      };
+      final foot = Story.fromJson(json).nodes['foot']!;
+      expect(foot.draft, isTrue);
+      expect(foot.parts, isEmpty);
+      expect(foot.choices, isEmpty);
+    });
+
+    test('a draft keeps what it has, even two ways out', () {
+      final json = validJson()..['schema'] = 6;
+      node(json, 'door')
+        ..['draft'] = true
+        ..['ending'] = 'death';
+      final door = Story.fromJson(json).nodes['door']!;
+      expect(door.choices, hasLength(2));
+      expect(door.ending, Ending.death);
+    });
+
+    test('what a draft has must still be valid', () {
+      expect(
+        failure((j) {
+          j['schema'] = 6;
+          node(j, 'door')
+            ..['draft'] = true
+            ..['ending'] = 'maybe';
+        }),
+        'nodes.door.ending: expected "victory" or "death"',
+      );
+    });
+
+    test('a page that is not a draft still needs a way out', () {
+      expect(
+        failure((j) {
+          j['schema'] = 6;
+          node(j, 'door')
+            ..['draft'] = false
+            ..remove('choices');
+        }),
+        startsWith('nodes.door: needs exactly one of'),
+      );
+    });
+
+    test('draft needs schema 6', () {
+      expect(
+        failure((j) => node(j, 'door')['draft'] = true),
+        'nodes.door.draft: needs "schema": 6',
+      );
+    });
+  });
+
   group('quantities and limits (schema 5)', () {
     String error(
       void Function(Map<String, Object?> j) change, {
