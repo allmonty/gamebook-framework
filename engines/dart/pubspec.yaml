@@ -1,0 +1,16 @@
+name: gamebook_engine
+description: The reference engine for the Gamebook Framework story format, in pure Dart, with a story validator and a graph tool.
+version: 0.5.0
+repository: https://github.com/allmonty/gamebook-framework
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+executables:
+  validate_story:
+  story_graph:
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.26.0

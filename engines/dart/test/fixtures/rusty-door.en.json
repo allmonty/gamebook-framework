@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "id": "rusty-door",
+  "lang": "en",
+  "title": "The Rusty Door",
+  "rules": { "preset": "fighting-fantasy" },
+  "items": { "rusty-key": { "name": "Rusty key" } },
+  "start": "cellar",
+  "nodes": {
+    "cellar": {
+      "text": "You wake in a cold cellar. Shelves line one wall; a heavy door stands opposite.",
+      "choices": [
+        { "text": "Search the shelves", "to": "shelves" },
+        { "text": "Go to the door", "to": "door" }
+      ]
+    },
+    "shelves": {
+      "text": "Behind a jar you find a rusty key.",
+      "once": true,
+      "effects": [ { "give": "rusty-key" } ],
+      "choices": [ { "text": "Go back", "to": "cellar" } ]
+    },
+    "door": {
+      "text": "The door is locked.",
+      "choices": [
+        { "text": "Unlock it", "to": "treasure", "if": { "has": "rusty-key" } },
+        {
+          "text": "Kick it open",
+          "check": { "roll": "2d6", "add": "skill", "op": "gte", "vs": 15, "pass": "treasure", "fail": "foot" }
+        }
+      ]
+    },
+    "foot": {
+      "text": "Ouch. The door does not move.",
+      "effects": [ { "stat": "stamina", "add": -2 } ],
+      "choices": [ { "text": "Try something else", "to": "door" } ]
+    },
+    "treasure": { "text": "A chest of gold. You win!", "ending": "victory" }
+  }
+}
