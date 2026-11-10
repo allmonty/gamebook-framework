@@ -1,0 +1,13 @@
+This repository uses two licenses.
+
+1. The specification text, every Markdown (.md) file under `spec/`, is
+   licensed under the Creative Commons Attribution 4.0 International
+   License (CC BY 4.0). Full text: LICENSE-CC-BY-4.0, or
+   https://creativecommons.org/licenses/by/4.0/legalcode
+
+2. Everything else, including the engines, the tools, the JSON Schema
+   (spec/story.schema.json) and the conformance tests, is licensed under
+   the MIT License, so it can be copied into any project.
+   Full text: LICENSE-MIT
+
+Copyright (c) 2026 Allan Monteiro and the contributors.
