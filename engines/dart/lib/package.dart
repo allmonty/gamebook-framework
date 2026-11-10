@@ -65,6 +65,11 @@ GamePackage readPackage(
   int maxBytes = maxPackageBytes,
   int maxFiles = maxPackageFiles,
 }) {
+  // Every zip starts with "PK"; the decoder takes some other bytes for an
+  // empty archive, which would read as "no story file".
+  if (bytes.length < 4 || bytes[0] != 0x50 || bytes[1] != 0x4B) {
+    throw const PackageException('not a zip file');
+  }
   final Archive archive;
   try {
     archive = ZipDecoder().decodeBytes(bytes, verify: true);

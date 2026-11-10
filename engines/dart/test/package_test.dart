@@ -64,10 +64,13 @@ void main() {
 
   group('refuses', () {
     test('a file that is not a zip', () {
-      expect(
-        () => readPackage(utf8.encode('hello')),
-        refused('not a zip file'),
-      );
+      for (final bytes in ['hello', 'nope', 'PK']) {
+        expect(
+          () => readPackage(utf8.encode(bytes)),
+          refused('not a zip file'),
+          reason: bytes,
+        );
+      }
     });
 
     test('a package without a story', () {
