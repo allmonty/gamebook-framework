@@ -1,0 +1,37 @@
+{
+  "description": "A choice has exactly one of to, check or table.",
+  "spec": [
+    "B10"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Go",
+            "to": "a",
+            "check": {
+              "roll": "2d6",
+              "op": "gte",
+              "vs": 7,
+              "pass": "a",
+              "fail": "a"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.choices[0]"
+  }
+}

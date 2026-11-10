@@ -1,0 +1,65 @@
+{
+  "description": "An item's bonus raises the stat everywhere while it is carried, and conditions see it.",
+  "spec": [
+    "B5",
+    "B7"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "give": "sword"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Strong door",
+            "to": "a",
+            "if": {
+              "stat": "skill",
+              "gte": 10
+            }
+          }
+        ]
+      }
+    },
+    "items": {
+      "sword": {
+        "name": "Sword",
+        "bonus": {
+          "skill": 1
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "node": "a",
+    "stats": {
+      "skill": 10
+    },
+    "choices": [
+      {
+        "index": 0,
+        "text": "Strong door",
+        "locked": false
+      }
+    ]
+  }
+}

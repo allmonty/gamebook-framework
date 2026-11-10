@@ -1,0 +1,31 @@
+{
+  "description": "Unknown keys are errors, named by their JSON path.",
+  "spec": [
+    "B2"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Go",
+            "to": "a",
+            "too": "x"
+          }
+        ]
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.choices[0].too"
+  }
+}

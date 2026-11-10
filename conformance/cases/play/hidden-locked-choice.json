@@ -1,0 +1,69 @@
+{
+  "description": "hideIfLocked hides a locked choice; it comes back once the condition holds.",
+  "spec": [
+    "B10"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Secret",
+            "to": "a",
+            "if": {
+              "flag": "found"
+            },
+            "hideIfLocked": true
+          },
+          {
+            "text": "Search",
+            "to": "a",
+            "effects": [
+              {
+                "set": "found"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 1
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "flags": [
+      "found"
+    ],
+    "choices": [
+      {
+        "index": 0,
+        "text": "Secret",
+        "locked": false
+      },
+      {
+        "index": 1,
+        "text": "Search",
+        "locked": false
+      }
+    ]
+  }
+}

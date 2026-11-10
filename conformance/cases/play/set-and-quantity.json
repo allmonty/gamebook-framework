@@ -1,0 +1,91 @@
+{
+  "description": "set and add take quantities: pay a price held in another stat; values clamp at 0.",
+  "spec": [
+    "B4",
+    "B9"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "stats": {
+        "gold": {
+          "label": "Gold",
+          "roll": "0",
+          "limit": 50
+        },
+        "price": {
+          "label": "Price",
+          "roll": "0"
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Buy",
+            "to": "a",
+            "if": {
+              "stat": "gold",
+              "gte": {
+                "stat": "price"
+              }
+            },
+            "effects": [
+              {
+                "stat": "gold",
+                "add": {
+                  "stat": "price",
+                  "times": -1
+                }
+              }
+            ]
+          },
+          {
+            "text": "Rob",
+            "to": "a",
+            "effects": [
+              {
+                "stat": "gold",
+                "set": 0
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8,
+    "gold": 7,
+    "price": 3
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0,
+      "rejected": true
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "stats": {
+      "gold": 1,
+      "price": 3
+    }
+  }
+}

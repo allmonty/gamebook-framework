@@ -1,0 +1,68 @@
+{
+  "description": "Test your Luck: the roll uses Luck from before the check's effects, which apply either way.",
+  "spec": [
+    "B10"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Test luck",
+            "check": {
+              "roll": "2d6",
+              "op": "lte",
+              "vs": "luck",
+              "pass": "lucky",
+              "fail": "unlucky",
+              "effects": [
+                {
+                  "stat": "luck",
+                  "add": -1
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "lucky": {
+        "text": "Lucky",
+        "ending": "victory"
+      },
+      "unlucky": {
+        "text": "Unlucky",
+        "ending": "death"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    4,
+    4
+  ],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "lucky",
+    "ending": "victory",
+    "stats": {
+      "luck": 7
+    }
+  }
+}

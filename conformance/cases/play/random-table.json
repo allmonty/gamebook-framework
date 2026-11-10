@@ -1,0 +1,88 @@
+{
+  "description": "1d6 = 4 picks the first outcome whose upTo is at least 4; its effects apply.",
+  "spec": [
+    "B10"
+  ],
+  "story": {
+    "schema": 4,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "stats": {
+        "gold": {
+          "label": "Gold",
+          "roll": "0"
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Search",
+            "table": {
+              "roll": "1d6",
+              "outcomes": [
+                {
+                  "upTo": 2,
+                  "to": "none"
+                },
+                {
+                  "upTo": 5,
+                  "to": "coins",
+                  "effects": [
+                    {
+                      "stat": "gold",
+                      "add": 3
+                    }
+                  ]
+                },
+                {
+                  "upTo": 6,
+                  "to": "gem"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "none": {
+        "text": "Nothing",
+        "ending": "death"
+      },
+      "coins": {
+        "text": "Coins",
+        "ending": "victory"
+      },
+      "gem": {
+        "text": "Gem",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8,
+    "gold": 0
+  },
+  "dice": [
+    4
+  ],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "coins",
+    "ending": "victory",
+    "stats": {
+      "gold": 3
+    }
+  }
+}

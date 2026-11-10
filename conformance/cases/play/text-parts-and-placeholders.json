@@ -1,0 +1,73 @@
+{
+  "description": "Conditional text parts show while their condition holds; {stat} and {stat.max} show values.",
+  "spec": [
+    "B6"
+  ],
+  "story": {
+    "schema": 4,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": [
+          "Hall.",
+          {
+            "if": {
+              "flag": "lit"
+            },
+            "text": "A fire burns."
+          },
+          {
+            "if": {
+              "visits": "a",
+              "gte": 2
+            },
+            "text": "Again. Stamina {stamina} of {stamina.max}."
+          }
+        ],
+        "choices": [
+          {
+            "text": "Light it ({luck})",
+            "to": "a",
+            "effects": [
+              {
+                "set": "lit"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "paragraphs": [
+      "Hall.",
+      "A fire burns.",
+      "Again. Stamina 12 of 12."
+    ],
+    "choices": [
+      {
+        "index": 0,
+        "text": "Light it (8)",
+        "locked": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "description": "A journal effect unlocks an entry once.",
+  "spec": [
+    "B6",
+    "B9"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "journal": "clue"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Again",
+            "to": "a"
+          }
+        ]
+      }
+    },
+    "journal": {
+      "clue": {
+        "title": "Clue",
+        "text": "A note."
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "journal": [
+      "clue"
+    ]
+  }
+}

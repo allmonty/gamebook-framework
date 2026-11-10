@@ -1,0 +1,69 @@
+{
+  "description": "Using an item applies its effects and removes it.",
+  "spec": [
+    "B5"
+  ],
+  "story": {
+    "schema": 2,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "give": "potion"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    },
+    "items": {
+      "potion": {
+        "name": "Potion",
+        "use": {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 6
+            }
+          ],
+          "when": [
+            "story"
+          ]
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 5,
+      "max": 12
+    },
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "use": "potion"
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "inventory": [],
+    "stats": {
+      "stamina": 11
+    }
+  }
+}

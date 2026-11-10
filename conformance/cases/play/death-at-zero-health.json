@@ -1,0 +1,60 @@
+{
+  "description": "Health at 0 ends the game in death wherever it happens, even on a page with choices.",
+  "spec": [
+    "B10"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Jump",
+            "to": "b",
+            "effects": [
+              {
+                "stat": "stamina",
+                "add": -20
+              }
+            ]
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "b",
+    "ending": "death",
+    "stats": {
+      "stamina": 0
+    }
+  }
+}

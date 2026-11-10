@@ -1,0 +1,74 @@
+{
+  "description": "A once node's effects apply only on the first visit, and healing stops at the stat's max.",
+  "spec": [
+    "B4",
+    "B6"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Drink",
+            "to": "well"
+          }
+        ]
+      },
+      "well": {
+        "text": "Well",
+        "once": true,
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 5
+          }
+        ],
+        "choices": [
+          {
+            "text": "Back",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 8,
+      "max": 12
+    },
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "well",
+    "stats": {
+      "stamina": 12
+    },
+    "visits": {
+      "well": 2,
+      "a": 2
+    }
+  }
+}

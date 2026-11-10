@@ -1,0 +1,25 @@
+{
+  "description": "Only the listed presets exist.",
+  "spec": [
+    "B4"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "lone-wolf"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "rules.preset"
+  }
+}

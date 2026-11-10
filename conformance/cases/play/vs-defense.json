@@ -1,0 +1,60 @@
+{
+  "description": "d20-lite: 1d20+might against defense 12 hits; damage 1d6 kills, so the enemy does not strike back.",
+  "spec": [
+    "B4",
+    "B8",
+    "B11"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "d20-lite"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Rat",
+              "attack": 3,
+              "defense": 12,
+              "health": 3
+            }
+          ],
+          "win": "w"
+        }
+      },
+      "w": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "might": 2,
+    "agility": 2,
+    "wits": 1,
+    "hp": 10
+  },
+  "dice": [
+    15,
+    3
+  ],
+  "actions": [
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "w",
+    "ending": "victory",
+    "stats": {
+      "hp": 10
+    }
+  }
+}

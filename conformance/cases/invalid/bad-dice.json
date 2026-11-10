@@ -1,0 +1,36 @@
+{
+  "description": "Dice notation is NdM with an optional +K or -K, or an integer.",
+  "spec": [
+    "B8"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Go",
+            "check": {
+              "roll": "2x6",
+              "op": "gte",
+              "vs": 7,
+              "pass": "a",
+              "fail": "a"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.choices[0].check.roll"
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "description": "Opposed rounds: player 2d6+9 against enemy 2d6+7; the higher total deals 2. Two wins kill the Goblin.",
+  "spec": [
+    "B8",
+    "B11"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Hall",
+        "choices": [
+          {
+            "text": "Fight",
+            "to": "ring"
+          }
+        ]
+      },
+      "ring": {
+        "text": "Ring",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Goblin",
+              "attack": 7,
+              "health": 4
+            }
+          ],
+          "win": "prize",
+          "flee": "a"
+        }
+      },
+      "prize": {
+        "text": "Prize",
+        "effects": [
+          {
+            "give": "medal"
+          }
+        ],
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "medal": {
+        "name": "Medal"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    6,
+    6,
+    1,
+    1,
+    6,
+    6,
+    1,
+    1
+  ],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "fight": {}
+    },
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "prize",
+    "ending": "victory",
+    "inventory": [
+      "medal"
+    ],
+    "stats": {
+      "stamina": 12
+    }
+  }
+}

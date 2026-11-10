@@ -1,0 +1,88 @@
+{
+  "description": "With capacity 1 and pickup auto, a second item is refused; a container needs no room and adds one.",
+  "spec": [
+    "B4",
+    "B5",
+    "B9"
+  ],
+  "story": {
+    "schema": 3,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "inventory": {
+        "capacity": 1
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "give": "rope"
+          },
+          {
+            "give": "lamp"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Bag",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "effects": [
+          {
+            "give": "bag"
+          },
+          {
+            "give": "lamp"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "b"
+          }
+        ]
+      }
+    },
+    "items": {
+      "rope": {
+        "name": "Rope"
+      },
+      "lamp": {
+        "name": "Lamp"
+      },
+      "bag": {
+        "name": "Bag",
+        "capacity": 1
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "b",
+    "inventory": [
+      "bag",
+      "lamp",
+      "rope"
+    ]
+  }
+}

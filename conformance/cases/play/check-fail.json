@@ -1,0 +1,129 @@
+{
+  "description": "2d6 + Skill 9 = 12 misses; the fail page costs 2 Stamina every visit.",
+  "spec": [
+    "B8",
+    "B10"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "rusty-door",
+    "lang": "en",
+    "title": "The Rusty Door",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "items": {
+      "rusty-key": {
+        "name": "Rusty key"
+      }
+    },
+    "start": "cellar",
+    "nodes": {
+      "cellar": {
+        "text": "You wake in a cold cellar. Shelves line one wall; a heavy door stands opposite.",
+        "choices": [
+          {
+            "text": "Search the shelves",
+            "to": "shelves"
+          },
+          {
+            "text": "Go to the door",
+            "to": "door"
+          }
+        ]
+      },
+      "shelves": {
+        "text": "Behind a jar you find a rusty key.",
+        "once": true,
+        "effects": [
+          {
+            "give": "rusty-key"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Go back",
+            "to": "cellar"
+          }
+        ]
+      },
+      "door": {
+        "text": "The door is locked.",
+        "choices": [
+          {
+            "text": "Unlock it",
+            "to": "treasure",
+            "if": {
+              "has": "rusty-key"
+            }
+          },
+          {
+            "text": "Kick it open",
+            "check": {
+              "roll": "2d6",
+              "add": "skill",
+              "op": "gte",
+              "vs": 15,
+              "pass": "treasure",
+              "fail": "foot"
+            }
+          }
+        ]
+      },
+      "foot": {
+        "text": "Ouch. The door does not move.",
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": -2
+          }
+        ],
+        "choices": [
+          {
+            "text": "Try something else",
+            "to": "door"
+          }
+        ]
+      },
+      "treasure": {
+        "text": "A chest of gold. You win!",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    1,
+    2,
+    1,
+    1
+  ],
+  "actions": [
+    {
+      "choose": 1
+    },
+    {
+      "choose": 1
+    },
+    {
+      "choose": 0
+    },
+    {
+      "choose": 1
+    }
+  ],
+  "expect": {
+    "node": "foot",
+    "stats": {
+      "stamina": 8
+    },
+    "visits": {
+      "foot": 2,
+      "door": 2
+    }
+  }
+}

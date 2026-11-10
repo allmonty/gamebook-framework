@@ -1,0 +1,79 @@
+{
+  "description": "Undo restores everything as it was before the choice.",
+  "spec": [
+    "B4"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "undo": 1
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Hurt",
+            "to": "b",
+            "effects": [
+              {
+                "stat": "stamina",
+                "add": -3
+              },
+              {
+                "give": "rope"
+              }
+            ]
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "Back",
+            "to": "a"
+          }
+        ]
+      }
+    },
+    "items": {
+      "rope": {
+        "name": "Rope"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "undo": {}
+    },
+    {
+      "undo": {},
+      "rejected": true
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "stats": {
+      "stamina": 12
+    },
+    "inventory": [],
+    "visits": {
+      "a": 1
+    }
+  }
+}

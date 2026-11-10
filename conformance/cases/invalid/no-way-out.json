@@ -1,0 +1,24 @@
+{
+  "description": "A page needs exactly one of choices, combat or ending.",
+  "spec": [
+    "B6"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a"
+  }
+}

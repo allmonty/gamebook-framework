@@ -1,0 +1,57 @@
+{
+  "description": "A once choice disappears after it is taken.",
+  "spec": [
+    "B10"
+  ],
+  "story": {
+    "schema": 4,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Look",
+            "to": "a",
+            "once": true
+          },
+          {
+            "text": "Wait",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0,
+      "rejected": true
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "choices": [
+      {
+        "index": 1,
+        "text": "Wait",
+        "locked": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "description": "A miss deals nothing; the living enemy attacks: 1d20+3 against 10+agility 2, then 1d6 damage.",
+  "spec": [
+    "B8",
+    "B11"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "d20-lite"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Rat",
+              "attack": 3,
+              "defense": 12,
+              "health": 3
+            }
+          ],
+          "win": "w"
+        }
+      },
+      "w": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "might": 2,
+    "agility": 2,
+    "wits": 1,
+    "hp": 10
+  },
+  "dice": [
+    5,
+    9,
+    4
+  ],
+  "actions": [
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "ending": null,
+    "stats": {
+      "hp": 6
+    },
+    "combat": {
+      "enemy": 0,
+      "health": [
+        3
+      ]
+    }
+  }
+}
