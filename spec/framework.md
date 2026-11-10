@@ -322,7 +322,17 @@ A condition is an object with exactly one kind:
 `NdM` with optional `+K` or `-K`, or a plain integer. No spaces. `N` is the number of dice (at least 1), `M` the number of faces (at least 2).
 Examples: `1d6`, `2d6+6`, `1d20`, `2d6-1`, `3` (fixed).
 Rolls keep the individual dice (the UI shows them) and the total (dice sum plus modifier).
-The engine takes a `Random` so tests and the UI can be seeded.
+Engines take their randomness from outside (a seedable source), so tests and tools can fix the dice.
+
+### Order of rolls
+Engines must roll in this order, so that the same dice give the same game everywhere (the [conformance tests](../conformance/README.md) script the die faces). A roll of `NdM` takes N dice one after another; a plain integer takes none.
+- **Character creation**: each stat once, in rules order: the preset's stats in the order of its table (B4), then the stats the story adds, in the order of `rules.stats`.
+- **Check** (B10): its `roll`. **Table**: its `roll`.
+- **Round, `opposed`**: the player's `attackRoll`, then the enemy's `attackRoll`, then the `damage` of whichever side won (none on a tie).
+- **Round, `vs-defense`**: the player's `attackRoll`; the player's `damage` if it hits; then, if the enemy is still alive, its `attackRoll`, and its `damage` if it hits.
+- **Round, `table`** (and duels): the table `roll` only.
+- **Several enemies at once**: the player's `attackRoll` once. In `opposed` mode, then for each living enemy in list order: its `attackRoll`, then the damage of the side that won against it (the player deals damage only to the target). In `vs-defense` mode, the player's `damage` on the target if it hits, then for each enemy still living, in list order: its `attackRoll` and, if it hits, its `damage`.
+- **Testing luck in a fight**: the `luck.roll`.
 
 ## B9. Effects
 An effect is an object with exactly one kind:
