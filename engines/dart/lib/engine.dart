@@ -603,3 +603,42 @@ class GameEngine {
       if (!before.journal.contains(entry)) JournalUnlocked(entry),
   ];
 }
+
+/// Whether a saved [state] still fits [story] (spec B14, "Updates and
+/// saves"): every node, item, stat and journal entry it names exists, and a
+/// fight under way still matches the fight on its page. A save that does not
+/// fit must be dropped, never played: it could point at a page or an enemy
+/// that is gone.
+bool stateFits(GameState state, Story story, Rules rules) {
+  bool node(String id) => story.nodes.containsKey(id);
+  bool item(String id) => story.items.containsKey(id);
+  final current = story.nodes[state.node];
+  if (current == null) return false;
+  final stats = {for (final s in rules.stats) s.id};
+  if (!state.stats.keys.toSet().containsAll(stats) ||
+      !stats.containsAll(state.stats.keys)) {
+    return false;
+  }
+  if (!state.inventory.every(item) || !state.offers.every(item)) return false;
+  if (!state.visited.every(node) || !state.visits.keys.every(node)) {
+    return false;
+  }
+  if (!state.journal.every(story.journal.containsKey)) return false;
+  for (final taken in state.taken) {
+    final hash = taken.lastIndexOf('#');
+    final choices = story.nodes[taken.substring(0, hash < 0 ? 0 : hash)];
+    final index = int.tryParse(taken.substring(hash + 1));
+    if (choices == null || index == null || index >= choices.choices.length) {
+      return false;
+    }
+  }
+  if (state.combat case final fight?) {
+    final enemies = current.combat?.enemies;
+    if (enemies == null ||
+        fight.enemyHealth.length != enemies.length ||
+        fight.enemy >= enemies.length) {
+      return false;
+    }
+  }
+  return true;
+}
