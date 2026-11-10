@@ -84,6 +84,32 @@ void main() {
     expect(run([root.path]).$1, 0);
   });
 
+  group('--llm', () {
+    test('turns the problems into a message for the chatbot', () {
+      write('rusty/story.en.json', {...valid, 'start': 'nowhere'});
+      final (code, out) = run([root.path, '--llm']);
+
+      expect(code, 1);
+      expect(
+        out,
+        startsWith(
+          'The validator found these problems in the story. Fix every one '
+          'and reply with the whole corrected file, and nothing else.\n'
+          '- story.en.json: error: start: unknown node "nowhere"\n',
+        ),
+      );
+      expect(out, isNot(contains(root.path)));
+    });
+
+    test('says so when there is nothing to fix', () {
+      write('rusty/story.en.json', valid);
+      expect(run([root.path, '--llm']), (
+        0,
+        'The validator found no problems.\n',
+      ));
+    });
+  });
+
   test('warnings pass unless --strict', () {
     final json = jsonDecode(jsonEncode(valid)) as Map<String, Object?>;
     (json['nodes']! as Map<String, Object?>)['lost'] = {

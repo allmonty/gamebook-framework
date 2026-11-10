@@ -30,6 +30,7 @@ Ink and Twine are great for branching text, but have no stats, dice or inventory
 | [spec/framework.md](spec/framework.md) | **The spec.** Part A explains gamebooks and the format to anyone; Part B is the exact reference |
 | [spec/CHANGELOG.md](spec/CHANGELOG.md) | what each `schema` version adds |
 | [spec/story.schema.json](spec/story.schema.json) | JSON Schema (shape only) for editors and quick checks |
+| [spec/llm-kit.md](spec/llm-kit.md) | **One file to give a chatbot** so it can write or change a story: instructions, common mistakes and the reference (generated) |
 | [conformance/](conformance/README.md) | language-neutral test cases with scripted dice: the definition of "plays it right" |
 | [engines/](engines/README.md) | engines; the reference one is [Dart](engines/dart/README.md) (with a validator and graph CLI) |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | how to change the spec or add an engine |

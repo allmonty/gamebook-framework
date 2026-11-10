@@ -11,6 +11,7 @@ executables:
   validate_story:
   story_graph:
   pack_game:
+  llm_kit:
 
 dependencies:
   # Reads and writes .gamebook packages (zip); pure Dart, so it works on the web too.

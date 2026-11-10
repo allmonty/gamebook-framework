@@ -1,5 +1,8 @@
-// Checks story files: `dart run tool/validate_story.dart <dir|file>... [--strict]`.
-// Exits 1 if there are errors (or warnings with --strict), 2 on bad usage.
+// Checks story files:
+// `dart run gamebook_engine:validate_story <dir|file>... [--strict] [--llm]`.
+// --llm prints the problems as a message to paste back to the chatbot that
+// wrote the story. Exits 1 if there are errors (or warnings with --strict),
+// 2 on bad usage.
 import 'dart:io';
 
 import 'package:gamebook_engine/story.dart';
@@ -12,6 +15,7 @@ final _storyFile = RegExp(r'^story\.(?!schema\.)([A-Za-z-]+)\.json$');
 /// process exit code.
 int runValidator(List<String> args, StringSink out) {
   final strict = args.contains('--strict');
+  final llm = args.contains('--llm');
   final paths = args.where((a) => !a.startsWith('--')).toList();
   final files = <File>[
     for (final path in paths)
@@ -25,7 +29,8 @@ int runValidator(List<String> args, StringSink out) {
   ]..sort((a, b) => a.path.compareTo(b.path));
   if (paths.isEmpty || files.isEmpty) {
     out.writeln(
-      'No story files found. Usage: validate_story <dir|file>... [--strict]',
+      'No story files found. '
+      'Usage: validate_story <dir|file>... [--strict] [--llm]',
     );
     return 2;
   }
@@ -34,9 +39,11 @@ int runValidator(List<String> args, StringSink out) {
   var warnings = 0;
   final byId = <String, List<Story>>{};
 
+  final lines = <String>[];
   void report(String file, Iterable<Issue> issues) {
     for (final issue in issues) {
-      out.writeln('$file: $issue');
+      // The chatbot knows its files by name, not by the author's paths.
+      lines.add('${llm ? file.split('/').last : file}: $issue');
       issue.severity == Severity.error ? errors++ : warnings++;
     }
   }
@@ -74,9 +81,20 @@ int runValidator(List<String> args, StringSink out) {
     }
   }
 
-  out.writeln(
-    '${files.length} file(s): $errors error(s), $warnings warning(s).',
-  );
+  if (llm) {
+    out.writeln(
+      lines.isEmpty
+          ? 'The validator found no problems.'
+          : 'The validator found these problems in the story. Fix every one '
+                'and reply with the whole corrected file, and nothing else.\n'
+                '${[for (final l in lines) '- $l'].join('\n')}',
+    );
+  } else {
+    lines.forEach(out.writeln);
+    out.writeln(
+      '${files.length} file(s): $errors error(s), $warnings warning(s).',
+    );
+  }
   return errors > 0 || (strict && warnings > 0) ? 1 : 0;
 }
 

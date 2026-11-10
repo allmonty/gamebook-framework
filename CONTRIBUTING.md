@@ -5,7 +5,7 @@ Thanks for helping. Three kinds of change, three paths.
 ## Spec changes
 The spec is the source of truth: if an engine and [spec/framework.md](spec/framework.md) Part B disagree, one of them has a bug, and the fix starts in the spec.
 - Open an issue first for anything new. Say what a story author can do with it that they cannot today, with a short story example.
-- A new feature needs: the text in Part B, a `schema` version bump (with the rule that older stories using it are rejected with `needs "schema": N`), a line in [spec/CHANGELOG.md](spec/CHANGELOG.md), the JSON Schema, at least one conformance case, and the reference engine. One pull request per feature.
+- A new feature needs: the text in Part B, a `schema` version bump (with the rule that older stories using it are rejected with `needs "schema": N`), a line in [spec/CHANGELOG.md](spec/CHANGELOG.md), the JSON Schema, at least one conformance case, and the reference engine. Then regenerate the LLM kit (`dart run gamebook_engine:llm_kit` in `engines/dart`); a test fails while it is out of date. One pull request per feature.
 - Versions only add. A story valid in version N stays valid, and plays the same, in every later version.
 - Where randomness is involved, say in which order the dice are rolled (B8, "Order of rolls").
 - Write plainly: Part A is read by people who never programmed.

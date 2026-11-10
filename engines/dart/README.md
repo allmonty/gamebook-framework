@@ -29,9 +29,10 @@ engine.choose(0);                                 // returns the events of what 
 
 ## Tools
 ```
-dart run gamebook_engine:validate_story <dir|file>... [--strict]
+dart run gamebook_engine:validate_story <dir|file>... [--strict] [--llm]   # --llm: a message to paste back to a chatbot
 dart run gamebook_engine:story_graph <story.json> [--mermaid]
 dart run gamebook_engine:pack_game <game-folder> [out.gamebook]
+dart run gamebook_engine:llm_kit [--check]                                # regenerates ../../spec/llm-kit.md (run from this folder)
 ```
 
 ## Develop
