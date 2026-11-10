@@ -475,9 +475,9 @@ A node with `"draft": true` is a page not written yet. For a draft the rule "exa
 - Removing `draft` makes the node an ordinary page with every usual rule.
 
 ## B14. Game packages (`.gamebook`)
-A game travels outside the app as one file: a **zip** of the game folder (B1) with the extension `.gamebook`. Editors export it and players import it; the Dart engine will ship a packer (planned).
+A game travels outside the app as one file: a **zip** of the game folder (B1) with the extension `.gamebook`. Editors export it and players import it; the Dart engine reads and writes them (`package.dart`) and packs a folder with its `pack_game` tool.
 - The zip root holds what `games/<slug>/` holds: one or more `story.<lang>.json`, and the `images/` and `audio/` they reference. `builder.json` may be included; the app ignores it. Nothing else is allowed (no other files, no folders above the root, no links).
-- Every story in it must parse and share one `id`, and the translations must match (B1). Missing media are allowed (the player shows nothing), as for bundled games.
+- Every story in it must parse, have no validator **errors** (B2: a broken link would strand a player; warnings are allowed), and share one `id`, and the translations must match (B1). Missing media are allowed (the player shows nothing), as for bundled games.
 - Limits, checked before anything is unpacked: at most 100 MB unpacked, 2,000 files, media files only of the types the app plays (`.webp`, `.png`, `.jpg`, `.jpeg`, `.ogg`, `.mp3`, `.wav`, `.m4a`). Anything else rejects the whole file with a message saying why.
 - A package whose story `id` matches a bundled game is refused (bundled games cannot be replaced); one matching an imported game is an **update** of it.
 
