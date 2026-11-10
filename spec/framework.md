@@ -444,6 +444,34 @@ The **ratio** is the player's `attackStat` minus the enemy's `attack`. The row i
 
 When the player's health is 0: **death** (B10 step 5). Mid-fight state (current enemy, enemy health) is part of the saved game state.
 
+## B12. Complete example
+```json
+{
+  "schema": 1, "id": "rusty-door", "lang": "en", "title": "The Rusty Door",
+  "rules": { "preset": "fighting-fantasy" },
+  "items": { "rusty-key": { "name": "Rusty key" } },
+  "start": "cellar",
+  "nodes": {
+    "cellar": { "text": "You wake in a cold cellar. Shelves line one wall; a heavy door stands opposite.",
+      "choices": [
+        { "text": "Search the shelves", "to": "shelves" },
+        { "text": "Go to the door", "to": "door" } ] },
+    "shelves": { "text": "Behind a jar you find a rusty key.", "once": true,
+      "effects": [ { "give": "rusty-key" } ],
+      "choices": [ { "text": "Go back", "to": "cellar" } ] },
+    "door": { "text": "The door is locked.",
+      "choices": [
+        { "text": "Unlock it", "to": "treasure", "if": { "has": "rusty-key" } },
+        { "text": "Kick it open", "check": { "roll": "2d6", "add": "skill", "op": "gte", "vs": 15,
+            "pass": "treasure", "fail": "foot" } } ] },
+    "foot": { "text": "Ouch. The door does not move.", "effects": [ { "stat": "stamina", "add": -2 } ],
+      "choices": [ { "text": "Try something else", "to": "door" } ] },
+    "treasure": { "text": "A chest of gold. You win!", "ending": "victory" }
+  }
+}
+```
+Note that `foot` has no `once`, so every visit costs 2 Stamina on purpose.
+
 ## B13. Authoring fields (schema 6)
 These fields exist for authors and visual editors (the Builder). None of them changes how a finished story plays, except `showTitles`.
 
@@ -482,31 +510,3 @@ A game travels outside the app as one file: a **zip** of the game folder (B1) wi
 - A package whose story `id` matches a bundled game is refused (bundled games cannot be replaced); one matching an imported game is an **update** of it.
 
 **Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
-
-## B12. Complete example
-```json
-{
-  "schema": 1, "id": "rusty-door", "lang": "en", "title": "The Rusty Door",
-  "rules": { "preset": "fighting-fantasy" },
-  "items": { "rusty-key": { "name": "Rusty key" } },
-  "start": "cellar",
-  "nodes": {
-    "cellar": { "text": "You wake in a cold cellar. Shelves line one wall; a heavy door stands opposite.",
-      "choices": [
-        { "text": "Search the shelves", "to": "shelves" },
-        { "text": "Go to the door", "to": "door" } ] },
-    "shelves": { "text": "Behind a jar you find a rusty key.", "once": true,
-      "effects": [ { "give": "rusty-key" } ],
-      "choices": [ { "text": "Go back", "to": "cellar" } ] },
-    "door": { "text": "The door is locked.",
-      "choices": [
-        { "text": "Unlock it", "to": "treasure", "if": { "has": "rusty-key" } },
-        { "text": "Kick it open", "check": { "roll": "2d6", "add": "skill", "op": "gte", "vs": 15,
-            "pass": "treasure", "fail": "foot" } } ] },
-    "foot": { "text": "Ouch. The door does not move.", "effects": [ { "stat": "stamina", "add": -2 } ],
-      "choices": [ { "text": "Try something else", "to": "door" } ] },
-    "treasure": { "text": "A chest of gold. You win!", "ending": "victory" }
-  }
-}
-```
-Note that `foot` has no `once`, so every visit costs 2 Stamina on purpose.
