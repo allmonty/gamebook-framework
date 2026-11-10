@@ -1,14 +1,52 @@
 import 'dice.dart';
 import 'story.dart';
 
-enum _EdgeStyle { plain, locked, pass, fail, win, flee }
+/// What kind of exit a link is; tools draw each kind its own way.
+enum EdgeKind {
+  /// A choice that always leads there.
+  plain,
 
-class _Edge {
-  const _Edge(this.from, this.to, this.label, this.style);
+  /// A choice with a condition (`if`).
+  locked,
+
+  /// A dice check passed / failed.
+  pass,
+  fail,
+
+  /// One row of a random table.
+  outcome,
+
+  /// A fight won / fled.
+  win,
+  flee,
+}
+
+/// One link from a page to another: an exit of a choice (a check has two, a
+/// table one per outcome) or of a fight.
+class StoryEdge {
+  const StoryEdge(
+    this.from,
+    this.to,
+    this.label,
+    this.kind, {
+    this.choice,
+    this.port = 0,
+  });
+
   final String from;
   final String to;
+
+  /// What the graph tool writes on the link.
   final String label;
-  final _EdgeStyle style;
+  final EdgeKind kind;
+
+  /// The position of the choice in the page's `choices`, or null for a
+  /// fight's exits.
+  final int? choice;
+
+  /// Which exit of its choice or fight this is: 0, or 1 for a failed check
+  /// or for fleeing, or the outcome's position in a table.
+  final int port;
 }
 
 /// One-line summary of a condition, for edge labels.
@@ -40,18 +78,20 @@ String _operand(Operand? operand) => switch (operand) {
   StatRef(:final stat) => stat,
 };
 
-List<_Edge> _edges(Story story) => [
+/// Every link of [story], page by page in file order.
+List<StoryEdge> storyEdges(Story story) => [
   for (final MapEntry(:key, :value) in story.nodes.entries) ...[
-    for (final choice in value.choices) ..._choiceEdges(key, choice),
+    for (var i = 0; i < value.choices.length; i++)
+      ..._choiceEdges(key, i, value.choices[i]),
     if (value.combat case final combat?) ...[
-      _Edge(key, combat.win, 'win', _EdgeStyle.win),
+      StoryEdge(key, combat.win, 'win', EdgeKind.win),
       if (combat.flee case final flee?)
-        _Edge(key, flee, 'flee', _EdgeStyle.flee),
+        StoryEdge(key, flee, 'flee', EdgeKind.flee, port: 1),
     ],
   ],
 ];
 
-List<_Edge> _choiceEdges(String from, Choice choice) {
+List<StoryEdge> _choiceEdges(String from, int index, Choice choice) {
   final text = choice.once ? '${choice.text} (once)' : choice.text;
   final gate = choice.condition == null
       ? ''
@@ -61,33 +101,49 @@ List<_Edge> _choiceEdges(String from, Choice choice) {
         '${check.roll}${check.add == null ? '' : '+${_operand(check.add)}'} '
         '${check.op == CheckOp.gte ? '>=' : '<='} ${_operand(check.vs)}';
     return [
-      _Edge(from, check.pass, '$text$gate\npass: $roll', _EdgeStyle.pass),
-      _Edge(from, check.fail, '$text\nfail', _EdgeStyle.fail),
+      StoryEdge(
+        from,
+        check.pass,
+        '$text$gate\npass: $roll',
+        EdgeKind.pass,
+        choice: index,
+      ),
+      StoryEdge(
+        from,
+        check.fail,
+        '$text\nfail',
+        EdgeKind.fail,
+        choice: index,
+        port: 1,
+      ),
     ];
   }
   if (choice.table case final table?) {
     final min = Dice.parse(table.roll).min;
     var low = min;
     return [
-      for (final o in table.outcomes)
+      for (final (j, o) in table.outcomes.indexed)
         () {
           final range = low >= o.upTo ? '${o.upTo}' : '$low-${o.upTo}';
           low = o.upTo + 1;
-          return _Edge(
+          return StoryEdge(
             from,
             o.to,
             '$text$gate\nroll ${table.roll}: $range',
-            _EdgeStyle.plain,
+            EdgeKind.outcome,
+            choice: index,
+            port: j,
           );
         }(),
     ];
   }
   return [
-    _Edge(
+    StoryEdge(
       from,
       choice.to!,
       '$text$gate',
-      choice.condition == null ? _EdgeStyle.plain : _EdgeStyle.locked,
+      choice.condition == null ? EdgeKind.plain : EdgeKind.locked,
+      choice: index,
     ),
   ];
 }
@@ -150,14 +206,14 @@ String toDot(Story story) {
     }
     out.writeln('  }');
   }
-  for (final e in _edges(story)) {
+  for (final e in storyEdges(story)) {
     final attrs = [
       'label="${_dotEscape(e.label)}"',
-      switch (e.style) {
-        _EdgeStyle.plain => null,
-        _EdgeStyle.locked || _EdgeStyle.flee => 'style=dashed',
-        _EdgeStyle.pass || _EdgeStyle.win => 'color="#2e7d32"',
-        _EdgeStyle.fail => 'color="#c62828"',
+      switch (e.kind) {
+        EdgeKind.plain || EdgeKind.outcome => null,
+        EdgeKind.locked || EdgeKind.flee => 'style=dashed',
+        EdgeKind.pass || EdgeKind.win => 'color="#2e7d32"',
+        EdgeKind.fail => 'color="#c62828"',
       },
     ].nonNulls;
     out.writeln(
@@ -197,10 +253,10 @@ String toMermaid(Story story) {
     }
     out.writeln('  end');
   }
-  for (final e in _edges(story)) {
+  for (final e in storyEdges(story)) {
     final label = '"${_mermaidEscape(e.label)}"';
-    final arrow = switch (e.style) {
-      _EdgeStyle.locked || _EdgeStyle.flee => '-.->|$label|',
+    final arrow = switch (e.kind) {
+      EdgeKind.locked || EdgeKind.flee => '-.->|$label|',
       _ => '-->|$label|',
     };
     out.writeln('  ${_mermaidId(e.from)} $arrow ${_mermaidId(e.to)}');

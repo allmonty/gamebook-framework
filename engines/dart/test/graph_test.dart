@@ -85,6 +85,36 @@ Story fightStory() => Story.fromJson({
 });
 
 void main() {
+  test('storyEdges gives each exit its kind, choice and port', () {
+    final json = jsonDecode(
+      File('test/fixtures/rusty-door.en.json').readAsStringSync(),
+    ) as Map<String, Object?>;
+    final nodes = json['nodes']! as Map<String, Object?>;
+    nodes['foot'] = {
+      'text': 'A rat bites.',
+      'combat': {
+        'enemies': [
+          {'name': 'Rat', 'attack': 5, 'health': 2},
+        ],
+        'win': 'door',
+        'flee': 'cellar',
+      },
+    };
+    final edges = [
+      for (final e in storyEdges(Story.fromJson(json)))
+        if (e.from == 'door' || e.from == 'foot')
+          (e.to, e.kind, e.choice, e.port),
+    ];
+
+    expect(edges, [
+      ('treasure', EdgeKind.locked, 0, 0),
+      ('treasure', EdgeKind.pass, 1, 0),
+      ('foot', EdgeKind.fail, 1, 1),
+      ('door', EdgeKind.win, null, 0),
+      ('cellar', EdgeKind.flee, null, 1),
+    ]);
+  });
+
   test('DOT output for the rusty door', () {
     expect(toDot(rustyDoor()), dot);
   });
