@@ -1,0 +1,64 @@
+{
+  "description": "Titles, notes and chapters do not change how a story plays; the current page's title is available for the heading.",
+  "spec": [
+    "B13"
+  ],
+  "story": {
+    "schema": 6,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "title": "Gate",
+        "note": "First page.",
+        "chapter": "one",
+        "text": "A gate.",
+        "choices": [
+          {
+            "text": "Through",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "title": "Garden",
+        "chapter": "two",
+        "text": "A garden.",
+        "ending": "victory"
+      }
+    },
+    "chapters": {
+      "one": {
+        "title": "Act 1"
+      },
+      "two": {
+        "title": "Act 2"
+      }
+    },
+    "showTitles": true
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "b",
+    "ending": "victory",
+    "title": "Garden",
+    "paragraphs": [
+      "A garden."
+    ]
+  }
+}

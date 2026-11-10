@@ -101,6 +101,7 @@ void _check(GameEngine engine, Map<String, Object?> want) {
         for (final c in engine.choices)
           {'index': c.index, 'text': c.text, 'locked': c.locked},
       ],
+      'title' => engine.node.title,
       'combat' =>
         s.combat == null
             ? null

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "story.schema.json",
-  "title": "Gamebook story, schema versions 1 to 5",
+  "title": "Gamebook story, schema versions 1 to 6",
   "description": "Shape only. Cross-references (targets, items, stats) are checked by a validator such as the Dart engine's validate_story. Spec: spec/framework.md",
   "type": "object",
   "additionalProperties": false,
@@ -24,7 +24,8 @@
         2,
         3,
         4,
-        5
+        5,
+        6
       ]
     },
     "id": {
@@ -81,6 +82,29 @@
           }
         }
       }
+    },
+    "chapters": {
+      "description": "Schema 6. Groups of pages, in reading order, by id; for authors and editors",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "showTitles": {
+      "description": "Schema 6. Show node titles to players as page headings",
+      "type": "boolean"
     },
     "start": {
       "$ref": "#/$defs/id"
@@ -863,6 +887,19 @@
         "sound": {
           "description": "Schema 5. A file played once when the page is entered",
           "type": "string"
+        },
+        "title": {
+          "description": "Schema 6. A short name for the page; players see it only with showTitles",
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "note": {
+          "description": "Schema 6. For authors only, never shown to players",
+          "type": "string"
+        },
+        "chapter": {
+          "description": "Schema 6. A key of the story's chapters",
+          "$ref": "#/$defs/id"
         }
       },
       "oneOf": [

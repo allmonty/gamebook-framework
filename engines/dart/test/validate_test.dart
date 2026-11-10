@@ -556,6 +556,42 @@ void main() {
         i.toString(),
     ];
 
+    test('chapters and the chapter of each page must match', () {
+      Map<String, Object?> withChapters(Map<String, Object?> j) => j
+        ..['schema'] = 6
+        ..['chapters'] = {
+          'one': {'title': 'One'},
+          'two': {'title': 'Two'},
+        };
+      final en = withChapters(validJson());
+      node(en, 'door')['chapter'] = 'one';
+      final pt = withChapters(validJson())
+        ..['lang'] = 'pt'
+        ..['chapters'] = {
+          'one': {'title': 'Um'},
+          'three': {'title': 'Três'},
+        };
+      node(pt, 'door')['chapter'] = 'three';
+      node(pt, 'cellar')
+        ..['title'] = 'Porão'
+        ..['note'] = 'Notes may differ.';
+
+      expect(
+        [
+          for (final i in compareTranslations(
+            Story.fromJson(en),
+            Story.fromJson(pt),
+          ))
+            i.toString(),
+        ],
+        unorderedEquals([
+          'warning: pt: chapter "two" exists in en but not in pt',
+          'warning: pt: chapter "three" exists in pt but not in en',
+          'warning: nodes.door: is in chapter one in en but three in pt',
+        ]),
+      );
+    });
+
     test('identical structure has no differences', () {
       expect(diff((_) {}), isEmpty);
     });

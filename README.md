@@ -35,7 +35,7 @@ Ink and Twine are great for branching text, but have no stats, dice or inventory
 | [CONTRIBUTING.md](CONTRIBUTING.md) | how to change the spec or add an engine |
 
 ## Status
-Schema versions 1 to 5 are specified and implemented by the Dart engine, which runs the gamebook app for iOS and Android (not public yet). Version 6 (authoring fields for visual editors) and `.gamebook` packages are specified and not implemented yet.
+Schema versions 1 to 6 are specified. The Dart engine, which runs the gamebook app for iOS and Android (not public yet), implements all of them except draft pages; `.gamebook` packages (B14) are specified and not implemented yet.
 
 ## License
 The spec text is [CC BY 4.0](LICENSE-CC-BY-4.0); code, the JSON Schema and the conformance cases are [MIT](LICENSE-MIT). Details: [LICENSE](LICENSE).

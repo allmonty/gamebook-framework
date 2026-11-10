@@ -13,7 +13,7 @@ export 'json_reader.dart' show StoryFormatException;
 export 'rules_spec.dart';
 
 /// The schema versions this engine can read.
-const supportedSchemas = {1, 2, 3, 4, 5};
+const supportedSchemas = {1, 2, 3, 4, 5, 6};
 
 enum Ending { victory, death }
 
@@ -110,6 +110,20 @@ class JournalEntry {
 
   final String title;
   final String text;
+}
+
+/// A named group of pages, for authors and editors (schema 6, B13).
+class Chapter {
+  const Chapter({required this.title});
+
+  factory Chapter.fromJson(String _, Object? json, String path) {
+    final obj = JsonObject(json, path);
+    final chapter = Chapter(title: obj.string('title'));
+    obj.finish();
+    return chapter;
+  }
+
+  final String title;
 }
 
 class Item {
@@ -428,6 +442,9 @@ class Node {
     this.choices = const [],
     this.combat,
     this.ending,
+    this.title,
+    this.note,
+    this.chapter,
   });
 
   factory Node.fromJson(String id, Object? json, String path) {
@@ -463,8 +480,18 @@ class Node {
       _ => throw obj.error('text', 'expected a string or a list of parts'),
     };
     if (parts.isEmpty) throw obj.error('text', 'needs at least one part');
+    final title = obj.optString('title');
+    if (title != null && title.trim().isEmpty) {
+      throw obj.error('title', 'must not be empty');
+    }
+    final chapter = obj.optString('chapter');
     final node = Node(
       id: id,
+      title: title,
+      note: obj.optString('note'),
+      chapter: chapter == null
+          ? null
+          : checkId(chapter, obj.childPath('chapter')),
       parts: parts,
       textIsList: rawText is List,
       image: obj.optString('image'),
@@ -502,6 +529,16 @@ class Node {
   final List<Choice> choices;
   final Combat? combat;
   final Ending? ending;
+
+  /// A short name for the page; players see it only with
+  /// [Story.showTitles] (schema 6).
+  final String? title;
+
+  /// For authors only, never shown to players (schema 6).
+  final String? note;
+
+  /// The id of the chapter this page belongs to (schema 6).
+  final String? chapter;
 }
 
 /// A whole story file. See spec/framework.md B3.
@@ -519,6 +556,8 @@ class Story {
     this.journal = const {},
     required this.start,
     required this.nodes,
+    this.chapters = const {},
+    this.showTitles = false,
   });
 
   factory Story.parse(String source) {
@@ -542,8 +581,11 @@ class Story {
     if (!RegExp(r'^[a-z0-9-]+$').hasMatch(id)) {
       throw obj.error('id', 'expected a slug (lowercase letters, digits, "-")');
     }
+    final usesShowTitles = obj.has('showTitles');
     final story = Story(
       schema: schema,
+      chapters: obj.idMap('chapters', Chapter.fromJson, optional: true),
+      showTitles: obj.optBool('showTitles'),
       id: id,
       lang: obj.string('lang'),
       title: obj.string('title'),
@@ -578,7 +620,31 @@ class Story {
       final path = story._firstSchema5Feature();
       if (path != null) throw StoryFormatException(path, 'needs "schema": 5');
     }
+    if (schema < 6) {
+      final path = usesShowTitles ? 'showTitles' : story._firstSchema6Feature();
+      if (path != null) throw StoryFormatException(path, 'needs "schema": 6');
+    }
+    for (final MapEntry(:key, :value) in story.nodes.entries) {
+      if (value.chapter case final chapter?
+          when !story.chapters.containsKey(chapter)) {
+        throw StoryFormatException(
+          'nodes.$key.chapter',
+          'unknown chapter "$chapter"',
+        );
+      }
+    }
     return story;
+  }
+
+  /// Where the story first uses something only schema 6 has, or null.
+  String? _firstSchema6Feature() {
+    if (chapters.isNotEmpty) return 'chapters';
+    for (final MapEntry(:key, :value) in nodes.entries) {
+      if (value.title != null) return 'nodes.$key.title';
+      if (value.note != null) return 'nodes.$key.note';
+      if (value.chapter != null) return 'nodes.$key.chapter';
+    }
+    return null;
   }
 
   /// Where the story first uses something only schema 5 has, or null.
@@ -759,4 +825,10 @@ class Story {
   final Map<String, JournalEntry> journal;
   final String start;
   final Map<String, Node> nodes;
+
+  /// Groups of pages, in reading order, by id (schema 6).
+  final Map<String, Chapter> chapters;
+
+  /// Whether players see each page's title as its heading (schema 6).
+  final bool showTitles;
 }

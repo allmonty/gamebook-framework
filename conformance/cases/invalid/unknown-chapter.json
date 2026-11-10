@@ -1,0 +1,31 @@
+{
+  "description": "A node's chapter must be a key of chapters.",
+  "spec": [
+    "B13"
+  ],
+  "story": {
+    "schema": 6,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "chapter": "attic",
+        "ending": "victory"
+      }
+    },
+    "chapters": {
+      "cellar": {
+        "title": "Cellar"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.chapter"
+  }
+}

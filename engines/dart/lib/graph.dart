@@ -97,7 +97,23 @@ String _excerpt(String text) {
   return line.length <= 40 ? line : '${line.substring(0, 39)}…';
 }
 
-String _nodeLabel(Node node) => '${node.id}\n${_excerpt(node.text)}';
+String _nodeLabel(Node node) => [
+  node.title == null ? node.id : '${node.title} [${node.id}]',
+  _excerpt(node.text),
+].join('\n');
+
+/// The ids of the nodes in each chapter, in the order of `chapters`.
+Iterable<(String, Chapter, List<String>)> _chapters(Story story) => [
+  for (final MapEntry(:key, :value) in story.chapters.entries)
+    (
+      key,
+      value,
+      [
+        for (final node in story.nodes.values)
+          if (node.chapter == key) node.id,
+      ],
+    ),
+];
 
 String _dotEscape(String s) =>
     s.replaceAll(r'\', r'\\').replaceAll('"', r'\"').replaceAll('\n', r'\n');
@@ -105,6 +121,7 @@ String _dotEscape(String s) =>
 /// The story as a Graphviz graph: render with `dot -Tsvg`. Dashed edges are
 /// gated by a condition, checks split into green (pass) and red (fail) edges,
 /// fights are red boxes and endings are green (victory) or grey (death).
+/// Chapters (schema 6) are drawn as labelled clusters.
 String toDot(Story story) {
   final out = StringBuffer()
     ..writeln('digraph "${_dotEscape(story.id)}" {')
@@ -122,6 +139,15 @@ String toDot(Story story) {
         'style="rounded,filled", fillcolor="#cccccc"',
     ];
     out.writeln('  "${_dotEscape(node.id)}" [${attrs.join(', ')}];');
+  }
+  for (final (id, chapter, nodes) in _chapters(story)) {
+    out
+      ..writeln('  subgraph "cluster_${_dotEscape(id)}" {')
+      ..writeln('    label="${_dotEscape(chapter.title)}";');
+    for (final node in nodes) {
+      out.writeln('    "${_dotEscape(node)}";');
+    }
+    out.writeln('  }');
   }
   for (final e in _edges(story)) {
     final attrs = [
@@ -160,6 +186,15 @@ String toMermaid(Story story) {
           ? '  $id(["$label"])'
           : '  $id["$label"]',
     );
+  }
+  for (final (id, chapter, nodes) in _chapters(story)) {
+    out.writeln(
+      '  subgraph c_${id.replaceAll('-', '_')} ["${_mermaidEscape(chapter.title)}"]',
+    );
+    for (final node in nodes) {
+      out.writeln('    ${_mermaidId(node)}');
+    }
+    out.writeln('  end');
   }
   for (final e in _edges(story)) {
     final label = '"${_mermaidEscape(e.label)}"';

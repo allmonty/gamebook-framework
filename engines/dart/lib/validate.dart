@@ -27,7 +27,8 @@ List<Issue> validateStory(
 }) => _Validator(story, assetExists).run();
 
 /// Warnings for where [other] (a translation) differs structurally from
-/// [reference]: node ids, choice counts, item ids, stat ids and flags must match.
+/// [reference]: node ids, choice counts, item ids, stat ids, flags and chapters
+/// (ids, and the chapter of each node) must match.
 List<Issue> compareTranslations(Story reference, Story other) {
   final issues = <Issue>[];
   void diff(String what, Set<String> a, Set<String> b) {
@@ -60,6 +61,7 @@ List<Issue> compareTranslations(Story reference, Story other) {
     other.journal.keys.toSet(),
   );
   diff('flag', _flags(reference), _flags(other));
+  diff('chapter', reference.chapters.keys.toSet(), other.chapters.keys.toSet());
   for (final id in reference.nodes.keys.toSet().intersection(
     other.nodes.keys.toSet(),
   )) {
@@ -71,6 +73,18 @@ List<Issue> compareTranslations(Story reference, Story other) {
           Severity.warning,
           'nodes.$id',
           'has $textA text parts in ${reference.lang} but $textB in ${other.lang}',
+        ),
+      );
+    }
+    final chapterA = reference.nodes[id]!.chapter;
+    final chapterB = other.nodes[id]!.chapter;
+    if (chapterA != chapterB) {
+      issues.add(
+        Issue(
+          Severity.warning,
+          'nodes.$id',
+          'is in chapter ${chapterA ?? 'none'} in ${reference.lang} but '
+              '${chapterB ?? 'none'} in ${other.lang}',
         ),
       );
     }

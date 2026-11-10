@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:gamebook_engine/graph.dart';
@@ -194,6 +195,44 @@ void main() {
 
     expect(toDot(story), contains('label="Search (once)"'));
     expect(toMermaid(story), contains('"Search (once)"'));
+  });
+
+  test('titles label the nodes and chapters become clusters', () {
+    final json =
+        jsonDecode(File('test/fixtures/rusty-door.en.json').readAsStringSync())
+              as Map<String, Object?>
+          ..['schema'] = 6
+          ..['chapters'] = {
+            'start': {'title': 'Act "1"'},
+          };
+    final nodes = json['nodes']! as Map<String, Object?>;
+    (nodes['cellar']! as Map<String, Object?>)
+      ..['title'] = 'Cold cellar'
+      ..['chapter'] = 'start';
+    (nodes['shelves']! as Map<String, Object?>)['chapter'] = 'start';
+    final story = Story.fromJson(json);
+
+    final dot = toDot(story);
+    expect(dot, contains(r'label="Cold cellar [cellar]\nYou wake'));
+    expect(
+      dot,
+      contains(
+        '  subgraph "cluster_start" {\n'
+        '    label="Act \\"1\\"";\n'
+        '    "cellar";\n'
+        '    "shelves";\n'
+        '  }\n',
+      ),
+    );
+    expect(
+      toMermaid(story),
+      contains(
+        '  subgraph c_start ["Act #quot;1#quot;"]\n'
+        '    n_cellar\n'
+        '    n_shelves\n'
+        '  end\n',
+      ),
+    );
   });
 
   test('long text is cut to a one-line excerpt', () {

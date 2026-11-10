@@ -2,7 +2,7 @@
 
 | Engine | Language | Versions | Conformance | Maintainer |
 |---|---|---|---|---|
-| [dart](dart/README.md) | Dart | 1-5 | all cases | reference engine |
+| [dart](dart/README.md) | Dart | 1-6 (not yet `draft`) | all cases | reference engine |
 
 ## Adding an engine in another language
 New engines are welcome: TypeScript for the web, Python for tools, C# for Unity, anything.

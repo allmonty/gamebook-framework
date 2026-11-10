@@ -53,6 +53,7 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
 | `offers` | pending offers, in order |
 | `paragraphs` | the current page's text as shown: the parts that apply, placeholders filled, split on blank lines (B6) |
 | `choices` | the choices shown (hidden and spent ones left out), each `{ "index", "text", "locked" }`; `text` has placeholders filled |
+| `title` | the current node's `title` (B13), or `null` |
 | `combat` | the fight under way, `{ "enemy": position, "health": [each enemy's health] }`, or `null` |
 
 ## Invalid cases
@@ -63,9 +64,9 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
 Loading the story (parsing it, resolving its rules, and the validator's **error** checks) must fail, and the first error must be at `path`, written as in B2 (`nodes.door.choices[1].to`). Messages are not compared: each engine words its own.
 
 ## Coverage
-Covered: pages, choices, locks and hidden choices, checks and their effects, tables, once nodes and once choices, death at 0 health, stat ceilings, limits and quantities, opposed and vs-defense combat, fleeing, usable items, pack capacity, containers, offers, item bonuses, conditional text and placeholders, the journal, undo, and the common load errors.
+Covered: pages, choices, locks and hidden choices, checks and their effects, tables, once nodes and once choices, death at 0 health, stat ceilings, limits and quantities, opposed and vs-defense combat, fleeing, usable items, pack capacity, containers, offers, item bonuses, conditional text and placeholders, the journal, undo, schema 6 authoring fields, and the common load errors.
 
-Not covered yet (good first contributions): character creation rolls and picks, simultaneous fights, armor, luck in fights, the results-table mode and duels, `takeAll`, audio events, translations (`compareTranslations`), validator warnings, and schema 6 (B13).
+Not covered yet (good first contributions): character creation rolls and picks, simultaneous fights, armor, luck in fights, the results-table mode and duels, `takeAll`, audio events, translations (`compareTranslations`), validator warnings, `showTitles` beyond the title itself.
 
 ## Adding a case
 One case, one idea. Work out the expected result **from the spec**, not from an engine, then run it on the Dart engine; if they disagree, find out which is wrong before committing. Name the file after what it shows.

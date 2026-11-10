@@ -99,6 +99,95 @@ void main() {
     expect(Story.fromJson(json).id, 'rusty-door');
   });
 
+  group('authoring fields (schema 6)', () {
+    Map<String, Object?> authored() => validJson()
+      ..['schema'] = 6
+      ..['showTitles'] = true
+      ..['chapters'] = {
+        'below': {'title': 'Act 1: Below'},
+        'out': {'title': 'Act 2: Out'},
+      };
+
+    test('titles, notes, chapters and showTitles are read', () {
+      final json = authored();
+      node(json, 'cellar')
+        ..['title'] = 'Cellar'
+        ..['note'] = 'Keep it short.'
+        ..['chapter'] = 'below';
+      final story = Story.fromJson(json);
+
+      expect(story.showTitles, isTrue);
+      expect(story.chapters.keys, ['below', 'out']);
+      expect(story.chapters['out']!.title, 'Act 2: Out');
+      final cellar = story.nodes['cellar']!;
+      expect(
+        (cellar.title, cellar.note, cellar.chapter),
+        ('Cellar', 'Keep it short.', 'below'),
+      );
+      expect(story.nodes['door']!.title, isNull);
+    });
+
+    test('they default to nothing', () {
+      final story = Story.fromJson(validJson());
+      expect(story.showTitles, isFalse);
+      expect(story.chapters, isEmpty);
+      expect(story.nodes['cellar']!.chapter, isNull);
+    });
+
+    test('a chapter must be one of the story\'s chapters', () {
+      final json = authored();
+      node(json, 'door')['chapter'] = 'attic';
+      expect(
+        () => Story.fromJson(json),
+        throwsA(
+          isA<StoryFormatException>().having(
+            (e) => e.toString(),
+            'message',
+            'nodes.door.chapter: unknown chapter "attic"',
+          ),
+        ),
+      );
+    });
+
+    test('an empty title is an error', () {
+      final json = authored();
+      node(json, 'door')['title'] = '  ';
+      expect(
+        () => Story.fromJson(json),
+        throwsA(
+          isA<StoryFormatException>().having(
+            (e) => e.toString(),
+            'message',
+            'nodes.door.title: must not be empty',
+          ),
+        ),
+      );
+    });
+
+    for (final (field, mutate)
+        in <(String, void Function(Map<String, Object?>))>[
+          ('showTitles', (j) => j['showTitles'] = false),
+          (
+            'chapters',
+            (j) => j['chapters'] = {
+              'a': {'title': 'A'},
+            },
+          ),
+          ('nodes.door.title', (j) => node(j, 'door')['title'] = 'Door'),
+          ('nodes.door.note', (j) => node(j, 'door')['note'] = 'x'),
+        ]) {
+      test('$field needs schema 6', () {
+        expect(
+          failure((j) {
+            j['schema'] = 5;
+            mutate(j);
+          }),
+          '$field: needs "schema": 6',
+        );
+      });
+    }
+  });
+
   group('quantities and limits (schema 5)', () {
     String error(
       void Function(Map<String, Object?> j) change, {
@@ -818,7 +907,7 @@ void main() {
 
   group('errors name the JSON path', () {
     test('unsupported schema', () {
-      expect(failure((j) => j['schema'] = 6), startsWith('schema:'));
+      expect(failure((j) => j['schema'] = 7), startsWith('schema:'));
     });
 
     test('unknown top-level key', () {
