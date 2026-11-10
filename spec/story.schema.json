@@ -1,0 +1,1007 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "story.schema.json",
+  "title": "Gamebook story, schema versions 1 to 4",
+  "description": "Shape only. Cross-references (targets, items, stats) are checked by a validator such as the Dart engine's validate_story. Spec: spec/framework.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "lang",
+    "title",
+    "rules",
+    "start",
+    "nodes"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema": {
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "lang": {
+      "type": "string",
+      "minLength": 2
+    },
+    "title": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "cover": {
+      "type": "string"
+    },
+    "rules": {
+      "$ref": "#/$defs/rules"
+    },
+    "items": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "journal": {
+      "description": "Schema 5. Notes the player unlocks with the { \"journal\": id } effect.",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "text"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "start": {
+      "$ref": "#/$defs/id"
+    },
+    "nodes": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "dice": {
+      "description": "NdM, NdM+K, NdM-K or a plain integer",
+      "type": "string",
+      "pattern": "^([0-9]+d[0-9]+([+-][0-9]+)?|[0-9]+)$"
+    },
+    "operand": {
+      "description": "An integer, or the id of a stat",
+      "oneOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "$ref": "#/$defs/id"
+        }
+      ]
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preset": {
+          "enum": [
+            "fighting-fantasy",
+            "d20-lite"
+          ]
+        },
+        "rerolls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "health": {
+          "$ref": "#/$defs/id"
+        },
+        "stats": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/id"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "roll": {
+                "$ref": "#/$defs/dice"
+              },
+              "max": {
+                "type": "boolean"
+              },
+              "limit": {
+                "description": "Schema 5. A ceiling that does not depend on the roll (not with max: true)",
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "combat": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "opposed",
+                "vs-defense",
+                "table"
+              ]
+            },
+            "attackRoll": {
+              "$ref": "#/$defs/dice"
+            },
+            "attackStat": {
+              "$ref": "#/$defs/id"
+            },
+            "defenseStat": {
+              "$ref": "#/$defs/id"
+            },
+            "defenseBase": {
+              "type": "integer"
+            },
+            "damage": {
+              "$ref": "#/$defs/dice"
+            },
+            "roll": {
+              "description": "Schema 5, table mode. Must be able to give 0 (default 1d10-1)",
+              "$ref": "#/$defs/dice"
+            },
+            "table": {
+              "description": "Schema 5, table mode. Rows by combat ratio; the last row has no upTo.",
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "results"
+                ],
+                "properties": {
+                  "upTo": {
+                    "type": "integer"
+                  },
+                  "results": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "luck": {
+              "description": "Schema 5. Testing your Luck in a fight",
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "stat"
+              ],
+              "properties": {
+                "stat": {
+                  "$ref": "#/$defs/id"
+                },
+                "roll": {
+                  "$ref": "#/$defs/dice"
+                },
+                "lucky": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "dealt": {
+                      "type": "integer"
+                    },
+                    "taken": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "unlucky": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "dealt": {
+                      "type": "integer"
+                    },
+                    "taken": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "inventory": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "capacity": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "pickup": {
+              "enum": [
+                "auto",
+                "choose"
+              ]
+            }
+          }
+        },
+        "undo": {
+          "description": "Schema 5. How many pages the player can go back (default 0)",
+          "type": "integer",
+          "minimum": 0
+        },
+        "creation": {
+          "description": "Schema 5. The hero's name and groups of options to pick from at the start",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "boolean"
+            },
+            "picks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "title",
+                  "count",
+                  "options"
+                ],
+                "properties": {
+                  "id": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "options": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "label"
+                      ],
+                      "properties": {
+                        "id": {
+                          "$ref": "#/$defs/id"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "effects": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/$defs/effect"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "use": {
+          "$ref": "#/$defs/itemUse"
+        },
+        "capacity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "bonus": {
+          "description": "Schema 5. Added to these stats while the item is carried",
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/id"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "condition": {
+      "description": "Exactly one kind per object",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "has"
+          ],
+          "properties": {
+            "has": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "flag"
+          ],
+          "properties": {
+            "flag": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "visited"
+          ],
+          "properties": {
+            "visited": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "all"
+          ],
+          "properties": {
+            "all": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "any"
+          ],
+          "properties": {
+            "any": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "not"
+          ],
+          "properties": {
+            "not": {
+              "$ref": "#/$defs/condition"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stat"
+          ],
+          "properties": {
+            "stat": {
+              "$ref": "#/$defs/id"
+            },
+            "gte": {
+              "$ref": "#/$defs/quantity"
+            },
+            "lte": {
+              "$ref": "#/$defs/quantity"
+            },
+            "eq": {
+              "$ref": "#/$defs/quantity"
+            }
+          },
+          "oneOf": [
+            {
+              "required": [
+                "gte"
+              ]
+            },
+            {
+              "required": [
+                "lte"
+              ]
+            },
+            {
+              "required": [
+                "eq"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "visits"
+          ],
+          "properties": {
+            "visits": {
+              "$ref": "#/$defs/id"
+            },
+            "gte": {
+              "type": "integer"
+            },
+            "lte": {
+              "type": "integer"
+            },
+            "eq": {
+              "type": "integer"
+            }
+          },
+          "oneOf": [
+            {
+              "required": [
+                "gte"
+              ]
+            },
+            {
+              "required": [
+                "lte"
+              ]
+            },
+            {
+              "required": [
+                "eq"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "effect": {
+      "description": "Exactly one kind per object",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "give"
+          ],
+          "properties": {
+            "give": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "take"
+          ],
+          "properties": {
+            "take": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "set"
+          ],
+          "properties": {
+            "set": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "clear"
+          ],
+          "properties": {
+            "clear": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stat"
+          ],
+          "properties": {
+            "stat": {
+              "$ref": "#/$defs/id"
+            },
+            "add": {
+              "$ref": "#/$defs/quantity"
+            },
+            "set": {
+              "$ref": "#/$defs/quantity"
+            }
+          },
+          "oneOf": [
+            {
+              "required": [
+                "add"
+              ]
+            },
+            {
+              "required": [
+                "set"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "takeAll"
+          ],
+          "properties": {
+            "takeAll": {
+              "const": true
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "journal"
+          ],
+          "properties": {
+            "journal": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        }
+      ]
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "roll",
+        "op",
+        "vs",
+        "pass",
+        "fail"
+      ],
+      "properties": {
+        "roll": {
+          "$ref": "#/$defs/dice"
+        },
+        "add": {
+          "$ref": "#/$defs/operand"
+        },
+        "op": {
+          "enum": [
+            "gte",
+            "lte"
+          ]
+        },
+        "vs": {
+          "$ref": "#/$defs/operand"
+        },
+        "pass": {
+          "$ref": "#/$defs/id"
+        },
+        "fail": {
+          "$ref": "#/$defs/id"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effect"
+          }
+        }
+      }
+    },
+    "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "to": {
+          "$ref": "#/$defs/id"
+        },
+        "check": {
+          "$ref": "#/$defs/check"
+        },
+        "if": {
+          "$ref": "#/$defs/condition"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effect"
+          }
+        },
+        "hideIfLocked": {
+          "type": "boolean"
+        },
+        "lockedText": {
+          "type": "string"
+        },
+        "once": {
+          "type": "boolean"
+        },
+        "table": {
+          "$ref": "#/$defs/randomTable"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "to"
+          ]
+        },
+        {
+          "required": [
+            "check"
+          ]
+        },
+        {
+          "required": [
+            "table"
+          ]
+        }
+      ]
+    },
+    "enemy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "attack",
+        "health"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "attack": {
+          "type": "integer"
+        },
+        "health": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "defense": {
+          "type": "integer"
+        },
+        "damage": {
+          "$ref": "#/$defs/dice"
+        },
+        "armor": {
+          "description": "Schema 5. Taken off every wound the player deals this enemy",
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "combat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enemies",
+        "win"
+      ],
+      "properties": {
+        "enemies": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/enemy"
+          }
+        },
+        "win": {
+          "$ref": "#/$defs/id"
+        },
+        "flee": {
+          "$ref": "#/$defs/id"
+        },
+        "simultaneous": {
+          "description": "Schema 5. All enemies fight at once; the player picks a target each round",
+          "type": "boolean"
+        },
+        "duel": {
+          "description": "Schema 5. Resolved by rules.combat.table instead of the combat mode",
+          "type": "boolean"
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "text": {
+          "description": "A string, or (schema 4) a list of parts. In schema 4, {stat} and {stat.max} are replaced by values; {{ and }} are literal braces.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/textPart"
+              }
+            }
+          ]
+        },
+        "image": {
+          "type": "string"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effect"
+          }
+        },
+        "once": {
+          "type": "boolean"
+        },
+        "choices": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/choice"
+          }
+        },
+        "combat": {
+          "$ref": "#/$defs/combat"
+        },
+        "ending": {
+          "enum": [
+            "victory",
+            "death"
+          ]
+        },
+        "music": {
+          "description": "Schema 5. A file that loops from this page on, or \"stop\"",
+          "type": "string"
+        },
+        "sound": {
+          "description": "Schema 5. A file played once when the page is entered",
+          "type": "string"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "choices"
+          ]
+        },
+        {
+          "required": [
+            "combat"
+          ]
+        },
+        {
+          "required": [
+            "ending"
+          ]
+        }
+      ]
+    },
+    "itemUse": {
+      "description": "Schema 2 only (the parser rejects it in a schema 1 story). combatCost only with combat in when.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "effects",
+        "when"
+      ],
+      "properties": {
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effect"
+          }
+        },
+        "when": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "story",
+              "combat"
+            ]
+          }
+        },
+        "combatCost": {
+          "enum": [
+            "round",
+            "free"
+          ]
+        }
+      }
+    },
+    "textPart": {
+      "description": "A string, or a part shown only while its condition holds (schema 4)",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "if": {
+              "$ref": "#/$defs/condition"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "randomTable": {
+      "description": "Schema 4. upTo must increase and the last must cover the largest roll (checked by the parser).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "roll",
+        "outcomes"
+      ],
+      "properties": {
+        "roll": {
+          "$ref": "#/$defs/dice"
+        },
+        "outcomes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "upTo",
+              "to"
+            ],
+            "properties": {
+              "upTo": {
+                "type": "integer"
+              },
+              "to": {
+                "$ref": "#/$defs/id"
+              },
+              "effects": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/effect"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "quantity": {
+      "description": "Schema 5. An integer, or the value of a stat times `times` (default 1)",
+      "oneOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stat"
+          ],
+          "properties": {
+            "stat": {
+              "$ref": "#/$defs/id"
+            },
+            "times": {
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
