@@ -22,6 +22,7 @@ class GamePackage {
   const GamePackage({
     required this.id,
     required this.stories,
+    required this.sources,
     required this.files,
   });
 
@@ -30,6 +31,10 @@ class GamePackage {
 
   /// Language code to story, in code order.
   final Map<String, Story> stories;
+
+  /// Story file name (`story.en.json`) to its JSON text, as packed, so a
+  /// player can store the game exactly as it came.
+  final Map<String, String> sources;
 
   /// Path inside the package (`images/a.webp`) to its bytes. The story files
   /// themselves are not repeated here.
@@ -107,6 +112,7 @@ GamePackage readPackage(
   return GamePackage(
     id: stories.values.first.id,
     stories: stories,
+    sources: sources,
     files: files,
   );
 }

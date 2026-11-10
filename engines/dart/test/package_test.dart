@@ -45,6 +45,8 @@ void main() {
     expect(package.id, 'rusty-door');
     expect(package.stories.keys, ['en', 'pt']);
     expect(package.stories['pt']!.nodes.keys, contains('cellar'));
+    expect(package.sources.keys, ['story.en.json', 'story.pt.json']);
+    expect(package.sources['story.en.json'], utf8.decode(storyBytes()));
     expect(package.files.keys, [
       'audio/drip.ogg',
       'builder.json',
