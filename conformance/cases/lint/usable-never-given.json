@@ -1,0 +1,53 @@
+{
+  "description": "A usable item nothing gives.",
+  "spec": [
+    "B16"
+  ],
+  "story": {
+    "schema": 2,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "potion": {
+        "name": "Potion",
+        "use": {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 2
+            }
+          ],
+          "when": [
+            "story"
+          ]
+        }
+      }
+    }
+  },
+  "warnings": [
+    {
+      "code": "usable-never-given",
+      "path": "items.potion"
+    }
+  ]
+}

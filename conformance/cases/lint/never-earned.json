@@ -1,0 +1,42 @@
+{
+  "description": "An achievement nothing earns.",
+  "spec": [
+    "B16"
+  ],
+  "story": {
+    "schema": 7,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "achievements": {
+      "brave": {
+        "title": "Brave"
+      }
+    }
+  },
+  "warnings": [
+    {
+      "code": "never-earned",
+      "path": "achievements.brave"
+    }
+  ]
+}

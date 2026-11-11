@@ -75,9 +75,17 @@ Loading the story (parsing it, resolving its rules, and the validator's **error*
 Load the story (it must have no errors) and validate it. The warnings reported must be exactly `warnings`, compared as a set of `code` and `path` (B16); order and messages are not compared. With `stories` instead of `story` (language code to story), each story is validated and every one after the first is also compared with the first as its translation (B16, "Translations").
 
 ## Coverage
-Covered: pages, choices, locks and hidden choices, checks and their effects, tables, once nodes and once choices, death at 0 health, stat ceilings, limits and quantities, opposed and vs-defense combat, fleeing, usable items, pack capacity, containers, offers, item bonuses, conditional text and placeholders, the journal, undo, schema 6 authoring fields and draft pages, achievements, and the common load errors.
+Play cases cover every rule of Part B:
+- **Pages and choices:** locks, hidden and once-only choices, once nodes, visits, checks and their effects, random tables, conditional text and placeholders, the hero's name, death at 0 health, undo, draft pages, titles.
+- **Conditions:** `has`, `flag`, `visited`, `visits`, stat comparisons (`gte`, `lte`, `eq`, quantities), `all`, `any` and `not`, empty ones included.
+- **Stats and creation:** the rolls of both presets in B8 order, rerolls, ceilings and limits, quantities in effects, creation picks.
+- **Items:** usable items, bonuses, pack capacity with `auto` and `choose`, offers (in order, left, ignored, swapped, discarded at the end), containers (room, and what is lost when one goes), `takeAll`.
+- **Combat:** `opposed`, `vs-defense` and `table` rounds, duels, fights against several at once, armor, luck in fights (lucky, unlucky, when it is not offered, kills, the group total, after armor), fleeing, items in a fight.
+- **The rest:** the journal, page audio, achievements.
 
-Not covered yet (good first contributions): character creation rolls and picks, simultaneous fights, armor, luck in fights, the results-table mode and duels, `takeAll`, audio events, translations (`compareTranslations`), validator warnings, `showTitles` beyond the title itself.
+Invalid cases cover the schema gate of every version, unknown references, impossible combat rules and the common load errors. Lint cases cover every warning code of B16, translations included.
+
+Not covered: game packages (B14), which need binary fixtures; and what is only presentation, so not compared (the default text of a locked choice, `lockedText`, `showTitles`).
 
 ## Adding a case
 One case, one idea. Work out the expected result **from the spec**, not from an engine, then run it on the Dart engine; if they disagree, find out which is wrong before committing. Name the file after what it shows.

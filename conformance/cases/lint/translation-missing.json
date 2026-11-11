@@ -1,0 +1,69 @@
+{
+  "description": "The translation lacks an item the source has.",
+  "spec": [
+    "B16"
+  ],
+  "warnings": [
+    {
+      "code": "translation-missing",
+      "path": "items.rope"
+    }
+  ],
+  "stories": {
+    "en": {
+      "schema": 1,
+      "id": "case",
+      "lang": "en",
+      "title": "Case",
+      "rules": {
+        "preset": "fighting-fantasy"
+      },
+      "start": "a",
+      "nodes": {
+        "a": {
+          "text": "A",
+          "choices": [
+            {
+              "text": "On",
+              "to": "won"
+            }
+          ]
+        },
+        "won": {
+          "text": "Won",
+          "ending": "victory"
+        }
+      },
+      "items": {
+        "rope": {
+          "name": "Rope"
+        }
+      }
+    },
+    "pt": {
+      "schema": 1,
+      "id": "case",
+      "lang": "pt",
+      "title": "Case",
+      "rules": {
+        "preset": "fighting-fantasy"
+      },
+      "start": "a",
+      "nodes": {
+        "a": {
+          "text": "A",
+          "choices": [
+            {
+              "text": "On",
+              "to": "won"
+            }
+          ]
+        },
+        "won": {
+          "text": "Won",
+          "ending": "victory"
+        }
+      }
+    }
+  }
+}

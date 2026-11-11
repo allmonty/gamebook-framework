@@ -1,0 +1,68 @@
+{
+  "description": "A page has a different number of choices.",
+  "spec": [
+    "B16"
+  ],
+  "warnings": [
+    {
+      "code": "translation-choices",
+      "path": "nodes.a"
+    }
+  ],
+  "stories": {
+    "en": {
+      "schema": 1,
+      "id": "case",
+      "lang": "en",
+      "title": "Case",
+      "rules": {
+        "preset": "fighting-fantasy"
+      },
+      "start": "a",
+      "nodes": {
+        "a": {
+          "text": "A",
+          "choices": [
+            {
+              "text": "On",
+              "to": "won"
+            },
+            {
+              "text": "Also",
+              "to": "won"
+            }
+          ]
+        },
+        "won": {
+          "text": "Won",
+          "ending": "victory"
+        }
+      }
+    },
+    "pt": {
+      "schema": 1,
+      "id": "case",
+      "lang": "pt",
+      "title": "Case",
+      "rules": {
+        "preset": "fighting-fantasy"
+      },
+      "start": "a",
+      "nodes": {
+        "a": {
+          "text": "A",
+          "choices": [
+            {
+              "text": "On",
+              "to": "won"
+            }
+          ]
+        },
+        "won": {
+          "text": "Won",
+          "ending": "victory"
+        }
+      }
+    }
+  }
+}

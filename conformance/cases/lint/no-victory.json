@@ -1,0 +1,37 @@
+{
+  "description": "No victory ending can be reached.",
+  "spec": [
+    "B16"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "On",
+            "to": "dead"
+          }
+        ]
+      },
+      "dead": {
+        "text": "Dead",
+        "ending": "death"
+      }
+    }
+  },
+  "warnings": [
+    {
+      "code": "no-victory",
+      "path": "nodes"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "description": "A journal entry nothing unlocks.",
+  "spec": [
+    "B16"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "journal": {
+      "note": {
+        "title": "A note",
+        "text": "Words."
+      }
+    }
+  },
+  "warnings": [
+    {
+      "code": "journal-never-unlocked",
+      "path": "journal.note"
+    }
+  ]
+}

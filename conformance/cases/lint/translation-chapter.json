@@ -1,0 +1,75 @@
+{
+  "description": "A page is in a different chapter.",
+  "spec": [
+    "B16"
+  ],
+  "warnings": [
+    {
+      "code": "translation-chapter",
+      "path": "nodes.a"
+    }
+  ],
+  "stories": {
+    "en": {
+      "schema": 6,
+      "id": "case",
+      "lang": "en",
+      "title": "Case",
+      "rules": {
+        "preset": "fighting-fantasy"
+      },
+      "start": "a",
+      "nodes": {
+        "a": {
+          "text": "A",
+          "chapter": "one",
+          "choices": [
+            {
+              "text": "On",
+              "to": "won"
+            }
+          ]
+        },
+        "won": {
+          "text": "Won",
+          "ending": "victory"
+        }
+      },
+      "chapters": {
+        "one": {
+          "title": "One"
+        }
+      }
+    },
+    "pt": {
+      "schema": 6,
+      "id": "case",
+      "lang": "pt",
+      "title": "Case",
+      "rules": {
+        "preset": "fighting-fantasy"
+      },
+      "start": "a",
+      "nodes": {
+        "a": {
+          "text": "A",
+          "choices": [
+            {
+              "text": "On",
+              "to": "won"
+            }
+          ]
+        },
+        "won": {
+          "text": "Won",
+          "ending": "victory"
+        }
+      },
+      "chapters": {
+        "one": {
+          "title": "One"
+        }
+      }
+    }
+  }
+}

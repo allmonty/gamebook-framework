@@ -1,0 +1,48 @@
+{
+  "description": "A container in a story whose pack has no capacity.",
+  "spec": [
+    "B16"
+  ],
+  "story": {
+    "schema": 3,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "give": "bag"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "bag": {
+        "name": "Bag",
+        "capacity": 2
+      }
+    }
+  },
+  "warnings": [
+    {
+      "code": "capacity-without-pack",
+      "path": "items.bag.capacity"
+    }
+  ]
+}

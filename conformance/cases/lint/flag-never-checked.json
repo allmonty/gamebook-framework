@@ -1,0 +1,42 @@
+{
+  "description": "A flag is set but nothing checks it.",
+  "spec": [
+    "B16"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "set": "told"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "warnings": [
+    {
+      "code": "flag-never-checked",
+      "path": "flags.told"
+    }
+  ]
+}
