@@ -962,7 +962,7 @@ void main() {
 
   group('errors name the JSON path', () {
     test('unsupported schema', () {
-      expect(failure((j) => j['schema'] = 7), startsWith('schema:'));
+      expect(failure((j) => j['schema'] = 8), startsWith('schema:'));
     });
 
     test('unknown top-level key', () {

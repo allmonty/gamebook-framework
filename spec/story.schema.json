@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "story.schema.json",
-  "title": "Gamebook story, schema versions 1 to 6",
+  "title": "Gamebook story, schema versions 1 to 7",
   "description": "Shape only. Cross-references (targets, items, stats) are checked by a validator such as the Dart engine's validate_story. Spec: spec/framework.md",
   "type": "object",
   "additionalProperties": false,
@@ -25,7 +25,8 @@
         3,
         4,
         5,
-        6
+        6,
+        7
       ]
     },
     "id": {
@@ -79,6 +80,31 @@
           },
           "text": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "achievements": {
+      "description": "Schema 7. Things a player can earn, kept across games, by id",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
           }
         }
       }
@@ -665,6 +691,19 @@
           ],
           "properties": {
             "journal": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
+        {
+          "description": "Schema 7. Earns an achievement",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "achieve"
+          ],
+          "properties": {
+            "achieve": {
               "$ref": "#/$defs/id"
             }
           }

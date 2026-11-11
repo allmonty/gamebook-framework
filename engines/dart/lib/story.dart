@@ -13,7 +13,7 @@ export 'json_reader.dart' show StoryFormatException;
 export 'rules_spec.dart';
 
 /// The schema versions this engine can read.
-const supportedSchemas = {1, 2, 3, 4, 5, 6};
+const supportedSchemas = {1, 2, 3, 4, 5, 6, 7};
 
 enum Ending { victory, death }
 
@@ -95,6 +95,32 @@ class ItemUse {
 const stopMusic = 'stop';
 
 /// A note the player unlocks through play and can reread (schema 5).
+/// Something a player can earn, kept across games (schema 7, B15).
+class Achievement {
+  const Achievement({
+    required this.title,
+    this.description,
+    this.hidden = false,
+  });
+
+  factory Achievement.fromJson(String _, Object? json, String path) {
+    final obj = JsonObject(json, path);
+    final achievement = Achievement(
+      title: obj.string('title'),
+      description: obj.optString('description'),
+      hidden: obj.optBool('hidden'),
+    );
+    obj.finish();
+    return achievement;
+  }
+
+  final String title;
+  final String? description;
+
+  /// Players see only that it exists until they earn it.
+  final bool hidden;
+}
+
 class JournalEntry {
   const JournalEntry({required this.title, required this.text});
 
@@ -569,6 +595,7 @@ class Story {
     required this.nodes,
     this.chapters = const {},
     this.showTitles = false,
+    this.achievements = const {},
   });
 
   factory Story.parse(String source) {
@@ -596,6 +623,11 @@ class Story {
     final story = Story(
       schema: schema,
       chapters: obj.idMap('chapters', Chapter.fromJson, optional: true),
+      achievements: obj.idMap(
+        'achievements',
+        Achievement.fromJson,
+        optional: true,
+      ),
       showTitles: obj.optBool('showTitles'),
       id: id,
       lang: obj.string('lang'),
@@ -635,6 +667,10 @@ class Story {
       final path = usesShowTitles ? 'showTitles' : story._firstSchema6Feature();
       if (path != null) throw StoryFormatException(path, 'needs "schema": 6');
     }
+    if (schema < 7) {
+      final path = story._firstSchema7Feature();
+      if (path != null) throw StoryFormatException(path, 'needs "schema": 7');
+    }
     for (final MapEntry(:key, :value) in story.nodes.entries) {
       if (value.chapter case final chapter?
           when !story.chapters.containsKey(chapter)) {
@@ -645,6 +681,50 @@ class Story {
       }
     }
     return story;
+  }
+
+  /// Where the story first uses something only schema 7 has, or null.
+  String? _firstSchema7Feature() {
+    if (achievements.isNotEmpty) return 'achievements';
+    for (final (path, effects) in effectLists()) {
+      final found = _findEffect(path, effects, (e) => e is Achieve);
+      if (found != null) return found;
+    }
+    return null;
+  }
+
+  /// Every list of effects in the story with its JSON path: pages, choices,
+  /// checks, table outcomes, items' use and creation picks.
+  Iterable<(String, List<Effect>)> effectLists() sync* {
+    for (final MapEntry(:key, :value) in items.entries) {
+      if (value.use case final use?) {
+        yield ('items.$key.use.effects', use.effects);
+      }
+    }
+    final picks = rules.creation?.picks ?? const <PickGroup>[];
+    for (var g = 0; g < picks.length; g++) {
+      for (var o = 0; o < picks[g].options.length; o++) {
+        yield (
+          'rules.creation.picks[$g].options[$o].effects',
+          picks[g].options[o].effects,
+        );
+      }
+    }
+    for (final MapEntry(:key, :value) in nodes.entries) {
+      yield ('nodes.$key.effects', value.effects);
+      for (var i = 0; i < value.choices.length; i++) {
+        final at = 'nodes.$key.choices[$i]';
+        final choice = value.choices[i];
+        yield ('$at.effects', choice.effects);
+        if (choice.check case final check?) {
+          yield ('$at.check.effects', check.effects);
+        }
+        final outcomes = choice.table?.outcomes ?? const <TableOutcome>[];
+        for (var j = 0; j < outcomes.length; j++) {
+          yield ('$at.table.outcomes[$j].effects', outcomes[j].effects);
+        }
+      }
+    }
   }
 
   /// Where the story first uses something only schema 6 has, or null.
@@ -843,4 +923,7 @@ class Story {
 
   /// Whether players see each page's title as its heading (schema 6).
   final bool showTitles;
+
+  /// Things a player can earn, by id (schema 7).
+  final Map<String, Achievement> achievements;
 }

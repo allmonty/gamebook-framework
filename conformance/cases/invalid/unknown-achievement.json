@@ -1,0 +1,35 @@
+{
+  "description": "An achieve effect names a declared achievement.",
+  "spec": [
+    "B15"
+  ],
+  "story": {
+    "schema": 7,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "achieve": "x"
+          }
+        ],
+        "ending": "victory"
+      }
+    },
+    "achievements": {
+      "y": {
+        "title": "Y"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.effects[0]"
+  }
+}

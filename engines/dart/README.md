@@ -2,7 +2,7 @@
 
 The reference engine for the [Gamebook Framework](../../README.md) format: pure Dart, no Flutter and no I/O in `lib/`, randomness injected. It powers the gamebook app and its Builder, and is where the format is tried first.
 
-Supports schema versions 1 to 6 ([../../spec/CHANGELOG.md](../../spec/CHANGELOG.md)).
+Supports schema versions 1 to 7 ([../../spec/CHANGELOG.md](../../spec/CHANGELOG.md)).
 
 ## Use
 ```yaml

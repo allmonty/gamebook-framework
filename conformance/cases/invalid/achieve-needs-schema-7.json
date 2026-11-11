@@ -1,0 +1,31 @@
+{
+  "description": "Achievements need schema 7.",
+  "spec": [
+    "B2",
+    "B15"
+  ],
+  "story": {
+    "schema": 6,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "achieve": "x"
+          }
+        ],
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.effects[0]"
+  }
+}

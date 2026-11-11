@@ -61,6 +61,11 @@ List<Issue> compareTranslations(Story reference, Story other) {
     other.journal.keys.toSet(),
   );
   diff('flag', _flags(reference), _flags(other));
+  diff(
+    'achievement',
+    reference.achievements.keys.toSet(),
+    other.achievements.keys.toSet(),
+  );
   diff('chapter', reference.chapters.keys.toSet(), other.chapters.keys.toSet());
   for (final id in reference.nodes.keys.toSet().intersection(
     other.nodes.keys.toSet(),
@@ -131,6 +136,7 @@ class _Validator {
   final flagsSet = <String>{};
   final flagsRead = <String, String>{};
   final entriesUnlocked = <String>{};
+  final achievementsEarned = <String>{};
 
   void error(String where, String message) =>
       issues.add(Issue(Severity.error, where, message));
@@ -361,6 +367,11 @@ class _Validator {
           _quantity(here, amount);
         case SetFlag(:final flag):
           flagsSet.add(flag);
+        case Achieve(:final achievement):
+          if (!story.achievements.containsKey(achievement)) {
+            error(here, 'unknown achievement "$achievement"');
+          }
+          achievementsEarned.add(achievement);
         case UnlockEntry(:final entry):
           if (!story.journal.containsKey(entry)) {
             error(here, 'unknown journal entry "$entry"');
@@ -373,6 +384,11 @@ class _Validator {
   }
 
   void _summaries() {
+    for (final id in story.achievements.keys) {
+      if (!achievementsEarned.contains(id)) {
+        warn('achievements.$id', 'is never earned');
+      }
+    }
     for (final MapEntry(:key, :value) in itemsRequired.entries) {
       if (!itemsGiven.contains(key)) {
         warn(value, 'item "$key" is required but never given');

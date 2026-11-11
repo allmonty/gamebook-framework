@@ -16,6 +16,7 @@ sealed class Effect {
       'clear',
       'takeAll',
       'journal',
+      'achieve',
     ];
     // With `stat` present, `add` or `set` is a stat effect (schema 5 added
     // `set` and quantities); `set` alone is a flag.
@@ -42,6 +43,7 @@ sealed class Effect {
       'set' => SetFlag(id),
       'clear' => ClearFlag(id),
       'journal' => UnlockEntry(id),
+      'achieve' => Achieve(id),
       _ => throw StateError('unreachable'),
     };
     obj.finish();
@@ -106,6 +108,13 @@ class UnlockEntry extends Effect {
   final String entry;
 }
 
+/// Earns an achievement (schema 7). It changes nothing in the game: the
+/// engine reports it, and the app keeps it for the player.
+class Achieve extends Effect {
+  const Achieve(this.achievement);
+  final String achievement;
+}
+
 class ClearFlag extends Effect {
   const ClearFlag(this.flag);
   final String flag;
@@ -124,6 +133,7 @@ GameState applyEffect(Effect effect, GameState state) => switch (effect) {
   ClearFlag(:final flag) => state.copyWith(
     flags: {...state.flags}..remove(flag),
   ),
+  Achieve() => state,
   UnlockEntry(:final entry) =>
     state.journal.contains(entry)
         ? state

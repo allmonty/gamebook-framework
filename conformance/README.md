@@ -54,6 +54,7 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
 | `paragraphs` | the current page's text as shown: the parts that apply, placeholders filled, split on blank lines (B6) |
 | `choices` | the choices shown (hidden and spent ones left out), each `{ "index", "text", "locked" }`; `text` has placeholders filled |
 | `title` | the current node's `title` (B13), or `null` |
+| `achieved` | every achievement earned since the game started, in order, one entry per `achieve` effect applied (B15) |
 | `combat` | the fight under way, `{ "enemy": position, "health": [each enemy's health] }`, or `null` |
 
 ## Invalid cases
@@ -64,7 +65,7 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
 Loading the story (parsing it, resolving its rules, and the validator's **error** checks) must fail, and the first error must be at `path`, written as in B2 (`nodes.door.choices[1].to`). Messages are not compared: each engine words its own.
 
 ## Coverage
-Covered: pages, choices, locks and hidden choices, checks and their effects, tables, once nodes and once choices, death at 0 health, stat ceilings, limits and quantities, opposed and vs-defense combat, fleeing, usable items, pack capacity, containers, offers, item bonuses, conditional text and placeholders, the journal, undo, schema 6 authoring fields and draft pages, and the common load errors.
+Covered: pages, choices, locks and hidden choices, checks and their effects, tables, once nodes and once choices, death at 0 health, stat ceilings, limits and quantities, opposed and vs-defense combat, fleeing, usable items, pack capacity, containers, offers, item bonuses, conditional text and placeholders, the journal, undo, schema 6 authoring fields and draft pages, achievements, and the common load errors.
 
 Not covered yet (good first contributions): character creation rolls and picks, simultaneous fights, armor, luck in fights, the results-table mode and duels, `takeAll`, audio events, translations (`compareTranslations`), validator warnings, `showTitles` beyond the title itself.
 

@@ -53,6 +53,12 @@ class SoundPlayed extends GameEvent {
   final String file;
 }
 
+/// An achievement was earned (schema 7); the app keeps it for the player.
+class AchievementEarned extends GameEvent {
+  const AchievementEarned(this.achievement);
+  final String achievement;
+}
+
 class JournalUnlocked extends GameEvent {
   const JournalUnlocked(this.entry);
   final String entry;
@@ -177,6 +183,7 @@ class GameEngine {
   /// a pack that is too small drops the newest items as usual.
   void _applyCreation(List<Effect> effects, List<GameEvent> events) {
     for (final effect in effects) {
+      if (effect is Achieve) events.add(AchievementEarned(effect.achievement));
       _state = effect is GiveItem
           ? _state.copyWith(inventory: {..._state.inventory, effect.item})
           : applyEffect(effect, _state);
@@ -521,6 +528,8 @@ class GameEngine {
     for (final effect in effects) {
       if (effect is GiveItem) {
         _give(effect.item, events);
+      } else if (effect is Achieve) {
+        events.add(AchievementEarned(effect.achievement));
       } else {
         _state = applyEffect(effect, _state);
       }

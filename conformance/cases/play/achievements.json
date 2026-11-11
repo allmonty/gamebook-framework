@@ -1,0 +1,79 @@
+{
+  "description": "The achieve effect earns an achievement wherever effects go, changing nothing in the game; earning one twice is reported each time and the app keeps it once.",
+  "spec": [
+    "B15"
+  ],
+  "story": {
+    "schema": 7,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "achieve": "arrived"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "b",
+            "effects": [
+              {
+                "achieve": "moved"
+              }
+            ]
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "Back",
+            "to": "a"
+          }
+        ]
+      }
+    },
+    "achievements": {
+      "arrived": {
+        "title": "Arrived"
+      },
+      "moved": {
+        "title": "Moved",
+        "hidden": true
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "achieved": [
+      "arrived",
+      "moved",
+      "arrived"
+    ],
+    "flags": [],
+    "inventory": []
+  }
+}

@@ -79,7 +79,11 @@ List<GameEvent> _act(GameEngine engine, Map<String, Object?> action) {
 
 List<String> _sorted(Iterable<String> s) => s.toList()..sort();
 
-void _check(GameEngine engine, Map<String, Object?> want) {
+void _check(
+  GameEngine engine,
+  Map<String, Object?> want,
+  List<GameEvent> events,
+) {
   final s = engine.state;
   for (final MapEntry(:key, :value) in want.entries) {
     final actual = switch (key) {
@@ -102,6 +106,9 @@ void _check(GameEngine engine, Map<String, Object?> want) {
           {'index': c.index, 'text': c.text, 'locked': c.locked},
       ],
       'title' => engine.node.title,
+      'achieved' => [
+        for (final e in events.whereType<AchievementEarned>()) e.achievement,
+      ],
       'combat' =>
         s.combat == null
             ? null
@@ -128,13 +135,14 @@ void main() {
         final story = Story.fromJson(c['story']! as Map<String, Object?>);
         final rules = Rules.resolve(story.rules);
         final random = ScriptedRandom((c['dice']! as List<Object?>).cast());
-        final (engine, _) = GameEngine.newGame(
+        final (engine, started) = GameEngine.newGame(
           story: story,
           rules: rules,
           random: random,
           stats: _stats(rules, c['stats']! as Map<String, Object?>),
           name: c['name'] as String?,
         );
+        final events = [...started];
         for (final (i, a) in (c['actions']! as List<Object?>).indexed) {
           final action = a! as Map<String, Object?>;
           if (action['rejected'] == true) {
@@ -146,10 +154,10 @@ void main() {
             );
             expect(jsonEncode(engine.state.toJson()), before);
           } else {
-            _act(engine, action);
+            events.addAll(_act(engine, action));
           }
         }
-        _check(engine, c['expect']! as Map<String, Object?>);
+        _check(engine, c['expect']! as Map<String, Object?>, events);
         expect(random.remaining, 0, reason: 'every scripted die is used');
       });
     }
