@@ -1,0 +1,88 @@
+{
+  "description": "Unlucky takes 1 off the wound dealt and adds 1 to the wound taken; luck still drops by 1.",
+  "spec": [
+    "B4",
+    "B8",
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "combat": {
+        "luck": {
+          "stat": "luck"
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Troll",
+              "attack": 7,
+              "health": 6
+            }
+          ],
+          "win": "won"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    6,
+    6,
+    1,
+    1,
+    6,
+    6,
+    1,
+    1,
+    6,
+    6,
+    6,
+    5
+  ],
+  "actions": [
+    {
+      "fight": {}
+    },
+    {
+      "testLuck": {}
+    },
+    {
+      "fight": {}
+    },
+    {
+      "testLuck": {}
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "combat": {
+      "enemy": 0,
+      "health": [
+        5
+      ]
+    },
+    "stats": {
+      "stamina": 9,
+      "luck": 6
+    }
+  }
+}

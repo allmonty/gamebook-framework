@@ -58,7 +58,7 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
 | `achieved` | every achievement earned since the game started, in order, one entry per `achieve` effect applied (B15) |
 | `music` | the music playing now (B6): the path, or `null` |
 | `sounds` | every `sound` played since the game started, in order, one entry per page entered that has one (B6) |
-| `combat` | the fight under way, `{ "enemy": position, "health": [each enemy's health] }`, or `null` |
+| `combat` | the fight under way, `{ "enemy": position, "health": [each enemy's health] }`, or `null`. In a fight against several enemies at once there is no current enemy and `enemy` is 0. |
 
 ## Invalid cases
 ```json

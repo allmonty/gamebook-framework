@@ -1,0 +1,208 @@
+{
+  "description": "A fight marked duel uses the rules' results table while other fights use the mode; no luck test in a duel.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "combat": {
+        "luck": {
+          "stat": "luck"
+        },
+        "roll": "1d10-1",
+        "table": [
+          {
+            "upTo": -3,
+            "results": [
+              [
+                0,
+                4
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ]
+            ]
+          },
+          {
+            "upTo": 3,
+            "results": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                6,
+                0
+              ]
+            ]
+          },
+          {
+            "results": [
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                6,
+                0
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                8,
+                0
+              ],
+              [
+                9,
+                0
+              ],
+              [
+                10,
+                0
+              ],
+              [
+                99,
+                0
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Duelist",
+              "attack": 7,
+              "health": 10
+            }
+          ],
+          "win": "won",
+          "duel": true
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    1
+  ],
+  "actions": [
+    {
+      "fight": {}
+    },
+    {
+      "testLuck": {},
+      "rejected": true
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "combat": {
+      "enemy": 0,
+      "health": [
+        9
+      ]
+    },
+    "stats": {
+      "stamina": 10,
+      "luck": 8
+    }
+  }
+}

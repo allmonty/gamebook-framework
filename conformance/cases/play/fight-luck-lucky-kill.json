@@ -1,0 +1,68 @@
+{
+  "description": "A lucky blow that finishes the last enemy wins the fight.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "combat": {
+        "luck": {
+          "stat": "luck"
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Troll",
+              "attack": 7,
+              "health": 4
+            }
+          ],
+          "win": "won"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    6,
+    6,
+    1,
+    1,
+    1,
+    1
+  ],
+  "actions": [
+    {
+      "fight": {}
+    },
+    {
+      "testLuck": {}
+    }
+  ],
+  "expect": {
+    "node": "won",
+    "ending": "victory",
+    "stats": {
+      "luck": 7
+    }
+  }
+}

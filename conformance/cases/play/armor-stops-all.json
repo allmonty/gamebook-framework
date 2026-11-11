@@ -1,0 +1,61 @@
+{
+  "description": "Armor greater than the damage stops the wound; the enemy's health never goes up.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Golem",
+              "attack": 7,
+              "health": 2,
+              "armor": 3
+            }
+          ],
+          "win": "won"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    6,
+    6,
+    1,
+    1
+  ],
+  "actions": [
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "combat": {
+      "enemy": 0,
+      "health": [
+        2
+      ]
+    }
+  }
+}

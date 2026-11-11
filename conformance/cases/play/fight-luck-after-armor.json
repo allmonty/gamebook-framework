@@ -1,0 +1,86 @@
+{
+  "description": "Luck changes the wound left after armor: a blow armor stopped stays at 0.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "combat": {
+        "luck": {
+          "stat": "luck"
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Golem",
+              "attack": 7,
+              "health": 5,
+              "armor": 3
+            },
+            {
+              "name": "Gull",
+              "attack": 7,
+              "health": 4
+            }
+          ],
+          "win": "won",
+          "simultaneous": true
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 5,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    3,
+    3,
+    1,
+    1,
+    6,
+    6,
+    1,
+    1
+  ],
+  "actions": [
+    {
+      "fight": {
+        "target": 0
+      }
+    },
+    {
+      "testLuck": {}
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "combat": {
+      "enemy": 0,
+      "health": [
+        5,
+        4
+      ]
+    },
+    "stats": {
+      "stamina": 11,
+      "luck": 7
+    }
+  }
+}

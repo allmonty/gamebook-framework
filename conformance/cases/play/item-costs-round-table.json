@@ -1,0 +1,238 @@
+{
+  "description": "Using an item in a table fight costs the round: the roll picks a result and only the player's loss applies.",
+  "spec": [
+    "B5",
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "combat": {
+        "mode": "table",
+        "attackStat": "skill",
+        "roll": "1d10-1",
+        "table": [
+          {
+            "upTo": -3,
+            "results": [
+              [
+                0,
+                4
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ]
+            ]
+          },
+          {
+            "upTo": 3,
+            "results": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                6,
+                0
+              ]
+            ]
+          },
+          {
+            "results": [
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                6,
+                0
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                8,
+                0
+              ],
+              [
+                9,
+                0
+              ],
+              [
+                10,
+                0
+              ],
+              [
+                99,
+                0
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Start",
+        "effects": [
+          {
+            "give": "potion"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Fight",
+            "to": "f"
+          }
+        ]
+      },
+      "f": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Brute",
+              "attack": 7,
+              "health": 10
+            }
+          ],
+          "win": "won"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "potion": {
+        "name": "Potion",
+        "use": {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 4
+            }
+          ],
+          "when": [
+            "combat"
+          ]
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 6,
+      "max": 12
+    },
+    "luck": 8
+  },
+  "dice": [
+    1
+  ],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "use": "potion"
+    }
+  ],
+  "expect": {
+    "node": "f",
+    "stats": {
+      "stamina": 8
+    },
+    "combat": {
+      "enemy": 0,
+      "health": [
+        10
+      ]
+    }
+  }
+}

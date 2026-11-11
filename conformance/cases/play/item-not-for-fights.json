@@ -1,0 +1,92 @@
+{
+  "description": "An item whose use is only for the story cannot be used in a fight.",
+  "spec": [
+    "B5"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Start",
+        "effects": [
+          {
+            "give": "potion"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Fight",
+            "to": "f"
+          }
+        ]
+      },
+      "f": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Rat",
+              "attack": 7,
+              "health": 4
+            }
+          ],
+          "win": "won"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "potion": {
+        "name": "Potion",
+        "use": {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 4
+            }
+          ],
+          "when": [
+            "story"
+          ]
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 6,
+      "max": 12
+    },
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "use": "potion",
+      "rejected": true
+    }
+  ],
+  "expect": {
+    "node": "f",
+    "inventory": [
+      "potion"
+    ],
+    "stats": {
+      "stamina": 6
+    }
+  }
+}

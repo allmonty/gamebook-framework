@@ -1,0 +1,96 @@
+{
+  "description": "Using an item in a vs-defense fight costs the round: the enemy makes its normal attack.",
+  "spec": [
+    "B5",
+    "B8",
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "d20-lite"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Start",
+        "effects": [
+          {
+            "give": "potion"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Fight",
+            "to": "f"
+          }
+        ]
+      },
+      "f": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Rat",
+              "attack": 1,
+              "defense": 10,
+              "health": 3
+            }
+          ],
+          "win": "won"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "potion": {
+        "name": "Potion",
+        "use": {
+          "effects": [
+            {
+              "stat": "hp",
+              "add": 4
+            }
+          ],
+          "when": [
+            "combat"
+          ]
+        }
+      }
+    }
+  },
+  "stats": {
+    "might": 2,
+    "agility": 2,
+    "wits": 1,
+    "hp": {
+      "value": 10,
+      "max": 20
+    }
+  },
+  "dice": [
+    15,
+    3
+  ],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "use": "potion"
+    }
+  ],
+  "expect": {
+    "node": "f",
+    "inventory": [],
+    "stats": {
+      "hp": 11
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "description": "No luck test after a round where nobody was hurt or an enemy was killed, and only one per round.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "combat": {
+        "luck": {
+          "stat": "luck"
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Rat",
+              "attack": 9,
+              "health": 2
+            },
+            {
+              "name": "Rat",
+              "attack": 9,
+              "health": 4
+            }
+          ],
+          "win": "won"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    3,
+    3,
+    3,
+    3,
+    6,
+    6,
+    1,
+    1,
+    6,
+    6,
+    1,
+    1,
+    6,
+    6
+  ],
+  "actions": [
+    {
+      "fight": {}
+    },
+    {
+      "testLuck": {},
+      "rejected": true
+    },
+    {
+      "fight": {}
+    },
+    {
+      "testLuck": {},
+      "rejected": true
+    },
+    {
+      "fight": {}
+    },
+    {
+      "testLuck": {}
+    },
+    {
+      "testLuck": {},
+      "rejected": true
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "combat": {
+      "enemy": 1,
+      "health": [
+        0,
+        3
+      ]
+    },
+    "stats": {
+      "stamina": 12,
+      "luck": 7
+    }
+  }
+}

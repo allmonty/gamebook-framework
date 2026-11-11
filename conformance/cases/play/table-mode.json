@@ -1,0 +1,217 @@
+{
+  "description": "Results-table combat: the ratio picks the row (the first whose upTo is at least it), the roll picks the pair; armor takes points off the enemy's loss.",
+  "spec": [
+    "B8",
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "combat": {
+        "mode": "table",
+        "attackStat": "skill",
+        "roll": "1d10-1",
+        "table": [
+          {
+            "upTo": -3,
+            "results": [
+              [
+                0,
+                4
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ]
+            ]
+          },
+          {
+            "upTo": 3,
+            "results": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                6,
+                0
+              ]
+            ]
+          },
+          {
+            "results": [
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                6,
+                0
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                8,
+                0
+              ],
+              [
+                9,
+                0
+              ],
+              [
+                10,
+                0
+              ],
+              [
+                99,
+                0
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Giant",
+              "attack": 12,
+              "health": 3
+            },
+            {
+              "name": "Brute",
+              "attack": 7,
+              "health": 10,
+              "armor": 1
+            }
+          ],
+          "win": "won"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    10,
+    6,
+    10
+  ],
+  "actions": [
+    {
+      "fight": {}
+    },
+    {
+      "fight": {}
+    },
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "combat": {
+      "enemy": 1,
+      "health": [
+        0,
+        2
+      ]
+    },
+    "stats": {
+      "stamina": 11
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "description": "Several enemies at once, vs-defense: the player attacks the target, then every enemy still living attacks.",
+  "spec": [
+    "B8",
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "d20-lite"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Rat",
+              "attack": 1,
+              "defense": 10,
+              "health": 3
+            },
+            {
+              "name": "Rat",
+              "attack": 1,
+              "defense": 10,
+              "health": 3
+            }
+          ],
+          "win": "won",
+          "simultaneous": true
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "might": 2,
+    "agility": 2,
+    "wits": 1,
+    "hp": 20
+  },
+  "dice": [
+    10,
+    3,
+    15,
+    4,
+    1,
+    2,
+    20,
+    6
+  ],
+  "actions": [
+    {
+      "fight": {
+        "target": 0
+      }
+    },
+    {
+      "fight": {
+        "target": 1
+      }
+    },
+    {
+      "fight": {
+        "target": 1
+      }
+    }
+  ],
+  "expect": {
+    "node": "won",
+    "ending": "victory",
+    "stats": {
+      "hp": 16
+    }
+  }
+}

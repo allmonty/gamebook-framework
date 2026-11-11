@@ -1,0 +1,63 @@
+{
+  "description": "A fight against several enemies at once needs a target each round.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Fight",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Gull",
+              "attack": 7,
+              "health": 4
+            },
+            {
+              "name": "Gull",
+              "attack": 7,
+              "health": 4
+            }
+          ],
+          "win": "won",
+          "simultaneous": true
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "fight": {},
+      "rejected": true
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "combat": {
+      "enemy": 0,
+      "health": [
+        4,
+        4
+      ]
+    }
+  }
+}
