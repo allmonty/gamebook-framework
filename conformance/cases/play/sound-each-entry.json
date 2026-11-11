@@ -1,0 +1,68 @@
+{
+  "description": "A page's sound plays every time the page is entered.",
+  "spec": [
+    "B6"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "sound": "audio/door.wav",
+        "choices": [
+          {
+            "text": "On",
+            "to": "b"
+          },
+          {
+            "text": "End",
+            "to": "won"
+          }
+        ]
+      },
+      "b": {
+        "text": "Page",
+        "sound": "audio/bell.wav",
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "sounds": [
+      "audio/door.wav",
+      "audio/bell.wav",
+      "audio/door.wav"
+    ]
+  }
+}

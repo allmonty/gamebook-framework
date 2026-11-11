@@ -1,0 +1,57 @@
+{
+  "description": "A page with music stop ends the music.",
+  "spec": [
+    "B6"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Page",
+        "music": "audio/rain.ogg",
+        "choices": [
+          {
+            "text": "On",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "Page",
+        "music": "stop",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "b",
+    "music": null
+  }
+}
