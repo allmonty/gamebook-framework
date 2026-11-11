@@ -1,0 +1,51 @@
+{
+  "description": "Rolling again replaces every stat; the last roll is kept.",
+  "spec": [
+    "B4",
+    "B8"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Start",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "dice": [
+    1,
+    1,
+    1,
+    1,
+    6,
+    6,
+    6,
+    6
+  ],
+  "rerolls": 1,
+  "actions": [],
+  "expect": {
+    "stats": {
+      "skill": 12,
+      "stamina": 24,
+      "luck": 12
+    }
+  }
+}

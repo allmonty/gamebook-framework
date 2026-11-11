@@ -1,0 +1,55 @@
+{
+  "description": "A story that asks for the hero's name fills {name} in its text.",
+  "spec": [
+    "B4",
+    "B6"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "creation": {
+        "name": true
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Good luck, {name}.",
+        "choices": [
+          {
+            "text": "Go, {name}",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "name": "Ann",
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "paragraphs": [
+      "Good luck, Ann."
+    ],
+    "choices": [
+      {
+        "index": 0,
+        "text": "Go, Ann",
+        "locked": false
+      }
+    ]
+  }
+}

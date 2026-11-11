@@ -1,0 +1,144 @@
+{
+  "description": "Creation picks apply their effects group by group, in file order; a give is direct, and an over-full pack drops the newest.",
+  "spec": [
+    "B4"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "inventory": {
+        "capacity": 1,
+        "pickup": "choose"
+      },
+      "creation": {
+        "picks": [
+          {
+            "id": "kit",
+            "title": "Kit",
+            "count": 2,
+            "options": [
+              {
+                "id": "torch",
+                "label": "Torch",
+                "effects": [
+                  {
+                    "give": "torch"
+                  }
+                ]
+              },
+              {
+                "id": "rope",
+                "label": "Rope",
+                "effects": [
+                  {
+                    "give": "rope"
+                  }
+                ]
+              },
+              {
+                "id": "lamp",
+                "label": "Lamp",
+                "effects": [
+                  {
+                    "give": "lamp"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "trait",
+            "title": "Trait",
+            "count": 1,
+            "options": [
+              {
+                "id": "brave",
+                "label": "Brave",
+                "effects": [
+                  {
+                    "stat": "luck",
+                    "add": 1
+                  },
+                  {
+                    "set": "brave"
+                  }
+                ]
+              },
+              {
+                "id": "clever",
+                "label": "Clever",
+                "effects": [
+                  {
+                    "set": "clever"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Start",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "torch": {
+        "name": "Torch"
+      },
+      "rope": {
+        "name": "Rope"
+      },
+      "lamp": {
+        "name": "Lamp"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": {
+      "value": 7,
+      "max": 9
+    }
+  },
+  "picks": {
+    "trait": [
+      "brave"
+    ],
+    "kit": [
+      "lamp",
+      "torch"
+    ]
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "inventory": [
+      "torch"
+    ],
+    "offers": [],
+    "flags": [
+      "brave"
+    ],
+    "stats": {
+      "luck": 8
+    }
+  }
+}
