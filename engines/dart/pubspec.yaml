@@ -13,6 +13,7 @@ executables:
   pack_game:
   llm_kit:
   simulate_story:
+  import_twine:
 
 dependencies:
   # Reads and writes .gamebook packages (zip); pure Dart, so it works on the web too.

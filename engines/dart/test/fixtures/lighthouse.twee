@@ -1,0 +1,35 @@
+:: StoryTitle
+The Lighthouse
+
+:: StoryData
+{
+  "ifid": "D674C58C-DEFA-4F70-B7A2-27742230C0FC",
+  "format": "Harlowe",
+  "start": "Shore"
+}
+
+:: Shore {"position":"100,100"}
+Waves break on the rocks. The lighthouse is dark tonight.
+
+[[Climb to the light->Stairs]]
+[[Wait for morning|Morning]]
+
+:: Stairs [tense] {"position":"300,100"}
+The stairs spiral up. (set: $tired to true) A door stands at the top.
+You can [[open the door->Lamp room]] or [[go back down|Shore]].
+
+:: Lamp room {"position":"500,100"}
+You light the lamp. Far out, a ship turns away from the rocks.
+
+:: Morning [death] {"position":"300,300"}
+By morning the ship is on the rocks.
+
+:: Keeper {"position":"500,300"}
+The keeper is asleep. [[Wake him->Nowhere]]
+[[Leave him|Shore]]
+
+:: StoryInit
+(set: $tired to false)
+
+:: Styles [stylesheet]
+body { color: white; }
