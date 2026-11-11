@@ -1,0 +1,36 @@
+{
+  "description": "Page music needs schema 5.",
+  "spec": [
+    "B2",
+    "B6"
+  ],
+  "story": {
+    "schema": 4,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "music": "audio/rain.ogg",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.music"
+  }
+}
