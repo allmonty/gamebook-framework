@@ -25,6 +25,7 @@ engine.choose(0);                                 // returns the events of what 
 | `dice.dart`, `condition.dart`, `effect.dart`, `check.dart`, `combat.dart`, `quantity.dart`, `text.dart` | the parts |
 | `validate.dart` | the validator, also comparing translations |
 | `graph.dart` | the story as Graphviz DOT or Mermaid |
+| `simulate.dart` | plays a story many times at random and reports win and death rates, dead ends, endless loops, endings and pages never reached |
 | `package.dart` | `.gamebook` packages: read with every B14 check, write (B14) |
 
 ## Tools
@@ -32,6 +33,7 @@ engine.choose(0);                                 // returns the events of what 
 dart run gamebook_engine:validate_story <dir|file>... [--strict] [--llm]   # --llm: a message to paste back to a chatbot
 dart run gamebook_engine:story_graph <story.json> [--mermaid]
 dart run gamebook_engine:pack_game <game-folder> [out.gamebook]
+dart run gamebook_engine:simulate_story <story.json> [--games N] [--policy random|explore|decline] [--seed N]   # exits 1 on dead ends or endless games
 dart run gamebook_engine:llm_kit [--check]                                # regenerates ../../spec/llm-kit.md (run from this folder)
 ```
 
