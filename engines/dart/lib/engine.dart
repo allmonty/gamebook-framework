@@ -306,9 +306,7 @@ class GameEngine {
       isContainer(item) || capacity == null || slotsUsed < capacity!;
 
   /// The item the player is deciding about, if any (`pickup: "choose"`).
-  /// Offers do not outlive the game.
-  String? get offer =>
-      ending != null || _state.offers.isEmpty ? null : _state.offers.first;
+  String? get offer => _state.offers.firstOrNull;
 
   /// More items waiting behind [offer].
   int get moreOffers => offer == null ? 0 : _state.offers.length - 1;
@@ -563,6 +561,10 @@ class GameEngine {
     final before = _state;
     final events = <GameEvent>[];
     action(events);
+    // Offers do not outlive the game (B4).
+    if (ending != null && _state.offers.isNotEmpty) {
+      _state = _state.copyWith(offers: const []);
+    }
     final overflowed = {
       for (final e in events)
         if (e is ItemOverflow) e.item,

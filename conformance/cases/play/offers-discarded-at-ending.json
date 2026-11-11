@@ -1,0 +1,81 @@
+{
+  "description": "Offers still waiting when the game ends are discarded.",
+  "spec": [
+    "B4"
+  ],
+  "story": {
+    "schema": 3,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "inventory": {
+        "capacity": 1,
+        "pickup": "choose"
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "End",
+            "to": "end"
+          }
+        ]
+      },
+      "end": {
+        "text": "End",
+        "effects": [
+          {
+            "give": "rope"
+          }
+        ],
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "rope": {
+        "name": "Rope"
+      },
+      "lamp": {
+        "name": "Lamp"
+      },
+      "bag": {
+        "name": "Bag",
+        "capacity": 1
+      },
+      "potion": {
+        "name": "Potion",
+        "use": {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 2
+            }
+          ],
+          "when": [
+            "story"
+          ]
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "ending": "victory",
+    "offers": []
+  }
+}
