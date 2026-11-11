@@ -280,8 +280,7 @@ class GameEngine {
       unmet: choice.condition == null
           ? const []
           : explain(choice.condition!, _state),
-      locked:
-          choice.condition != null && !evaluate(choice.condition!, _state),
+      locked: choice.condition != null && !evaluate(choice.condition!, _state),
     );
   }
 
