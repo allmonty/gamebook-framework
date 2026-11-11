@@ -1,3 +1,5 @@
 .dart_tool/
 pubspec.lock
 build/
+temp-theme/
+.DS_Store
