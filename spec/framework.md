@@ -80,7 +80,7 @@ The next section shows this same story in the file format.
 
 # Part B. Technical reference
 
-Schema versions: **1** to **6**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
+Schema versions: **1** to **7**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
 
 ## B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
@@ -98,8 +98,9 @@ Schema versions: **1** to **6**. Version 2 adds usable items (`use`, B5). Versio
 | Field | Type | Req | Notes |
 |---|---|---|---|
 | `$schema` | string | no | path to `story.schema.json`, an editor hint the engine ignores |
-| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13) |
+| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15) |
 | `journal` | object | no | map `entryId -> { title, text }` (schema 5, B6) |
+| `achievements` | object | no | map `achievementId -> { title, description, hidden }` (schema 7, B15) |
 | `chapters` | object | no | map `chapterId -> { title }`, in reading order (schema 6, B13) |
 | `showTitles` | bool | no | default false: show node titles to players as page headings (schema 6, B13) |
 | `id` | string | yes | slug, `[a-z0-9-]+`, shared by translations |
@@ -346,6 +347,7 @@ An effect is an object with exactly one kind:
 | `{ "set": "flag" }` | set a flag |
 | `{ "clear": "flag" }` | clear it |
 | `{ "takeAll": true }` | remove every item from the pack (schema 3): a theft or a flood. Pending offers are unaffected. |
+| `{ "achieve": "achievementId" }` | the player earns an achievement (schema 7, B15); it changes nothing in the game |
 
 `give` follows the story's inventory rules (B4): added at once, refused when the pack is full (`pickup: "auto"`), or turned into an offer (`pickup: "choose"`).
 
@@ -510,3 +512,18 @@ A game travels outside the app as one file: a **zip** of the game folder (B1) wi
 - A package whose story `id` matches a bundled game is refused (bundled games cannot be replaced); one matching an imported game is an **update** of it.
 
 **Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
+
+## B15. Achievements (schema 7)
+```json
+"achievements": {
+  "brave": { "title": "Brave", "description": "Faced the dragon and lived." },
+  "coward": { "title": "Better safe", "description": "Went home.", "hidden": true }
+}
+```
+An achievement is a mark of something the player did, kept **across games** of a story: replay value.
+- The effect `{ "achieve": "brave" }` earns it, wherever effects go (a page, a choice, a check, a table outcome, an item's use, a creation pick).
+- Achievements belong to the **player**, not to one adventure: an app keeps the ones earned for each story (by its `id`, so for every language), outside saved games. Starting again, dying or undoing does not take one back; earning one already earned does nothing. An app may tell the player the first time.
+- `title` is required; `description` is optional; `hidden: true` keeps the title and description from players until it is earned (they see that a hidden achievement exists).
+- An engine reports each achievement earned as an event and keeps nothing in the game state, so the effect never changes how a story plays.
+- Ids must be the same in every translation; titles and descriptions are per language.
+
