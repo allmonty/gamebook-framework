@@ -531,7 +531,7 @@ void main() {
       expect(
         found,
         unorderedEquals([
-          'warning: flags: flag "looked" is set but never checked',
+          'warning: flags.looked: is set but never checked',
           'warning: nodes.door.choices[1].if: flag "angry" is checked but never set',
         ]),
       );
@@ -597,8 +597,8 @@ void main() {
             i.toString(),
         ],
         unorderedEquals([
-          'warning: pt: chapter "two" exists in en but not in pt',
-          'warning: pt: chapter "three" exists in pt but not in en',
+          'warning: chapters.two: chapter "two" exists in en but not in pt',
+          'warning: chapters.three: chapter "three" exists in pt but not in en',
           'warning: nodes.door: is in chapter one in en but three in pt',
         ]),
       );
@@ -618,8 +618,8 @@ void main() {
           (node(j, 'door')['choices']! as List<Object?>).removeLast();
         }),
         unorderedEquals([
-          'warning: pt: node "foot" exists in en but not in pt',
-          'warning: pt: item "extra" exists in pt but not in en',
+          'warning: nodes.foot: node "foot" exists in en but not in pt',
+          'warning: items.extra: item "extra" exists in pt but not in en',
           'warning: nodes.door: has 2 choices in en but 1 in pt',
         ]),
       );
@@ -650,8 +650,8 @@ void main() {
           ];
         }),
         unorderedEquals([
-          'warning: pt: stat "gold" exists in pt but not in en',
-          'warning: pt: flag "looked" exists in pt but not in en',
+          'warning: rules.stats.gold: stat "gold" exists in pt but not in en',
+          'warning: flags.looked: flag "looked" exists in pt but not in en',
         ]),
       );
     });

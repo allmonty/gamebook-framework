@@ -29,7 +29,7 @@ You write gamebooks in the **Gamebook Framework** story format, defined in the r
 
 ## Part B. Technical reference
 
-Schema versions: **1** to **7**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
+Schema versions: **1** to **7**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
 
 ### B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
@@ -389,7 +389,7 @@ The **ratio** is the player's `attackStat` minus the enemy's `attack`. The row i
 
 **Several enemies at once (schema 5):** `"simultaneous": true` on the fight. Every living enemy fights every round and the player **chooses a target** each round. In `opposed` mode the player rolls once; each enemy rolls its own total; against the target the higher total wounds the other as usual, against the others an enemy with the higher total wounds the player and otherwise nothing happens. In `vs-defense` mode the player attacks the target only, then every living enemy attacks. The fight is won when every enemy is at 0; the player loses health from several enemies in one round.
 
-**Testing your Luck in a fight (schema 5):** when the rules have `combat.luck` and a round has hurt someone but the fight is not over, the player may test luck once: roll the `luck.roll` (default 2d6); at or below the current `luck` stat is lucky, above is unlucky; the luck stat then drops by 1 either way (never below 0). Lucky: if the player wounded an enemy this round that wound grows by `lucky.dealt` (default +2); if an enemy wounded the player that wound changes by `lucky.taken` (default -1). Unlucky: the same with `unlucky.dealt` (default -1) and `unlucky.taken` (default +1). Wounds never become negative and a healed side never goes above its maximum. The test is not offered after a round that ended the fight, after a round that killed an enemy, or after a round in which nobody was hurt. A lucky blow that finishes an enemy counts as a kill (and as the win if it was the last). The open test is part of the saved fight; fighting on, using an item that costs the round, or testing closes it.
+**Testing your Luck in a fight (schema 5):** when the rules have `combat.luck` and a round has hurt someone but the fight is not over, the player may test luck once: roll the `luck.roll` (default 2d6); at or below the current `luck` stat is lucky, above is unlucky; the luck stat then drops by 1 either way (never below 0). Lucky: if the player wounded an enemy this round that wound grows by `lucky.dealt` (default +2); if an enemy wounded the player that wound changes by `lucky.taken` (default -1). Unlucky: the same with `unlucky.dealt` (default -1) and `unlucky.taken` (default +1). Wounds never become negative and a healed side never goes above its maximum. A wound is what the round actually took off: an enemy's `armor` comes off first, and luck changes what is left (a blow that armor stopped entirely is no wound, and luck leaves it at 0). In a fight against several enemies at once, the wounds the player took that round count as **one** wound: luck changes their total once, not each enemy's. The test is not offered after a round that ended the fight, after a round that killed an enemy, or after a round in which nobody was hurt. A lucky blow that finishes an enemy counts as a kill (and as the win if it was the last). The open test is part of the saved fight; fighting on, using an item that costs the round, or testing closes it.
 
 **Using an item** during a fight is allowed for items whose `use.when` includes `"combat"` (B5); depending on `combatCost` it forfeits the round or is free.
 
@@ -476,3 +476,32 @@ An achievement is a mark of something the player did, kept **across games** of a
 - An engine reports each achievement earned as an event and keeps nothing in the game state, so the effect never changes how a story plays.
 - Ids must be the same in every translation; titles and descriptions are per language.
 
+### B16. Validator warnings (lint)
+Errors make a story unplayable, and every engine must reject it (B2; conformance `invalid` cases). **Warnings** point at what is probably a mistake in a story that still plays. Reporting them is optional: an engine can play stories without them. A tool that does report them (a validator, an editor) may claim the **lint** tier of the conformance suite, and then reports exactly these, each with its code and path. Messages are each tool's own wording.
+
+| Code | Path | When |
+|---|---|---|
+| `unreachable` | `nodes.<id>` | no way leads to the node from the start (choices, checks, tables, fight win and flee) |
+| `no-victory` | `nodes` | no victory ending can be reached |
+| `draft` | `nodes.<id>` | the node is a draft (B13) |
+| `never-earned` | `achievements.<id>` | no `achieve` effect earns it |
+| `required-never-given` | where the `has` condition is | the item is required but nothing gives it |
+| `usable-never-given` | `items.<id>` | the item has a `use` but nothing gives it |
+| `taken-never-given` | where the `take` effect is | the item is taken but nothing gives it |
+| `flag-never-set` | where the `flag` condition is | the flag is checked but nothing sets it |
+| `flag-never-checked` | `flags.<flag>` | the flag is set but nothing checks it |
+| `journal-never-unlocked` | `journal.<id>` | no `journal` effect unlocks the entry |
+| `capacity-without-pack` | `items.<id>.capacity` | a container, but the rules give the pack no `capacity` |
+
+An item or flag required, taken or checked in several places is reported once, at one of them (which one is up to the tool).
+
+**Translations.** A translation (another language file of the same story, B1) is compared with the source, the first language. It must have the same ids and structure; only the words differ:
+| Code | Path | When |
+|---|---|---|
+| `translation-missing` | where the id is declared (`nodes.<id>`, `items.<id>`, `rules.stats.<id>`, `journal.<id>`, `achievements.<id>`, `chapters.<id>`, `flags.<flag>`) | the source has the id and the translation does not |
+| `translation-extra` | the same | the translation has an id the source does not |
+| `translation-text-parts` | `nodes.<id>` | the node's text has a different number of parts (B6) |
+| `translation-choices` | `nodes.<id>` | the node has a different number of choices |
+| `translation-chapter` | `nodes.<id>` | the node is in a different chapter |
+
+Warnings are not versioned with `schema`: a new warning can be added at any time. It changes no story, only what tools say about it.

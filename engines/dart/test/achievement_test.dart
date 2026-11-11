@@ -114,12 +114,17 @@ void main() {
         'extra': {'title': 'Extra'},
       };
     (node(pt, 'cellar')['effects'] = <Object?>[]);
-    expect([
-      for (final i in compareTranslations(
-        Story.fromJson(achieving()),
-        Story.fromJson(pt),
-      ))
-        '$i',
-    ], contains('warning: pt: achievement "extra" exists in pt but not in en'));
+    expect(
+      [
+        for (final i in compareTranslations(
+          Story.fromJson(achieving()),
+          Story.fromJson(pt),
+        ))
+          '$i',
+      ],
+      contains(
+        'warning: achievements.extra: achievement "extra" exists in pt but not in en',
+      ),
+    );
   });
 }

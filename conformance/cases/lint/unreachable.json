@@ -1,0 +1,18 @@
+{
+  "description": "A page no choice leads to is unreachable; the rest of the story is fine.",
+  "spec": ["B16"],
+  "story": {
+    "schema": 1,
+    "id": "lint",
+    "lang": "en",
+    "title": "Lint",
+    "rules": { "preset": "fighting-fantasy" },
+    "start": "a",
+    "nodes": {
+      "a": { "text": "A", "choices": [ { "text": "Win", "to": "won" } ] },
+      "lost": { "text": "Nobody comes here.", "choices": [ { "text": "Win", "to": "won" } ] },
+      "won": { "text": "Won", "ending": "victory" }
+    }
+  },
+  "warnings": [ { "code": "unreachable", "path": "nodes.lost" } ]
+}

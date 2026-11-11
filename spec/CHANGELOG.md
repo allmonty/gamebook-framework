@@ -12,4 +12,6 @@ A story says which version it needs in its `schema` field. Each version only add
 | 6 | Authoring fields: node `title`, `note`, `chapter` and `draft`; story `chapters` and `showTitles` | B13 |
 | 7 | Achievements: story `achievements` and the `achieve` effect | B15 |
 
-Not versioned with `schema`: game packages (`.gamebook`, B14), which can hold a story of any version.
+Not versioned with `schema`: game packages (`.gamebook`, B14), which can hold a story of any version, and the validator warnings with their codes (B16), which change no story.
+
+Clarified without a version change: luck in a fight changes the wound left after armor, and in a fight against several enemies it changes the round's total wound once (B11).

@@ -7,6 +7,7 @@ Dice are scripted, not seeded: each case lists the exact die faces in order, so 
 ## Files
 - `cases/play/*.json`: play a story with scripted dice and check the result.
 - `cases/invalid/*.json`: a story that must be rejected, and where.
+- `cases/lint/*.json` (optional tier): a story, or a story and its translations, and the warnings a validator must report (B16). An engine that only plays stories may skip these; a tool that reports warnings claims the tier by passing them all.
 
 Every case has a `description` (what it shows) and `spec` (the sections it tests).
 
@@ -23,7 +24,7 @@ Every case has a `description` (what it shows) and `spec` (the sections it tests
   "expect": { "node": "treasure", "ending": "victory" }
 }
 ```
-**Start.** Start a new game (B10, "The game starts...") with these start values instead of rolling them. `stats` gives every stat of the resolved rules: a number is a start value, turned into the stat as the creation roll would (with `max: true` it is also the ceiling; with a `limit` it is cut to the limit and the limit is the ceiling); an object gives the value and ceiling directly (`max` may be null). `name` is optional (the hero's name, B4). Creation picks are not used.
+**Start.** Start a new game (B10, "The game starts..."). Without `stats`, character creation rolls every stat from the scripted dice (B4, in the order of B8), then rolls them all again `rerolls` times (optional, default 0) and keeps the last roll. With `stats`, the engine uses these start values instead of rolling: `stats` gives every stat of the resolved rules: a number is a start value, turned into the stat as the creation roll would (with `max: true` it is also the ceiling; with a `limit` it is cut to the limit and the limit is the ceiling); an object gives the value and ceiling directly (`max` may be null). `name` is optional (the hero's name, B4). `picks` is optional: for each pick group, the ids of the options the player chose, as in `{ "kit": ["torch", "rope"] }`; their effects apply as the player accepts the character (B4).
 
 **Dice.** `dice` are die faces, used one by one whenever the engine rolls a die. A face is always on the die being rolled (1 to M for an `NdM`). After the last action **every face must have been used**: an unused face means the engine rolled less than the spec says.
 
@@ -55,6 +56,8 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
 | `choices` | the choices shown (hidden and spent ones left out), each `{ "index", "text", "locked" }`; `text` has placeholders filled |
 | `title` | the current node's `title` (B13), or `null` |
 | `achieved` | every achievement earned since the game started, in order, one entry per `achieve` effect applied (B15) |
+| `music` | the music playing now (B6): the path, or `null` |
+| `sounds` | every `sound` played since the game started, in order, one entry per page entered that has one (B6) |
 | `combat` | the fight under way, `{ "enemy": position, "health": [each enemy's health] }`, or `null` |
 
 ## Invalid cases
@@ -63,6 +66,13 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
   "error": { "path": "nodes.a.choices[0].too" } }
 ```
 Loading the story (parsing it, resolving its rules, and the validator's **error** checks) must fail, and the first error must be at `path`, written as in B2 (`nodes.door.choices[1].to`). Messages are not compared: each engine words its own.
+
+## Lint cases
+```json
+{ "description": "...", "spec": ["B16"], "story": { "...": "..." },
+  "warnings": [ { "code": "unreachable", "path": "nodes.lost" } ] }
+```
+Load the story (it must have no errors) and validate it. The warnings reported must be exactly `warnings`, compared as a set of `code` and `path` (B16); order and messages are not compared. With `stories` instead of `story` (language code to story), each story is validated and every one after the first is also compared with the first as its translation (B16, "Translations").
 
 ## Coverage
 Covered: pages, choices, locks and hidden choices, checks and their effects, tables, once nodes and once choices, death at 0 health, stat ceilings, limits and quantities, opposed and vs-defense combat, fleeing, usable items, pack capacity, containers, offers, item bonuses, conditional text and placeholders, the journal, undo, schema 6 authoring fields and draft pages, achievements, and the common load errors.

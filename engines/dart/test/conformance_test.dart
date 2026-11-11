@@ -57,6 +57,32 @@ Map<String, StatValue> _stats(Rules rules, Map<String, Object?> given) => {
     },
 };
 
+/// The given start values, or (with no `stats`) the stats rolled from the
+/// scripted dice, `rerolls` more times, keeping the last roll.
+Map<String, StatValue> _startStats(
+  Rules rules,
+  Random random,
+  Map<String, Object?> c,
+) {
+  if (c['stats'] case final Map<String, Object?> given) {
+    return _stats(rules, given);
+  }
+  var stats = rules.rollStats(random);
+  for (var i = 0; i < ((c['rerolls'] as int?) ?? 0); i++) {
+    stats = rules.rollStats(random);
+  }
+  return stats;
+}
+
+/// The effects of the picked creation options: group by group, each group's
+/// options in file order (B4).
+List<Effect> _picked(Rules rules, Map<String, Object?>? picks) => [
+  for (final group in rules.creation?.picks ?? const <PickGroup>[])
+    for (final option in group.options)
+      if ((picks?[group.id] as List<Object?>?)?.contains(option.id) ?? false)
+        ...option.effects,
+];
+
 List<GameEvent> _act(GameEngine engine, Map<String, Object?> action) {
   final MapEntry(key: name, value: arg) = action.entries.firstWhere(
     (e) => e.key != 'rejected',
@@ -106,6 +132,8 @@ void _check(
           {'index': c.index, 'text': c.text, 'locked': c.locked},
       ],
       'title' => engine.node.title,
+      'music' => s.music,
+      'sounds' => [for (final e in events.whereType<SoundPlayed>()) e.file],
       'achieved' => [
         for (final e in events.whereType<AchievementEarned>()) e.achievement,
       ],
@@ -129,6 +157,31 @@ void main() {
     }
   });
 
+  group('lint', () {
+    for (final (file, c) in _cases('lint')) {
+      test('$file: ${c['description']}', () {
+        final sources = (c['stories'] ?? {'only': c['story']}) as Map;
+        final stories = [
+          for (final json in sources.values)
+            Story.fromJson(json! as Map<String, Object?>),
+        ];
+        final found = {
+          for (final story in stories)
+            for (final i in validateStory(story))
+              if (i.severity == Severity.warning) '${i.code} ${i.where}',
+          for (final other in stories.skip(1))
+            for (final i in compareTranslations(stories.first, other))
+              '${i.code} ${i.where}',
+        };
+        expect(found, {
+          for (final w in c['warnings']! as List<Object?>)
+            if (w case {'code': final String code, 'path': final String path})
+              '$code $path',
+        });
+      });
+    }
+  });
+
   group('play', () {
     for (final (file, c) in _cases('play')) {
       test('$file: ${c['description']}', () {
@@ -139,8 +192,9 @@ void main() {
           story: story,
           rules: rules,
           random: random,
-          stats: _stats(rules, c['stats']! as Map<String, Object?>),
+          stats: _startStats(rules, random, c),
           name: c['name'] as String?,
+          creationEffects: _picked(rules, c['picks'] as Map<String, Object?>?),
         );
         final events = [...started];
         for (final (i, a) in (c['actions']! as List<Object?>).indexed) {

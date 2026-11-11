@@ -8,11 +8,15 @@ enum Severity { error, warning }
 
 /// One problem found in a story. [where] is a JSON-style path.
 class Issue {
-  const Issue(this.severity, this.where, this.message);
+  const Issue(this.severity, this.where, this.message, {this.code});
 
   final Severity severity;
   final String where;
   final String message;
+
+  /// For warnings, what kind it is (spec B16, the same in every engine that
+  /// claims the lint tier); null for errors.
+  final String? code;
 
   @override
   String toString() => '${severity.name}: $where: $message';
@@ -31,13 +35,15 @@ List<Issue> validateStory(
 /// (ids, and the chapter of each node) must match.
 List<Issue> compareTranslations(Story reference, Story other) {
   final issues = <Issue>[];
-  void diff(String what, Set<String> a, Set<String> b) {
+  // [at] is where the id is declared (B16), so a tool can point at it.
+  void diff(String what, String at, Set<String> a, Set<String> b) {
     for (final id in a.difference(b)) {
       issues.add(
         Issue(
           Severity.warning,
-          other.lang,
+          '$at.$id',
           '$what "$id" exists in ${reference.lang} but not in ${other.lang}',
+          code: 'translation-missing',
         ),
       );
     }
@@ -45,28 +51,36 @@ List<Issue> compareTranslations(Story reference, Story other) {
       issues.add(
         Issue(
           Severity.warning,
-          other.lang,
+          '$at.$id',
           '$what "$id" exists in ${other.lang} but not in ${reference.lang}',
+          code: 'translation-extra',
         ),
       );
     }
   }
 
-  diff('node', reference.nodes.keys.toSet(), other.nodes.keys.toSet());
-  diff('item', reference.items.keys.toSet(), other.items.keys.toSet());
-  diff('stat', _statIds(reference), _statIds(other));
+  diff('node', 'nodes', reference.nodes.keys.toSet(), other.nodes.keys.toSet());
+  diff('item', 'items', reference.items.keys.toSet(), other.items.keys.toSet());
+  diff('stat', 'rules.stats', _statIds(reference), _statIds(other));
   diff(
     'journal entry',
+    'journal',
     reference.journal.keys.toSet(),
     other.journal.keys.toSet(),
   );
-  diff('flag', _flags(reference), _flags(other));
+  diff('flag', 'flags', _flags(reference), _flags(other));
   diff(
     'achievement',
+    'achievements',
     reference.achievements.keys.toSet(),
     other.achievements.keys.toSet(),
   );
-  diff('chapter', reference.chapters.keys.toSet(), other.chapters.keys.toSet());
+  diff(
+    'chapter',
+    'chapters',
+    reference.chapters.keys.toSet(),
+    other.chapters.keys.toSet(),
+  );
   for (final id in reference.nodes.keys.toSet().intersection(
     other.nodes.keys.toSet(),
   )) {
@@ -78,6 +92,7 @@ List<Issue> compareTranslations(Story reference, Story other) {
           Severity.warning,
           'nodes.$id',
           'has $textA text parts in ${reference.lang} but $textB in ${other.lang}',
+          code: 'translation-text-parts',
         ),
       );
     }
@@ -90,6 +105,7 @@ List<Issue> compareTranslations(Story reference, Story other) {
           'nodes.$id',
           'is in chapter ${chapterA ?? 'none'} in ${reference.lang} but '
               '${chapterB ?? 'none'} in ${other.lang}',
+          code: 'translation-chapter',
         ),
       );
     }
@@ -101,6 +117,7 @@ List<Issue> compareTranslations(Story reference, Story other) {
           Severity.warning,
           'nodes.$id',
           'has $a choices in ${reference.lang} but $b in ${other.lang}',
+          code: 'translation-choices',
         ),
       );
     }
@@ -141,8 +158,8 @@ class _Validator {
   void error(String where, String message) =>
       issues.add(Issue(Severity.error, where, message));
 
-  void warn(String where, String message) =>
-      issues.add(Issue(Severity.warning, where, message));
+  void warn(String where, String code, String message) =>
+      issues.add(Issue(Severity.warning, where, message, code: code));
 
   List<Issue> run() {
     try {
@@ -160,6 +177,7 @@ class _Validator {
       if (value.capacity != null && rules?.inventory.capacity == null) {
         warn(
           'items.$key.capacity',
+          'capacity-without-pack',
           'adds pack room but the story has no inventory capacity',
         );
       }
@@ -248,7 +266,7 @@ class _Validator {
 
   void _node(String id, Node node) {
     final at = 'nodes.$id';
-    if (node.draft) warn(at, 'draft page, not written yet');
+    if (node.draft) warn(at, 'draft', 'draft page, not written yet');
     _image('$at.image', node.image);
     if (node.music != null && node.music != stopMusic) {
       _file('$at.music', node.music!, 'music');
@@ -386,34 +404,42 @@ class _Validator {
   void _summaries() {
     for (final id in story.achievements.keys) {
       if (!achievementsEarned.contains(id)) {
-        warn('achievements.$id', 'is never earned');
+        warn('achievements.$id', 'never-earned', 'is never earned');
       }
     }
     for (final MapEntry(:key, :value) in itemsRequired.entries) {
       if (!itemsGiven.contains(key)) {
-        warn(value, 'item "$key" is required but never given');
+        warn(
+          value,
+          'required-never-given',
+          'item "$key" is required but never given',
+        );
       }
     }
     for (final item in usableItems.difference(itemsGiven)) {
-      warn('items.$item', 'is usable but never given');
+      warn('items.$item', 'usable-never-given', 'is usable but never given');
     }
     for (final MapEntry(:key, :value) in itemsTaken.entries) {
       if (!itemsGiven.contains(key)) {
-        warn(value, 'item "$key" is taken but never given');
+        warn(
+          value,
+          'taken-never-given',
+          'item "$key" is taken but never given',
+        );
       }
     }
     for (final MapEntry(:key, :value) in flagsRead.entries) {
       if (!flagsSet.contains(key)) {
-        warn(value, 'flag "$key" is checked but never set');
+        warn(value, 'flag-never-set', 'flag "$key" is checked but never set');
       }
     }
     for (final entry in story.journal.keys) {
       if (!entriesUnlocked.contains(entry)) {
-        warn('journal.$entry', 'is never unlocked');
+        warn('journal.$entry', 'journal-never-unlocked', 'is never unlocked');
       }
     }
     for (final flag in flagsSet.difference(flagsRead.keys.toSet())) {
-      warn('flags', 'flag "$flag" is set but never checked');
+      warn('flags.$flag', 'flag-never-checked', 'is set but never checked');
     }
   }
 
@@ -436,13 +462,13 @@ class _Validator {
       }
     }
     for (final id in story.nodes.keys.where((id) => !seen.contains(id))) {
-      warn('nodes.$id', 'is unreachable from the start');
+      warn('nodes.$id', 'unreachable', 'is unreachable from the start');
     }
     final reachableEndings = seen
         .map((id) => story.nodes[id]!.ending)
         .whereType<Ending>();
     if (!reachableEndings.contains(Ending.victory)) {
-      warn('nodes', 'no victory ending is reachable');
+      warn('nodes', 'no-victory', 'no victory ending is reachable');
     }
   }
 }
