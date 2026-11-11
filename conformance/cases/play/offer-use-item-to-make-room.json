@@ -1,0 +1,117 @@
+{
+  "description": "While an offer waits, the player may use an item, which makes room.",
+  "spec": [
+    "B4",
+    "B5"
+  ],
+  "story": {
+    "schema": 3,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "inventory": {
+        "capacity": 1,
+        "pickup": "choose"
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Page",
+        "effects": [
+          {
+            "give": "potion"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "Page",
+        "effects": [
+          {
+            "give": "rope"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "rope": {
+        "name": "Rope"
+      },
+      "lamp": {
+        "name": "Lamp"
+      },
+      "bag": {
+        "name": "Bag",
+        "capacity": 1
+      },
+      "potion": {
+        "name": "Potion",
+        "use": {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 2
+            }
+          ],
+          "when": [
+            "story"
+          ]
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 10,
+      "max": 12
+    },
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "offer": {
+        "take": true
+      }
+    },
+    {
+      "choose": 0
+    },
+    {
+      "use": "potion"
+    },
+    {
+      "offer": {
+        "take": true
+      }
+    }
+  ],
+  "expect": {
+    "inventory": [
+      "rope"
+    ],
+    "offers": [],
+    "stats": {
+      "stamina": 12
+    }
+  }
+}

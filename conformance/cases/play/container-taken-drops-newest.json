@@ -1,0 +1,103 @@
+{
+  "description": "When a container leaves the pack, the most recently picked up items that no longer fit are lost.",
+  "spec": [
+    "B5"
+  ],
+  "story": {
+    "schema": 3,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "inventory": {
+        "capacity": 1,
+        "pickup": "auto"
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Page",
+        "effects": [
+          {
+            "give": "bag"
+          },
+          {
+            "give": "rope"
+          },
+          {
+            "give": "lamp"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "Page",
+        "effects": [
+          {
+            "take": "bag"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "rope": {
+        "name": "Rope"
+      },
+      "lamp": {
+        "name": "Lamp"
+      },
+      "bag": {
+        "name": "Bag",
+        "capacity": 1
+      },
+      "potion": {
+        "name": "Potion",
+        "use": {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 2
+            }
+          ],
+          "when": [
+            "story"
+          ]
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "b",
+    "inventory": [
+      "rope"
+    ]
+  }
+}
