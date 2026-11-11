@@ -13,4 +13,8 @@ content tests: a template renders with strings; a `gamebook` block becomes an em
 `dart run tool/build.dart` writes build/en/index.html and build/pt/index.html; checks green.
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- `SiteBuilder` (`lib/src/content/site_builder.dart`) builds `build/index.html` (language picker), `build/<lang>/index.html`, and copies `css/` and `assets/`. Add pages in `_buildLanguage`; give each page a template in `templates/` and its text in `strings/*.json`.
+- Embeds: `embedExamples(markdown, lookup)` is written and tested but not wired yet; step 10 wires chapters (render with `package:markdown`, `ExtensionSet.gitHubWeb`, after `embedExamples`).
+- The layout loads `js/main.dart.js` (deferred); `web/main.dart` is empty until step 02.
+- `pubspec.lock` is ignored repo-wide (root `.gitignore`), as for the engine.
+- Logo is the app icon resized to 256px.

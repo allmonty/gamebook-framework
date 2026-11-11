@@ -1,0 +1,13 @@
+{
+  "page.title": "Gamebook Framework: write gamebooks, play anywhere",
+  "page.description": "An open JSON format for gamebooks with stats, dice, items and combat built in. Play and edit stories right in your browser.",
+  "nav.skip": "Skip to content",
+  "nav.label": "Main",
+  "nav.otherLanguage": "PT",
+  "brand.kicker": "Grimoire // open format",
+  "home.kicker": "Gamebooks // rules as data",
+  "home.title": "Write gamebooks. Play anywhere.",
+  "home.lead": "One JSON file holds your story and its rules: stats, dice, items and fights. Any engine plays it the same way.",
+  "footer.license": "Code under MIT, spec and content under CC BY 4.0.",
+  "footer.made": "Built with the reference Dart engine"
+}

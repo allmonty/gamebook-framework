@@ -1,0 +1,13 @@
+{
+  "page.title": "Gamebook Framework: escreva livros-jogo, jogue em qualquer lugar",
+  "page.description": "Um formato JSON aberto para livros-jogo com atributos, dados, itens e combate. Jogue e edite histórias no navegador.",
+  "nav.skip": "Pular para o conteúdo",
+  "nav.label": "Principal",
+  "nav.otherLanguage": "EN",
+  "brand.kicker": "Grimório // formato aberto",
+  "home.kicker": "Livros-jogo // regras como dados",
+  "home.title": "Escreva livros-jogo. Jogue em qualquer lugar.",
+  "home.lead": "Um arquivo JSON guarda sua história e suas regras: atributos, dados, itens e lutas. Qualquer motor joga do mesmo jeito.",
+  "footer.license": "Código sob MIT, especificação e conteúdo sob CC BY 4.0.",
+  "footer.made": "Feito com o motor de referência em Dart"
+}

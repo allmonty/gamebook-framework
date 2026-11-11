@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{page.title}}</title>
+<meta name="description" content="{{page.description}}">
+<link rel="icon" href="{{root}}assets/logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="{{root}}css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">{{nav.skip}}</a>
+<header class="site-header">
+  <a class="brand" href="{{root}}{{lang}}/index.html">
+    <img src="{{root}}assets/logo.jpeg" alt="" width="32" height="32">
+    <span class="brand-text"><span class="label">{{brand.kicker}}</span><span class="brand-name">Gamebook Framework</span></span>
+  </a>
+  <nav class="site-nav" aria-label="{{nav.label}}">
+    <a href="https://github.com/allmonty/gamebook-framework">GitHub</a>
+    <a class="lang-switch label" href="{{root}}{{otherLang}}/{{path}}" hreflang="{{otherLang}}">{{nav.otherLanguage}}</a>
+  </nav>
+</header>
+<main id="main">
+{{content}}
+</main>
+<footer class="site-footer">
+  <p>{{footer.license}}</p>
+  <p class="label">{{footer.made}}</p>
+</footer>
+<script defer src="{{root}}js/main.dart.js"></script>
+</body>
+</html>
