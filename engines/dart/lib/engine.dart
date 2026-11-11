@@ -127,7 +127,9 @@ class ChoiceView {
     required this.choice,
     this.unmet = const [],
     String? text,
-  }) : text = text ?? choice.text;
+    bool? locked,
+  }) : text = text ?? choice.text,
+       locked = locked ?? unmet.isNotEmpty;
 
   /// Position in the node's `choices`; pass it to [GameEngine.choose].
   final int index;
@@ -136,10 +138,13 @@ class ChoiceView {
   /// The choice text with `{stat}` placeholders filled in.
   final String text;
 
-  /// Why the choice is locked; empty when it can be chosen.
+  /// Why the choice is locked: the requirements not met. Empty when it can be
+  /// chosen, and also for a condition that fails with nothing to name (an
+  /// empty `any`).
   final List<Unmet> unmet;
 
-  bool get locked => unmet.isNotEmpty;
+  /// Whether the choice's condition fails, so it cannot be chosen.
+  final bool locked;
 }
 
 /// Plays one story. Pure Dart; randomness comes from [random]. The order in
@@ -275,6 +280,8 @@ class GameEngine {
       unmet: choice.condition == null
           ? const []
           : explain(choice.condition!, _state),
+      locked:
+          choice.condition != null && !evaluate(choice.condition!, _state),
     );
   }
 

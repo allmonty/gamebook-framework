@@ -64,6 +64,40 @@ Story arena() => Story.fromJson(
 );
 
 void main() {
+  test('a condition that fails with nothing to name still locks', () {
+    final story = Story.fromJson({
+      'schema': 1,
+      'id': 'c',
+      'lang': 'en',
+      'title': 'C',
+      'rules': {'preset': 'fighting-fantasy'},
+      'start': 'a',
+      'nodes': {
+        'a': {
+          'text': 'A',
+          'choices': [
+            {
+              'text': 'Never',
+              'to': 'won',
+              'if': {'any': <Object?>[]},
+            },
+            {
+              'text': 'Never either',
+              'to': 'won',
+              'if': {
+                'not': {'all': <Object?>[]},
+              },
+            },
+          ],
+        },
+        'won': {'text': 'Won', 'ending': 'victory'},
+      },
+    });
+    final (engine, _) = start(story);
+    expect([for (final c in engine.choices) c.locked], [true, true]);
+    expect(() => engine.choose(0), throwsStateError);
+  });
+
   group('draft pages (schema 6)', () {
     Story drafted() => Story.fromJson(
       jsonDecode('''

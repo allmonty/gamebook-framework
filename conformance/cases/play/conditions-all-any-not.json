@@ -1,0 +1,160 @@
+{
+  "description": "all is true when every part is (empty: true), any when one is (empty: false), not negates.",
+  "spec": [
+    "B7"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "give": "key"
+          },
+          {
+            "set": "y"
+          }
+        ],
+        "choices": [
+          {
+            "text": "all of nothing",
+            "to": "won",
+            "if": {
+              "all": []
+            }
+          },
+          {
+            "text": "any of nothing",
+            "to": "won",
+            "if": {
+              "any": []
+            }
+          },
+          {
+            "text": "not x",
+            "to": "won",
+            "if": {
+              "not": {
+                "flag": "x"
+              }
+            }
+          },
+          {
+            "text": "key and y",
+            "to": "won",
+            "if": {
+              "all": [
+                {
+                  "has": "key"
+                },
+                {
+                  "flag": "y"
+                }
+              ]
+            }
+          },
+          {
+            "text": "key and x",
+            "to": "won",
+            "if": {
+              "all": [
+                {
+                  "has": "key"
+                },
+                {
+                  "flag": "x"
+                }
+              ]
+            }
+          },
+          {
+            "text": "x or y",
+            "to": "won",
+            "if": {
+              "any": [
+                {
+                  "flag": "x"
+                },
+                {
+                  "flag": "y"
+                }
+              ]
+            }
+          },
+          {
+            "text": "not key",
+            "to": "won",
+            "if": {
+              "not": {
+                "has": "key"
+              }
+            }
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    },
+    "items": {
+      "key": {
+        "name": "Key"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "choices": [
+      {
+        "index": 0,
+        "text": "all of nothing",
+        "locked": false
+      },
+      {
+        "index": 1,
+        "text": "any of nothing",
+        "locked": true
+      },
+      {
+        "index": 2,
+        "text": "not x",
+        "locked": false
+      },
+      {
+        "index": 3,
+        "text": "key and y",
+        "locked": false
+      },
+      {
+        "index": 4,
+        "text": "key and x",
+        "locked": true
+      },
+      {
+        "index": 5,
+        "text": "x or y",
+        "locked": false
+      },
+      {
+        "index": 6,
+        "text": "not key",
+        "locked": true
+      }
+    ]
+  }
+}
