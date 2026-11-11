@@ -1,0 +1,103 @@
+{
+  "description": "A stat condition compares the current value with gte, lte or eq.",
+  "spec": [
+    "B7"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "skill = 9",
+            "to": "won",
+            "if": {
+              "stat": "skill",
+              "eq": 9
+            }
+          },
+          {
+            "text": "skill = 8",
+            "to": "won",
+            "if": {
+              "stat": "skill",
+              "eq": 8
+            }
+          },
+          {
+            "text": "skill <= 9",
+            "to": "won",
+            "if": {
+              "stat": "skill",
+              "lte": 9
+            }
+          },
+          {
+            "text": "skill <= 8",
+            "to": "won",
+            "if": {
+              "stat": "skill",
+              "lte": 8
+            }
+          },
+          {
+            "text": "skill >= 10",
+            "to": "won",
+            "if": {
+              "stat": "skill",
+              "gte": 10
+            }
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "choices": [
+      {
+        "index": 0,
+        "text": "skill = 9",
+        "locked": false
+      },
+      {
+        "index": 1,
+        "text": "skill = 8",
+        "locked": true
+      },
+      {
+        "index": 2,
+        "text": "skill <= 9",
+        "locked": false
+      },
+      {
+        "index": 3,
+        "text": "skill <= 8",
+        "locked": true
+      },
+      {
+        "index": 4,
+        "text": "skill >= 10",
+        "locked": true
+      }
+    ]
+  }
+}

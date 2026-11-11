@@ -1,0 +1,132 @@
+{
+  "description": "visited is true once a node was entered; visits counts entries (eq, lte).",
+  "spec": [
+    "B7"
+  ],
+  "story": {
+    "schema": 4,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "To b",
+            "to": "b"
+          },
+          {
+            "text": "To c",
+            "to": "c"
+          },
+          {
+            "text": "been to b",
+            "to": "won",
+            "if": {
+              "visited": "b"
+            }
+          },
+          {
+            "text": "been to c",
+            "to": "won",
+            "if": {
+              "visited": "c"
+            }
+          },
+          {
+            "text": "here twice",
+            "to": "won",
+            "if": {
+              "visits": "a",
+              "eq": 2
+            }
+          },
+          {
+            "text": "here at most once",
+            "to": "won",
+            "if": {
+              "visits": "a",
+              "lte": 1
+            }
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "Back",
+            "to": "a"
+          }
+        ]
+      },
+      "c": {
+        "text": "C",
+        "choices": [
+          {
+            "text": "Back",
+            "to": "a"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "choices": [
+      {
+        "index": 0,
+        "text": "To b",
+        "locked": false
+      },
+      {
+        "index": 1,
+        "text": "To c",
+        "locked": false
+      },
+      {
+        "index": 2,
+        "text": "been to b",
+        "locked": false
+      },
+      {
+        "index": 3,
+        "text": "been to c",
+        "locked": true
+      },
+      {
+        "index": 4,
+        "text": "here twice",
+        "locked": false
+      },
+      {
+        "index": 5,
+        "text": "here at most once",
+        "locked": true
+      }
+    ]
+  }
+}

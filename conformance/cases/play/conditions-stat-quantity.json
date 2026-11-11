@@ -1,0 +1,116 @@
+{
+  "description": "The right side of a stat condition may be a quantity: another stat times a number (default 1, may be negative).",
+  "spec": [
+    "B4",
+    "B7"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "stats": {
+        "gold": {
+          "label": "Gold",
+          "roll": "0",
+          "limit": 50
+        },
+        "price": {
+          "label": "Price",
+          "roll": "0",
+          "limit": 50
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "twice the price",
+            "to": "won",
+            "if": {
+              "stat": "gold",
+              "gte": {
+                "stat": "price",
+                "times": 2
+              }
+            }
+          },
+          {
+            "text": "three times",
+            "to": "won",
+            "if": {
+              "stat": "gold",
+              "gte": {
+                "stat": "price",
+                "times": 3
+              }
+            }
+          },
+          {
+            "text": "minus the price",
+            "to": "won",
+            "if": {
+              "stat": "gold",
+              "lte": {
+                "stat": "price",
+                "times": -1
+              }
+            }
+          },
+          {
+            "text": "gold itself",
+            "to": "won",
+            "if": {
+              "stat": "gold",
+              "eq": {
+                "stat": "gold"
+              }
+            }
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8,
+    "gold": 10,
+    "price": 4
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "choices": [
+      {
+        "index": 0,
+        "text": "twice the price",
+        "locked": false
+      },
+      {
+        "index": 1,
+        "text": "three times",
+        "locked": true
+      },
+      {
+        "index": 2,
+        "text": "minus the price",
+        "locked": true
+      },
+      {
+        "index": 3,
+        "text": "gold itself",
+        "locked": false
+      }
+    ]
+  }
+}
