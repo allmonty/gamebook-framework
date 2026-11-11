@@ -212,7 +212,7 @@ void main() {
         }),
         unorderedEquals([
           'error: nodes.treasure.combat.enemies[0].health: must be at least 1',
-          'error: nodes.treasure.combat.enemies[0]: "Rat" needs a defense (vs-defense combat)',
+          'error: nodes.treasure.combat.enemies[0].defense: missing: "Rat" needs a defense (vs-defense combat)',
         ]),
       );
     });

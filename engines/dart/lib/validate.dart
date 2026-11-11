@@ -344,7 +344,10 @@ class _Validator {
       if (enemy.health < 1) error('$here.health', 'must be at least 1');
       if (enemy.damage case final damage?) _dice('$here.damage', damage);
       if (rulesCombat?.mode == CombatMode.vsDefense && enemy.defense == null) {
-        error(here, '"${enemy.name}" needs a defense (vs-defense combat)');
+        error(
+          '$here.defense',
+          'missing: "${enemy.name}" needs a defense (vs-defense combat)',
+        );
       }
     }
   }
