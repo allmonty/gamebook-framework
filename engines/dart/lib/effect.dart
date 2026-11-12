@@ -150,7 +150,3 @@ GameState applyEffect(Effect effect, GameState state) => switch (effect) {
           )
         : state,
 };
-
-/// [effects] applied in order.
-GameState applyEffects(Iterable<Effect> effects, GameState state) =>
-    effects.fold(state, (s, e) => applyEffect(e, s));

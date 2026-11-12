@@ -212,7 +212,7 @@ Finished stories can be **packaged** into a single `.gamebook` file (a zip) that
 | [engines/](engines/README.md) | engines; the reference one is [Dart](engines/dart/README.md) (with a validator and graph CLI) |
 | [site/](site/README.md) | the website and the bilingual tutorial, built in Dart on the reference engine |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | how to change the spec or add an engine |
-| [AGENTS.md](AGENTS.md), [roadmap/](roadmap/README.md) | how AI assistants (and people) work in this repo, and the plan in commit-sized steps |
+| [AGENTS.md](AGENTS.md) | how AI assistants (and people) work in this repo |
 
 ## Status
 Schema versions 1 to 7 are specified. The Dart engine, which runs the gamebook app for iOS and Android (not public yet), implements all of them, and reads and writes `.gamebook` packages (B14).

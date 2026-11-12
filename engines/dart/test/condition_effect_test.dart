@@ -367,10 +367,10 @@ void main() {
 
     test('effects apply in order and do not mutate the old state', () {
       final before = state();
-      final after = applyEffects([
+      final after = [
         effect({'give': 'a'}),
         effect({'stat': 'gold', 'add': 3}),
-      ], before);
+      ].fold(before, (s, e) => applyEffect(e, s));
       expect(after.inventory, {'a'});
       expect(after.stat('gold'), 3);
       expect(before.inventory, isEmpty);
