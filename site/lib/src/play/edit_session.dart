@@ -59,6 +59,10 @@ class EditSession {
     } on StoryFormatException catch (e) {
       issues = [IssueView(error: true, where: e.path, message: e.message)];
       play = null;
+    } on Object catch (e) {
+      // Whatever a story from a stranger breaks, the page says so and lives.
+      issues = [IssueView(error: true, where: '', message: '$e')];
+      play = null;
     }
   }
 

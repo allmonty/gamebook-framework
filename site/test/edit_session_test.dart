@@ -66,4 +66,22 @@ void main() {
     expect(warning.where, 'nodes.attic');
     expect(edit.play, isNotNull, reason: 'warnings do not stop play');
   });
+
+  test('an unexpected failure is an error to read, not a crash', () {
+    final edit = EditSession(_rustyDoor(), _BrokenDice());
+    expect(edit.play, isNull);
+    expect(edit.issues.single.error, isTrue);
+    expect(edit.issues.single.message, contains('no dice'));
+  });
+}
+
+class _BrokenDice implements Random {
+  @override
+  int nextInt(int max) => throw StateError('no dice');
+
+  @override
+  bool nextBool() => throw StateError('no dice');
+
+  @override
+  double nextDouble() => throw StateError('no dice');
 }
