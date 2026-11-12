@@ -55,7 +55,8 @@ TwineImport importTwine(String source, {String lang = 'en'}) {
     final id = ids[p.name]!;
     final links = _links(p.text);
     final choices = <Map<String, Object?>>[];
-    for (final (text, target) in links) {
+    for (final (words, target) in links) {
+      final text = _literal(words);
       final to = ids[target];
       if (to == null) {
         report.add(
@@ -74,7 +75,7 @@ TwineImport importTwine(String source, {String lang = 'en'}) {
       );
     }
     if (text.isEmpty) text = p.name;
-    final node = <String, Object?>{'title': p.name, 'text': text};
+    final node = <String, Object?>{'title': p.name, 'text': _literal(text)};
     if (choices.isNotEmpty) {
       node['choices'] = choices;
     } else {
@@ -97,7 +98,8 @@ TwineImport importTwine(String source, {String lang = 'en'}) {
   }
   final story = <String, Object?>{
     'schema': 1,
-    'id': _slug(title).toLowerCase(),
+    // A story id has no underscore.
+    'id': _slug(title).toLowerCase().replaceAll('_', '-'),
     'lang': lang,
     'title': title,
     'rules': {'preset': 'fighting-fantasy'},
@@ -111,6 +113,9 @@ TwineImport importTwine(String source, {String lang = 'en'}) {
   }
   return TwineImport(story, positions, report);
 }
+
+/// Twine text is literal: its braces are not placeholders.
+String _literal(String s) => s.replaceAll('{', '{{').replaceAll('}', '}}');
 
 final _code = RegExp(r'<<|\(\w+:|\$\w|_\w+\s*to\b');
 final _link = RegExp(r'\[\[(.+?)\]\]');
