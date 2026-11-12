@@ -188,6 +188,7 @@ class GameEngine {
   /// a pack that is too small drops the newest items as usual.
   void _applyCreation(List<Effect> effects, List<GameEvent> events) {
     for (final effect in effects) {
+      if (_dead) break;
       if (effect is Achieve) events.add(AchievementEarned(effect.achievement));
       _state = effect is GiveItem
           ? _state.copyWith(inventory: {..._state.inventory, effect.item})
@@ -223,8 +224,11 @@ class GameEngine {
 
   Node get node => story.nodes[_state.node]!;
 
+  /// Health at 0 is final: no effect applies after it (B4).
+  bool get _dead => (_state.stats[rules.health]?.value ?? 0) <= 0;
+
   /// Set once the player has died (health at 0) or reached an ending node.
-  Ending? get ending => (_state.stats[rules.health]?.value ?? 0) <= 0
+  Ending? get ending => _dead
       ? Ending.death
       : node.draft
       ? null
@@ -530,6 +534,7 @@ class GameEngine {
   /// adds the item, refuses it if the pack is full, or turns it into an offer.
   void _applyEffects(Iterable<Effect> effects, List<GameEvent> events) {
     for (final effect in effects) {
+      if (_dead) break;
       if (effect is GiveItem) {
         _give(effect.item, events);
       } else if (effect is Achieve) {

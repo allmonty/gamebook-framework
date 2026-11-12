@@ -1,0 +1,71 @@
+{
+  "description": "Health at 0 is final: the page entered after the fatal effect is visited, but its effects do not apply.",
+  "spec": [
+    "B4",
+    "B9",
+    "B10"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Fall",
+            "to": "b",
+            "effects": [
+              {
+                "stat": "stamina",
+                "add": -5
+              }
+            ]
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 2,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "b",
+    "ending": "death",
+    "stats": {
+      "stamina": 0
+    },
+    "visits": {
+      "b": 1
+    }
+  }
+}

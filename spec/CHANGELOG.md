@@ -14,4 +14,4 @@ A story says which version it needs in its `schema` field. Each version only add
 
 Not versioned with `schema`: game packages (`.gamebook`, B14), which can hold a story of any version, and the validator warnings with their codes (B16), which change no story.
 
-Clarified without a version change: luck in a fight changes the wound left after armor, and in a fight against several enemies it changes the round's total wound once (B11). Dice notation has limits: at most 100 dice, 1000 faces, and 6 digits for a modifier or a plain integer (B8).
+Clarified without a version change: luck in a fight changes the wound left after armor, and in a fight against several enemies it changes the round's total wound once (B11). Dice notation has limits: at most 100 dice, 1000 faces, and 6 digits for a modifier or a plain integer (B8). Health at 0 is final: once it is 0, no further effect applies, so a later effect in the same list, a check's effects or the target page's effects cannot bring the hero back; checks and tables still roll and the target is still entered (B4, B9, B10).
