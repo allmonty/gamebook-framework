@@ -1,0 +1,27 @@
+{
+  "rerolls": 2,
+  "health": "stamina",
+  "stats": {
+    "skill": {
+      "label": "Skill",
+      "roll": "1d6+6",
+      "max": true
+    },
+    "stamina": {
+      "label": "Stamina",
+      "roll": "2d6+12",
+      "max": true
+    },
+    "luck": {
+      "label": "Luck",
+      "roll": "1d6+6",
+      "max": true
+    }
+  },
+  "combat": {
+    "mode": "opposed",
+    "attackRoll": "2d6",
+    "attackStat": "skill",
+    "damage": "2"
+  }
+}

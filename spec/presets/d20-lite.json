@@ -1,0 +1,31 @@
+{
+  "rerolls": 2,
+  "health": "hp",
+  "stats": {
+    "might": {
+      "label": "Might",
+      "roll": "1d4"
+    },
+    "agility": {
+      "label": "Agility",
+      "roll": "1d4"
+    },
+    "wits": {
+      "label": "Wits",
+      "roll": "1d4"
+    },
+    "hp": {
+      "label": "HP",
+      "roll": "2d6+8",
+      "max": true
+    }
+  },
+  "combat": {
+    "mode": "vs-defense",
+    "attackRoll": "1d20",
+    "attackStat": "might",
+    "defenseStat": "agility",
+    "defenseBase": 10,
+    "damage": "1d6"
+  }
+}

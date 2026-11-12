@@ -15,4 +15,7 @@ The two presets (`fighting-fantasy`, `d20-lite`) exist in two places: tables in 
 Both files exist, the test fails if either side changes alone, checks green.
 
 ## Handoff notes
-(fill in)
+- `spec/presets/fighting-fantasy.json` and `d20-lite.json`: the `rules` block each preset stands for. Defaults are left out (no `"max": false`, no `undo`), as a story would write it.
+- The test is in `rules_test.dart`: `describe(Rules)` turns resolved rules into plain values (stats with id, label, roll, max, limit, min and hidden; health, rerolls, undo; combat mode, rolls, stats, defense, luck, table). Each file must resolve to the same as `{ "preset": "<name>" }`. Changing the damage in one file fails it, which I checked by hand and put back.
+- As the step said, the engine still builds its presets in code: `lib/` does no I/O. The test is the link.
+- Spec B4 "Presets" links the files and calls them normative; the tables stay for readers. The engines README tells new engines to build their presets from the files. LICENSE puts them under MIT with the schema and the cases. The README's map lists them.
