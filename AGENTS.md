@@ -3,7 +3,7 @@
 Guide for any AI (or human) working in this repo. Read it fully before changing anything.
 
 ## What this is
-The **Gamebook Framework**: an open JSON format for gamebooks whose rules (stats, dice, combat) are data. The repo holds the spec, its JSON Schema, a conformance suite, the Dart reference engine with its tools, and the public website with a bilingual tutorial (`site/`).
+The **Gamebook Framework**: an open JSON format for gamebooks whose rules (stats, dice, combat) are data. The repo holds the spec, its JSON Schema, a conformance suite, the Dart reference engine with its tools, starter games to copy (`starters/`), and the public website with a bilingual tutorial and a page that plays the starters (`site/`).
 
 The aim: the best gamebook format and engine, in a repository people and AIs can use and cite to build their games. What that means against other engines is in `spec/comparison.md` (section 8).
 
@@ -15,6 +15,7 @@ The aim: the best gamebook format and engine, in a repository people and AIs can
 | Understand the story format | `spec/framework.md` (the spec; Part A plain words, Part B exact) |
 | Know what other engines do and why this one exists | `spec/comparison.md` |
 | Change the spec, conformance cases or an engine | `CONTRIBUTING.md`, `engines/README.md`, `conformance/README.md` |
+| Add or change a starter game | `starters/README.md`: a folder per game, English and Portuguese with the same structure, no warnings, shown on `site/pages/{en,pt}/starters.md` (tests fail without each) |
 | Work on the Dart engine | `engines/dart/README.md` |
 | Work on the website or tutorial | `site/README.md` |
 | Know why the site is built the way it is | `docs/adr/` |
