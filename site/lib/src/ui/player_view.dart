@@ -41,11 +41,13 @@ class PlayerView {
         'div',
         children: [
           _hud(view.stats),
-          PackPanel(
-            view.pack,
-            m,
-            onUse: (id) => _act(() => session.useItem(id)),
-          ).element,
+          // An empty, unlimited pack says nothing worth the space.
+          if (view.pack.items.isNotEmpty || view.pack.capacity != null)
+            PackPanel(
+              view.pack,
+              m,
+              onUse: (id) => _act(() => session.useItem(id)),
+            ).element,
           if (view.journal.isNotEmpty || view.achievements.isNotEmpty)
             journalPanel(view, m),
           if (view.log.isNotEmpty) logPanel(view.log, m),
