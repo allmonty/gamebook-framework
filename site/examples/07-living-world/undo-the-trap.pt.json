@@ -1,0 +1,45 @@
+{
+  "schema": 5,
+  "id": "undo-the-trap",
+  "lang": "pt",
+  "title": "Desfazer a Armadilha",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "undo": 1,
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "hall",
+  "nodes": {
+    "hall": {
+      "text": "Dois corredores. Um piso parece mais novo que o outro.",
+      "choices": [
+        {
+          "text": "Ir pelo piso novo",
+          "to": "pit"
+        },
+        {
+          "text": "Ir pela escada velha",
+          "to": "stairs"
+        }
+      ]
+    },
+    "pit": {
+      "text": "O piso novo é um alçapão. Toque em Desfazer para voltar atrás.",
+      "ending": "death"
+    },
+    "stairs": {
+      "text": "A escada velha aguenta. Você saiu.",
+      "ending": "victory"
+    }
+  }
+}

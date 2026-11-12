@@ -1,0 +1,67 @@
+{
+  "schema": 4,
+  "id": "gold-counter",
+  "lang": "pt",
+  "title": "O Poço dos Desejos",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      },
+      "gold": {
+        "label": "Ouro",
+        "roll": "1d6"
+      }
+    }
+  },
+  "start": "well",
+  "nodes": {
+    "well": {
+      "text": [
+        "Um poço dos desejos brilha na praça. Você tem {gold} de ouro e {luck} de Sorte (no máximo {luck.max}).",
+        {
+          "if": {
+            "stat": "gold",
+            "lte": 2
+          },
+          "text": "Sua bolsa está quase vazia."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Jogar uma moeda (restam {gold})",
+          "to": "well",
+          "if": {
+            "stat": "gold",
+            "gte": 1
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -1
+            },
+            {
+              "stat": "luck",
+              "add": 1
+            }
+          ]
+        },
+        {
+          "text": "Seguir em frente",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "Você segue, um pouco mais sortudo, talvez.",
+      "ending": "victory"
+    }
+  }
+}

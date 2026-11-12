@@ -1,0 +1,85 @@
+{
+  "schema": 7,
+  "id": "journal-clues",
+  "lang": "pt",
+  "title": "O Escritório",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "journal": {
+    "letter": {
+      "title": "A carta do mago",
+      "text": "\"O cofre obedece à palavra BRASA.\""
+    },
+    "map": {
+      "title": "O mapa da parede",
+      "text": "Um túnel vai do porão até o rio."
+    }
+  },
+  "achievements": {
+    "scholar": {
+      "title": "Estudioso",
+      "description": "Terminou o escritório."
+    },
+    "cartographer": {
+      "title": "Cartógrafo",
+      "description": "Estudou o mapa do mago.",
+      "hidden": true
+    }
+  },
+  "start": "study",
+  "nodes": {
+    "study": {
+      "text": "O escritório de um mago morto. Uma carta na mesa, um mapa na parede.",
+      "choices": [
+        {
+          "text": "Ler a carta",
+          "to": "study",
+          "once": true,
+          "effects": [
+            {
+              "journal": "letter"
+            }
+          ]
+        },
+        {
+          "text": "Estudar o mapa",
+          "to": "study",
+          "once": true,
+          "effects": [
+            {
+              "journal": "map"
+            },
+            {
+              "achieve": "cartographer"
+            }
+          ]
+        },
+        {
+          "text": "Sair com o que aprendeu",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "Você sai. Abra o diário sob a mochila para reler suas pistas.",
+      "effects": [
+        {
+          "achieve": "scholar"
+        }
+      ],
+      "ending": "victory"
+    }
+  }
+}

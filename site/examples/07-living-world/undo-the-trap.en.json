@@ -1,0 +1,34 @@
+{
+  "schema": 5,
+  "id": "undo-the-trap",
+  "lang": "en",
+  "title": "Undo the Trap",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "undo": 1
+  },
+  "start": "hall",
+  "nodes": {
+    "hall": {
+      "text": "Two corridors. One floor looks newer than the other.",
+      "choices": [
+        {
+          "text": "Take the new floor",
+          "to": "pit"
+        },
+        {
+          "text": "Take the old stairs",
+          "to": "stairs"
+        }
+      ]
+    },
+    "pit": {
+      "text": "The new floor is a trapdoor. Press Undo to take it back.",
+      "ending": "death"
+    },
+    "stairs": {
+      "text": "The old stairs hold. You are out.",
+      "ending": "victory"
+    }
+  }
+}

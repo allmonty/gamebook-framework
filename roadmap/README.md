@@ -21,8 +21,8 @@ Status values: `todo`, `in progress`, `done`, `blocked`.
 | 12 | [Tutorial 3: Items](steps/12-tutorial-03.md) | done | 11592c3 |
 | 13 | [Tutorial 4: Stats and your hero](steps/13-tutorial-04.md) | done | b7f29a5 |
 | 14 | [Tutorial 5: Dice](steps/14-tutorial-05.md) | done | 55e935f |
-| 15 | [Tutorial 6: Combat](steps/15-tutorial-06.md) | done | |
-| 16 | [Tutorial 7: A living world](steps/16-tutorial-07.md) | todo | |
+| 15 | [Tutorial 6: Combat](steps/15-tutorial-06.md) | done | 68509ee |
+| 16 | [Tutorial 7: A living world](steps/16-tutorial-07.md) | done | |
 | 17 | [Tutorial 8: Check and publish](steps/17-tutorial-08.md) | todo | |
 | 18 | [Cookbook](steps/18-cookbook.md) | todo | |
 | 19 | [Deploy to GitHub Pages](steps/19-pages-deploy.md) | todo | |
