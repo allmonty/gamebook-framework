@@ -82,6 +82,7 @@ class ChoiceItem {
     this.locked = false,
     this.lockedText,
     this.needs = const [],
+    this.roll,
   });
 
   /// Pass to [PlaySession.choose].
@@ -92,6 +93,10 @@ class ChoiceItem {
 
   /// The author's own wording for why it is locked; wins over [needs].
   final String? lockedText;
+
+  /// What the choice rolls, for a check or a table: `2d6 + Skill ≥ 16`,
+  /// `1d6`. Shown before the tap (spec B10).
+  final String? roll;
 
   /// What is missing, for the UI to word as "Needs: ...".
   final List<Requirement> needs;

@@ -35,7 +35,7 @@ examples/05-dice/jump-the-gap
 - `op` and `vs`: `gte` passes when the total is `vs` or more; `lte` passes when it is `vs` or less. `vs` can be a number or a stat.
 - `pass` and `fail`: the pages to go to.
 
-Tell the reader what they are rolling in the choice text, as the example does: "(2d6 + Skill, 16 or more)". Checks are drawn in amber so readers can tell a risk from a plain choice. After the roll, the log shows the dice and the total.
+Tell the reader what they are rolling in the choice text, as the example does: "(2d6 + Skill, 16 or more)". The player also writes the roll under the choice ("Roll 2d6 + Skill ≥ 16") and draws it in amber, so readers can tell a risk from a plain choice. After the roll, the log shows the dice and the total.
 
 ## Test your Luck
 

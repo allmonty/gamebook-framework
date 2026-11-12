@@ -35,7 +35,7 @@ examples/05-dice/jump-the-gap
 - `op` e `vs`: `gte` passa quando o total é `vs` ou mais; `lte` passa quando é `vs` ou menos. `vs` pode ser um número ou um atributo.
 - `pass` e `fail`: as páginas para onde ir.
 
-Diga ao leitor o que ele vai rolar no texto da escolha, como no exemplo: "(2d6 + Habilidade, 16 ou mais)". Testes aparecem em âmbar, para o leitor distinguir um risco de uma escolha simples. Depois da rolagem, o registro mostra os dados e o total.
+Diga ao leitor o que ele vai rolar no texto da escolha, como no exemplo: "(2d6 + Habilidade, 16 ou mais)". O player também escreve a rolagem embaixo da escolha ("Rolar 2d6 + Habilidade ≥ 16") e a desenha em âmbar, para o leitor distinguir um risco de uma escolha simples. Depois da rolagem, o registro mostra os dados e o total.
 
 ## Teste sua Sorte
 

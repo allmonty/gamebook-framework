@@ -19,6 +19,7 @@
   "player.ending.victory": "Vitória // fim",
   "player.ending.defeat": "Derrota // fim",
   "player.ending.death": "Você morreu // fim",
+  "player.rolls": "Rolar {roll}",
   "player.locked": "Bloqueado",
   "player.needs": "Precisa: {list}",
   "player.not": "sem {what}",

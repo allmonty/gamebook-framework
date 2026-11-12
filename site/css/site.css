@@ -227,6 +227,7 @@ main { display: block; }
 .gb-choice.check .gb-index, .gb-choice.table .gb-index { color: var(--amber); }
 .gb-choice.locked { cursor: not-allowed; opacity: 0.55; background: var(--surface); }
 .gb-choice.locked .gb-index { color: var(--inert); }
+.gb-rolls { grid-column: 2; color: var(--muted); margin-top: var(--s1); }
 .gb-needs { grid-column: 2; color: var(--amber); margin-top: var(--s1); }
 
 .gb-ending { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); flex-wrap: wrap;

@@ -167,7 +167,23 @@ class PlaySession {
     locked: c.locked,
     lockedText: c.locked ? c.choice.lockedText : null,
     needs: [for (final u in c.unmet) _requirement(u)],
+    roll: c.choice.table?.roll ?? _rollOf(c.choice.check),
   );
+
+  /// A check in a line: the dice, what is added, and what it must reach.
+  String? _rollOf(Check? check) {
+    if (check == null) return null;
+    String side(Operand o) => switch (o) {
+      Const(:final value) => '$value',
+      StatRef(:final stat) => _label(stat),
+    };
+    return [
+      check.roll,
+      if (check.add case final add?) '+ ${side(add)}',
+      check.op == CheckOp.gte ? '≥' : '≤',
+      side(check.vs),
+    ].join(' ');
+  }
 
   Requirement _requirement(Unmet unmet) => switch (unmet.condition) {
     HasItem(:final item, :final amount) => Requirement(

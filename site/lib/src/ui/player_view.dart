@@ -227,6 +227,12 @@ class PlayerView {
       children: [
         el('span', cls: 'gb-index', text: choiceIndex(position)),
         el('span', cls: 'gb-text', text: c.text),
+        if (c.roll != null)
+          el(
+            'span',
+            cls: 'gb-rolls label',
+            text: m('player.rolls', {'roll': c.roll!}),
+          ),
         if (c.locked)
           el('span', cls: 'gb-needs label', text: lockedReason(c, m)),
       ],
