@@ -1,6 +1,6 @@
 # Gamebook frameworks and RPG rule systems: research
 
-Written 2026-10-24. Purpose: record what exists, what each option is good and bad at, and why we built our own data-driven JSON framework (see [framework.md](framework.md)). Nothing here is a legal opinion; check licenses yourself before shipping third-party content.
+Written 2026-10-24, updated 2026-11-11 with a second round of research (new entries in section 2, verified rules in section 3, and section 8). Purpose: record what exists, what each option is good and bad at, and why we built our own data-driven JSON framework (see [framework.md](framework.md)). Nothing here is a legal opinion; check licenses yourself before shipping third-party content.
 
 ## 1. The question
 We want one app that can play many kinds of gamebooks. A gamebook is a graph of pages. Each page has text and/or an image and some choices. Some choices need an item, a stat or a dice roll. So we need two things:
@@ -22,8 +22,8 @@ A narrative scripting language. Stories are written in a plain-text markup, comp
 A visual editor for hypertext stories, with output "story formats": [Harlowe, SugarCube and Chapbook](https://twinery.org/cookbook/introduction/story_formats.html) (plus Snowman). Harlowe and Chapbook aim at beginners; SugarCube has the largest feature set and a built-in save system ([community comparison](https://intfiction.org/t/twine-story-format-differences/72242)).
 - Pros: very friendly visual authoring, the graph is drawn for you, large community.
 - Cons: the product is an HTML+JavaScript page, not a data file. Logic is written as macros in each format's own syntax. Running it in Flutter means a WebView, which breaks native feel, accessibility and our own save/inventory UI. Importing the Twine archive and re-implementing macros is a large, lossy job.
-- Verdict: useful as an authoring inspiration (the story map). Not a runtime for us. A possible future importer for simple link-only stories.
-- Not verified: the license of each story format. Check the repositories before reusing any code.
+- Verdict: useful as an authoring inspiration (the story map). Not a runtime for us. The Dart engine now imports simple Twine stories (`import_twine`, Twee 3 or a published Twine 2 file) and reports what it could not convert.
+- Licenses, from secondary sources only (a Twine forum post and a repository mirror): SugarCube under the Simplified BSD license, Chapbook under MIT, Harlowe under a custom permissive license. Read each format's own LICENSE file before reusing any code.
 
 ### ChoiceScript (Choice of Games)
 A text-based scripting language for choice-driven games with variables and stats.
@@ -31,13 +31,35 @@ A text-based scripting language for choice-driven games with variables and stats
 - Cons: not open source. The interpreter is under a free non-commercial license; commercial use needs a license or a contract ([forum discussion](https://forum.choiceofgames.com/t/cog-contract-if-i-want-to-do-self-publish/36657), [another thread](https://forum.choiceofgames.com/t/question-regarding-intellectual-property-and-publishing-with-choicescript/107189)). A forum post quotes a 25% revenue fee and a USD 20,000 first-year minimum; that figure may be outdated, so confirm with the company. Also JavaScript-based, so same WebView problem as Twine.
 - Verdict: ruled out for licensing and runtime reasons.
 
-### egamebook and other gamebook-specific engines
-An older search result listed "egamebook" as a "sophisticated RPG engine in gamebook format" and "Jumbo Grove" with a JSON-heavy markup. **Not verified:** a follow-up search found nothing on either, so we do not know their status, license or fit. Treat as unexplored; check their repositories if we ever want prior art for a Dart-based engine.
+### egamebook (Filip Hracek)
+A Dart monorepo for "egamebooks", with one game, *Insignificant Little Vermin* (a procedural sword and sorcery adventure). BSD-3-Clause ([repository](https://github.com/filiph/egamebook)).
+- Pros: pure Dart, rich simulated combat, built by someone who shipped a game with it.
+- Cons: a story is **Dart code plus text files**; the documented way to make your own is to copy the example game's folder and change its code. There is no data format, so nothing can be checked, generated or played by another engine.
+- Verdict: prior art for a Dart engine, not a format.
+
+### Gamebook Engine (Brad Root)
+An iOS app (Swift, MPL-2.0) to write and play gamebooks, with a web player ([repository](https://github.com/amiantos/gamebookengine), [wiki](https://github.com/amiantos/gamebookengine/wiki)). The closest project to ours in spirit.
+- Model: a **Page** offers **Decisions**; **Rules** that test the player's **Attributes** decide which Decisions show; **Consequences** change Attributes. Stories export to `.gbook`, which is plain JSON. An analyzer warns about unreachable pages and dead ends. The web player has undo.
+- Cons for us: attributes are the only mechanic we could find; the pages we read mention no dice, inventory or combat. The format is whatever the app writes: no spec, schema, versions or tests for a second implementation.
+- Verdict: confirms the bet on JSON and on a static analyzer. We go further on rules.
+
+### GoDungeon
+A hosted web player and visual builder in early alpha ([announcement](https://intfiction.org/t/godungeon-a-web-engine-to-create-and-read-digital-interactive-story-with-incorporate-dice-rolls-and-inventory/78750)): d20 checks on choices, stats rolled at the start, items that unlock choices. Its goal is ours: "the computer handles stats, dice and inventory".
+- Cons for us: an account is needed to write; no combat, file format or license is described, so stories live on its servers.
+- Verdict: shows the demand. Player feedback there is worth keeping: animate the dice, show pictures of items, make choices large on big screens.
+
+### Tools for printed gamebooks
+[gamebookformat and its successor pangamebook](https://mcdemarco.net/tools/hyperfic/software.html) (a Pandoc filter) turn marked-up text into a book of **numbered, shuffled sections**. LibroGameCreator (Java) exports ePUB, RTF, ChoiceScript and Squiffy. GBAT is commercial and Windows-only.
+- They solve the opposite half: the book, with the reader doing the rules by hand.
+- Verdict: an export from our format to a numbered book is possible later, because our stories are data (section 8).
+
+### Others checked
+Squiffy, Dendry, Undum, Yarn Spinner and inklewriter are branching-text or dialogue tools like Ink and Twine: no dice, stats, inventory or combat built in ([IFWiki list](https://ifwiki.org/Authoring_systems_for_choice-based_IF)).
 
 ### Plain JSON graph (our choice)
 Write the graph directly as data: nodes, choices, conditions, effects, checks.
 - Pros: trivial to parse in Dart and to validate statically (broken links, unreachable pages, missing items); easy for people, scripts and AI to generate; rules can be part of the data; no external runtime or compiler; translations are just more files.
-- Cons: we build and maintain the engine, validator and authoring tooling; raw JSON is less pleasant to write than Ink for long prose (mitigated by the validator, the JSON Schema for editor help and the graph tool); no visual editor in v1.
+- Cons: we build and maintain the engine, validator and authoring tooling; raw JSON is less pleasant to write than Ink for long prose (mitigated by the validator, the JSON Schema for editor help, the graph tool, the website's playground and the kit for chatbots, [llm-kit.md](llm-kit.md)); no visual editor in this repository.
 
 ## 3. Rules systems
 All of these reduce to: **stats + a dice roll + a comparison**, optionally repeated in rounds. That is what our schema models (`roll`, `add`, `op`, `vs`, `combat.mode`).
@@ -45,7 +67,9 @@ All of these reduce to: **stats + a dice roll + a comparison**, optionally repea
 ### Fighting Fantasy (Puffin / Games Workshop era)
 - Stats: Skill (combat ability), Stamina (health), Luck (a dwindling stock). Starting values: Skill = 1 die + 6, Stamina = 2 dice + 12, Luck = 1 die + 6 ([example fan adventure](https://fighting-fantasy-fan-engine.sourceforge.io/curseof/curseofblackwoodmanor.pdf); consistent across several fan adventures, e.g. [this one](https://fighting-fantasy-fan-engine.sourceforge.io/Dragon/DRAGON.pdf)).
 - Combat round: each side rolls 2 dice and adds Skill. Higher total wounds the other for 2 Stamina; equal totals mean no damage. Fight until one Stamina reaches 0.
-- Test your Luck: roll 2 dice; success if the total is at most current Luck; Luck then drops by 1. **This rule is from memory; the sources above only say Luck is spent to improve outcomes.** Our preset implements it as a `check` plus a stat effect.
+- Test your Luck: roll 2 dice; success if the total is at most current Luck; Luck then drops by 1 either way. In a fight: lucky after wounding the creature takes 2 more Stamina from it, unlucky gives 1 back; when wounded, lucky restores 1 and unlucky costs 1 more. Found on 2026-11-11 in search results quoting the books' rules (*City of Thieves*); these are the defaults of `rules.combat.luck`.
+- Escaping, where a page offers it, costs 2 Stamina (same sources). In our format: the fight's `flee` page with a `stat` effect.
+- Provisions: meals carried as a number and eaten outside fights to restore Stamina. **The amount (4 per meal) is from memory.** This needs counted items (section 8).
 - Maps to our schema: `opposed` combat mode; a check with `roll: 2d6`, `add: none`, `op: lte`, `vs: luck`.
 - Caveat: exact text varies by book; the sources above are fan adventures that restate the rules, not the official rulebooks.
 
@@ -53,7 +77,8 @@ All of these reduce to: **stats + a dice roll + a comparison**, optionally repea
 - Stats: Combat Skill and Endurance. Kai series: Combat Skill = random number + 10, Endurance = random number + 20 (New Order series: +25 and +30).
 - Combat: Combat Ratio = your Combat Skill (with bonuses) minus the enemy's. Pick a number from the Random Number Table (a 10-sided die is an accepted substitute), look up Combat Ratio against the number in the Combat Results Table, which gives Endurance lost by both sides. Repeat until one reaches 0 ([Project Aon: Kai combat](https://www.projectaon.org/en/ReadersHandbook/KaiCombat), [example combat](https://www.projectaon.org/en/ReadersHandbook/ExampleCombat), [New Order combat](https://www.projectaon.org/en/ReadersHandbook/NewOrderCombat)).
 - Extras: Disciplines (skills the player picks) and special items grant bonuses or unlock choices.
-- Maps to our schema: stats and items work today. Disciplines map to flags or items. The Combat Results Table needs a new `combat.mode` (`table`); it is **out of scope for v1** but `combat.mode` leaves room. We did not retrieve the table itself.
+- Equipment, read on 2026-11-11 in [book 1's rules](https://www.projectaon.org/en/xhtml/lw/01fftd/equipmnt.htm): at most 2 weapons; a Backpack of at most 8 items, Meals included; Special Items carried apart; at most 50 Gold Crowns; told to eat without a Meal, lose 3 Endurance; fighting unarmed, -4 Combat Skill. [Disciplines](https://www.projectaon.org/en/xhtml/lw/01fftd/discplnz.htm): choose 5 of 10; Healing restores 1 Endurance for every section passed without a fight; Weaponskill gives +2 with one kind of weapon; Hunting removes the need for Meals.
+- Maps to our schema: the Combat Results Table is `combat.mode: "table"` and choosing disciplines is `rules.creation.picks` (both schema 5); the gold maximum is a stat `limit`; the backpack is `rules.inventory.capacity`. Not expressible yet: a count of Meals, a separate limit for weapons, a bonus that depends on which item is held, and healing on every page (section 8). We did not copy the table's values.
 
 ### d20 / D&D 5e
 - Six ability scores; a modifier derived from each; a check is d20 + modifier (+ proficiency) against a Difficulty Class. Typical DCs: 5 very easy, 10 easy, 15 medium, 20 hard, 25 very hard, 30 nearly impossible. Advantage and disadvantage roll two d20 and keep the higher or lower ([SRD mirror](https://dnd-wiki.org/wiki/SRD5:Check); we did not check the official SRD).
@@ -74,11 +99,13 @@ Roll N dice and count successes. Needs a new check type (`count`). Not in v1.
 | Ink | No (external functions) | Yes (`ink_dart`) | Partly (compiler) | Good (Inky) | Low | Medium |
 | Twine formats | No (macros) | No (WebView) | No | Excellent (visual) | Unverified | Low |
 | ChoiceScript | Variables only | No (JS) | No | Good | High (commercial) | Low |
-| egamebook | Claims RPG engine | Unverified | Unverified | Unverified | Unverified | Unknown |
+| egamebook | Yes, in code | Yes (Dart) | No (stories are code) | Dart programming | Low (BSD-3) | Low |
+| Gamebook Engine (`.gbook`) | Attributes only | No (Swift, web player) | Partly (its analyzer) | Good (in the app) | Low (MPL-2.0) | Medium |
+| GoDungeon | Dice, stats, items; no combat | No (hosted) | Unknown | Good (visual) | Unknown | Low |
 | **Own JSON + rules as data** | **Yes** | **Yes (pure Dart)** | **Yes (our validator)** | Medium (hand/AI, schema, graph tool) | None | **High** |
 
 ## 5. Decision
-Build our own JSON graph format with rules expressed as data, plus presets for Fighting Fantasy and d20-lite. Reasons: it is the only option where stats, dice, inventory and combat are first-class and a pure-Dart engine runs them with no external runtime. We pay for it by building the engine, validator and graph tool ourselves, and by having no visual editor in v1. The decision is cheap to revisit: a future importer can turn Ink or Twine content into our format, and `combat.mode` / check types can grow.
+Build our own JSON graph format with rules expressed as data, plus presets for Fighting Fantasy and d20-lite. Reasons: it is the only option where stats, dice, inventory and combat are first-class and a pure-Dart engine runs them with no external runtime. We pay for it by building the engine, validator and graph tool ourselves, and by having no visual editor here. The decision is cheap to revisit: the Twine importer exists, an Ink one could follow, and `combat.mode` and check types can grow. The second round of research (section 8) found nothing that changes it.
 
 ## 6. Content sources (for future games)
 - **Project Aon** (Lone Wolf books, free to read online). Its [license](https://projectaon.org/en/Main/License) says that by viewing or downloading you agree **not to redistribute** the books or illustrations in any format, and the FAQ restricts use to personal enjoyment. So we **cannot bundle Lone Wolf text or art in an app**. Read the license text yourself before deciding anything.
@@ -87,9 +114,37 @@ Build our own JSON graph format with rules expressed as data, plus presets for F
 - **D&D 5e SRD** text is the only mainstream RPG rules text with a permissive license, and we only borrow the mechanics (mechanics are not copyrightable, text is), so we do not need to copy any of it.
 
 ## 7. Not verified
-- Licenses of Harlowe, SugarCube and Chapbook.
-- Existence, status and license of egamebook and "Jumbo Grove".
+- Licenses of Harlowe, SugarCube and Chapbook at the source (we have secondary sources only).
+- "Jumbo Grove": still nothing found.
 - Lone Wolf's Combat Results Table values.
-- The official Fighting Fantasy rulebook wording (we used fan adventures that restate it), and the exact Test your Luck rule (from memory).
+- The official Fighting Fantasy rulebook wording (we used fan adventures and search results that quote it), and how much Stamina a meal of Provisions restores.
+- Whether Gamebook Engine has dice, inventory or combat beyond what its README and wiki front page say, and the license and file format of GoDungeon.
 - The official D&D 5e SRD text and license (we used a wiki mirror).
 - The current maintenance state of `ink_dart` and `flutter_ink`.
+
+## 8. Where we stand (2026-11-11)
+
+### What only this project has
+Among everything in section 2 we found no other project with:
+- a **written specification** with versions, where each version only adds;
+- a **conformance suite** with scripted dice, so a second engine in any language can prove it plays the same;
+- **rules as data** with presets: opposed, vs-defense and results-table combat, luck, checks and random tables without code;
+- a **strict validator with stable warning codes**, a random-play simulator, a JSON Schema and a kit that lets a chatbot write valid stories.
+
+### What others have and we lack
+| Seen in | What | For us |
+|---|---|---|
+| Fighting Fantasy, Lone Wolf | items you hold several of (Provisions, Meals, arrows) | planned: counted items |
+| Fighting Fantasy | "if it wounds you, turn to...", "if you win within N rounds" | planned: fight events |
+| every book | endings that are neither victory nor death | planned: a neutral ending |
+| web accessibility practice | a text for each picture | planned: image alt text |
+| Lone Wolf | at most 2 weapons next to an 8-item backpack | open: limits per kind of item |
+| Lone Wolf | +2 with one weapon, -4 unarmed | open: a bonus that depends on a condition |
+| Lone Wolf (Healing) | +1 Endurance on every page without a fight | open: rules that apply on every page |
+| gamebookformat, pangamebook, LibroGameCreator | a printable book of numbered, shuffled sections | open: an export tool; needs no format change |
+| Gamebook Engine | a dead-end analyzer | we have it by simulation (`simulate_story`), not statically |
+| GoDungeon, Twine | a visual builder | outside this repository (the Builder is a separate app) |
+| d20 games | advantage and disadvantage; dice pools | open: new check kinds |
+
+"Planned" means schema 8. "Open" items are candidates: each needs an author who wants it and a short story example before it is specified ([../CONTRIBUTING.md](../CONTRIBUTING.md)).
+
