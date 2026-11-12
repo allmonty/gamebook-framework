@@ -1,0 +1,46 @@
+{
+  "schema": 5,
+  "id": "golem-and-rat",
+  "lang": "en",
+  "title": "The Golem and the Rat",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "combat": {
+      "luck": {
+        "stat": "luck"
+      }
+    }
+  },
+  "start": "lab",
+  "nodes": {
+    "lab": {
+      "text": "In the ruined lab, a clay golem lurches up, and a cyber-rat darts from its feet. Both attack at once: choose your target each round.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Clay golem",
+            "attack": 5,
+            "health": 6,
+            "armor": 1
+          },
+          {
+            "name": "Cyber-rat",
+            "attack": 4,
+            "health": 2
+          }
+        ],
+        "simultaneous": true,
+        "win": "won",
+        "flee": "out"
+      }
+    },
+    "out": {
+      "text": "You flee into the sewers and are never seen again.",
+      "ending": "death"
+    },
+    "won": {
+      "text": "The lab falls silent.",
+      "ending": "victory"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "id": "d20-skirmish",
+  "lang": "pt",
+  "title": "Uma Escaramuça d20",
+  "rules": {
+    "preset": "d20-lite",
+    "stats": {
+      "might": {
+        "label": "Força"
+      },
+      "agility": {
+        "label": "Agilidade"
+      },
+      "wits": {
+        "label": "Astúcia"
+      },
+      "hp": {
+        "label": "PV"
+      }
+    }
+  },
+  "start": "road",
+  "nodes": {
+    "road": {
+      "text": "Um bandido da ferrugem bloqueia a estrada. Você acerta com 1d20 + Força de 11 ou mais; ele acerta com 1d20 + 2 contra 10 + sua Agilidade.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Bandido da ferrugem",
+            "attack": 2,
+            "defense": 11,
+            "health": 6,
+            "damage": "1d4"
+          }
+        ],
+        "win": "won"
+      }
+    },
+    "won": {
+      "text": "O bandido foge para os campos de sucata.",
+      "ending": "victory"
+    }
+  }
+}
