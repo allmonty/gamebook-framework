@@ -1,0 +1,62 @@
+{
+  "schema": 6,
+  "id": "tidy-book",
+  "lang": "pt",
+  "title": "Um Livro Organizado",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "chapters": {
+    "act1": {
+      "title": "Ato 1: A vila"
+    },
+    "act2": {
+      "title": "Ato 2: A cripta"
+    }
+  },
+  "showTitles": true,
+  "start": "village",
+  "nodes": {
+    "village": {
+      "title": "A vila",
+      "chapter": "act1",
+      "note": "Página de abertura: curta.",
+      "text": "Lanternas balançam sobre a praça da vila.",
+      "choices": [
+        {
+          "text": "Pegar a estrada norte",
+          "to": "road"
+        }
+      ]
+    },
+    "road": {
+      "title": "A estrada norte",
+      "chapter": "act1",
+      "text": "A estrada sobe pela neblina.",
+      "choices": [
+        {
+          "text": "Entrar na cripta",
+          "to": "crypt"
+        }
+      ]
+    },
+    "crypt": {
+      "title": "A cripta",
+      "chapter": "act2",
+      "note": "A FAZER: colocar a luta com o guardião aqui.",
+      "text": "Ar frio e ossos velhos. Fim, por enquanto.",
+      "ending": "victory"
+    }
+  }
+}
