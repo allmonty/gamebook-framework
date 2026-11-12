@@ -234,4 +234,33 @@ void main() {
     );
     expect(session.view.heading, 'The Rusty Door');
   });
+
+  test('undo brings back the music of the page before', () {
+    final session = PlaySession.start(
+      storyOf(
+        {
+          'quiet': {
+            'text': 'Silence.',
+            'choices': [
+              {'text': 'In', 'to': 'crypt'},
+            ],
+          },
+          'crypt': {
+            'text': 'An organ plays.',
+            'music': 'audio/crypt.ogg',
+            'ending': 'victory',
+          },
+        },
+        extra: {
+          'rules': {'preset': 'fighting-fantasy', 'undo': 1},
+        },
+      ),
+      random: Random(1),
+    )..choose(0);
+    expect(session.view.audio.music, 'audio/crypt.ogg');
+
+    session.undo();
+
+    expect(session.view.audio.music, isNull);
+  });
 }

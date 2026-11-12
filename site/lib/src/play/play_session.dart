@@ -30,7 +30,6 @@ class PlaySession {
   /// Character creation under way; null once the adventure has begun.
   HeroDraft? creation;
   List<GameEvent> _events = const [];
-  String? _music;
 
   /// Earned in any game since this session began; ids in earning order.
   final Set<String> _achievements = {};
@@ -67,7 +66,6 @@ class PlaySession {
       creationEffects: draft.effects,
     );
     _engine = engine;
-    _music = null;
     _record(events);
   }
 
@@ -100,8 +98,6 @@ class PlaySession {
     _events = events;
     for (final event in events) {
       switch (event) {
-        case MusicChanged(:final file):
-          _music = file;
         case AchievementEarned(:final achievement):
           _achievements.add(achievement);
         default:
@@ -145,7 +141,8 @@ class PlaySession {
       for (final id in _achievements) story.achievements[id]?.title ?? id,
     ],
     audio: AudioCue(
-      music: _music,
+      // From the state, not the events: undo brings the old music back.
+      music: _engine.state.music,
       sounds: [
         for (final e in _events)
           if (e is SoundPlayed) e.file,
