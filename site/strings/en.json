@@ -58,6 +58,7 @@
   "player.attack": "Attack {enemy}",
   "player.luck": "Test your luck",
   "player.flee": "Flee",
+  "player.fleeRound": "Flee (costs a round)",
   "player.journal": "Journal // {count}",
   "player.undo": "Undo",
   "player.restartNow": "Restart",

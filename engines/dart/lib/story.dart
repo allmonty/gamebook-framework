@@ -442,6 +442,7 @@ class Combat {
     required this.enemies,
     required this.win,
     this.flee,
+    this.fleeCost,
     this.wounded,
     this.rounds,
     this.simultaneous = false,
@@ -452,12 +453,21 @@ class Combat {
     final enemies = obj.list('enemies', Enemy.fromJson);
     if (enemies.isEmpty) throw obj.error('enemies', 'needs at least one enemy');
     final flee = obj.optString('flee');
+    final costName = obj.optString('fleeCost');
+    final fleeCost = costName == null
+        ? null
+        : CombatCost.values.where((c) => c.name == costName).firstOrNull ??
+              (throw obj.error('fleeCost', 'expected "round" or "free"'));
+    if (fleeCost != null && flee == null) {
+      throw obj.error('fleeCost', 'only applies to a fight with "flee"');
+    }
     final wounded = obj.optString('wounded');
     final rounds = obj.optObject('rounds');
     final combat = Combat(
       enemies: enemies,
       win: checkId(obj.string('win'), obj.childPath('win')),
       flee: flee == null ? null : checkId(flee, obj.childPath('flee')),
+      fleeCost: fleeCost,
       wounded: wounded == null
           ? null
           : checkId(wounded, obj.childPath('wounded')),
@@ -472,6 +482,10 @@ class Combat {
   final List<Enemy> enemies;
   final String win;
   final String? flee;
+
+  /// As written (schema 8); null is `free`. With `round`, fleeing lets the
+  /// enemies strike first.
+  final CombatCost? fleeCost;
 
   /// Where the fight goes the first time the player is wounded and still
   /// alive (schema 8).

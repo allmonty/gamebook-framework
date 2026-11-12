@@ -128,7 +128,7 @@ Pages can be **fight scenes**. The player taps a button to fight round by round.
 
 - Define one or more **enemies**, each with a name, attack score and health.
 - Two combat modes built in: **opposed** (Fighting Fantasy style — both sides roll, highest total wins) and **vs-defense** (d20 style — attacker rolls against the defender's rating).
-- If the player runs low on health they can **flee** to a page you specify (optional).
+- If the player runs low on health they can **flee** to a page you specify (optional). Fleeing can cost a round, Lone Wolf style: the enemy gets a free blow as the hero runs.
 - When all enemies are defeated the story continues on the page you set as the win destination.
 
 #### Advanced combat options

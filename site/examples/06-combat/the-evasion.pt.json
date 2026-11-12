@@ -1,0 +1,56 @@
+{
+  "schema": 8,
+  "id": "the-evasion",
+  "lang": "pt",
+  "title": "A Fuga",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "bridge",
+  "nodes": {
+    "bridge": {
+      "text": "Um troll mora debaixo da ponte de pedra, e hoje ele está acordado. Ele sobe para a estrada, com o dobro da sua altura, e bloqueia o caminho.",
+      "choices": [
+        {
+          "text": "Ficar e lutar",
+          "to": "fight"
+        }
+      ]
+    },
+    "fight": {
+      "text": "O troll gira um porrete do tamanho de uma árvore. Cada golpe que acerta custa 3 de Energia. Você pode correr de volta por onde veio, mas dar as costas custa uma rodada: o troll ganha um golpe livre enquanto você foge.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Troll da ponte",
+            "attack": 10,
+            "health": 12,
+            "damage": "3"
+          }
+        ],
+        "win": "won",
+        "flee": "ran",
+        "fleeCost": "round"
+      }
+    },
+    "ran": {
+      "text": "Você corre, e não para até a ponte sumir de vista. Está vivo, mas a estrada do outro lado vai ter que esperar.",
+      "ending": "defeat"
+    },
+    "won": {
+      "text": "O troll despenca no rio com um tchibum que molha a outra margem. A ponte é sua.",
+      "ending": "victory"
+    }
+  }
+}

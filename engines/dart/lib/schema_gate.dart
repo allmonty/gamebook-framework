@@ -127,6 +127,7 @@ String? _schema8(Story story) {
   for (final MapEntry(:key, :value) in story.nodes.entries) {
     if (value.imageAlt != null) return 'nodes.$key.imageAlt';
     if (value.ending == Ending.defeat) return 'nodes.$key.ending';
+    if (value.combat?.fleeCost != null) return 'nodes.$key.combat.fleeCost';
     if (value.combat?.wounded != null) return 'nodes.$key.combat.wounded';
     if (value.combat?.rounds != null) return 'nodes.$key.combat.rounds';
     for (var i = 0; i < value.parts.length; i++) {

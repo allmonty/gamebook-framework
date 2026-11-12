@@ -1,0 +1,68 @@
+{
+  "description": "In vs-defense mode the enemy rolls its attack when the player flees at the cost of a round.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "d20-lite"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A troll.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Troll",
+              "attack": 9,
+              "health": 9,
+              "defense": 12
+            }
+          ],
+          "win": "won",
+          "flee": "ran",
+          "fleeCost": "round"
+        }
+      },
+      "ran": {
+        "text": "Ran",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "might": 2,
+    "agility": 2,
+    "wits": 2,
+    "hp": 12
+  },
+  "dice": [
+    20,
+    4
+  ],
+  "actions": [
+    {
+      "flee": {}
+    }
+  ],
+  "expect": {
+    "node": "ran",
+    "stats": {
+      "hp": 8
+    }
+  }
+}

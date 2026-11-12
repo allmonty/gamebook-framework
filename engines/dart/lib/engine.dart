@@ -555,25 +555,7 @@ class GameEngine {
           use.combatCost == CombatCost.round &&
           ending == null) {
         final healthBefore = _health;
-        // Against several at once every enemy still standing strikes.
-        final strikers = fightNode.simultaneous
-            ? [
-                for (var i = 0; i < fightNode.enemies.length; i++)
-                  if (_state.combat!.enemyHealth[i] > 0) i,
-              ]
-            : [_state.combat!.enemy];
-        for (final i in strikers) {
-          if (ending != null) break;
-          final strike = enemyStrike(
-            rules: rules,
-            combat: fightNode,
-            state: _state,
-            random: random,
-            enemyIndex: i,
-          );
-          _state = strike.state;
-          events.add(CombatStrike(strike));
-        }
+        _strikes(fightNode, events);
         // It costs the round: it counts as one, and a strike as a wound.
         _afterRound(fightNode, CombatOutcome.ongoing, healthBefore, events);
       }
@@ -584,10 +566,39 @@ class GameEngine {
 
   /// Runs away from the fight, to the page the story names.
   List<GameEvent> flee() {
-    final target = combat?.flee;
+    final fightNode = combat;
+    final target = fightNode?.flee;
     if (target == null) throw StateError('cannot flee');
     _requireNoOffer();
-    return _run((events) => _enter(target, events));
+    return _run((events) {
+      // Running costs the round (schema 8): the enemies strike first. It is
+      // no wound for `wounded`, nor a round for `rounds`: the player left.
+      if (fightNode!.fleeCost == CombatCost.round) _strikes(fightNode, events);
+      if (ending == null) _enter(target, events);
+    });
+  }
+
+  /// The enemies strike while the player does something else (B5): the
+  /// current enemy, or every one still standing in a fight against several.
+  void _strikes(Combat fightNode, List<GameEvent> events) {
+    final strikers = fightNode.simultaneous
+        ? [
+            for (var i = 0; i < fightNode.enemies.length; i++)
+              if (_state.combat!.enemyHealth[i] > 0) i,
+          ]
+        : [_state.combat!.enemy];
+    for (final i in strikers) {
+      if (ending != null) break;
+      final strike = enemyStrike(
+        rules: rules,
+        combat: fightNode,
+        state: _state,
+        random: random,
+        enemyIndex: i,
+      );
+      _state = strike.state;
+      events.add(CombatStrike(strike));
+    }
   }
 
   void _requireNoFightOrEnd() {

@@ -58,6 +58,7 @@
   "player.attack": "Atacar {enemy}",
   "player.luck": "Testar a sorte",
   "player.flee": "Fugir",
+  "player.fleeRound": "Fugir (custa uma rodada)",
   "player.journal": "Diário // {count}",
   "player.undo": "Desfazer",
   "player.restartNow": "Recomeçar",

@@ -98,11 +98,22 @@ examples/06-combat/poison-sting
 
 After each round the order is: death, then the win, then a wound, then the round limit. An item that costs the round counts as a round, and the enemy's free hit as a wound. To escape at a price you need nothing new: that is `flee` with an effect on the page you run to, as the goblin guard shows.
 
+### Running costs a round
+
+Lone Wolf runs differently: in the round you turn to flee, only the enemy can hurt you, so running can kill. Add `"fleeCost": "round"` next to `flee` (schema 8):
+
+```gamebook
+examples/06-combat/the-evasion
+```
+
+Press Flee (the button says it costs a round): the troll swings once, exactly as when you use an item that costs the round, and only then do you reach the flee page. If that blow takes your last Stamina, you never get there. The blow is no wound for `wounded` and no round for `rounds`.
+
 ### Try it
 
 - Give the goblin `"health": 12` and see how long the fight gets. Remove `flee` and the Flee button disappears.
 - Give the golem `"armor": 2`: now only lucky blows hurt it.
 - Remove `"duel": true` from the Champion and fight him with dice instead.
 - Remove `wounded` from the scorpion: its sting is now just a wound, and the fight goes on.
+- Change the troll's `fleeCost` to `"free"`: running away is safe again.
 
 Next: making the world remember what the reader did.

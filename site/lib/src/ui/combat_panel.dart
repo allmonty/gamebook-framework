@@ -62,7 +62,11 @@ class CombatPanel {
       ),
     if (combat.canFlee)
       onClick(
-        el('button', cls: 'btn btn-danger', text: m('player.flee')),
+        el(
+          'button',
+          cls: 'btn btn-danger',
+          text: m(combat.fleeCostsRound ? 'player.fleeRound' : 'player.flee'),
+        ),
         onFlee,
       ),
   ];

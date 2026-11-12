@@ -261,6 +261,7 @@ class PlaySession {
       ],
       pickTarget: fight.simultaneous,
       canFlee: _engine.canFlee,
+      fleeCostsRound: fight.fleeCost == CombatCost.round,
       canTestLuck: _engine.canTestLuck,
     );
   }

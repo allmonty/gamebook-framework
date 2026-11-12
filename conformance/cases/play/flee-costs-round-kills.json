@@ -1,0 +1,65 @@
+{
+  "description": "The strike of a flee that costs a round can kill: death, and the flee page is not entered.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A troll.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Troll",
+              "attack": 9,
+              "health": 9,
+              "defense": 12
+            }
+          ],
+          "win": "won",
+          "flee": "ran",
+          "fleeCost": "round"
+        }
+      },
+      "ran": {
+        "text": "Ran",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 2,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "flee": {}
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "ending": "death",
+    "stats": {
+      "stamina": 0
+    }
+  }
+}
