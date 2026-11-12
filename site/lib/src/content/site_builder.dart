@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:gamebook_engine/package.dart' show mediaTypes;
+
 import 'chapter.dart';
 import 'embed.dart';
 import 'template.dart';
@@ -20,6 +22,9 @@ class SiteBuilder {
     output.createSync(recursive: true);
     _copyDir('css');
     _copyDir('assets');
+    // Example stories are embedded in the pages; only their pictures and
+    // sounds are served as files, next to where the story says they are.
+    _copyDir('examples', (path) => mediaTypes.any(path.endsWith));
     _write('index.html', fillTemplate(_read('templates/root.html'), const {}));
     for (final lang in languages) {
       _buildLanguage(lang);
@@ -159,11 +164,11 @@ class SiteBuilder {
       ..writeAsStringSync(text);
   }
 
-  void _copyDir(String name) {
+  void _copyDir(String name, [bool Function(String path)? only]) {
     for (final entity in Directory(
       '${source.path}/$name',
     ).listSync(recursive: true)) {
-      if (entity is! File) continue;
+      if (entity is! File || !(only?.call(entity.path) ?? true)) continue;
       final relative = entity.path.substring(source.path.length + 1);
       File('${output.path}/$relative').parent.createSync(recursive: true);
       entity.copySync('${output.path}/$relative');

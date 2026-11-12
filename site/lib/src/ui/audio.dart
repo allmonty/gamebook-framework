@@ -9,6 +9,10 @@ import '../play/views.dart';
 /// sounds of the last action. A missing file or a blocked autoplay is
 /// ignored: audio is a nicety, never an error.
 class AudioOutput {
+  AudioOutput([this.base = '']);
+
+  /// Put in front of every file path (see `PlayerView.mediaBase`).
+  final String base;
   HTMLAudioElement? _music;
   String? _playing;
 
@@ -19,13 +23,13 @@ class AudioOutput {
       _playing = cue.music;
       if (cue.music case final file?) {
         _music = HTMLAudioElement()
-          ..src = file
+          ..src = '$base$file'
           ..loop = true;
         _start(_music!);
       }
     }
     for (final file in cue.sounds) {
-      _start(HTMLAudioElement()..src = file);
+      _start(HTMLAudioElement()..src = '$base$file');
     }
   }
 

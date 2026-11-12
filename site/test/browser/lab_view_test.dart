@@ -30,6 +30,39 @@ final _source = const JsonEncoder.withIndent('  ').convert({
 });
 
 void main() {
+  test("pictures load from the example's folder", () {
+    final host = el('div');
+    document.body!.append(host);
+    LabView(
+      host,
+      EditSession(
+        jsonEncode({
+          'schema': 8,
+          'id': 't',
+          'lang': 'en',
+          'title': 'Lab',
+          'rules': {'preset': 'fighting-fantasy'},
+          'start': 'a',
+          'nodes': {
+            'a': {
+              'text': 'Hall.',
+              'image': 'images/hall.png',
+              'imageAlt': 'A hall.',
+              'ending': 'victory',
+            },
+          },
+        }),
+        Random(1),
+      ),
+      const Messages({}),
+      mediaBase: '../../examples/x/',
+    );
+    final image = host.querySelector('.gb-page img')!;
+    expect(image.getAttribute('src'), '../../examples/x/images/hall.png');
+    expect(image.getAttribute('alt'), 'A hall.');
+    host.remove();
+  });
+
   test(
     'editing re-checks the story; errors stop play; reset restores',
     () async {

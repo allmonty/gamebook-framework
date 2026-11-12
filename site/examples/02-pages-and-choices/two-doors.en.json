@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 8,
   "id": "two-doors",
   "lang": "en",
   "title": "Two Doors",
@@ -10,6 +10,8 @@
   "nodes": {
     "hall": {
       "text": "The lift opens on a hall of mirrors. Two doors wait at the end: one glows red, one glows blue.\n\nSomewhere behind you, the lift doors close for good.",
+      "image": "images/hall.png",
+      "imageAlt": "A dark hall lined with mirrors. At the far end, two doors: one glowing red, one glowing blue.",
       "choices": [
         {
           "text": "Open the red door",

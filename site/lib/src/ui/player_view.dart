@@ -12,7 +12,7 @@ import 'wording.dart';
 
 /// Draws a [PlaySession] into [host] and redraws after every action.
 class PlayerView {
-  PlayerView(this.host, this.session, this.m) {
+  PlayerView(this.host, this.session, this.m, {this.mediaBase = ''}) {
     host.classList.add('gb-player');
     render();
   }
@@ -20,7 +20,11 @@ class PlayerView {
   final HTMLElement host;
   final PlaySession session;
   final Messages m;
-  final _audio = AudioOutput();
+
+  /// The folder the story's picture and sound paths are relative to, ending
+  /// in `/` (empty: the page's own folder).
+  final String mediaBase;
+  late final _audio = AudioOutput(mediaBase);
 
   void render() {
     if (session.creation case final draft?) {
@@ -136,7 +140,10 @@ class PlayerView {
     children: [
       if (view.heading != null) el('h3', cls: 'gb-title', text: view.heading),
       if (view.image != null)
-        el('img', attrs: {'src': view.image!, 'alt': view.imageAlt ?? ''}),
+        el(
+          'img',
+          attrs: {'src': '$mediaBase${view.image}', 'alt': view.imageAlt ?? ''},
+        ),
       for (final p in view.paragraphs) el('p', text: p),
     ],
   );
