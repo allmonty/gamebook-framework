@@ -27,6 +27,9 @@ class JsonObject {
     throw StoryFormatException(path, 'expected an object');
   }
 
+  /// The object as it was read.
+  Map<String, Object?> get source => _map;
+
   bool has(String key) => _map.containsKey(key);
 
   String childPath(String key) => joinPath(path, key);

@@ -213,7 +213,12 @@ Map<String, Story> _stories(Map<String, String> sources) {
         'stories have different ids: "${first.id}" and "${story.id}"',
       );
     }
-    final differences = compareTranslations(first, story);
+    // What a package must share is B1's list: ids and counts. A difference
+    // in the rest of the structure is a warning for authors, as any other.
+    final differences = compareTranslations(
+      first,
+      story,
+    ).where((i) => i.code != 'translation-structure');
     if (differences.isNotEmpty) {
       throw PackageException('translations do not match: ${differences.first}');
     }

@@ -743,6 +743,7 @@ class Story {
     this.chapters = const {},
     this.showTitles = false,
     this.achievements = const {},
+    this.json = const {},
   });
 
   factory Story.parse(String source) {
@@ -768,6 +769,7 @@ class Story {
     }
     final cover = obj.optString('cover');
     final story = Story(
+      json: obj.source,
       schema: schema,
       chapters: obj.idMap('chapters', Chapter.fromJson, optional: true),
       achievements: obj.idMap(
@@ -857,6 +859,10 @@ class Story {
       }
     }
   }
+
+  /// The file as it was read, for tools that compare files (translations,
+  /// B16) rather than play them. Empty for a story not read from JSON.
+  final Map<String, Object?> json;
 
   /// The `schema` version the file declares; `{stat}` placeholders in text
   /// only mean something from version 4 on.

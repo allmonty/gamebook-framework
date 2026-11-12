@@ -64,7 +64,7 @@ dart run gamebook_engine:simulate_story path/to/story.en.json --games 2000
 
 ## Translations
 
-Each language is its own file, side by side: `story.en.json`, `story.pt.json`. They share the same `id`, and must have the same page ids, items, stats, flags and chapters, the same number of choices on each page in the same order, and the same number of text parts. Only the words change. The validator compares every translation with the first language and warns when those ids or counts differ (`translation-missing`, `translation-choices`...). It does not compare where a choice leads, what it needs or does, or the numbers in the rules: keep those the same yourself, by translating a copy of the first file. Every example on this site exists in English and Portuguese, checked this way.
+Each language is its own file, side by side: `story.en.json`, `story.pt.json`. They share the same `id`, and must have the same page ids, items, stats, flags and chapters, the same number of choices on each page in the same order, and the same number of text parts. Only the words change. The validator compares every translation with the first language and warns about any other difference: a missing id (`translation-missing`), another number of choices (`translation-choices`), or anything that is not text, such as where a choice leads or what an item does (`translation-structure`). The easy way to stay clean is to translate a copy of the first file. Every example on this site exists in English and Portuguese, checked this way.
 
 Remember to translate stat labels in `rules.stats` when you use a preset (chapter 4).
 

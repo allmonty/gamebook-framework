@@ -34,7 +34,7 @@ Schema version: **1**, with everything in this document. B2 says how later versi
 ### B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
 - `<lang>` is a short language code. The file's `lang` field must equal it.
-- Translations of one game share the same `id`. They must also share **identical node ids, item ids, stat ids, flag names, and, for each node, the same number of choices in the same order (and the same number of text parts)**. The validator checks this. Only human-readable strings differ.
+- Translations of one game share the same `id`. They must also share **identical node ids, item ids, stat ids, flag names, and, for each node, the same number of choices in the same order (and the same number of text parts)**. The validator checks this, and warns when anything else but text differs (B16, `translation-structure`). Only human-readable strings differ.
 - The app groups files by `id` and offers the languages that exist. App UI language is independent of story language.
 - JSON only, UTF-8. No comments.
 
@@ -209,7 +209,7 @@ An item is **unique** unless it has a `stack`: the pack holds it or not, and giv
 - `give`, `take` and `has` take a `count` (B7, B9). A `count` above 1 for an item without `stack` is an error.
 - Using a countable item spends one; it leaves the pack when the last one is spent. Its `bonus` applies once, while at least one is held. `takeAll` removes every unit.
 - A container cannot have a `stack`.
-- `stack` and every `count` are structure, so translations must agree on them (the Dart validator does not compare them yet). `imageAlt` says what the image shows, as for a page (B6).
+- `stack` and every `count` are structure, so translations must agree on them (B16, `translation-structure`). `imageAlt` says what the image shows, as for a page (B6).
 
 #### Usable items
 ```json
@@ -558,5 +558,13 @@ An item or flag required, taken or checked in several places is reported once, a
 | `translation-text-parts` | `nodes.<id>` | the node's text has a different number of parts (B6) |
 | `translation-choices` | `nodes.<id>` | the node has a different number of choices |
 | `translation-chapter` | `nodes.<id>` | the node is in a different chapter |
+| `translation-structure` | `start`, `rules`, `rules.stats.<id>`, `items.<id>`, `achievements.<id>` or `nodes.<id>` | that part of the two files differs in something that is not text (see below) |
+
+**What is text.** A translation changes words, and may use other pictures and sounds; everything else decides how the game plays and must be the same: where a choice leads, what it needs and does, a fight's enemies, the numbers of the rules. For `translation-structure` the two files are compared as JSON with the text fields left out: `text`, `title`, `label`, `name`, `description`, `note`, `lockedText`, `imageAlt`, `coverAlt`, `image`, `cover`, `music` and `sound`, wherever their value is a string (so `"name": true` in `rules.creation` is compared), and each string in a list of text parts (an object part keeps its `if`). The order of keys does not matter; a field written in one file and left out of the other is a difference, even at its default. One warning is reported for each part that differs:
+- `start`;
+- `rules`, without its `stats`;
+- `rules.stats.<id>`, for each stat both stories have (a stat one file leaves to the preset is compared as `{}`, so renaming it with a `label` is no difference);
+- `items.<id>` and `achievements.<id>`, for each id both files have;
+- `nodes.<id>`, for each node both files have, unless it is already reported by `translation-text-parts`, `translation-choices` or `translation-chapter`.
 
 Warnings are not versioned with `schema`: a new warning can be added at any time. It changes no story, only what tools say about it.

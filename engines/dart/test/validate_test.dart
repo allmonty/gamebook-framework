@@ -731,6 +731,54 @@ void main() {
         unorderedEquals([
           'warning: rules.stats.gold: stat "gold" exists in pt but not in en',
           'warning: flags.looked: flag "looked" exists in pt but not in en',
+          'warning: nodes.shelves: differs between en and pt in more than '
+              'its text',
+        ]),
+      );
+    });
+
+    test('reports what differs beyond the text, and only that', () {
+      // Words, pictures and sounds may differ; a stat only renamed is fine.
+      expect(
+        diff((j) {
+          j['title'] = 'A Porta';
+          j['rules'] = {
+            'preset': 'fighting-fantasy',
+            'stats': {
+              'skill': {'label': 'Habilidade'},
+            },
+          };
+          (j['items']! as Map<String, Object?>)['rusty-key'] = {
+            'name': 'Chave',
+          };
+          node(j, 'cellar')
+            ..['text'] = 'Um porão.'
+            ..['music'] = 'audio/pt.ogg';
+          choice(j, 'door', 0)['text'] = 'Destrancar';
+        }),
+        isEmpty,
+      );
+      expect(
+        diff((j) {
+          j['rules'] = {'preset': 'fighting-fantasy', 'rerolls': 5};
+          (j['items']! as Map<String, Object?>)['rusty-key'] = {
+            'name': 'Key',
+            'bonus': {'skill': 1},
+          };
+          choice(j, 'door', 0)['to'] = 'cellar';
+          final stats = (j['rules']! as Map<String, Object?>)['stats'] = {
+            'luck': {'roll': '2d6'},
+          };
+          expect(stats, isNotEmpty);
+        }),
+        unorderedEquals([
+          for (final at in [
+            'rules',
+            'rules.stats.luck',
+            'items.rusty-key',
+            'nodes.door',
+          ])
+            'warning: $at: differs between en and pt in more than its text',
         ]),
       );
     });
