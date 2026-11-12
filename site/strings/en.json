@@ -71,6 +71,7 @@
   "player.journal": "Journal // {count}",
   "player.mute": "Mute",
   "player.undo": "Undo",
+  "player.restartConfirm": "Really restart?",
   "player.restartNow": "Restart",
   "player.create": "Create your hero",
   "player.reroll": "Roll again // {count} left",

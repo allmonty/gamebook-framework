@@ -44,6 +44,10 @@ class PlayerView {
   /// Everything that is redrawn.
   late final _body = el('div', cls: 'gb-body');
 
+  /// Restart wipes the game, so it asks once: the first press only changes
+  /// the button's words, and any other action takes the question back.
+  bool _confirmRestart = false;
+
   void render() {
     if (session.creation case final draft?) {
       _audio.stop();
@@ -146,14 +150,28 @@ class PlayerView {
         ),
       if (view.ending == null)
         onClick(
-          el('button', cls: 'btn btn-ghost', text: m('player.restartNow')),
-          () => _act(session.restart),
+          el(
+            'button',
+            cls: 'btn btn-ghost',
+            text: m(
+              _confirmRestart ? 'player.restartConfirm' : 'player.restartNow',
+            ),
+            attrs: {'data-key': 'restart'},
+          ),
+          () {
+            if (_confirmRestart) return _act(session.restart);
+            _confirmRestart = true;
+            render();
+            (host.querySelector('[data-key="restart"]') as HTMLElement?)
+                ?.focus();
+          },
         ),
     ],
   );
 
   /// Runs a use case, redraws and moves focus to the new page.
   void _act(void Function() action) {
+    _confirmRestart = false;
     action();
     render();
     (host.querySelector('.gb-page') as HTMLElement?)?.focus();

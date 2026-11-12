@@ -264,4 +264,62 @@ void main() {
     expect(status.textContent, 'Got Key');
     host.remove();
   });
+
+  test('restart asks once, and another action takes the question back', () {
+    final host = el('div');
+    document.body!.append(host);
+    final session = PlaySession.start(
+      Story.fromJson({
+        'schema': 1,
+        'id': 't',
+        'lang': 'en',
+        'title': 'Loop',
+        'rules': {'preset': 'fighting-fantasy'},
+        'start': 'a',
+        'nodes': {
+          'a': {
+            'text': 'A.',
+            'choices': [
+              {'text': 'On', 'to': 'b'},
+            ],
+          },
+          'b': {
+            'text': 'B.',
+            'choices': [
+              {'text': 'On', 'to': 'b'},
+              {'text': 'End', 'to': 'c'},
+            ],
+          },
+          'c': {'text': 'C.', 'ending': 'victory'},
+        },
+      }),
+      random: Random(1),
+    );
+    PlayerView(
+      host,
+      session,
+      const Messages({
+        'player.restartNow': 'Restart',
+        'player.restartConfirm': 'Really restart?',
+      }),
+    );
+    HTMLElement restart() =>
+        host.querySelector('[data-key="restart"]')! as HTMLElement;
+    String page() => host.querySelector('.gb-page p')!.textContent!;
+    (host.querySelector('.gb-choice')! as HTMLElement).click();
+    expect(page(), 'B.');
+
+    restart().click();
+    expect(page(), 'B.', reason: 'the first press only asks');
+    expect(restart().textContent, 'Really restart?');
+
+    (host.querySelector('.gb-choice')! as HTMLElement).click();
+    expect(restart().textContent, 'Restart');
+
+    restart().click();
+    restart().click();
+    expect(page(), 'A.');
+    expect(restart().textContent, 'Restart');
+    host.remove();
+  });
 }

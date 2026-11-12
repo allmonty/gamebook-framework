@@ -305,7 +305,8 @@ main { display: block; }
   font: 500 16px var(--font-body); color: var(--text);
   background: var(--canvas); border: 1px solid var(--line-cyan); border-radius: var(--radius);
 }
-.gb-field input:focus { outline: none; border-color: var(--cyan); box-shadow: var(--glow-soft); }
+/* Transparent, not none: it shows in forced-colours (high contrast) mode. */
+.gb-field input:focus { outline: 2px solid transparent; border-color: var(--cyan); box-shadow: var(--glow-soft); }
 .gb-picks { display: grid; gap: var(--s2); width: 100%; margin: 0; padding: 0; border: 0; }
 .gb-picks legend { color: var(--amber); margin-bottom: var(--s2); }
 .gb-choice.picked { border-color: var(--cyan); background: var(--elevated); }
@@ -323,7 +324,7 @@ main { display: block; }
   font: 13px/1.6 var(--font-mono); color: var(--text); tab-size: 2;
   background: var(--canvas); border: 1px solid var(--line-cyan); border-radius: var(--radius);
 }
-.gb-edit textarea:focus { outline: none; border-color: var(--cyan); box-shadow: var(--glow-soft); }
+.gb-edit textarea:focus { outline: 2px solid transparent; border-color: var(--cyan); box-shadow: var(--glow-soft); }
 .gb-issues { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
 .gb-issues li { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: baseline; padding: var(--s2) var(--s3);
   font-size: 14px; background: var(--card); border-left: 2px solid var(--amber); }

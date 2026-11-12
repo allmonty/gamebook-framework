@@ -34,7 +34,8 @@ class CombatPanel {
     'li',
     cls: 'gb-enemy${e.alive ? '' : ' dead'}${e.current ? ' current' : ''}',
     children: [
-      el('strong', text: e.name),
+      // Not by colour alone: the enemy being fought is pointed at.
+      el('strong', text: e.current ? '▶ ${e.name}' : e.name),
       if (e.armor > 0)
         el('span', cls: 'label', text: m('player.armor', {'armor': e.armor})),
       el(

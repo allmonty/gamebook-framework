@@ -71,6 +71,7 @@
   "player.journal": "Diário // {count}",
   "player.mute": "Sem som",
   "player.undo": "Desfazer",
+  "player.restartConfirm": "Recomeçar mesmo?",
   "player.restartNow": "Recomeçar",
   "player.create": "Crie seu herói",
   "player.reroll": "Rolar de novo // restam {count}",
