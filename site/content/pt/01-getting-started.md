@@ -31,7 +31,7 @@ Toda história começa com os mesmos poucos campos:
 
 | Campo | O que é |
 |---|---|
-| `schema` | A versão do formato que a história usa. Comece com `1`; os próximos capítulos dizem quando um recurso pede um número maior. |
+| `schema` | A versão do formato que a história usa. Escreva `1`: é a única versão até agora ([versões do formato](../versions.html)). |
 | `id` | Um nome curto para a história, com letras minúsculas, números e hífens: `hello-world`. |
 | `lang` | O idioma deste arquivo: `en`, `pt`... |
 | `title` | O título que os leitores veem. |
@@ -44,7 +44,7 @@ Em português, o exemplo também troca os nomes dos atributos em `rules.stats` (
 Uma página (um *node*, ou nó) tem `text` e exatamente um jeito de seguir:
 
 - `choices`: uma lista de botões, cada um com o `text` a mostrar e a página para onde vai (`to`);
-- um final, `ending`: `"victory"` (vitória) ou `"death"` (morte);
+- um final, `ending`: `"victory"` (vitória), `"defeat"` (derrota) ou `"death"` (morte);
 - ou uma luta (capítulo 6).
 
 Os ids e os nomes dos campos ficam sempre em inglês; só o texto que o leitor vê muda de idioma.
@@ -74,5 +74,7 @@ Quando a história crescer, escreva num arquivo:
    "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
    ```
 4. Para jogar, abra o [playground](../play.html), toque em **Abrir arquivo** e escolha sua história.
+
+O playground lê só o arquivo da história. Imagens e sons da sua pasta não carregam lá; o `validate_story` (capítulo 8) confere se esses arquivos existem.
 
 A seguir você vai dar decisões de verdade ao leitor: várias escolhas, becos sem saída e mais de um jeito de terminar.
