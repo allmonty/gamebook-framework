@@ -135,6 +135,7 @@ Pages can be **fight scenes**. The player taps a button to fight round by round.
 - **Duel mode**: a special set-piece fight resolved by a results table, while every other fight in the game uses the normal mode.
 - **Test your Luck in a fight**: after a round that hurt someone, the player may risk their Luck stat for a better (or worse) outcome on that round's wounds.
 - **Custom damage per enemy**: override the default damage for a specific enemy.
+- **Fight events**: leave a fight on the first wound ("if the creature wounds you, turn to…") or after a number of rounds ("if you have not won after three rounds…").
 
 ---
 

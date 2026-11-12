@@ -1,0 +1,109 @@
+{
+  "description": "An item that costs the round counts towards the round limit.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "start",
+    "nodes": {
+      "start": {
+        "text": "Start",
+        "effects": [
+          {
+            "give": "potion"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Fight",
+            "to": "a"
+          }
+        ]
+      },
+      "a": {
+        "text": "A scorpion.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Scorpion",
+              "attack": 7,
+              "health": 6
+            }
+          ],
+          "win": "won",
+          "rounds": {
+            "after": 2,
+            "to": "slow"
+          }
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      },
+      "slow": {
+        "text": "Gone",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      }
+    },
+    "items": {
+      "potion": {
+        "name": "Potion",
+        "use": {
+          "effects": [
+            {
+              "set": "drank"
+            }
+          ],
+          "when": [
+            "combat"
+          ],
+          "combatCost": "round"
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    3,
+    3,
+    4,
+    4
+  ],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "fight": {}
+    },
+    {
+      "use": "potion"
+    }
+  ],
+  "expect": {
+    "node": "slow",
+    "stats": {
+      "stamina": 10
+    },
+    "flags": [
+      "drank"
+    ]
+  }
+}

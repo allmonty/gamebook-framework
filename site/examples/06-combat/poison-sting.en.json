@@ -1,0 +1,60 @@
+{
+  "schema": 8,
+  "id": "poison-sting",
+  "lang": "en",
+  "title": "The Poison Sting",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "nest",
+  "nodes": {
+    "nest": {
+      "text": "In a hollow of warm sand, a giant scorpion lifts its tail. One sting and its poison will be in your blood.",
+      "choices": [
+        {
+          "text": "Draw your blade",
+          "to": "fight"
+        }
+      ]
+    },
+    "fight": {
+      "text": "The scorpion circles you. Win before it stings you, and quickly: after three rounds it will tire of you and burrow away.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Giant scorpion",
+            "attack": 7,
+            "health": 6
+          }
+        ],
+        "win": "won",
+        "wounded": "stung",
+        "rounds": {
+          "after": 3,
+          "to": "gone"
+        }
+      }
+    },
+    "stung": {
+      "text": "The tail flicks past your guard. Fire runs up your arm and your legs go weak. You will live, but this journey is over.",
+      "ending": "defeat"
+    },
+    "gone": {
+      "text": "Three rounds, and the scorpion has had enough. It sinks into the sand and is gone. No trophy, but no sting either.",
+      "choices": [
+        {
+          "text": "Walk on",
+          "to": "road"
+        }
+      ]
+    },
+    "won": {
+      "text": "The scorpion lies still. You cut off its sting: a fine trophy for the city.",
+      "ending": "victory"
+    },
+    "road": {
+      "text": "Beyond the dunes the road runs on to the city gates.",
+      "ending": "victory"
+    }
+  }
+}

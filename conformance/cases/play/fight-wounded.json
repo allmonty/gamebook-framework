@@ -1,0 +1,68 @@
+{
+  "description": "The first wound the player survives ends the fight, and the wounded page is entered.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A scorpion.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Scorpion",
+              "attack": 7,
+              "health": 6
+            }
+          ],
+          "win": "won",
+          "wounded": "stung"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      },
+      "stung": {
+        "text": "Stung",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    1,
+    1,
+    6,
+    6
+  ],
+  "actions": [
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "stung",
+    "ending": null,
+    "stats": {
+      "stamina": 10
+    }
+  }
+}

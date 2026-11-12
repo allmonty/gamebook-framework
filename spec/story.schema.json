@@ -875,6 +875,28 @@
         "flee": {
           "$ref": "#/$defs/id"
         },
+        "wounded": {
+          "description": "Schema 8. Where the fight goes the first time the player is wounded and still alive",
+          "$ref": "#/$defs/id"
+        },
+        "rounds": {
+          "description": "Schema 8. Where the fight goes once `after` rounds are played and it is not over",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "after",
+            "to"
+          ],
+          "properties": {
+            "after": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "to": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
         "simultaneous": {
           "description": "Schema 5. All enemies fight at once; the player picks a target each round",
           "type": "boolean"

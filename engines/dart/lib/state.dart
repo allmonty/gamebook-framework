@@ -28,17 +28,20 @@ class StatValue {
 
 /// Progress through the current fight. See spec/framework.md B11.
 class CombatState {
-  const CombatState(this.enemy, this.enemyHealth, [this.luck]);
+  const CombatState(this.enemy, this.enemyHealth, [this.luck, this.round = 0]);
 
   factory CombatState.fromJson(Object? json) {
     if (json is Map<String, Object?> &&
         json['enemy'] is int &&
         json['health'] is List<Object?> &&
-        (json['health']! as List<Object?>).every((h) => h is int)) {
+        (json['health']! as List<Object?>).every((h) => h is int) &&
+        (json['round'] == null || json['round'] is int)) {
       return CombatState(
         json['enemy']! as int,
         (json['health']! as List<Object?>).cast<int>(),
         json['luck'] == null ? null : LuckChance.fromJson(json['luck']),
+        // A save from before schema 8 has no count.
+        json['round'] as int? ?? 0,
       );
     }
     throw const FormatException('state: bad combat');
@@ -54,10 +57,14 @@ class CombatState {
   /// them (schema 5); null otherwise.
   final LuckChance? luck;
 
+  /// Rounds played so far, items that cost a round included (schema 8).
+  final int round;
+
   Map<String, Object?> toJson() => {
     'enemy': enemy,
     'health': enemyHealth,
     if (luck != null) 'luck': luck!.toJson(),
+    'round': round,
   };
 }
 

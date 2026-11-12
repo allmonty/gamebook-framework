@@ -76,10 +76,33 @@ examples/06-combat/duel-table
 
 Each pair is `[enemy loses, you lose]`. A row covers every ratio up to its `upTo`; the last row has none and takes everything above. Every row needs one pair per possible roll, ten here. The fight in the hall has `"duel": true`; the sparring drone in the yard still fights the usual way.
 
+## Fights that end early
+
+Gamebooks love "if the creature wounds you, turn to 55" and "if you have not won after three rounds, turn to 120". Two fields on `combat` say it (schema 8):
+
+```gamebook
+examples/06-combat/poison-sting
+```
+
+```json
+"combat": {
+  "enemies": [ { "name": "Giant scorpion", "attack": 7, "health": 6 } ],
+  "win": "won",
+  "wounded": "stung",
+  "rounds": { "after": 3, "to": "gone" }
+}
+```
+
+- `wounded`: the first time the scorpion hurts you, and you are still alive, the fight stops and `stung` follows.
+- `rounds`: once 3 rounds are played without a winner, the fight stops and `gone` follows. "Win within three rounds" is written the same way.
+
+After each round the order is: death, then the win, then a wound, then the round limit. An item that costs the round counts as a round, and the enemy's free hit as a wound. To escape at a price you need nothing new: that is `flee` with an effect on the page you run to, as the goblin guard shows.
+
 ### Try it
 
 - Give the goblin `"health": 12` and see how long the fight gets. Remove `flee` and the Flee button disappears.
 - Give the golem `"armor": 2`: now only lucky blows hurt it.
 - Remove `"duel": true` from the Champion and fight him with dice instead.
+- Remove `wounded` from the scorpion: its sting is now just a wound, and the fight goes on.
 
 Next: making the world remember what the reader did.

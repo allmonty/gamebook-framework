@@ -76,10 +76,33 @@ examples/06-combat/duel-table
 
 Cada par é `[inimigo perde, você perde]`. Uma linha cobre toda razão até o seu `upTo`; a última não tem e pega tudo acima. Cada linha precisa de um par para cada rolagem possível, dez aqui. A luta no salão tem `"duel": true`; o drone de treino no pátio ainda luta do jeito normal.
 
+## Lutas que acabam antes
+
+Livros-jogo adoram "se a criatura ferir você, vá para 55" e "se você não vencer em três rodadas, vá para 120". Dois campos em `combat` dizem isso (schema 8):
+
+```gamebook
+examples/06-combat/poison-sting
+```
+
+```json
+"combat": {
+  "enemies": [ { "name": "Escorpião gigante", "attack": 7, "health": 6 } ],
+  "win": "won",
+  "wounded": "stung",
+  "rounds": { "after": 3, "to": "gone" }
+}
+```
+
+- `wounded`: na primeira vez que o escorpião ferir você, e você ainda estiver vivo, a luta para e `stung` vem em seguida.
+- `rounds`: jogadas 3 rodadas sem vencedor, a luta para e `gone` vem em seguida. "Vença em três rodadas" se escreve do mesmo jeito.
+
+Depois de cada rodada a ordem é: morte, depois a vitória, depois um ferimento, depois o limite de rodadas. Um item que custa a rodada conta como rodada, e o golpe livre do inimigo como ferimento. Para fugir pagando um preço você não precisa de nada novo: é o `flee` com um efeito na página para onde você foge, como mostra o guarda goblin.
+
 ### Experimente
 
 - Dê ao goblin `"health": 12` e veja a luta crescer. Tire o `flee` e o botão Fugir some.
 - Dê ao golem `"armor": 2`: agora só golpes de sorte o ferem.
 - Tire o `"duel": true` do Campeão e enfrente-o com dados.
+- Tire o `wounded` do escorpião: a ferroada agora é só um ferimento, e a luta continua.
 
 A seguir: fazer o mundo lembrar do que o leitor fez.

@@ -136,7 +136,9 @@ StrikeResult enemyStrike({
     outcome: health.value == 0 ? CombatOutcome.lost : CombatOutcome.ongoing,
     state: state
         .copyWith(stats: {...state.stats, rules.health: health})
-        .withCombat(CombatState(fight.enemy, fight.enemyHealth)),
+        .withCombat(
+          CombatState(fight.enemy, fight.enemyHealth, null, fight.round),
+        ),
   );
 }
 
@@ -256,6 +258,7 @@ RoundResult fightRound({
             enemyDead && !lastEnemy ? fight.enemy + 1 : fight.enemy,
             health,
             luck,
+            fight.round,
           ),
         ),
   );
@@ -416,7 +419,7 @@ GroupRoundResult groupRound({
     outcome: outcome,
     state: state
         .copyWith(stats: {...state.stats, rules.health: playerHealth})
-        .withCombat(CombatState(fight.enemy, health, luck)),
+        .withCombat(CombatState(fight.enemy, health, luck, fight.round)),
   );
 }
 
@@ -519,6 +522,8 @@ LuckResult testFightLuck({
           CombatState(
             dead && !lastEnemy ? chance.enemy + 1 : fight.enemy,
             health,
+            null,
+            fight.round,
           ),
         ),
   );

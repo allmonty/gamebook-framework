@@ -87,6 +87,22 @@ void main() {
       );
     });
 
+    test('unknown fight event targets (schema 8)', () {
+      expect(
+        errors((j) {
+          j['schema'] = 8;
+          fight(j);
+          ((node(j, 'treasure')['combat']! as Map<String, Object?>)
+            ..['wounded'] = 'x'
+            ..['rounds'] = {'after': 2, 'to': 'y'});
+        }),
+        containsAll([
+          'error: nodes.treasure.combat.wounded: unknown node "x"',
+          'error: nodes.treasure.combat.rounds.to: unknown node "y"',
+        ]),
+      );
+    });
+
     test('unknown items', () {
       expect(
         errors((j) {
@@ -494,6 +510,20 @@ void main() {
         ),
         ['warning: nodes.lost: is unreachable from the start'],
       );
+    });
+
+    test('a page reached only through a fight event is reachable', () {
+      final found = warnings((j) {
+        j['schema'] = 8;
+        fight(j);
+        (node(j, 'treasure')['combat']! as Map<String, Object?>)
+          ..['wounded'] = 'stung'
+          ..['rounds'] = {'after': 2, 'to': 'slow'};
+        (j['nodes']! as Map<String, Object?>)
+          ..['stung'] = {'text': 'x', 'ending': 'victory'}
+          ..['slow'] = {'text': 'x', 'ending': 'victory'};
+      });
+      expect(found, everyElement(isNot(contains('unreachable'))));
     });
 
     test('no victory ending reachable', () {

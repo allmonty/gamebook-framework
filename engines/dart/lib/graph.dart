@@ -19,6 +19,10 @@ enum EdgeKind {
   /// A fight won / fled.
   win,
   flee,
+
+  /// A fight ended by a wound / by its round limit (schema 8).
+  wounded,
+  rounds,
 }
 
 /// One link from a page to another: an exit of a choice (a check has two, a
@@ -45,7 +49,8 @@ class StoryEdge {
   final int? choice;
 
   /// Which exit of its choice or fight this is: 0, or 1 for a failed check
-  /// or for fleeing, or the outcome's position in a table.
+  /// or for fleeing, 2 for a wound and 3 for the round limit of a fight, or
+  /// the outcome's position in a table.
   final int port;
 }
 
@@ -87,6 +92,16 @@ List<StoryEdge> storyEdges(Story story) => [
       StoryEdge(key, combat.win, 'win', EdgeKind.win),
       if (combat.flee case final flee?)
         StoryEdge(key, flee, 'flee', EdgeKind.flee, port: 1),
+      if (combat.wounded case final wounded?)
+        StoryEdge(key, wounded, 'wounded', EdgeKind.wounded, port: 2),
+      if (combat.rounds case final rounds?)
+        StoryEdge(
+          key,
+          rounds.to,
+          'after ${rounds.after} rounds',
+          EdgeKind.rounds,
+          port: 3,
+        ),
     ],
   ],
 ];
@@ -217,6 +232,7 @@ String toDot(Story story) {
         EdgeKind.locked || EdgeKind.flee => 'style=dashed',
         EdgeKind.pass || EdgeKind.win => 'color="#2e7d32"',
         EdgeKind.fail => 'color="#c62828"',
+        EdgeKind.wounded || EdgeKind.rounds => 'color="#ef6c00"',
       },
     ].nonNulls;
     out.writeln(

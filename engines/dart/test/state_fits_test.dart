@@ -135,6 +135,7 @@ void main() {
 
     final bad = <String, CombatState>{
       'the enemy index is negative': const CombatState(-1, [2, 4]),
+      'the round count is negative': const CombatState(0, [2, 4], null, -1),
       'an enemy health is negative': const CombatState(0, [-3, 4]),
       'an enemy health is above its start': const CombatState(0, [2, 5]),
       'the luck test names a negative enemy': CombatState(0, [

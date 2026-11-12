@@ -52,6 +52,40 @@ void main() {
     expect(_keys(session), ['round', 'gained']);
   });
 
+  test('a wound can end the fight: the round is logged, its page follows', () {
+    final session = _start('fight-wounded', [1, 1, 6, 6])..fight();
+    expect(_keys(session).first, 'round');
+    expect(session.view.combat, isNull);
+    expect(session.view.paragraphs, ['Stung']);
+    expect(session.view.choices.single.text, 'On');
+  });
+
+  test('so can the round limit', () {
+    final session = _start('fight-rounds', [3, 3, 4, 4, 3, 3, 4, 4])
+      ..fight()
+      ..fight();
+    expect(_keys(session), ['round']);
+    expect(session.view.combat, isNull);
+    expect(session.view.paragraphs, ['Gone']);
+  });
+
+  test('the poison-sting example leaves its fight both ways', () {
+    PlaySession sting(List<int> dice) => PlaySession.start(
+      storyFile('examples/06-combat/poison-sting.en.json'),
+      random: ScriptedRandom([..._stats, ...dice]),
+    )..choose(0);
+
+    final stung = sting([1, 1, 6, 6])..fight();
+    expect(stung.view.ending, Ending.defeat);
+
+    final gone = sting([3, 3, 4, 4, 3, 3, 4, 4, 3, 3, 4, 4])
+      ..fight()
+      ..fight()
+      ..fight();
+    expect(gone.view.combat, isNull);
+    expect(gone.view.choices.single.text, 'Walk on');
+  });
+
   test('fleeing leaves the fight', () {
     final session = _start('flee', [1, 1, 6, 6])
       ..choose(0)

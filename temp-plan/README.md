@@ -40,8 +40,8 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 06 | [Extract the schema gate](steps/06-schema-gate.md) | refactor | done | a450b69 |
 | 07 | [Schema 8 and image alt text](steps/07-image-alt.md) | feature | done | c6533d9, fcc15ed |
 | 07b | [A picture in an example](steps/07b-example-picture.md) | site | done | f015afc |
-| 08 | [A neutral ending](steps/08-defeat-ending.md) | feature | done | |
-| 09 | [Fight events](steps/09-fight-events.md) | feature | todo | |
+| 08 | [A neutral ending](steps/08-defeat-ending.md) | feature | done | 317c51c, 51be7d1 |
+| 09 | [Fight events](steps/09-fight-events.md) | feature | done | |
 | 10 | [Counted items](steps/10-counted-items.md) | feature | todo | |
 | 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | todo | |
 | 12 | [Presets as data](steps/12-presets-as-data.md) | docs + test | todo | |
