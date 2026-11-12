@@ -10,7 +10,7 @@ The aim: the best gamebook format and engine, in a repository people and AIs can
 ## Start here
 | You want to... | Read |
 |---|---|
-| Know what to do next | `temp-plan/README.md` (status table), then its first step not done |
+| Know what to do next | `docs/next.md`: the owner's to-do list and the ideas for version 2. There is no open plan; ask the owner before starting new work |
 | Write or change a **story** for someone (not this repo) | `spec/llm-kit.md` and a starter from `starters/` to copy, then check with `validate_story --llm` until clean |
 | Understand the story format | `spec/framework.md` (the spec; Part A plain words, Part B exact) |
 | Know what other engines do and why this one exists | `spec/comparison.md` |
@@ -20,7 +20,7 @@ The aim: the best gamebook format and engine, in a repository people and AIs can
 | Know why the site is built the way it is | `docs/adr/` |
 
 ## Plan protocol
-Planned work lives in a plan folder with a `README.md` (why, decisions, status table) and one file per step in `steps/`. The current one is `temp-plan/`; it is deleted when its last step is done. Its README is the authority; in short:
+Planned work lives in a plan folder with a `README.md` (why, decisions, status table) and one file per step in `steps/`, such as `temp-plan/`. There is none open now: the last one, which built version 1, is in the git history. A plan folder is deleted when its last step is done. Its README is the authority; in short:
 1. Take the lowest-numbered step not marked done (or whatever the owner asks). Do only that step.
 2. Set it to `in progress` in the plan's table.
 3. Finish it: code, tests, docs listed in the step.

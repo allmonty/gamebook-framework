@@ -2,6 +2,7 @@
   "page.title": "Gamebook Framework: escreva livros-jogo, jogue em qualquer lugar",
   "page.description": "Um formato JSON aberto para livros-jogo com atributos, dados, itens e combate. Jogue e edite histórias no navegador.",
   "nav.skip": "Pular para o conteúdo",
+  "nav.coffee": "☕ Me pague um café",
   "nav.label": "Principal",
   "nav.otherLanguage": "EN",
   "brand.kicker": "Grimório // formato aberto",

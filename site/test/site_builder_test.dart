@@ -17,6 +17,11 @@ void main() {
         expect(page, contains('<html lang="$lang">'), reason: name);
         expect(page, isNot(contains('{{')), reason: name);
         expect(page, contains('class="gb-embed"'), reason: name);
+        expect(
+          page,
+          contains('href="https://buymeacoffee.com/allmonty"'),
+          reason: name,
+        );
       }
     }
     expect(File('${output.path}/index.html').existsSync(), isTrue);
