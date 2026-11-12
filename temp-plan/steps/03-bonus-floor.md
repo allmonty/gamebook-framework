@@ -17,4 +17,6 @@ The effective value (stat plus bonuses) is never below 0. The stat itself is unt
 Case and test pass, checks green.
 
 ## Handoff notes
-(fill in)
+- As planned: `GameState.stat()` returns `max(0, value + bonus)`; no other reader needed a change. `bonusOf` is untouched, so the site's stats bar shows "Luck 0 (-20)": the real bonus next to the floored value.
+- Test in `bonus_test.dart` (a -20 Luck bonus at Luck 8: 0, base still 8, text "Luck 0.", back to 8 when dropped) and case `item-bonus-floor.json`; both fail without the fix.
+- Done on the branch `step-03-bonus-floor` from `main`.

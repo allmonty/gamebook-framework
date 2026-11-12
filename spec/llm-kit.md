@@ -208,7 +208,7 @@ An item without `use` cannot be used (a key is only held, and is spent by a choi
 ```json
 "sword": { "name": "Notched sword", "bonus": { "skill": 1 } }
 ```
-While the item is in the pack, each stat in `bonus` is higher (or lower, with a negative number) by that amount, **everywhere**: checks, combat, conditions and `{stat}` placeholders. Bonuses add to the current value; they never change the stat itself, its `limit` or its `max`, so losing the item takes the bonus away cleanly. A bonus on the `health` stat is not allowed. The stats bar shows the effective value with the bonus ("Skill 10 (+1)").
+While the item is in the pack, each stat in `bonus` is higher (or lower, with a negative number) by that amount, **everywhere**: checks, combat, conditions and `{stat}` placeholders. Bonuses add to the current value, but the result is never below 0 (B4: stats are clamped at 0), so a Luck of 8 with a bonus of -20 is 0. They never change the stat itself, its `limit` or its `max`, so losing the item takes the bonus away cleanly. A bonus on the `health` stat is not allowed. The stats bar shows the effective value with the bonus ("Skill 10 (+1)").
 
 #### Containers (schema 3)
 ```json
