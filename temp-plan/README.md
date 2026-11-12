@@ -91,7 +91,7 @@ For a new example story also run `(cd engines/dart && dart run gamebook_engine:s
 
 ## Candidates after this plan (not steps)
 From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes and a short story example before it is specified. In the order the evidence suggests:
-1. **Limits per kind of item** (Lone Wolf: 2 weapons next to an 8-item backpack) and whether each unit of a stack fills a slot (Lone Wolf counts every Meal; step 10 gives a stack one slot).
+1. **Limits per kind of item** (Lone Wolf: 2 weapons next to an 8-item backpack).
 2. **A bonus that depends on a condition** (Lone Wolf: +2 with one weapon, -4 unarmed).
 3. **Rules that apply on every page** (Lone Wolf's Healing: +1 Endurance per page without a fight).
 4. **Export to a printable book** of numbered, shuffled sections: a tool, no format change.

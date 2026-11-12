@@ -7,35 +7,35 @@ The pack is a set: an item is held or not (spec B5, "Items are unique"). Fightin
 
 Evidence: `spec/comparison.md` section 3. Fighting Fantasy: Provisions, eaten outside fights. Lone Wolf: Meals; "told to eat" means tick one off or lose 3 Endurance, which with this feature is two choices on the page: "Eat a Meal" (`if: has meal`, `take: meal`) and "Go hungry" (`if: not has meal`, `stat endurance -3`). Use that pattern in the tutorial example.
 
-Known difference from Lone Wolf: there every Meal fills a Backpack slot; here a stack fills one. Kept simple on purpose; it is candidate 1 in the plan's README. Say it in the spec text so nobody takes it for a bug.
-
 ## The feature
+Owner's decision (2026-11-11): `stack` is how many of the item fit in **one pack slot**, not how many can be held.
 ```json
-"items": { "provisions": { "name": "Provisions", "stack": 10,
+"items": { "meal": { "name": "Meal", "stack": 5,
     "use": { "effects": [ { "stat": "stamina", "add": 4 } ], "when": ["story"] } } }
 ```
-- Item `stack` (integer >= 2): the player can hold up to that many. An item without `stack` stays unique, exactly as today.
-- `{ "give": "provisions", "count": 3 }` and `{ "take": "provisions", "count": 2 }`: `count` is an integer >= 1, default 1. A give stops at `stack` (the rest is lost, silently, like a stat at its limit); a take stops at 0. `count` above 1 on an item without `stack` is a validator **error**.
-- `{ "has": "arrow", "count": 2 }`: holds at least 2 (default 1).
-- **Using** a stacked item spends one; it leaves the pack when the last one is spent.
-- **Pack room**: a stack fills one slot whatever its count. Its `bonus` applies once, while at least one is held.
-- **Losing**: pack overflow (a container gone) and `takeAll` lose the whole stack.
-- **`pickup: "auto"`**: more of a stack already carried is always added (it needs no room); a stack not carried needs a free slot or is refused whole.
-- **`pickup: "choose"`**: more of a stack already carried is added directly, no offer. Otherwise the give is one offer for the whole count; a further give while it is on offer adds to that offer. Taking it (or swapping for it) takes all of it.
-- Creation picks: a `give` with a count adds directly, as they do today.
+- Item `stack` (integer >= 1) makes the item **countable**: the player can hold several. An item without `stack` stays unique, exactly as today.
+- **Pack room**: a countable item fills `ceil(count / stack)` slots. With `"stack": 5`, 5 Meals fill one slot and 6 fill two (a stack of 5 and a single one). `"stack": 1` means every unit fills its own slot (Lone Wolf's Meals). Without `rules.inventory.capacity` the pack is unlimited, so the count is too.
+- `{ "give": "meal", "count": 3 }` and `{ "take": "meal", "count": 2 }`: `count` is an integer >= 1, default 1. A take stops at 0. `count` above 1 on an item without `stack` is a validator **error**.
+- `{ "has": "meal", "count": 2 }`: holds at least 2 (default 1).
+- **Using** a countable item spends one; it leaves the pack when the last one is spent.
+- Its `bonus` applies once, while at least one is held.
+- **`pickup: "auto"`**: as many units as fit are added (first the room left in a part-filled slot, then free slots); the rest are refused and the player is told how many were left behind.
+- **`pickup: "choose"`**: if the whole count fits without a new slot (room left in a part-filled slot), it is added directly. Otherwise the give is **one offer for the whole count**; a further give while it is on offer adds to that offer. Taking it adds as many units as fit and leaves the rest (the player is told); with a full pack the player may first leave one carried item behind to free a slot, as for any offer.
+- **Losing room** (a container goes): the newest items go first, as today; from a countable item, units are lost only until what is left fits.
+- `takeAll` removes every unit. Creation picks: a `give` with a count adds directly, then the usual overflow rule applies.
 - Translations: `stack` and every `count` must match; it is structure, not text. Add them to what `compareTranslations` checks only if cheap; otherwise say in the handoff notes that it is not checked.
 
 ## Engine design (keep existing code and saves working)
 - `GameState.inventory` stays the ordered `Set<String>`. Add `GameState.counts`, a `Map<String, int>` holding the amount of each **stacked** item that is in the pack **or on offer** (an item is never both), and `int count(String item)`: 0 if not held, else `counts[item] ?? 1`. In the save JSON as `counts`; a save without it reads as empty.
 - `effect.dart`: `GiveItem.count`, `TakeItem.count`; `applyEffect` for both; `TakeAll` clears counts of held items.
 - `condition.dart`: `HasItem.count`; `evaluate`; `explain` (the `Unmet` it returns already carries the condition, so the count travels with it).
-- `engine.dart`: `_give` (the rules above), `useItem` (spend one), `resolveOffer`, `_enforceCapacity` and `_applyCreation` (drop the count with the item), a new event `ItemCountChanged(item, from, to)` from `_changes` for an item held before and after with a different count, `stateFits` (every key of `counts` is an item with `stack`, held or offered, amount within `1..stack`).
+- `engine.dart`: `_give` (the rules above), `useItem` (spend one), `resolveOffer`, `slotsUsed` and `canHold` (slots are `ceil(count / stack)`), `_enforceCapacity` (lose units, not the whole item), `_applyCreation`, an `ItemRefused` that can carry how many were left, a new event `ItemCountChanged(item, from, to)` from `_changes` for an item held before and after with a different count, `stateFits` (every key of `counts` is an item with `stack`, held or offered, amount >= 1, and the slots used do not exceed the capacity).
 - `validate.dart`: the count error above; the `*-never-given` warnings are unaffected.
 - `story.dart` / `schema_gate.dart`: `Item.stack`, parsing, gate paths (`items.<id>.stack`, the effect's or condition's `count`).
 
 ## Conformance
 - New `expect` key `counts`: for each item listed, how many are held (0 if none). Document it in the "Expect" table of `conformance/README.md`, add counted items to its "Coverage" list, and read it in `engines/dart/test/conformance_test.dart`.
-- Cases in `play/`: `stack-give-and-ceiling.json`, `stack-take-to-zero.json`, `stack-has-count.json`, `stack-use-spends-one.json`, `stack-one-slot.json`, `stack-refused-when-full.json`, `stack-offer-whole-count.json`, `stack-more-while-carried-no-offer.json`, `stack-lost-with-container.json`, `stack-take-all.json`.
+- Cases in `play/`: `stack-fills-slots.json` (stack 5: 5 units one slot, the 6th a second), `stack-of-one.json` (every unit a slot), `stack-take-to-zero.json`, `stack-has-count.json`, `stack-use-spends-one.json`, `stack-partly-refused.json` (auto: what fits is added, the rest refused), `stack-offer-whole-count.json`, `stack-offer-takes-what-fits.json`, `stack-fits-in-slot-no-offer.json`, `stack-loses-units-with-container.json`, `stack-take-all.json`.
 - Cases in `invalid/`: `stack-needs-schema-8.json`, `count-on-unique-item.json`.
 
 ## Spec
