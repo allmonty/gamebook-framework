@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 8,
   "id": "two-doors",
   "lang": "pt",
   "title": "Duas Portas",
@@ -21,6 +21,8 @@
   "nodes": {
     "hall": {
       "text": "O elevador se abre num salão de espelhos. Duas portas esperam no fim: uma brilha vermelha, outra azul.\n\nEm algum lugar atrás de você, as portas do elevador se fecham de vez.",
+      "image": "images/hall.png",
+      "imageAlt": "Um corredor escuro coberto de espelhos. No fundo, duas portas: uma brilha em vermelho, a outra em azul.",
       "choices": [
         {
           "text": "Abrir a porta vermelha",

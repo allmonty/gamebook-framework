@@ -45,7 +45,8 @@ class GamePackage {
 const maxPackageBytes = 100 * 1024 * 1024;
 const maxPackageFiles = 2000;
 
-const _mediaTypes = {
+/// The file types of the media a game may ship (B14).
+const mediaTypes = {
   '.webp',
   '.png',
   '.jpg',
@@ -164,7 +165,7 @@ void _checkPath(String path, {required bool isLink}) {
   final type = dot < 0 ? '' : path.substring(dot).toLowerCase();
   if (parts.length > 1 &&
       (parts.first == 'images' || parts.first == 'audio') &&
-      _mediaTypes.contains(type) &&
+      mediaTypes.contains(type) &&
       parts.every((p) => p.isNotEmpty)) {
     return;
   }

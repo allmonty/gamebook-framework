@@ -63,7 +63,7 @@ What you need to know before adding a feature to the player (collected from the 
 
 ## Known shortcuts
 None blocks anything.
-- No image or audio files ship with the examples, so the player's image and audio support is untested in the browser (the CLI validator requires media files to exist). If wanted: ship media under `examples/<chapter>/`, copy them in the build and resolve paths against the example's folder.
+- No audio files ship with the examples, so the player's audio support is untested in the browser. The way is there: media under `examples/<chapter>/` are copied by the build and the player resolves paths against the example's folder, as for the picture of `two-doors` (drawn by `images/draw_hall.dart` next to it).
 - The player marks checks in amber but does not show the roll and target before the tap (spec B10 "should"); chapter texts write it into the choice instead.
 - Validator messages are the engine's English wording, also on Portuguese pages.
 - Dropped on purpose: side-by-side play and edit on desktop (tabs everywhere instead), a light theme, editor syntax highlighting.

@@ -17,6 +17,7 @@ class LabView {
     this.edit,
     this.m, {
     this.canOpenFiles = false,
+    this.mediaBase = '',
     this.pause = const Duration(milliseconds: 400),
   }) {
     host.classList.add('gb-lab');
@@ -32,6 +33,9 @@ class LabView {
 
   /// The playground also offers opening a story file from disk.
   final bool canOpenFiles;
+
+  /// Where the story's pictures and sounds are (see `PlayerView.mediaBase`).
+  final String mediaBase;
 
   /// How long typing must stop before the text is checked again.
   final Duration pause;
@@ -163,7 +167,7 @@ class LabView {
     } else {
       final host = el('div');
       _playPane.replaceChildren(host);
-      PlayerView(host, game, m);
+      PlayerView(host, game, m, mediaBase: mediaBase);
     }
   }
 

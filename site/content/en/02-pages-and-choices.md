@@ -28,7 +28,7 @@ A page can show an image above its text:
 "hall": { "text": "...", "image": "images/hall.webp", "choices": [ ... ] }
 ```
 
-The path is relative to the story's folder, so `images/hall.webp` sits next to `story.en.json`. `.webp`, `.png` and `.jpg` all work. The command-line validator tells you if the file is missing. (The examples on this site have no pictures, to keep them short.)
+The path is relative to the story's folder, so `images/hall.webp` sits next to `story.en.json`. `.webp`, `.png` and `.jpg` all work. The command-line validator tells you if the file is missing. The hall of the first example in this chapter has one.
 
 ### Describe your pictures
 
@@ -37,13 +37,13 @@ Some readers cannot see the picture: they read with a screen reader, or the imag
 ```json
 "hall": {
   "text": "...",
-  "image": "images/hall.webp",
-  "imageAlt": "A long hall lit by one flickering lamp, two doors at the end.",
+  "image": "images/hall.png",
+  "imageAlt": "A dark hall lined with mirrors. At the far end, two doors: one glowing red, one glowing blue.",
   "choices": [ ... ]
 }
 ```
 
-Say what the reader would notice, in a sentence; there is no need to start with "A picture of". The player hands this text to the screen reader. Without it, the picture counts as decoration and is skipped. `imageAlt` only goes next to an `image`, and an item's image takes one the same way. Each translation writes its own.
+Say what the reader would notice, in a sentence; there is no need to start with "A picture of". The player hands this text to the screen reader. Without it, the picture counts as decoration and is skipped. `imageAlt` only goes next to an `image`, and an item's image takes one the same way. Each translation writes its own. Open **Edit JSON** on the two doors example to see the hall's, then change it.
 
 ## Choices that wait
 

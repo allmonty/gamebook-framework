@@ -22,6 +22,14 @@ void main() {
     expect(File('${output.path}/css/site.css').existsSync(), isTrue);
   });
 
+  test("copies the examples' media, and only their media", () {
+    SiteBuilder(source: Directory.current, output: output).build();
+    final folder = '${output.path}/examples/02-pages-and-choices';
+    expect(File('$folder/images/hall.png').existsSync(), isTrue);
+    expect(File('$folder/images/draw_hall.dart').existsSync(), isFalse);
+    expect(File('$folder/two-doors.en.json').existsSync(), isFalse);
+  });
+
   test('every language has the same chapters, each with a page', () {
     final builder = SiteBuilder(source: Directory.current, output: output)
       ..build();

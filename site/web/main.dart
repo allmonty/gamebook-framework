@@ -30,7 +30,19 @@ void _mount(HTMLElement embed, Messages messages) {
     EditSession(_pretty(source?.textContent ?? ''), Random()),
     messages,
     canOpenFiles: embed.closest('.playground') != null,
+    mediaBase: _exampleFolder(embed),
   );
+}
+
+/// An embedded example's media sit next to its story file (the build copies
+/// them there): `examples/02-pages-and-choices/two-doors` gives
+/// `<root>examples/02-pages-and-choices/`.
+String _exampleFolder(HTMLElement embed) {
+  final path = embed.getAttribute('data-example') ?? '';
+  final slash = path.lastIndexOf('/');
+  if (slash < 0) return '';
+  return '${document.body?.getAttribute('data-root') ?? ''}'
+      '${path.substring(0, slash + 1)}';
 }
 
 /// The build ships examples on one line; writers read them indented.

@@ -28,7 +28,7 @@ Uma página pode mostrar uma imagem acima do texto:
 "hall": { "text": "...", "image": "images/hall.webp", "choices": [ ... ] }
 ```
 
-O caminho é relativo à pasta da história, então `images/hall.webp` fica ao lado de `story.pt.json`. `.webp`, `.png` e `.jpg` funcionam. O validador de linha de comando avisa se o arquivo não existir. (Os exemplos deste site não têm imagens, para ficarem curtos.)
+O caminho é relativo à pasta da história, então `images/hall.webp` fica ao lado de `story.pt.json`. `.webp`, `.png` e `.jpg` funcionam. O validador de linha de comando avisa se o arquivo não existir. O corredor do primeiro exemplo deste capítulo tem uma.
 
 ### Descreva suas imagens
 
@@ -37,13 +37,13 @@ Alguns leitores não conseguem ver a imagem: leem com um leitor de tela, ou a im
 ```json
 "hall": {
   "text": "...",
-  "image": "images/hall.webp",
-  "imageAlt": "Um corredor comprido iluminado por uma lâmpada que pisca, com duas portas no fundo.",
+  "image": "images/hall.png",
+  "imageAlt": "Um corredor escuro coberto de espelhos. No fundo, duas portas: uma brilha em vermelho, a outra em azul.",
   "choices": [ ... ]
 }
 ```
 
-Diga o que o leitor notaria, em uma frase; não precisa começar com "Uma imagem de". O jogo passa esse texto ao leitor de tela. Sem ele, a imagem conta como decoração e é pulada. `imageAlt` só vai ao lado de uma `image`, e a imagem de um item recebe uma do mesmo jeito. Cada tradução escreve a sua.
+Diga o que o leitor notaria, em uma frase; não precisa começar com "Uma imagem de". O jogo passa esse texto ao leitor de tela. Sem ele, a imagem conta como decoração e é pulada. `imageAlt` só vai ao lado de uma `image`, e a imagem de um item recebe uma do mesmo jeito. Cada tradução escreve a sua. Abra **Editar JSON** no exemplo das duas portas para ver a do corredor, e mude-a.
 
 ## Escolhas que esperam
 
