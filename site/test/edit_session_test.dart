@@ -54,4 +54,16 @@ void main() {
     expect(edit.play!.view.storyTitle, 'The Rusty Door');
     expect(edit.source, edit.original);
   });
+
+  test('warnings carry their code', () {
+    final story = _rustyDoor().replaceFirst(
+      '"nodes": {',
+      '"nodes": {\n    "attic": { "text": "Dust.", "ending": "death" },',
+    );
+    final edit = EditSession(story, Random(1));
+    final warning = edit.issues.singleWhere((i) => !i.error);
+    expect(warning.code, 'unreachable');
+    expect(warning.where, 'nodes.attic');
+    expect(edit.play, isNotNull, reason: 'warnings do not stop play');
+  });
 }

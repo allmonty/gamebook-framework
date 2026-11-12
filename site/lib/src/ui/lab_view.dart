@@ -148,6 +148,8 @@ class LabView {
                   issue.error ? 'player.issue.error' : 'player.issue.warning',
                 ),
               ),
+              if (issue.code != null)
+                el('span', cls: 'label code', text: issue.code),
               if (issue.where.isNotEmpty) el('code', text: issue.where),
               el('span', text: issue.message),
             ],

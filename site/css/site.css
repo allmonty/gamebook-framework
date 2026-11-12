@@ -402,3 +402,4 @@ main { display: block; }
 .pager a:hover { border-color: var(--cyan); text-shadow: none; }
 .pager .label { color: var(--muted); }
 .pager .next { text-align: right; }
+.gb-issues .label.code { color: var(--muted); }

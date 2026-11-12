@@ -12,9 +12,13 @@ class IssueView {
     required this.error,
     required this.where,
     required this.message,
+    this.code,
   });
 
   final bool error;
+
+  /// A warning's code from spec B16, like `unreachable`; null for errors.
+  final String? code;
   final String where;
   final String message;
 }
@@ -48,6 +52,7 @@ class EditSession {
             error: issue.severity == Severity.error,
             where: issue.where,
             message: issue.message,
+            code: issue.code,
           ),
       ];
       play = hasErrors ? null : PlaySession.start(story, random: _random);
