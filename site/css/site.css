@@ -164,8 +164,11 @@ main { display: block; }
   clip-path: var(--chamfer);
   cursor: pointer;
 }
-.btn:hover { box-shadow: var(--glow); text-shadow: none; filter: brightness(1.1); }
+.btn:hover { text-shadow: none; filter: brightness(1.1); }
 .btn-ghost { color: var(--cyan); background: var(--cyan-soft); }
+/* A clip-path hides outlines, so the focus ring is drawn inside the button. */
+.btn:focus-visible { outline: none; box-shadow: inset 0 0 0 3px var(--canvas); }
+.btn-ghost:focus-visible, .btn-danger:focus-visible, .gb-actions label.btn:focus-within { outline: none; box-shadow: inset 0 0 0 2px var(--text); }
 
 /* ---------- Player ---------- */
 .gb-player { display: grid; gap: var(--s4); max-width: 560px; }
@@ -310,7 +313,6 @@ main { display: block; }
 .gb-issues code { color: var(--cyan); word-break: break-all; }
 .gb-cannot { color: var(--muted); }
 .gb-file { position: absolute; width: 1px; height: 1px; opacity: 0; }
-.gb-actions label.btn:focus-within { box-shadow: var(--glow); }
 
 .steps { color: var(--muted); max-width: 70ch; margin: 0 0 var(--s8); padding-left: 1.25rem; }
 .steps li { margin-bottom: var(--s2); }
