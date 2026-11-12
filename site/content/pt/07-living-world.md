@@ -91,10 +91,21 @@ examples/07-living-world/undo-the-trap
 
 Desfazer é generoso: desfaz até uma morte. Deixe desligado para um livro clássico e implacável.
 
+## Finais que não são morte
+
+Preso na fronteira, perdido na floresta, de volta para casa: muitas aventuras terminam sem vitória e sem morte. Marque uma página assim com `"ending": "defeat"` (schema 8). O leitor fica sabendo que a aventura acabou, não que morreu.
+
+```gamebook
+examples/07-living-world/captured
+```
+
+Dois dos três finais são derrotas, e o herói está vivo nos dois. Vida em 0 continua sendo morte, diga a página o que disser.
+
 ### Experimente
 
 - Na estalagem, mude `"gte": 4` para `"gte": 2`: o estalajadeiro cede mais cedo.
 - No poço, adicione a parte `{ "if": { "stat": "luck", "gte": 12 }, "text": "Você se sente muito sortudo." }`.
 - No escritório, torne a conquista Cartógrafo visível tirando `"hidden": true`.
+- Na fronteira, troque o `"defeat"` da cela por `"death"` e veja o que o leitor fica sabendo.
 
 A seguir: garantir que um livro longo não tem links quebrados, e compartilhá-lo.

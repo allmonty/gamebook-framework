@@ -14,6 +14,7 @@
   "player.choices": "Decisões",
   "player.restart": "Jogar de novo",
   "player.ending.victory": "Vitória // fim",
+  "player.ending.defeat": "Derrota // fim",
   "player.ending.death": "Você morreu // fim",
   "player.locked": "Bloqueado",
   "player.needs": "Precisa: {list}",

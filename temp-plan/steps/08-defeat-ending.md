@@ -25,4 +25,12 @@ A page can only end in `victory` or `death`. Many gamebook endings are neither: 
 The example plays to the defeat ending on the site with its own heading in both languages; checks green.
 
 ## Handoff notes
-(fill in)
+- Two commits: `317c51c` adds the format, engine and tools; the second takes the ending to the site and the tutorial and marks the step done.
+- Engine: `Ending { victory, defeat, death }`; the schema 8 check `nodes.<id>.ending` is in `_schema8` (`schema_gate.dart`), after `imageAlt`. The parse error now reads `expected "victory", "defeat" or "death"`.
+- Simulator: `Outcome.defeat`. The report line now reads `victory N%, defeat N%, death N%, ...`. Anything that parses that line must expect the new field.
+- Graph: DOT fills defeat pages amber (`#ffe0b2`). Mermaid had no colours for endings (all are the same stadium shape), so it needed nothing.
+- No `switch` on `Ending` existed outside `simulate.dart`; the site picks the heading by name (`player.ending.<name>`). A site test now requires a heading for every `Ending` value, in both languages.
+- Site: `player.ending.defeat` ("Defeat // the end", "Derrota // fim"); `.gb-ending.defeat` in amber. A VM test and a browser test (8 browser tests now).
+- Tutorial: "Endings that are not a death" / "Finais que não são morte" in chapter 7 after Undo, with `examples/07-living-world/captured` (title "The Border" / "A Fronteira": one victory, two defeats), and a "Try it" line. The simulator reaches every ending, with nothing stuck.
+- `validate.dart` was unchanged: `no-victory` still asks for a reachable victory.
+- Done on the branch `step-08-defeat-ending` from `main`.

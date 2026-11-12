@@ -58,6 +58,41 @@ void main() {
     host.remove();
   });
 
+  test('a defeat ending has its own heading', () {
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(
+        Story.fromJson({
+          'schema': 8,
+          'id': 't',
+          'lang': 'en',
+          'title': 'Border',
+          'rules': {'preset': 'fighting-fantasy'},
+          'start': 'a',
+          'nodes': {
+            'a': {
+              'text': 'A.',
+              'choices': [
+                {'text': 'Show the papers', 'to': 'cell'},
+              ],
+            },
+            'cell': {'text': 'A cell.', 'ending': 'defeat'},
+          },
+        }),
+        random: Random(1),
+      ),
+      const Messages({'player.ending.defeat': 'Defeat // the end'}),
+    );
+
+    (host.querySelector('.gb-choice')! as HTMLElement).click();
+
+    final ending = host.querySelector('.gb-ending.defeat')!;
+    expect(ending.querySelector('.label')!.textContent, 'Defeat // the end');
+    host.remove();
+  });
+
   test('the page image carries its description as alt text', () {
     final host = el('div');
     document.body!.append(host);

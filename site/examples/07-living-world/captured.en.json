@@ -1,0 +1,50 @@
+{
+  "schema": 8,
+  "id": "captured",
+  "lang": "en",
+  "title": "The Border",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "post",
+  "nodes": {
+    "post": {
+      "text": "A guard post blocks the only road across the border. Your papers are forged, and not well.",
+      "choices": [
+        {
+          "text": "Show the papers",
+          "to": "cell"
+        },
+        {
+          "text": "Wait for nightfall by the river",
+          "to": "river"
+        }
+      ]
+    },
+    "river": {
+      "text": "Night falls. The river runs black and fast, and no one watches this side of it.",
+      "choices": [
+        {
+          "text": "Swim across",
+          "to": "shore"
+        },
+        {
+          "text": "Wait on the bank for a better moment",
+          "to": "dawn"
+        }
+      ]
+    },
+    "cell": {
+      "text": "The guard reads your papers twice, then calls for the captain. By morning you are in a cell: alive, unhurt, and a long way from the other side.",
+      "ending": "defeat"
+    },
+    "dawn": {
+      "text": "The better moment never comes. At dawn a patrol finds you shivering on the bank and walks you back to the post.",
+      "ending": "defeat"
+    },
+    "shore": {
+      "text": "You drag yourself onto the far bank, soaked and free. Behind you, the lamp of the guard post is a small orange dot.",
+      "ending": "victory"
+    }
+  }
+}

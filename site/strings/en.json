@@ -14,6 +14,7 @@
   "player.choices": "Decisions",
   "player.restart": "Play again",
   "player.ending.victory": "Victory // the end",
+  "player.ending.defeat": "Defeat // the end",
   "player.ending.death": "You died // the end",
   "player.locked": "Locked",
   "player.needs": "Needs: {list}",
