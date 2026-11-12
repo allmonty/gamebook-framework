@@ -78,6 +78,7 @@
   "player.name": "Hero name",
   "player.pick": "{title} // {picked}/{count}",
   "player.begin": "Begin the adventure",
+  "nav.starters": "Starters",
   "nav.play": "Playground",
   "play.kicker": "Playground // live engine",
   "play.title": "Write a story, play it at once",

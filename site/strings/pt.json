@@ -78,6 +78,7 @@
   "player.name": "Nome do herói",
   "player.pick": "{title} // {picked}/{count}",
   "player.begin": "Começar a aventura",
+  "nav.starters": "Modelos",
   "nav.play": "Playground",
   "play.kicker": "Playground // motor ao vivo",
   "play.title": "Escreva uma história e jogue na hora",

@@ -24,7 +24,7 @@ An open format for **gamebooks**: stories you play by reading a page, choosing w
 ## Start here
 Three jobs, three doors:
 
-1. **Write a game.** Copy a folder from [starters/](starters/README.md), learn the format with the [writer's tutorial](https://allmonty.github.io/gamebook-framework/en/tutorial/index.html), and check your story as you go. To write with a chatbot, give it [spec/llm-kit.md](spec/llm-kit.md) along with your request.
+1. **Write a game.** Copy a folder from [starters/](starters/README.md) ([play them first](https://allmonty.github.io/gamebook-framework/en/starters.html)), learn the format with the [writer's tutorial](https://allmonty.github.io/gamebook-framework/en/tutorial/index.html), and check your story as you go. To write with a chatbot, give it [spec/llm-kit.md](spec/llm-kit.md) along with your request.
    ```
    cd engines/dart && dart run gamebook_engine:validate_story ../../starters/fighting-fantasy --strict
    ```
@@ -43,6 +43,7 @@ AI tools: [llms.txt](llms.txt) lists everything above with one line each.
 The website plays stories in your browser with the reference engine, and every example can be edited and replayed on the spot (English and Portuguese):
 - **[Home](https://allmonty.github.io/gamebook-framework/)**: a complete showcase gamebook, the features and the comparison.
 - **[Writer's tutorial](https://allmonty.github.io/gamebook-framework/en/tutorial/index.html)**: eight short chapters and a cookbook, from your first page to fights, dice and translations. No programming needed.
+- **[Starter games](https://allmonty.github.io/gamebook-framework/en/starters.html)**: eight complete gamebooks to play, read and copy.
 - **[Playground](https://allmonty.github.io/gamebook-framework/en/play.html)**: write or open a story, check it and play it.
 
 The site's source, and how to build it, is in [site/](site/README.md).
@@ -235,7 +236,7 @@ Finished stories can be **packaged** into a single `.gamebook` file (a zip) that
 | [spec/story.schema.json](spec/story.schema.json) | JSON Schema (shape only) for editors and quick checks |
 | [spec/presets/](spec/presets/) | the two rule presets as data: the exact `rules` block each one stands for |
 | [spec/llm-kit.md](spec/llm-kit.md) | **One file to give a chatbot** so it can write or change a story: instructions, common mistakes and the reference (generated) |
-| [starters/](starters/README.md) | **three game folders to copy**: a blank one, a classic Fighting Fantasy adventure, and one with its own rules |
+| [starters/](starters/README.md) | **eight game folders to copy**, each in English and Portuguese: a blank one, a classic Fighting Fantasy adventure, custom rules, results-table combat, a percentile mystery, a town hub with a shop, a d20 dungeon and the skeleton of a long book |
 | [conformance/](conformance/README.md) | language-neutral test cases with scripted dice: the definition of "plays it right" |
 | [engines/](engines/README.md) | engines; the reference one is [Dart](engines/dart/README.md) (with a validator and graph CLI) |
 | [site/](site/README.md) | the website and the bilingual tutorial, built in Dart on the reference engine |

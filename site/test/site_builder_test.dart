@@ -110,6 +110,34 @@ void main() {
     );
   });
 
+  test('the starters page plays every starter, in both languages', () {
+    SiteBuilder(source: Directory.current, output: output).build();
+    final folders = [
+      for (final d in Directory(
+        '../starters',
+      ).listSync().whereType<Directory>())
+        d.uri.pathSegments.lastWhere((s) => s.isNotEmpty),
+    ];
+    expect(folders.length, greaterThanOrEqualTo(8));
+    for (final lang in SiteBuilder.languages) {
+      final page = File('${output.path}/$lang/starters.html')
+          .readAsStringSync();
+      for (final folder in folders) {
+        // A new starter cannot be added without being shown.
+        expect(
+          page,
+          contains('data-example="../starters/$folder/story"'),
+          reason: '$lang $folder',
+        );
+        expect(page, contains('tree/main/starters/$folder"'), reason: folder);
+      }
+      // The embedded story is the one in the page's language.
+      expect(page, contains('"lang":"$lang"'));
+      expect(page, isNot(contains('"lang":"${lang == 'en' ? 'pt' : 'en'}"')));
+      expect(page, contains('starters.html" aria-current="page">'));
+    }
+  });
+
   test('a string placed in an HTML attribute cannot break out of it', () {
     final inAttribute = RegExp(r'="[^"]*\{\{([\w.-]+)\}\}');
     final keys = {

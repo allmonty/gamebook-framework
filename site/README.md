@@ -30,6 +30,7 @@ Headless Chrome cannot go below 500px wide, so check phone layouts in a real bro
 | `templates/` | `layout.html` wraps every page; one template per page; `root.html` picks the language |
 | `strings/{en,pt}.json` | every visitor-facing text of templates; both files must have the same keys (tested) |
 | `content/{en,pt}/` | tutorial chapters in Markdown |
+| `pages/{en,pt}/starters.md` | the starter games page (`<lang>/starters.html`): every folder of `../starters` with a player; a test wants each folder on it |
 | `pages/{en,pt}/versions.md` | the format versions page (`<lang>/versions.html`), outside the tutorial; a test wants a section for every version the engine supports |
 | `examples/` | example stories, one file per language |
 | `css/site.css`, `assets/` | copied as they are |

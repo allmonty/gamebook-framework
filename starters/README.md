@@ -1,6 +1,6 @@
 # Starter games
 
-Complete game folders to copy and make your own, each in English and Portuguese. Each one is a folder laid out as the spec says ([B1](../spec/framework.md)): one `story.<lang>.json` per language, plus `images/` and `audio/` if you add them. Every story starts with `"$schema"`, so an editor that knows JSON Schema checks it as you type.
+Complete game folders to copy and make your own, each in English and Portuguese. [Play them on the site](https://allmonty.github.io/gamebook-framework/en/starters.html) before you choose. Each one is a folder laid out as the spec says ([B1](../spec/framework.md)): one `story.<lang>.json` per language, plus `images/` and `audio/` if you add them. Every story starts with `"$schema"`, so an editor that knows JSON Schema checks it as you type.
 
 | Folder | What it is |
 |---|---|
