@@ -25,6 +25,7 @@ class SiteBuilder {
     // Example stories are embedded in the pages; only their pictures and
     // sounds are served as files, next to where the story says they are.
     _copyDir('examples', (path) => mediaTypes.any(path.endsWith));
+    _publishFormatFiles();
     _write('index.html', fillTemplate(_read('templates/root.html'), const {}));
     for (final lang in languages) {
       _buildLanguage(lang);
@@ -162,6 +163,29 @@ class SiteBuilder {
     File('${output.path}/$path')
       ..parent.createSync(recursive: true)
       ..writeAsStringSync(text);
+  }
+
+  /// The format's own files, at stable addresses on the site: what a story's
+  /// `"$schema"` and an AI assistant reach for. They live in the repo,
+  /// one level above the site's sources.
+  void _publishFormatFiles() {
+    final repo = '${source.path}/..';
+    void copy(String from, String to) {
+      File('${output.path}/$to').parent.createSync(recursive: true);
+      File('$repo/$from').copySync('${output.path}/$to');
+    }
+
+    copy('llms.txt', 'llms.txt');
+    copy('spec/llm-kit.md', 'llm-kit.md');
+    copy('spec/story.schema.json', 'schema/story.schema.json');
+    for (final preset in Directory('$repo/spec/presets').listSync()) {
+      if (preset is File && preset.path.endsWith('.json')) {
+        copy(
+          'spec/presets/${preset.uri.pathSegments.last}',
+          'presets/${preset.uri.pathSegments.last}',
+        );
+      }
+    }
   }
 
   void _copyDir(String name, [bool Function(String path)? only]) {

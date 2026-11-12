@@ -23,6 +23,29 @@ void main() {
     expect(File('${output.path}/css/site.css').existsSync(), isTrue);
   });
 
+  test('publishes the format files, and every site link in llms.txt '
+      'leads to a built file', () {
+    SiteBuilder(source: Directory.current, output: output).build();
+    for (final path in [
+      'llms.txt',
+      'llm-kit.md',
+      'schema/story.schema.json',
+      'presets/fighting-fantasy.json',
+      'presets/d20-lite.json',
+    ]) {
+      expect(File('${output.path}/$path').existsSync(), isTrue, reason: path);
+    }
+    const site = 'https://allmonty.github.io/gamebook-framework/';
+    final links = RegExp(
+      r'\]\((https://allmonty\.github\.io/gamebook-framework/[^)\s]+)\)',
+    ).allMatches(File('../llms.txt').readAsStringSync());
+    expect(links, isNotEmpty);
+    for (final m in links) {
+      final path = m[1]!.substring(site.length).split('#').first;
+      expect(File('${output.path}/$path').existsSync(), isTrue, reason: path);
+    }
+  });
+
   test("copies the examples' media, and only their media", () {
     SiteBuilder(source: Directory.current, output: output).build();
     final folder = '${output.path}/examples/02-pages-and-choices';

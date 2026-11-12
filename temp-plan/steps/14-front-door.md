@@ -29,4 +29,10 @@ The addresses only work once the owner enables Pages (see "Waiting on the owner"
 From the README's first screen a reader can reach a starter, the tutorial, the kit, the engine and the conformance suite in one click each; the built site holds `llms.txt`, the kit, the schema and the presets; the link test is green.
 
 ## Handoff notes
-(fill in)
+- Three commits: `52bca63` (A: the README's "Start here", `llms.txt`, the schema's absolute `$id`, the starters in `AGENTS.md`, a link test), `10b3a9c` (a bug found on the way, below), and B (the site serves the format files; `$schema` lines move to it).
+- **"Start here"** sits right after the opening example: write a game, put games in your app, write an engine. Each door has its links and one command. The feature tour below is unchanged.
+- **`llms.txt`** links files the site serves by their site address, and the rest by GitHub `blob`/`tree` addresses. `site/test/docs_links_test.dart` checks every relative link and every GitHub link into the repo in `README.md`, `AGENTS.md` and `llms.txt`. `site_builder_test.dart` checks every site address in `llms.txt` against the build.
+- **The site:** `SiteBuilder._publishFormatFiles` copies `llms.txt`, `spec/llm-kit.md`, `spec/story.schema.json` and `spec/presets/*.json` from the repo, one level above `site/`, to the build's root. `pages.yml` deploys on every push to `main`, so they never go stale. Pages was already on (the owner checked); the old "enable Pages" item left "Waiting on the owner".
+- **`$schema`:** the tutorial (chapter 1, both languages) and the four starter files now point at `https://allmonty.github.io/gamebook-framework/schema/story.schema.json`, which is also the schema's `$id`. Chapter 8 links the published kit (`../../llm-kit.md`).
+- **Bug found:** the chapter renderer turned every relative `.md` link into `.html`, so `../../llm-kit.md` broke. Only a bare chapter file name is rewritten now (own commit, with its test).
+- For step 15: `AGENTS.md` still has the "Know what to do next" row and the "Plan protocol" pointing at `temp-plan/`; the step 14 file asked the last step to replace them.

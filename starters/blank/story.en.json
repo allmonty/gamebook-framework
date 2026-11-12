@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/allmonty/gamebook-framework/main/spec/story.schema.json",
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
   "schema": 1,
   "id": "blank",
   "lang": "en",
