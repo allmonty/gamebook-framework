@@ -13,4 +13,5 @@ none
 Links present.
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- README has a "Play it, learn it" section linking the home page, the tutorial and the playground at `https://allmonty.github.io/gamebook-framework/` (the default Pages address for this repository; the links work once Pages is enabled), and the "What is here" table lists `site/`, `AGENTS.md` and `roadmap/`.
+- The draft `TUTORIAL_AND_SITE_PLAN.md` never reached this branch, so there was nothing to delete.

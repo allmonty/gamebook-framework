@@ -21,6 +21,14 @@ An open format for **gamebooks**: stories you play by reading a page, choosing w
 }
 ```
 
+## Play it, learn it
+The website plays stories in your browser with the reference engine, and every example can be edited and replayed on the spot (English and Portuguese):
+- **[Home](https://allmonty.github.io/gamebook-framework/)**: a complete showcase gamebook, the features and the comparison.
+- **[Writer's tutorial](https://allmonty.github.io/gamebook-framework/en/tutorial/index.html)**: eight short chapters and a cookbook, from your first page to fights, dice and translations. No programming needed.
+- **[Playground](https://allmonty.github.io/gamebook-framework/en/play.html)**: write or open a story, check it and play it.
+
+The site's source, and how to build it, is in [site/](site/README.md).
+
 ## Why another format
 Ink and Twine are great for branching text, but have no stats, dice or inventory built in, and Twine's output is a web page rather than data. ChoiceScript has license limits. This format is plain, strict data that any language can parse, statically check (broken links, unreachable pages, items never given) and play the same way everywhere. The full comparison: [spec/comparison.md](spec/comparison.md).
 
@@ -202,7 +210,9 @@ Finished stories can be **packaged** into a single `.gamebook` file (a zip) that
 | [spec/llm-kit.md](spec/llm-kit.md) | **One file to give a chatbot** so it can write or change a story: instructions, common mistakes and the reference (generated) |
 | [conformance/](conformance/README.md) | language-neutral test cases with scripted dice: the definition of "plays it right" |
 | [engines/](engines/README.md) | engines; the reference one is [Dart](engines/dart/README.md) (with a validator and graph CLI) |
+| [site/](site/README.md) | the website and the bilingual tutorial, built in Dart on the reference engine |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | how to change the spec or add an engine |
+| [AGENTS.md](AGENTS.md), [roadmap/](roadmap/README.md) | how AI assistants (and people) work in this repo, and the plan in commit-sized steps |
 
 ## Status
 Schema versions 1 to 7 are specified. The Dart engine, which runs the gamebook app for iOS and Android (not public yet), implements all of them, and reads and writes `.gamebook` packages (B14).
