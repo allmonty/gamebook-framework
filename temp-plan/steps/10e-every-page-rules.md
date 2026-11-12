@@ -16,13 +16,14 @@ How the three cases are written with it:
 - **Poison:** `{ "if": { "flag": "fever" }, "effects": [ { "stat": "stamina", "add": -1 } ] }`; the healer clears the flag.
 - **A debuff that runs out:** a counter stat `hex` set to 3; a rule `{ "if": { "stat": "hex", "gte": 1 }, "effects": [ { "stat": "hex", "add": -1 } ] }`; and the penalty as a conditional bonus from step 10b, `{ "if": { "stat": "hex", "gte": 1 }, "bonus": { "skill": -2 } }`. No new state: a counter is a stat.
 
-## Open questions for the owner
-1. Do every-page rules run on the start page, and on a page entered again (yes, proposed: "every page entered")?
-2. A page entered by a fight's `win`/`flee`/`wounded`: "calm" or not? (Proposed: a page is calm when it has no `combat`, however it was reached.)
-3. Should a rule be able to run on fight rounds too ("lasts 2 rounds")? Proposed: no, pages only; a later candidate if a story needs it.
-4. A countdown written as a stat shows in the stats bar. Is that wanted, or should a stat be able to be hidden? (Possibly a small field `"hidden": true` on a stat.)
+## Owner decisions (2026-11-12, do not reopen)
+1. The rules run on **every page entered**: the start page, and a page entered again.
+2. A page is **calm** when it has no `combat`, however it was reached.
+3. **Pages only**, no fight rounds (counting fight rounds is now a candidate after the plan).
+4. A stat may be **hidden** from the stats bar: `"hidden": true` (schema 8). Placeholders and conditions still see it.
+5. The rules run **before** the page's own effects: a counter set to 3 on a page lasts the next three pages, a fever caught on a page drains from the next one, and the page that cures it still drains once.
 
-## Files (once the questions are settled)
+## Files
 Spec B4 (rules), B10 step 4 (when the rules run, and that health at 0 stops them as any effect), changelog row 8, JSON Schema; `rules_spec.dart`, gate; `engine.dart` `_enter`; `validate.dart` (conditions and effects of the rules); `simulate.dart` needs nothing. Cases: healing on calm pages only, poison until a flag clears, a countdown with a conditional bonus, a rule that kills, order of several rules, invalid gate cases. Site: nothing new beyond the log lines it already writes; tutorial in chapter 7 with the example; README; LLM kit.
 
 ## Done when

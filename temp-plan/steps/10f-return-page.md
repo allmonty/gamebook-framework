@@ -13,13 +13,15 @@ Write `site/examples/02-pages-and-choices/the-pedlar.{en,pt}.json`: a pedlar who
 - `"return": true` instead of `to` on a choice (and as the target of a fight's `win`, written `"win": { "return": true }`), leads back to the page last remembered, and forgets it.
 - Calls nest: a stack saved with the game. Stories come from strangers, so its depth needs a bound (proposed 16); what happens beyond it is question 3.
 
-## Open questions for the owner
-1. Returning: is the page **entered again** (its effects apply unless `once`, the visit counts, every-page rules run) or only **shown again** without entering? Proposed: entered again, like any page, so the rules stay simple; authors use `once` for one-time effects.
-2. What happens to a `return` with nothing remembered? Proposed: the choice is locked (never shown as usable) and the validator warns when a page with `return` can be reached without a call.
-3. The depth limit, and what a call beyond it does: proposed, the oldest remembered page is forgotten, so the game never fails (a static check cannot always see the depth).
-4. Does undo restore the stack? Proposed: yes, it is state.
+## Owner decisions (2026-11-12, do not reopen)
+1. Returning **enters the page again**, like any page: its effects (unless `once`), a visit, the every-page rules.
+2. A `return` with nothing remembered is **locked**, and the validator warns when that can happen.
+3. Calls nest **16 deep** at most; a deeper call forgets the oldest remembered page, so the game never fails.
+4. **Undo** restores what is remembered: it is state.
+5. `"call": true` goes on a **choice**, and covers whatever target it leads to: `to`, a check's `pass` or `fail`, a table outcome's `to`.
+6. `return` goes in place of `to` on a **choice** (`"return": true`), and as a fight's **`win`** and **`flee`** (`{ "return": true }`).
 
-## Files (once the questions are settled)
+## Files
 Spec B10 (choices, steps 3 to 4), B11 (`win`), B14 (saves), B16 (a new warning code), changelog row 8, JSON Schema; `story.dart` (choice and combat targets), gate; `state.dart` (`returnTo` list, saved); `engine.dart` (`choose`, fight win, `stateFits`); `validate.dart` and `graph.dart` (a return has no fixed target: reachability follows calls; draw return edges to every caller, dashed); `simulate.dart`. Cases for each rule above and invalid gate cases. Site: nothing new for the player; tutorial in chapter 2 with the example; README; LLM kit.
 
 ## Done when

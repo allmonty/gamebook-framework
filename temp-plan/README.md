@@ -119,14 +119,14 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 8. **New check kinds**: advantage and disadvantage, dice pools.
 9. Conditional effects, text emphasis, `{item}` counts in text, a total cap on a countable item (the last two are now step 10d).
 10. **A lower limit per stat** (now step 10a) (say `"min": -5`), so a stat can be a signed modifier as in tabletop RPGs ("Might -1"). Today every stat, item bonuses included, stays at 0 or above (B4, B5; step 03), so a cursed item at -5 Might held at Might 2 gives 0, and in `1d20 + might` the last 3 points of penalty are lost. The default stays 0, so existing stories play the same. No story needs it yet.
+11. **Rules that count fight rounds**, not only pages (the owner, 2026-11-12): "the hex lasts 2 rounds", "poison bites each round". Step 10e runs rules on pages only.
 
 ## Where things stand (2026-11-12, end of a session)
-- Steps 01 to 10d are done. 01 to 10 are merged into `main`; 10a to 10d are in pull request #15 (branch `steps-10a-10d`), waiting for the owner's review and merge. Check with `gh pr view 15` first.
-- **Next:** once #15 is merged, update `main` and cut `steps-10e-10f`. Write the example story of step 10e (`marsh-fever`), then that of 10f (`the-pedlar`), as files only: the engine cannot play them yet. Then stop and put each step's "Open questions" to the owner, with the proposed answers, before writing any spec.
+- Steps 01 to 10d are done and merged into `main` (10a to 10d in pull request #15).
+- **Next:** steps 10e and 10f on `steps-10e-10f` (drafts of their examples are in `drafts/`; the owner settled their open questions, now in each step file).
 - After 10f: steps 11 to 15, back to one branch and pull request per step.
 
 ## Waiting on the owner (outward-facing, never do these unasked)
-- Review and merge pull request #15 (steps 10a to 10d).
 - Enable GitHub Pages (Settings > Pages > Source: "GitHub Actions"; the workflow is already there); step 14's addresses work only once it is on.
 - Tag a release when schema 8 is merged, so stories and engines can cite a fixed version.
 - Decide whether to publish the Dart engine on pub.dev (`publish_to: none` today) and to submit the schema to SchemaStore for editor autocompletion.
