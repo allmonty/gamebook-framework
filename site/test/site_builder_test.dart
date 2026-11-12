@@ -76,6 +76,26 @@ void main() {
     }
   });
 
+  test('a string placed in an HTML attribute cannot break out of it', () {
+    final inAttribute = RegExp(r'="[^"]*\{\{([\w.-]+)\}\}');
+    final keys = {
+      for (final file in Directory('templates').listSync().whereType<File>())
+        for (final m in inAttribute.allMatches(file.readAsStringSync())) m[1]!,
+    };
+    expect(keys, contains('page.description'));
+    final builder = SiteBuilder(source: Directory.current, output: output);
+    for (final lang in SiteBuilder.languages) {
+      final strings = builder.loadStrings(lang);
+      for (final key in keys) {
+        expect(
+          strings[key] ?? '',
+          isNot(matches(RegExp('["<&]'))),
+          reason: '$lang $key',
+        );
+      }
+    }
+  });
+
   test('every language has the same string keys', () {
     final builder = SiteBuilder(source: Directory.current, output: output);
     final keys = {
