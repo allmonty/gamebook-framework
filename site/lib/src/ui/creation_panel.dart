@@ -55,6 +55,7 @@ class CreationPanel {
               'button',
               cls: 'btn btn-ghost',
               text: m('player.reroll', {'count': view.rerollsLeft}),
+              attrs: {'data-key': 'reroll'},
             ),
             () {
               draft.reroll();
@@ -112,7 +113,11 @@ class CreationPanel {
           el(
             'button',
             cls: 'gb-choice${option.picked ? ' picked' : ''}',
-            attrs: {'aria-pressed': '${option.picked}'},
+            attrs: {
+              'aria-pressed': '${option.picked}',
+              // Ids have no quotes or spaces, so this is safe in a selector.
+              'data-key': '${group.id}.${option.id}',
+            },
             children: [
               el('span', cls: 'gb-index', text: option.picked ? '[x]' : '[ ]'),
               el('span', cls: 'gb-text', text: option.label),

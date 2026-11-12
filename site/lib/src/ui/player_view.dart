@@ -42,7 +42,7 @@ class PlayerView {
         CreationPanel(
           draft,
           m,
-          onChange: render,
+          onChange: _redrawKeepingFocus,
           onBegin: () => _act(session.beginAdventure),
         ).element,
       );
@@ -89,6 +89,16 @@ class PlayerView {
       ),
     );
     _audio.play(view.audio);
+  }
+
+  /// Redraws character creation. The button just pressed is replaced by a
+  /// new one, so focus goes to that one instead of being lost.
+  void _redrawKeepingFocus() {
+    final key = document.activeElement?.getAttribute('data-key');
+    render();
+    if (key != null) {
+      (host.querySelector('[data-key="$key"]') as HTMLElement?)?.focus();
+    }
   }
 
   HTMLElement _controls(PageView view) => el(
