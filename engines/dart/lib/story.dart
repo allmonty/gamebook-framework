@@ -5,6 +5,7 @@ import 'dice.dart';
 import 'effect.dart';
 import 'json_reader.dart';
 import 'rules_spec.dart';
+import 'schema_gate.dart';
 import 'text.dart';
 
 export 'condition.dart';
@@ -642,34 +643,14 @@ class Story {
       nodes: obj.idMap('nodes', Node.fromJson),
     );
     obj.finish();
-    if (schema < 2) {
-      for (final MapEntry(:key, :value) in story.items.entries) {
-        if (value.use != null) {
-          throw StoryFormatException('items.$key.use', 'needs "schema": 2');
-        }
-      }
-    }
-    if (schema < 3) {
-      final path = story._firstSchema3Feature();
-      if (path != null) throw StoryFormatException(path, 'needs "schema": 3');
-    }
-    if (schema < 4) {
-      final path = story._firstSchema4Feature();
-      if (path != null) throw StoryFormatException(path, 'needs "schema": 4');
-    } else {
-      story._checkTemplates();
-    }
-    if (schema < 5) {
-      final path = story._firstSchema5Feature();
-      if (path != null) throw StoryFormatException(path, 'needs "schema": 5');
-    }
-    if (schema < 6) {
-      final path = usesShowTitles ? 'showTitles' : story._firstSchema6Feature();
-      if (path != null) throw StoryFormatException(path, 'needs "schema": 6');
-    }
-    if (schema < 7) {
-      final path = story._firstSchema7Feature();
-      if (path != null) throw StoryFormatException(path, 'needs "schema": 7');
+    // Placeholders are checked before the gate, as they were when the gate
+    // ran version by version: they only exist from schema 4 on.
+    if (schema >= 4) story._checkTemplates();
+    if (firstNewerFeature(story, usesShowTitles: usesShowTitles) case (
+      final version,
+      final path,
+    )) {
+      throw StoryFormatException(path, 'needs "schema": $version');
     }
     for (final MapEntry(:key, :value) in story.nodes.entries) {
       if (value.chapter case final chapter?
@@ -681,16 +662,6 @@ class Story {
       }
     }
     return story;
-  }
-
-  /// Where the story first uses something only schema 7 has, or null.
-  String? _firstSchema7Feature() {
-    if (achievements.isNotEmpty) return 'achievements';
-    for (final (path, effects) in effectLists()) {
-      final found = _findEffect(path, effects, (e) => e is Achieve);
-      if (found != null) return found;
-    }
-    return null;
   }
 
   /// Every list of effects in the story with its JSON path: pages, choices,
@@ -727,109 +698,6 @@ class Story {
     }
   }
 
-  /// Where the story first uses something only schema 6 has, or null.
-  String? _firstSchema6Feature() {
-    if (chapters.isNotEmpty) return 'chapters';
-    for (final MapEntry(:key, :value) in nodes.entries) {
-      if (value.title != null) return 'nodes.$key.title';
-      if (value.note != null) return 'nodes.$key.note';
-      if (value.chapter != null) return 'nodes.$key.chapter';
-      if (value.draft) return 'nodes.$key.draft';
-    }
-    return null;
-  }
-
-  /// Where the story first uses something only schema 5 has, or null.
-  String? _firstSchema5Feature() {
-    if (rules.creation != null) return 'rules.creation';
-    if (journal.isNotEmpty) return 'journal';
-    for (final MapEntry(:key, :value) in nodes.entries) {
-      if (value.music != null) return 'nodes.$key.music';
-      if (value.sound != null) return 'nodes.$key.sound';
-    }
-    if ((rules.undo ?? 0) != 0) return 'rules.undo';
-    if (rules.combat?.luck != null) return 'rules.combat.luck';
-    if (rules.combat?.mode == 'table') return 'rules.combat.mode';
-    if (rules.combat?.table != null) return 'rules.combat.table';
-    for (final MapEntry(:key, :value) in rules.stats.entries) {
-      if (value.limit != null) return 'rules.stats.$key.limit';
-    }
-    for (final MapEntry(:key, :value) in items.entries) {
-      if (value.bonus.isNotEmpty) return 'items.$key.bonus';
-    }
-    bool newEffect(Effect e) =>
-        e is UnlockEntry ||
-        e is StatChange && (e.replace || !e.amount.isConstant);
-    for (final MapEntry(:key, :value) in items.entries) {
-      final path = _findEffect(
-        'items.$key.use.effects',
-        value.use?.effects,
-        newEffect,
-      );
-      if (path != null) return path;
-    }
-    for (final MapEntry(:key, :value) in nodes.entries) {
-      final at = 'nodes.$key';
-      final enemies = value.combat?.enemies ?? const <Enemy>[];
-      if (value.combat?.simultaneous ?? false) return '$at.combat.simultaneous';
-      if (value.combat?.duel ?? false) return '$at.combat.duel';
-      for (var i = 0; i < enemies.length; i++) {
-        if (enemies[i].armor != 0) return '$at.combat.enemies[$i].armor';
-      }
-      for (var i = 0; i < value.parts.length; i++) {
-        if (_comparesStat(value.parts[i].condition)) {
-          return value.textIsList ? '$at.text[$i].if' : '$at.text.if';
-        }
-      }
-      final onNode = _findEffect('$at.effects', value.effects, newEffect);
-      if (onNode != null) return onNode;
-      for (var i = 0; i < value.choices.length; i++) {
-        final choice = value.choices[i];
-        if (_comparesStat(choice.condition)) return '$at.choices[$i].if';
-        final found =
-            _findEffect('$at.choices[$i].effects', choice.effects, newEffect) ??
-            _findEffect(
-              '$at.choices[$i].check.effects',
-              choice.check?.effects,
-              newEffect,
-            );
-        if (found != null) return found;
-        final outcomes = choice.table?.outcomes ?? const [];
-        for (var j = 0; j < outcomes.length; j++) {
-          final inOutcome = _findEffect(
-            '$at.choices[$i].table.outcomes[$j].effects',
-            outcomes[j].effects,
-            newEffect,
-          );
-          if (inOutcome != null) return inOutcome;
-        }
-      }
-    }
-    return null;
-  }
-
-  static String? _findEffect(
-    String path,
-    List<Effect>? effects,
-    bool Function(Effect) test,
-  ) {
-    if (effects == null) return null;
-    for (var i = 0; i < effects.length; i++) {
-      if (test(effects[i])) return '$path[$i]';
-    }
-    return null;
-  }
-
-  /// Whether [condition] compares a stat with another stat (schema 5).
-  static bool _comparesStat(Condition? condition) => switch (condition) {
-    null => false,
-    StatCompare(:final value) => !value.isConstant,
-    All(:final conditions) ||
-    Any(:final conditions) => conditions.any(_comparesStat),
-    Not(:final condition) => _comparesStat(condition),
-    _ => false,
-  };
-
   /// Schema 4 text: every placeholder must be well formed.
   void _checkTemplates() {
     for (final MapEntry(:key, :value) in nodes.entries) {
@@ -843,62 +711,6 @@ class Story {
         checkTemplate(value.choices[i].text, 'nodes.$key.choices[$i].text');
       }
     }
-  }
-
-  /// Where the story first uses something only schema 4 has, or null.
-  String? _firstSchema4Feature() {
-    for (final MapEntry(:key, :value) in nodes.entries) {
-      if (value.textIsList) return 'nodes.$key.text';
-      for (var i = 0; i < value.choices.length; i++) {
-        final choice = value.choices[i];
-        if (choice.once) return 'nodes.$key.choices[$i].once';
-        if (choice.table != null) return 'nodes.$key.choices[$i].table';
-        if (_usesVisits(choice.condition)) {
-          return 'nodes.$key.choices[$i].if';
-        }
-      }
-    }
-    return null;
-  }
-
-  static bool _usesVisits(Condition? condition) => switch (condition) {
-    null => false,
-    VisitCount() => true,
-    All(:final conditions) ||
-    Any(:final conditions) => conditions.any(_usesVisits),
-    Not(:final condition) => _usesVisits(condition),
-    _ => false,
-  };
-
-  /// Where the story first uses something only schema 3 has, or null.
-  String? _firstSchema3Feature() {
-    if (rules.inventory != null) return 'rules.inventory';
-    for (final MapEntry(:key, :value) in items.entries) {
-      if (value.capacity != null) return 'items.$key.capacity';
-      final path = _takeAllIn('items.$key.use.effects', value.use?.effects);
-      if (path != null) return path;
-    }
-    for (final MapEntry(:key, :value) in nodes.entries) {
-      final at = 'nodes.$key';
-      final path = _takeAllIn('$at.effects', value.effects);
-      if (path != null) return path;
-      for (var i = 0; i < value.choices.length; i++) {
-        final choice = value.choices[i];
-        final inChoice =
-            _takeAllIn('$at.choices[$i].effects', choice.effects) ??
-            _takeAllIn('$at.choices[$i].check.effects', choice.check?.effects);
-        if (inChoice != null) return inChoice;
-      }
-    }
-    return null;
-  }
-
-  static String? _takeAllIn(String path, List<Effect>? effects) {
-    if (effects == null) return null;
-    for (var i = 0; i < effects.length; i++) {
-      if (effects[i] is TakeAll) return '$path[$i]';
-    }
-    return null;
   }
 
   /// The `schema` version the file declares; `{stat}` placeholders in text

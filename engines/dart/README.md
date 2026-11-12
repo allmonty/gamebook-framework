@@ -20,6 +20,7 @@ engine.choose(0);                                 // returns the events of what 
 | Library | Holds |
 |---|---|
 | `story.dart` | models and parser (spec B1-B13) |
+| `schema_gate.dart` | the schema-version gate: the first thing a story uses that its `schema` does not have (B2) |
 | `rules.dart`, `rules_spec.dart` | presets and rule resolution (B4) |
 | `engine.dart`, `state.dart` | the game state machine and its events (B10, B11) |
 | `dice.dart`, `condition.dart`, `effect.dart`, `check.dart`, `combat.dart`, `quantity.dart`, `text.dart` | the parts |

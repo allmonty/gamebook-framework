@@ -29,19 +29,18 @@ class CombatRound extends GameEvent {
   final RoundResult result;
 }
 
-/// The player used [item]; its effects show up as the changes that follow.
 /// A random outcome table was rolled.
 class TableRolled extends GameEvent {
   const TableRolled(this.roll);
   final DiceRoll roll;
 }
 
+/// The player used [item]; its effects show up as the changes that follow.
 class ItemUsed extends GameEvent {
   const ItemUsed(this.item);
   final String item;
 }
 
-/// The enemy struck while the player used an item that costs the round.
 /// The music changed to [file], or stopped when null.
 class MusicChanged extends GameEvent {
   const MusicChanged(this.file);
@@ -74,6 +73,7 @@ class CombatLuck extends GameEvent {
   final LuckResult result;
 }
 
+/// The enemy struck while the player used an item that costs the round.
 class CombatStrike extends GameEvent {
   const CombatStrike(this.result);
   final StrikeResult result;
