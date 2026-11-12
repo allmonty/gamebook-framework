@@ -131,6 +131,12 @@ class Rules {
         'the health stat cannot have a min',
       );
     }
+    if (stats.firstWhere((s) => s.id == health).roll.min < 1) {
+      throw StoryFormatException(
+        'rules.stats.$health.roll',
+        'the health stat must start at 1 or more',
+      );
+    }
     final rerolls = spec.rerolls ?? preset?.rerolls ?? 0;
     if (rerolls < 0) {
       throw const StoryFormatException('rules.rerolls', 'must not be negative');

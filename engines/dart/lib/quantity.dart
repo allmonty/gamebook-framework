@@ -10,7 +10,7 @@ class Quantity {
   const Quantity.ofStat(String this.stat, [this.times = 1]) : value = null;
 
   factory Quantity.fromJson(Object? json, String path) {
-    if (json is int) return Quantity.value(json);
+    if (json is int) return Quantity.value(checkInt(json, path));
     if (json is! Map<String, Object?>) {
       throw StoryFormatException(path, 'expected an integer or {"stat": ...}');
     }

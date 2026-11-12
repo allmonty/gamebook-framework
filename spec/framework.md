@@ -93,6 +93,7 @@ Schema version: **1**, with everything in this document. B2 says how later versi
 - Unknown keys are **errors** (typo protection). Error messages name the JSON path, e.g. `nodes.door.choices[1].to`.
 - `schema` is an integer: the version of the format the story is written for. There is one version so far, **1**. An engine accepts only versions it supports and rejects any other, so a story never half-works.
 - Versions only add. When a new field or kind is added, it comes with a new version: a story that uses it must say that version, and an engine rejects a story that uses something newer than its `schema` (with `needs "schema": N` at the JSON path of the first such thing). A story written for one version stays valid in every later one once its `schema` says so. Old stories keep working; an old engine rejects what it does not know instead of misreading it.
+- Every integer a story writes is between **-1,000,000 and 1,000,000**; one outside is an error at its path. That is far more than a gamebook needs, and every engine, in any language, computes with such numbers exactly.
 - Saved games are not part of the format: each engine stores and versions its own, and must never fail on a save it does not understand (it reads as "no save").
 
 ## B3. Top level
@@ -140,7 +141,7 @@ Each stat: `{ "label": string, "roll": dice, "max": bool }`.
 - `max: true`: the creation roll is also the ceiling. Effects can never raise the stat above it (healing stops at full health).
 - `hidden: true`: the stat is kept off the stats bar, say a counter the reader need not see. It is a stat in every other way: effects, conditions and `{stat}` placeholders all see it.
 - Every stat is clamped at 0 from below, unless it has a `min`.
-- `min`: an integer, which may be negative, that the stat is clamped at instead: `{ "label": "Might", "roll": "1d4", "min": -3 }` can go down to -3, a signed modifier as in tabletop games. A creation roll below it is raised to it; with a `limit` it must be below the limit. The `health` stat cannot have a `min` (it is always 0).
+- `min`: an integer, which may be negative, that the stat is clamped at instead: `{ "label": "Might", "roll": "1d4", "min": -3 }` can go down to -3, a signed modifier as in tabletop games. A creation roll below it is raised to it; with a `limit` it must be below the limit. The `health` stat cannot have a `min` (it is always 0), and its `roll` must give at least 1 whatever the dice show (`"0"` or `"1d6-1"` is an error): a hero does not start dead.
 - `health` names the stat that means "alive". When it reaches 0 the game ends with a **death** ending, wherever that happens. Health at 0 is final: from then on no effect applies, so nothing later in the same action (or the game) can bring the hero back (B9, B10).
 
 ### Stat limits and quantities

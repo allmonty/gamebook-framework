@@ -49,7 +49,8 @@ class JsonObject {
 
   String? optString(String key) => has(key) ? string(key) : null;
 
-  int integer(String key) => _typed<int>(key, 'an integer');
+  int integer(String key) =>
+      checkInt(_typed<int>(key, 'an integer'), childPath(key));
 
   int? optInt(String key) => has(key) ? integer(key) : null;
 
@@ -112,6 +113,19 @@ class JsonObject {
       if (!_read.contains(key)) throw error(key, 'unknown key');
     }
   }
+}
+
+/// The largest number a story may write, and its negative the smallest (B2):
+/// far more than a gamebook needs, and exact in every language an engine may
+/// be written in.
+const maxInt = 1000000;
+
+/// [value], or a [StoryFormatException] at [path] if it is out of range.
+int checkInt(int value, String path) {
+  if (value < -maxInt || value > maxInt) {
+    throw StoryFormatException(path, 'must be between -$maxInt and $maxInt');
+  }
+  return value;
 }
 
 /// Ids of nodes, items, stats and flags.

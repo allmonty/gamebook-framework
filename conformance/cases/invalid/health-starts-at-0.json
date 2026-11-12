@@ -1,0 +1,31 @@
+{
+  "description": "The health stat must start at 1 or more: 1d6-1 can roll 0.",
+  "spec": [
+    "B4"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "health": "hp",
+      "stats": {
+        "hp": {
+          "label": "HP",
+          "roll": "1d6-1"
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "rules.stats.hp.roll"
+  }
+}

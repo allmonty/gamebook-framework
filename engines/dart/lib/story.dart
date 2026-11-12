@@ -26,7 +26,7 @@ sealed class Operand {
   const Operand();
 
   factory Operand.fromJson(Object? json, String path) => switch (json) {
-    final int n => Const(n),
+    final int n => Const(checkInt(n, path)),
     final String id => StatRef(checkId(id, path)),
     _ => throw StoryFormatException(path, 'expected an integer or a stat id'),
   };
@@ -200,7 +200,7 @@ class Item {
         if (json is! int) {
           throw StoryFormatException(path, 'expected an integer');
         }
-        return json;
+        return checkInt(json, path);
       }, optional: true),
     );
     obj.finish();
