@@ -80,7 +80,7 @@ The next section shows this same story in the file format.
 
 # Part B. Technical reference
 
-Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6), a neutral ending (`"ending": "defeat"`, B6), fight events (`wounded`, `rounds`, B11), counted items (item `stack`, and `count` on `give`, `take` and `has`; B4, B5, B7, B9), a floor per stat (`min`, B4), rule bonuses (`rules.bonuses`, B5), a flee that costs a round (`fleeCost`, B11), and item counts in text with a cap per item (`{item.count}`, item `max`; B5, B6). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
+Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6), a neutral ending (`"ending": "defeat"`, B6), fight events (`wounded`, `rounds`, B11), counted items (item `stack`, and `count` on `give`, `take` and `has`; B4, B5, B7, B9), a floor per stat (`min`, B4), rule bonuses (`rules.bonuses`, B5), a flee that costs a round (`fleeCost`, B11), item counts in text with a cap per item (`{item.count}`, item `max`; B5, B6), rules on every page with hidden stats (`rules.everyPage`, a stat's `hidden`; B4, B10), and pages that return where the player came from (`call`, `return`; B10, B11). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
 
 ## B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
@@ -98,7 +98,7 @@ Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Versio
 | Field | Type | Req | Notes |
 |---|---|---|---|
 | `$schema` | string | no | path to `story.schema.json`, an editor hint the engine ignores |
-| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) the `defeat` ending (B6), a fight's `wounded` and `rounds` (B11), an item's `stack` or a `count` (B5), a stat's `min` (B4), `rules.bonuses` (B5), a fight's `fleeCost` (B11), and an item's `max` or `{item.count}` in text (B5, B6) |
+| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) the `defeat` ending (B6), a fight's `wounded` and `rounds` (B11), an item's `stack` or a `count` (B5), a stat's `min` (B4), `rules.bonuses` (B5), a fight's `fleeCost` (B11), an item's `max` or `{item.count}` in text (B5, B6), `rules.everyPage` or a stat's `hidden` (B4), and a choice's `call` or `return` or a fight's returning `win` or `flee` (B10, B11) |
 | `journal` | object | no | map `entryId -> { title, text }` (schema 5, B6) |
 | `achievements` | object | no | map `achievementId -> { title, description, hidden }` (schema 7, B15) |
 | `chapters` | object | no | map `chapterId -> { title }`, in reading order (schema 6, B13) |
@@ -131,11 +131,13 @@ Ids (items, stats, flags, nodes) match `[A-Za-z0-9_-]+`.
 - Everything else **overrides the preset, field by field**. `stats` merges per stat id; a stat given in full adds a new stat.
 - **Labels are per story**, because story files are single-language. Presets carry English labels; non-English stories override them (`label`).
 - `bonuses` (schema 8): bonuses to stats while a condition holds (B5, "Rule bonuses").
+- `everyPage` (schema 8): rules applied each time a page is entered, before the page's own `effects` (B10 step 4). Each is `{ "if": <condition>, "effects": [ ... ], "calm": true }`: `if` is optional (without it the rule always applies), `effects` follow B9, and `"calm": true` skips a page that has a `combat`, however it was reached. Rules apply in list order, each seeing the state the one before left. They are how a story writes healing between fights (`{ "calm": true, "effects": [ { "stat": "endurance", "add": 1 } ] }`), a poison that drains until cured (`{ "if": { "flag": "fever" }, "effects": [ { "stat": "stamina", "add": -1 } ] }`), and a debuff that runs out: a counter stat set to 3, a rule `{ "if": { "stat": "hex", "gte": 1 }, "effects": [ { "stat": "hex", "add": -1 } ] }`, and the penalty as a rule bonus while the counter is at least 1 (B5). They run on pages only, not on fight rounds.
 
 ### Stats
 Each stat: `{ "label": string, "roll": dice, "max": bool }`.
 - `roll`: dice notation (B8) rolled at character creation. A plain integer gives a fixed start (`"0"` for gold).
 - `max: true`: the creation roll is also the ceiling. Effects can never raise the stat above it (healing stops at full health).
+- `hidden: true` (schema 8): the stat is kept off the stats bar, say a counter the reader need not see. It is a stat in every other way: effects, conditions and `{stat}` placeholders all see it.
 - Every stat is clamped at 0 from below, unless it has a `min`.
 - `min` (schema 8): an integer, which may be negative, that the stat is clamped at instead: `{ "label": "Might", "roll": "1d4", "min": -3 }` can go down to -3, a signed modifier as in tabletop games. A creation roll below it is raised to it; with a `limit` it must be below the limit. The `health` stat cannot have a `min` (it is always 0).
 - `health` names the stat that means "alive". When it reaches 0 the game ends with a **death** ending, wherever that happens. Health at 0 is final: from then on no effect applies, so nothing later in the same action (or the game) can bring the hero back (B9, B10).
@@ -394,16 +396,20 @@ Effects in a list apply in order, except that once the `health` stat is 0 no fur
 | Field | Notes |
 |---|---|
 | `text` | required |
-| `to` | target node id. Exactly one of `to`, `check` or `table`. |
+| `to` | target node id. Exactly one of `to`, `check`, `table` or `return`. |
 | `check` | a dice check (below) |
 | `table` | a random outcome table (below, schema 4) |
 | `once` | schema 4, default false. If true, once the player has taken this choice it is **gone** for the rest of the game (not shown, even if `hideIfLocked` is false). A choice is identified by its page and position, so translations must keep the order. |
 | `if` | condition. If false the choice is **locked**. |
 | `effects` | applied when chosen (see order below) |
 | `hideIfLocked` | default false. If true, a locked choice is not shown at all. |
+| `call` | schema 8, default false. If true, taking the choice **remembers this page** before entering the target, whatever leads there (`to`, a check's `pass` or `fail`, a table outcome). A later `return` leads back to it. |
+| `return` | schema 8: `"return": true` instead of `to`: leads back to the page **last remembered** by a `call`, and forgets it. With nothing remembered the choice is **locked**. A choice cannot both `call` and `return`. |
 | `lockedText` | optional string shown when locked. Without it the app builds a message from the condition ("Needs: Rusty key", "Needs Skill 8 or more") using its own translated UI strings, with item names and stat labels from the story. |
 
 Locked choices are shown **disabled** with their reason, and can't be chosen.
+
+**Calls and returns (schema 8).** A shop, a wandering monster or a side room that can be reached from many pages leads back to whichever page sent the player there. The pages remembered form a stack, last in first out, so calls can nest (the shop's back room returns to the shop, the shop to the road); it holds at most **16** pages, and a deeper call forgets the oldest one, so a game never fails on it. A return **enters** the page again like any other entry (B10 step 4): its `effects` apply unless `once`, the visit counts, the every-page rules run. What is remembered is part of the game state: saved with the game, and restored by undo. A fight can return too (B11).
 
 ### Checks
 ```json
@@ -432,8 +438,8 @@ Locked choices are shown **disabled** with their reason, and can't be chosen.
 ### What happens when the player taps a choice
 1. A locked choice is rejected.
 2. Apply the choice's `effects`.
-3. If there is a `check`: roll it, apply `check.effects`, pick `pass` or `fail` as the target. If there is a `table`: roll it, apply the outcome's `effects` and use its `to`. Otherwise the target is `to`. A `once` choice is marked as taken at this point.
-4. **Enter the target node**: record it as visited and count the visit. Apply its `effects` (skipped if `once` and it was already visited).
+3. If there is a `check`: roll it, apply `check.effects`, pick `pass` or `fail` as the target. If there is a `table`: roll it, apply the outcome's `effects` and use its `to`. With `return` (schema 8), the target is the page last remembered, which is forgotten. Otherwise the target is `to`. A `once` choice is marked as taken at this point. With `call` (schema 8), the current page is remembered.
+4. **Enter the target node**: record it as visited and count the visit. Apply the every-page rules (`rules.everyPage`, schema 8, B4), then its `effects` (skipped if `once` and it was already visited).
 5. If the `health` stat is 0 (after step 2, 3 or 4) the game ends with **death**, whatever the node says. Once health is 0, the steps after it still run but apply no effects: a check or table still rolls and decides the target, and the target is still entered (visited, visit counted, music and sound as usual).
 6. If the node has `ending`, the game ends with that ending (`victory`, `defeat` or `death`). If it has `combat`, the fight starts.
 
@@ -452,8 +458,8 @@ The game starts by entering `start` the same way, after character creation.
 }
 ```
 - `enemies`: fought **one at a time, in list order** (unless `simultaneous`, below). Each: `name`, `attack` (number), `health` (number), and for `vs-defense` mode `defense` (number); optional `damage` (dice) overriding the rules default for that enemy; optional `armor` (schema 5): the damage the player deals to this enemy is reduced by `armor`, never below 0.
-- `win`: node entered when the last enemy reaches 0 (the node is entered normally, step 4 above).
-- `flee`: optional node. If present the player may flee after any round (no automatic penalty; put penalties in the flee node's `effects`). If absent, no fleeing.
+- `win`: node entered when the last enemy reaches 0 (the node is entered normally, step 4 above). Schema 8: `{ "return": true }` instead leads back to the page last remembered by a `call` (B10); with nothing remembered the fight ends and the player stays on the page, with nothing to do (the validator warns: B16 `return-without-call`).
+- `flee`: optional node. If present the player may flee after any round (no automatic penalty; put penalties in the flee node's `effects`). If absent, no fleeing. Schema 8: `{ "return": true }` flees back to the page last remembered; with nothing remembered, fleeing is not offered.
 - `fleeCost` (schema 8): `"free"` (default) or `"round"`, only with `flee`. With `"round"`, fleeing costs the round, as an item that costs the round does (B5): the current enemy, or every enemy still standing in a fight against several, strikes first. If that brings health to 0 the game ends in **death**; otherwise the flee node is entered. The strike leads to no `wounded` and counts for no `rounds`: the player is leaving.
 - `wounded` (schema 8): optional node. The first time the player loses health in this fight and is still alive, the fight ends and this node is entered.
 - `rounds` (schema 8): optional `{ "after": 3, "to": "it-escapes" }`, `after` an integer of at least 1. When `after` rounds have been played and the fight is not over, it ends and `to` is entered. "Win within 3 rounds" is `after: 3`, with `to` the page for being too slow.
@@ -551,7 +557,7 @@ A game travels outside the app as one file: a **zip** of the game folder (B1) wi
 - Limits, checked before anything is unpacked: at most 100 MB unpacked, 2,000 files, media files only of the types the app plays (`.webp`, `.png`, `.jpg`, `.jpeg`, `.ogg`, `.mp3`, `.wav`, `.m4a`). Anything else rejects the whole file with a message saying why.
 - A package whose story `id` matches a bundled game is refused (bundled games cannot be replaced); one matching an imported game is an **update** of it.
 
-**Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists, the pack still fits (a count is kept only for a countable item, and the slots used fit the capacity), every stat is within its `min` and ceiling,, and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
+**Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists, the pack still fits (a count is kept only for a countable item, and the slots used fit the capacity), every stat is within its `min` and ceiling, the pages to return to still exist and are at most 16,, and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
 
 ## B15. Achievements (schema 7)
 ```json
@@ -572,7 +578,8 @@ Errors make a story unplayable, and every engine must reject it (B2; conformance
 
 | Code | Path | When |
 |---|---|---|
-| `unreachable` | `nodes.<id>` | no way leads to the node from the start (choices, checks, tables, fight win and flee, and the fight's `wounded` and `rounds.to`) |
+| `unreachable` | `nodes.<id>` | no way leads to the node from the start (choices, checks, tables, fight win and flee, and the fight's `wounded` and `rounds.to`; a `return` only leads back to pages already reached) |
+| `return-without-call` | `nodes.<id>` | the page has a `return` (a choice, a fight's `win` or `flee`) and can be reached from the start without any `call`, so the return may have nowhere to go (schema 8) |
 | `no-victory` | `nodes` | no victory ending can be reached |
 | `draft` | `nodes.<id>` | the node is a draft (B13) |
 | `never-earned` | `achievements.<id>` | no `achieve` effect earns it |

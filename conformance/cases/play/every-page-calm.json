@@ -1,0 +1,97 @@
+{
+  "description": "A calm rule skips a page with a fight, however it was reached.",
+  "spec": [
+    "B4",
+    "B10"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "stats": {
+        "tick": {
+          "label": "Tick",
+          "roll": "0",
+          "hidden": true
+        }
+      },
+      "everyPage": [
+        {
+          "calm": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 1
+            }
+          ]
+        }
+      ]
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Fight",
+            "to": "ring"
+          }
+        ]
+      },
+      "ring": {
+        "text": "Ring",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Rat",
+              "attack": 1,
+              "health": 2
+            }
+          ],
+          "win": "won"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "choices": [
+          {
+            "text": "A",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 10,
+      "max": 24
+    },
+    "luck": 8,
+    "tick": 0
+  },
+  "dice": [
+    6,
+    6,
+    1,
+    1
+  ],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "won",
+    "stats": {
+      "stamina": 12
+    }
+  }
+}

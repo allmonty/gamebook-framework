@@ -135,6 +135,7 @@ void _check(
       },
       'journal' => s.journal,
       'offers' => s.offers,
+      'returnTo' => s.returnTo,
       'paragraphs' => engine.paragraphs,
       'choices' => [
         for (final c in engine.choices)

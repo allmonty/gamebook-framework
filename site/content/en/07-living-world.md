@@ -103,11 +103,34 @@ examples/07-living-world/captured
 
 Two of its three endings are defeats, and the hero is alive in both. Health at 0 is still a death, whatever the page says.
 
+## Rules on every page
+
+Some things happen on every page: a fever drains you until it is cured, a curse wears off after a few steps, a hero heals a little whenever there is no fight. Write them once, in `rules.everyPage` (schema 8):
+
+```gamebook
+examples/07-living-world/marsh-fever
+```
+
+```json
+"everyPage": [
+  { "if": { "flag": "fever" }, "effects": [ { "stat": "stamina", "add": -1 } ] },
+  { "if": { "stat": "hex", "gte": 1 }, "effects": [ { "stat": "hex", "add": -1 } ] }
+],
+"bonuses": [ { "if": { "stat": "hex", "gte": 1 }, "bonus": { "skill": -2 } } ]
+```
+
+- Each rule applies on every page entered, the first one included, **before** the page's own effects. So the fever caught in the reeds starts draining on the next page, and the healer's page drains one last time before the cure.
+- **A debuff that runs out** is a counter: the witch sets `hex` to 3, the second rule counts it down page by page, and the bonus (chapter 4) holds while it is above 0. Set to 3, it lasts the next three pages.
+- `"hidden": true` keeps the counter off the stats bar: it is still a stat for conditions, effects and `{hex}`.
+- `"calm": true` on a rule skips pages with a fight: `{ "calm": true, "effects": [ { "stat": "stamina", "add": 1 } ] }` heals between fights.
+- Rules apply in order, and a rule that takes the hero's health to 0 ends the game like any other effect.
+
 ### Try it
 
 - In the inn, change `"gte": 4` to `"gte": 2`: the innkeeper gives in sooner.
 - In the well, add a part `{ "if": { "stat": "luck", "gte": 12 }, "text": "You feel very lucky." }`.
 - In the study, make the Cartographer achievement visible by removing `"hidden": true`.
 - At the border, change the cell's `"defeat"` to `"death"` and see what the reader is told.
+- In the marsh, set the witch's `hex` to 5: now even the healer's road leaves you hexed at the ditch.
 
 Next: making sure a long book has no broken links, and sharing it.

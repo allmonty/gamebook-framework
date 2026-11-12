@@ -43,6 +43,7 @@ class RulesSpec {
     this.creation,
     this.undo,
     this.bonuses = const [],
+    this.everyPage = const [],
   });
 
   factory RulesSpec.fromJson(JsonObject obj) {
@@ -59,6 +60,7 @@ class RulesSpec {
       creation: creation == null ? null : CreationSpec.fromJson(creation),
       undo: obj.optInt('undo'),
       bonuses: obj.list('bonuses', RuleBonus.fromJson, optional: true),
+      everyPage: obj.list('everyPage', PageRule.fromJson, optional: true),
     );
     obj.finish();
     return spec;
@@ -79,6 +81,33 @@ class RulesSpec {
 
   /// Bonuses that apply while a condition holds (schema 8, B5).
   final List<RuleBonus> bonuses;
+
+  /// Effects applied on entering every page (schema 8, B10).
+  final List<PageRule> everyPage;
+}
+
+/// Effects applied each time a page is entered, before the page's own
+/// (schema 8, B10): while [condition] holds, and with [calm] only on a page
+/// without a fight.
+class PageRule {
+  const PageRule(this.effects, {this.condition, this.calm = false});
+
+  factory PageRule.fromJson(Object? json, String path) {
+    final obj = JsonObject(json, path);
+    final rule = PageRule(
+      obj.list('effects', Effect.fromJson),
+      condition: obj.has('if')
+          ? Condition.fromJson(obj.raw('if'), obj.childPath('if'))
+          : null,
+      calm: obj.optBool('calm'),
+    );
+    obj.finish();
+    return rule;
+  }
+
+  final List<Effect> effects;
+  final Condition? condition;
+  final bool calm;
 }
 
 /// A bonus to stats while [condition] holds, like an item's (schema 8).
@@ -208,7 +237,14 @@ class PickOption {
 }
 
 class StatSpec {
-  const StatSpec({this.label, this.roll, this.max, this.limit, this.min});
+  const StatSpec({
+    this.label,
+    this.roll,
+    this.max,
+    this.limit,
+    this.min,
+    this.hidden,
+  });
 
   factory StatSpec.fromJson(String _, Object? json, String path) {
     final obj = JsonObject(json, path);
@@ -218,6 +254,7 @@ class StatSpec {
       max: obj.has('max') ? obj.optBool('max') : null,
       limit: obj.optInt('limit'),
       min: obj.optInt('min'),
+      hidden: obj.has('hidden') ? obj.optBool('hidden') : null,
     );
     if (spec.limit != null && spec.limit! < 1) {
       throw obj.error('limit', 'must be at least 1');
@@ -235,6 +272,9 @@ class StatSpec {
 
   /// The floor (schema 8), which may be negative; null is 0.
   final int? min;
+
+  /// Kept off the stats bar (schema 8), as written; null is shown.
+  final bool? hidden;
 }
 
 class CombatSpec {

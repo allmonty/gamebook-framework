@@ -1,0 +1,99 @@
+{
+  "description": "A choice cannot both call and return.",
+  "spec": [
+    "B10"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Shop",
+            "to": "shop",
+            "call": true
+          },
+          {
+            "text": "B",
+            "to": "b"
+          },
+          {
+            "text": "Ford",
+            "call": true,
+            "table": {
+              "roll": "1d6",
+              "outcomes": [
+                {
+                  "upTo": 3,
+                  "to": "wolf"
+                },
+                {
+                  "upTo": 6,
+                  "to": "b"
+                }
+              ]
+            }
+          },
+          {
+            "text": "Deeper",
+            "to": "a",
+            "call": true
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "Shop",
+            "to": "shop",
+            "call": true
+          },
+          {
+            "text": "Back",
+            "return": true
+          }
+        ]
+      },
+      "shop": {
+        "text": "Shop",
+        "choices": [
+          {
+            "text": "Goodbye",
+            "return": true,
+            "call": true
+          }
+        ]
+      },
+      "wolf": {
+        "text": "Wolf",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Wolf",
+              "attack": 1,
+              "health": 2
+            }
+          ],
+          "win": {
+            "return": true
+          },
+          "flee": {
+            "return": true
+          }
+        }
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.shop.choices[0].call"
+  }
+}

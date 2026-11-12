@@ -54,12 +54,13 @@ class HeroDraft {
   CreationView get view => CreationView(
     stats: [
       for (final s in rules.stats)
-        StatPill(
-          id: s.id,
-          label: s.label,
-          value: stats[s.id]!.value,
-          max: stats[s.id]!.max,
-        ),
+        if (!s.hidden)
+          StatPill(
+            id: s.id,
+            label: s.label,
+            value: stats[s.id]!.value,
+            max: stats[s.id]!.max,
+          ),
     ],
     rerollsLeft: rerollsLeft,
     asksName: asksName,

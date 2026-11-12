@@ -130,6 +130,7 @@ class GameState {
     this.offers = const [],
     this.counts = const {},
     this.offerCounts = const {},
+    this.returnTo = const [],
     this.taken = const {},
     this.visits = const {},
     this.statBonus = const {},
@@ -166,6 +167,8 @@ class GameState {
       // Saves from before counted items (schema 8) hold one of each.
       counts: _ints(json['counts']),
       offerCounts: _ints(json['offerCounts']),
+      // Saves from before schema 8 remember no pages.
+      returnTo: json['returnTo'] == null ? const [] : _list(json['returnTo']),
       taken: json['taken'] == null ? const {} : _strings(json['taken']),
       visits: _visits(json['visits'], _strings(json['visited'])),
       name: json['name'] is String ? json['name']! as String : null,
@@ -194,6 +197,13 @@ class GameState {
     throw const FormatException('state: expected a map of counts');
   }
 
+  static List<String> _list(Object? json) {
+    if (json is List<Object?> && json.every((e) => e is String)) {
+      return json.cast<String>().toList();
+    }
+    throw const FormatException('state: expected a list of strings');
+  }
+
   static Set<String> _strings(Object? json) {
     if (json is List<Object?> && json.every((e) => e is String)) {
       return json.cast<String>().toSet();
@@ -220,6 +230,10 @@ class GameState {
 
   /// The same for the offers: how many are offered at once.
   final Map<String, int> offerCounts;
+
+  /// The pages a `return` leads back to, oldest first (schema 8): the last
+  /// one is where the next `return` goes.
+  final List<String> returnTo;
 
   /// How many of [item] the pack holds (0 if none).
   int count(String item) => inventory.contains(item) ? counts[item] ?? 1 : 0;
@@ -267,6 +281,7 @@ class GameState {
     List<String>? offers,
     Map<String, int>? counts,
     Map<String, int>? offerCounts,
+    List<String>? returnTo,
     Set<String>? taken,
     Map<String, int>? visits,
     Map<String, int>? statBonus,
@@ -286,6 +301,7 @@ class GameState {
     offers: offers ?? this.offers,
     counts: counts ?? this.counts,
     offerCounts: offerCounts ?? this.offerCounts,
+    returnTo: returnTo ?? this.returnTo,
     taken: taken ?? this.taken,
     visits: visits ?? this.visits,
     statBonus: statBonus ?? this.statBonus,
@@ -312,6 +328,7 @@ class GameState {
     'offers': offers,
     'counts': counts,
     'offerCounts': offerCounts,
+    'returnTo': returnTo,
     'taken': taken.toList(),
     'visits': visits,
     'name': name,

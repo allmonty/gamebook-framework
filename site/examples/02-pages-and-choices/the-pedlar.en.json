@@ -1,0 +1,178 @@
+{
+  "schema": 8,
+  "id": "the-pedlar",
+  "lang": "en",
+  "title": "The Pedlar",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "gold": {
+        "label": "Gold",
+        "roll": "5"
+      }
+    }
+  },
+  "items": {
+    "rope": {
+      "name": "Rope"
+    },
+    "lamp": {
+      "name": "Lamp"
+    }
+  },
+  "start": "crossroads",
+  "nodes": {
+    "crossroads": {
+      "text": "Three roads meet at a milestone. A pedlar with a heavy pack wanders between them, selling to anyone who calls him over.",
+      "choices": [
+        {
+          "text": "Take the north road",
+          "to": "north"
+        },
+        {
+          "text": "Take the mill road",
+          "to": "mill"
+        },
+        {
+          "text": "Take the river road",
+          "to": "river"
+        }
+      ]
+    },
+    "north": {
+      "text": "The north road climbs between beech trees. The pedlar is resting on a stump.",
+      "choices": [
+        {
+          "text": "Hail the pedlar",
+          "to": "pedlar",
+          "call": true
+        },
+        {
+          "text": "Walk on to town",
+          "to": "town"
+        }
+      ]
+    },
+    "mill": {
+      "text": "The mill road runs past a creaking waterwheel. The pedlar is buying flour.",
+      "choices": [
+        {
+          "text": "Hail the pedlar",
+          "to": "pedlar",
+          "call": true
+        },
+        {
+          "text": "Walk on to town",
+          "to": "town"
+        }
+      ]
+    },
+    "river": {
+      "text": "The river road ends at a ford. The pedlar is washing his feet in the shallows.",
+      "choices": [
+        {
+          "text": "Hail the pedlar",
+          "to": "pedlar",
+          "call": true
+        },
+        {
+          "text": "Wade the ford",
+          "call": true,
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 3,
+                "to": "wolf"
+              },
+              {
+                "upTo": 6,
+                "to": "town"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "pedlar": {
+      "text": "\"Rope, lamps, good as new,\" says the pedlar. You have {gold} gold.",
+      "choices": [
+        {
+          "text": "Buy rope (2 gold)",
+          "to": "pedlar",
+          "if": {
+            "all": [
+              {
+                "not": {
+                  "has": "rope"
+                }
+              },
+              {
+                "stat": "gold",
+                "gte": 2
+              }
+            ]
+          },
+          "effects": [
+            {
+              "give": "rope"
+            },
+            {
+              "stat": "gold",
+              "add": -2
+            }
+          ]
+        },
+        {
+          "text": "Buy a lamp (3 gold)",
+          "to": "pedlar",
+          "if": {
+            "all": [
+              {
+                "not": {
+                  "has": "lamp"
+                }
+              },
+              {
+                "stat": "gold",
+                "gte": 3
+              }
+            ]
+          },
+          "effects": [
+            {
+              "give": "lamp"
+            },
+            {
+              "stat": "gold",
+              "add": -3
+            }
+          ]
+        },
+        {
+          "text": "Say goodbye",
+          "return": true
+        }
+      ]
+    },
+    "wolf": {
+      "text": "Halfway across, a wolf comes down to drink, and it does not like being disturbed.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Wolf",
+            "attack": 6,
+            "health": 5
+          }
+        ],
+        "win": {
+          "return": true
+        }
+      }
+    },
+    "town": {
+      "text": "The town gate stands open. Whatever road you took, you made it.",
+      "ending": "victory"
+    }
+  }
+}

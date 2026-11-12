@@ -1,0 +1,120 @@
+{
+  "description": "A call covers a table outcome, and a fight's win can return.",
+  "spec": [
+    "B10",
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Shop",
+            "to": "shop",
+            "call": true
+          },
+          {
+            "text": "B",
+            "to": "b"
+          },
+          {
+            "text": "Ford",
+            "call": true,
+            "table": {
+              "roll": "1d6",
+              "outcomes": [
+                {
+                  "upTo": 3,
+                  "to": "wolf"
+                },
+                {
+                  "upTo": 6,
+                  "to": "b"
+                }
+              ]
+            }
+          },
+          {
+            "text": "Deeper",
+            "to": "a",
+            "call": true
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "Shop",
+            "to": "shop",
+            "call": true
+          },
+          {
+            "text": "Back",
+            "return": true
+          }
+        ]
+      },
+      "shop": {
+        "text": "Shop",
+        "choices": [
+          {
+            "text": "Goodbye",
+            "return": true
+          }
+        ]
+      },
+      "wolf": {
+        "text": "Wolf",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Wolf",
+              "attack": 1,
+              "health": 2
+            }
+          ],
+          "win": {
+            "return": true
+          },
+          "flee": {
+            "return": true
+          }
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    1,
+    6,
+    6,
+    1,
+    1
+  ],
+  "actions": [
+    {
+      "choose": 2
+    },
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "returnTo": []
+  }
+}

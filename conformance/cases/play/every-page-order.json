@@ -1,0 +1,83 @@
+{
+  "description": "Every-page rules apply in list order, each seeing the state the one before left.",
+  "spec": [
+    "B4",
+    "B10"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "stats": {
+        "tick": {
+          "label": "Tick",
+          "roll": "0",
+          "hidden": true
+        }
+      },
+      "everyPage": [
+        {
+          "effects": [
+            {
+              "stat": "tick",
+              "add": 1
+            }
+          ]
+        },
+        {
+          "if": {
+            "stat": "tick",
+            "eq": 1
+          },
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 5
+            }
+          ]
+        }
+      ]
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "B",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "A",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 10,
+      "max": 24
+    },
+    "luck": 8,
+    "tick": 0
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "stats": {
+      "tick": 1,
+      "stamina": 15
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "description": "Every-page rules apply before the page's own effects: a fever caught on a page drains from the next page on, and the page that cures it still drains once.",
+  "spec": [
+    "B4",
+    "B10"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "stats": {
+        "tick": {
+          "label": "Tick",
+          "roll": "0",
+          "hidden": true
+        }
+      },
+      "everyPage": [
+        {
+          "if": {
+            "flag": "fever"
+          },
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -1
+            }
+          ]
+        }
+      ]
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "set": "fever"
+          }
+        ],
+        "choices": [
+          {
+            "text": "B",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "C",
+            "to": "c"
+          }
+        ]
+      },
+      "c": {
+        "text": "C",
+        "effects": [
+          {
+            "clear": "fever"
+          }
+        ],
+        "choices": [
+          {
+            "text": "D",
+            "to": "d"
+          }
+        ]
+      },
+      "d": {
+        "text": "D",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 10,
+      "max": 24
+    },
+    "luck": 8,
+    "tick": 0
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "d",
+    "stats": {
+      "stamina": 8
+    }
+  }
+}

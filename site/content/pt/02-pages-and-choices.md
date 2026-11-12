@@ -65,6 +65,23 @@ A terceira escolha, a escotilha de manutenção, tem `"hideIfLocked": true`: enq
 2. Apague a linha `lockedText` da porta do cofre (e a vírgula antes dela) e veja o motivo que o aplicativo escreve sozinho.
 3. Aponte uma escolha para uma página que não existe, como `"to": "nowhere"`. O verificador mostra a escolha exata: é assim que você vai achar erros de digitação em livros longos.
 
+## De volta para onde você veio
+
+Livros-jogo impressos dizem "visite o mascate e depois volte à seção de onde veio". Uma página pode servir a muitas outras (schema 8):
+
+```gamebook
+examples/02-pages-and-choices/the-pedlar
+```
+
+- `"call": true` numa escolha lembra a página onde você está e segue para o destino como sempre. As três estradas chamam o mascate assim.
+- `"return": true` no lugar de `to` leva de volta à última página lembrada: "Despedir-se" leva você de volta à sua estrada. Um retorno sem nada lembrado fica trancado, e o verificador avisa quando isso pode acontecer.
+- O `win` (ou o `flee`) de uma luta pode ser `{ "return": true }`: o lobo do vau aparece numa tabela de dados cuja escolha chama, e vencê-lo põe você de volta no vau.
+- Voltar **entra** na página de novo: os efeitos dela valem, a não ser que a página seja `once`, e a visita conta. Chamadas podem se aninhar, até 16 níveis.
+
+### Experimente
+
+1. Tire o `"call": true` do "Chamar o mascate" da estrada do norte. O verificador avisa, e nessa estrada "Despedir-se" fica trancado.
+
 ## O que você aprendeu
 
 | Campo | Em | Significado |
@@ -78,5 +95,7 @@ A terceira escolha, a escotilha de manutenção, tem `"hideIfLocked": true`: enq
 | `if` | escolha | Uma condição; enquanto for falsa, a escolha fica trancada. |
 | `lockedText` | escolha | Suas palavras para explicar por que está trancada. |
 | `hideIfLocked` | escolha | Esconde a escolha enquanto estiver trancada. |
+| `call` | escolha | Lembra esta página para um retorno depois (schema 8). |
+| `return` | escolha, `win` ou `flee` de uma luta | Volta à última página lembrada (schema 8). |
 
 `visited` é a primeira de muitas condições. A seguir, o leitor começa a carregar coisas.

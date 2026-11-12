@@ -190,6 +190,49 @@ void main() {
     }
   });
 
+  test('marsh fever drains page by page; the hex wears off on its own', () {
+    for (final lang in ['en', 'pt']) {
+      // Skill 9, Stamina 18, Luck 9.
+      final session = PlaySession.start(
+        storyFile('examples/07-living-world/marsh-fever.$lang.json'),
+        random: ScriptedRandom([3, 3, 3, 3]),
+      );
+      int stat(String id) =>
+          session.view.stats.firstWhere((s) => s.id == id).value;
+      expect(
+        session.view.stats.map((s) => s.id),
+        isNot(contains('hex')),
+        reason: '$lang: the hex counter is hidden',
+      );
+      session.choose(0); // the reeds: fever caught, no drain yet
+      expect(stat('stamina'), 18, reason: lang);
+      session.choose(0); // the hut: -1, and the hex
+      expect((stat('stamina'), stat('skill')), (17, 7), reason: lang);
+      session
+        ..choose(0) // the stones: hex 2
+        ..choose(0); // the healer: hex 1, last drain, cured
+      expect((stat('stamina'), stat('skill')), (15, 7), reason: lang);
+      session.choose(0); // the ditch: hex 0
+      expect((stat('stamina'), stat('skill')), (15, 9), reason: lang);
+    }
+  });
+
+  test('the pedlar sends the reader back to the road they came from', () {
+    for (final lang in ['en', 'pt']) {
+      for (final road in [0, 1, 2]) {
+        final session = PlaySession.start(
+          storyFile('examples/02-pages-and-choices/the-pedlar.$lang.json'),
+          random: ScriptedRandom([3, 3, 3, 3, 3]),
+        )..choose(road);
+        final roadText = session.view.paragraphs.single;
+        session
+          ..choose(0) // hail the pedlar
+          ..choose(2); // say goodbye
+        expect(session.view.paragraphs.single, roadText, reason: '$lang $road');
+      }
+    }
+  });
+
   test('without showTitles the heading is the story title', () {
     final session = PlaySession.start(
       conformanceStory('locked-choice'),

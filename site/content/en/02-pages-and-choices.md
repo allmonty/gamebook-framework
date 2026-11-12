@@ -65,6 +65,23 @@ The third choice, the maintenance hatch, has `"hideIfLocked": true`: until its c
 2. Delete the `lockedText` line of the vault door (and the comma before it) and see the reason the app writes on its own.
 3. Point a choice `to` a page that does not exist, like `"to": "nowhere"`. The checker names the exact choice: that is how you will find typos in long books.
 
+## Back where you came from
+
+Printed gamebooks say "visit the pedlar, then return to the section you came from". One page can serve many callers (schema 8):
+
+```gamebook
+examples/02-pages-and-choices/the-pedlar
+```
+
+- `"call": true` on a choice remembers the page you are on, then goes to the target as usual. All three roads call the pedlar this way.
+- `"return": true` instead of `to` leads back to the page last remembered: "Say goodbye" takes you back to your own road. A return with nothing remembered is locked, and the checker warns when that can happen.
+- A fight's `win` (or `flee`) can be `{ "return": true }`: the wolf at the ford is met from a random table whose choice calls, and beating it puts you back at the ford.
+- Coming back **enters** the page again: its effects apply unless the page is `once`, and the visit counts. Calls can nest, up to 16 deep.
+
+### Try it
+
+1. Remove `"call": true` from the north road's "Hail the pedlar". The checker warns, and on that road "Say goodbye" is locked.
+
 ## What you learned
 
 | Field | On | Meaning |
@@ -78,5 +95,7 @@ The third choice, the maintenance hatch, has `"hideIfLocked": true`: until its c
 | `if` | choice | A condition; while it is false the choice is locked. |
 | `lockedText` | choice | Your words for why it is locked. |
 | `hideIfLocked` | choice | Hide it completely while locked. |
+| `call` | choice | Remember this page for a later return (schema 8). |
+| `return` | choice, fight `win` or `flee` | Go back to the page last remembered (schema 8). |
 
 `visited` is the first of many conditions. Next, the reader starts carrying things.

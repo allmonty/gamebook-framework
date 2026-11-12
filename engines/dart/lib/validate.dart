@@ -172,6 +172,7 @@ class _Validator {
     }
     _creation();
     _ruleBonuses();
+    _pageRules();
     _image('cover', story.cover);
     for (final MapEntry(:key, :value) in story.items.entries) {
       _image('items.$key.image', value.image);
@@ -202,6 +203,17 @@ class _Validator {
     _summaries();
     _reachability();
     return issues;
+  }
+
+  /// Every-page rules: conditions and effects checked like any other.
+  void _pageRules() {
+    final rules = story.rules.everyPage;
+    for (var i = 0; i < rules.length; i++) {
+      if (rules[i].condition case final c?) {
+        _condition('rules.everyPage[$i].if', c);
+      }
+      _effects('rules.everyPage[$i].effects', rules[i].effects);
+    }
   }
 
   /// Rule bonuses: conditions and stats checked like any other.
@@ -341,7 +353,7 @@ class _Validator {
   }
 
   void _combat(String at, Combat combat) {
-    _target('$at.win', combat.win);
+    if (combat.win case final win?) _target('$at.win', win);
     if (combat.flee case final flee?) _target('$at.flee', flee);
     if (combat.wounded case final wounded?) _target('$at.wounded', wounded);
     if (combat.rounds case final rounds?) _target('$at.rounds.to', rounds.to);
@@ -478,24 +490,47 @@ class _Validator {
     }
   }
 
-  void _reachability() {
-    if (!story.nodes.containsKey(story.start)) return;
+  /// The pages reachable from the start. A return always leads back to a
+  /// page already reached, so it adds none. With [calls] false, choices that
+  /// call are not followed: what is left can be reached with nothing
+  /// remembered.
+  Set<String> _reached({bool calls = true}) {
     final seen = <String>{story.start};
     final queue = [story.start];
     while (queue.isNotEmpty) {
       final node = story.nodes[queue.removeLast()]!;
       for (final next in [
-        for (final c in node.choices) ...[
-          ?c.to,
-          if (c.check != null) ...[c.check!.pass, c.check!.fail],
-          if (c.table != null) ...[for (final o in c.table!.outcomes) o.to],
-        ],
+        for (final c in node.choices)
+          if (calls || !c.call) ...[
+            ?c.to,
+            if (c.check != null) ...[c.check!.pass, c.check!.fail],
+            if (c.table != null) ...[for (final o in c.table!.outcomes) o.to],
+          ],
         ?node.combat?.win,
         ?node.combat?.flee,
         ?node.combat?.wounded,
         ?node.combat?.rounds?.to,
       ]) {
         if (story.nodes.containsKey(next) && seen.add(next)) queue.add(next);
+      }
+    }
+    return seen;
+  }
+
+  void _reachability() {
+    if (!story.nodes.containsKey(story.start)) return;
+    final seen = _reached();
+    // A return reached with nothing remembered is locked (schema 8).
+    for (final id in _reached(calls: false)) {
+      final node = story.nodes[id]!;
+      if (node.choices.any((c) => c.returns) ||
+          (node.combat?.winReturns ?? false) ||
+          (node.combat?.fleeReturns ?? false)) {
+        warn(
+          'nodes.$id',
+          'return-without-call',
+          'has a return but can be reached with no page to return to',
+        );
       }
     }
     for (final id in story.nodes.keys.where((id) => !seen.contains(id))) {

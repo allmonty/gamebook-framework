@@ -1,0 +1,110 @@
+{
+  "description": "A page with a return that can be reached with nothing remembered.",
+  "spec": [
+    "B10",
+    "B16"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "lint",
+    "lang": "en",
+    "title": "Lint",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Shop",
+            "to": "shop",
+            "call": true
+          },
+          {
+            "text": "B",
+            "to": "b"
+          },
+          {
+            "text": "Ford",
+            "call": true,
+            "table": {
+              "roll": "1d6",
+              "outcomes": [
+                {
+                  "upTo": 3,
+                  "to": "wolf"
+                },
+                {
+                  "upTo": 6,
+                  "to": "b"
+                }
+              ]
+            }
+          },
+          {
+            "text": "Deeper",
+            "to": "a",
+            "call": true
+          },
+          {
+            "text": "Home",
+            "to": "won"
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "Shop",
+            "to": "shop",
+            "call": true
+          },
+          {
+            "text": "Back",
+            "return": true
+          }
+        ]
+      },
+      "shop": {
+        "text": "Shop",
+        "choices": [
+          {
+            "text": "Goodbye",
+            "return": true
+          }
+        ]
+      },
+      "wolf": {
+        "text": "Wolf",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Wolf",
+              "attack": 1,
+              "health": 2
+            }
+          ],
+          "win": {
+            "return": true
+          },
+          "flee": {
+            "return": true
+          }
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "warnings": [
+    {
+      "code": "return-without-call",
+      "path": "nodes.b"
+    }
+  ]
+}

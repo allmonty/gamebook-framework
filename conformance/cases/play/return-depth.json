@@ -1,0 +1,175 @@
+{
+  "description": "Calls nest 16 deep at most: a deeper call forgets the oldest page.",
+  "spec": [
+    "B10",
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Shop",
+            "to": "shop",
+            "call": true
+          },
+          {
+            "text": "B",
+            "to": "b"
+          },
+          {
+            "text": "Ford",
+            "call": true,
+            "table": {
+              "roll": "1d6",
+              "outcomes": [
+                {
+                  "upTo": 3,
+                  "to": "wolf"
+                },
+                {
+                  "upTo": 6,
+                  "to": "b"
+                }
+              ]
+            }
+          },
+          {
+            "text": "Deeper",
+            "to": "a",
+            "call": true
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "Shop",
+            "to": "shop",
+            "call": true
+          },
+          {
+            "text": "Back",
+            "return": true
+          }
+        ]
+      },
+      "shop": {
+        "text": "Shop",
+        "choices": [
+          {
+            "text": "Goodbye",
+            "return": true
+          }
+        ]
+      },
+      "wolf": {
+        "text": "Wolf",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Wolf",
+              "attack": 1,
+              "health": 2
+            }
+          ],
+          "win": {
+            "return": true
+          },
+          "flee": {
+            "return": true
+          }
+        }
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    },
+    {
+      "choose": 3
+    }
+  ],
+  "expect": {
+    "returnTo": [
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a",
+      "a"
+    ]
+  }
+}

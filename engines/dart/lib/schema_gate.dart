@@ -118,8 +118,10 @@ String? _schema7(Story story) {
 String? _schema8(Story story) {
   if (story.coverAlt != null) return 'coverAlt';
   if (story.rules.bonuses.isNotEmpty) return 'rules.bonuses';
+  if (story.rules.everyPage.isNotEmpty) return 'rules.everyPage';
   for (final MapEntry(:key, :value) in story.rules.stats.entries) {
     if (value.min != null) return 'rules.stats.$key.min';
+    if (value.hidden != null) return 'rules.stats.$key.hidden';
   }
   for (final MapEntry(:key, :value) in story.items.entries) {
     if (value.imageAlt != null) return 'items.$key.imageAlt';
@@ -130,6 +132,12 @@ String? _schema8(Story story) {
     if (value.imageAlt != null) return 'nodes.$key.imageAlt';
     if (value.ending == Ending.defeat) return 'nodes.$key.ending';
     if (value.combat?.fleeCost != null) return 'nodes.$key.combat.fleeCost';
+    if (value.combat?.winReturns ?? false) return 'nodes.$key.combat.win';
+    if (value.combat?.fleeReturns ?? false) return 'nodes.$key.combat.flee';
+    for (var i = 0; i < value.choices.length; i++) {
+      if (value.choices[i].call) return 'nodes.$key.choices[$i].call';
+      if (value.choices[i].returns) return 'nodes.$key.choices[$i].return';
+    }
     if (value.combat?.wounded != null) return 'nodes.$key.combat.wounded';
     if (value.combat?.rounds != null) return 'nodes.$key.combat.rounds';
     // Before schema 4 braces are plain text, not placeholders (B6).

@@ -898,7 +898,7 @@ void main() {
 
       expect(
         error(table(), keepTo: true),
-        'nodes.door.choices[0]: needs exactly one of "to", "check" or "table"',
+        'nodes.door.choices[0]: needs exactly one of "to", "check", "table" or "return"',
       );
       expect(
         error(table(outcomes: [])),
@@ -1297,7 +1297,7 @@ void main() {
             {'text': 'x'},
           ],
         ),
-        'nodes.cellar.choices[0]: needs exactly one of "to", "check" or "table"',
+        'nodes.cellar.choices[0]: needs exactly one of "to", "check", "table" or "return"',
       );
     });
 
