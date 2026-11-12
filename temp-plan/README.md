@@ -7,13 +7,13 @@ The review found the framework solid (spec, JSON Schema, 112 conformance cases a
 
 - **Five holes**, each confirmed by running the engine (steps 01 to 05).
 - **One structural outlier**: `engines/dart/lib/story.dart`, 929 lines, a third of it the schema-version gate (step 06).
-- **Four gaps against real gamebooks**, chosen by the owner, added together as **schema 8** (steps 07 to 10).
+- **Four gaps against real gamebooks**, chosen by the owner, added together as **schema 8** (steps 07 to 10), joined at the checkpoint by six more (steps 10a to 10f).
 - **The repo is hard to pick up from outside** (steps 11 to 15): the kit for chatbots tells them to write schema 6 while the format is at 7; the presets exist only as Dart code and spec tables; every example lives under `site/`; nothing tells a person or an AI that arrives cold which of three jobs (write a story, build an app, write an engine) starts where; the site never says which schema version a feature needs.
 
 ## The goal
 The owner's aim: **the better gamebook engine and format, in a repository that people and AIs can use and cite to build their games.**
 
-The survey found no other project with a written spec, a conformance suite, rules as data and a strict validator (`../spec/comparison.md` section 8). That is the lead to keep. So the order of work is: first make what exists unbreakable (01 to 06), then close the gaps real books expose (07 to 10), then make it easy to start from (11 to 15).
+The survey found no other project with a written spec, a conformance suite, rules as data and a strict validator (`../spec/comparison.md` section 8). That is the lead to keep. So the order of work is: first make what exists unbreakable (01 to 06), then close the gaps real books expose (07 to 10f), then make it easy to start from (11 to 15).
 
 ## Owner decisions (do not reopen)
 - Fix all five holes.
@@ -55,7 +55,7 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 14 | [A front door for people and AIs](steps/14-front-door.md) | docs + site | todo | |
 | 15 | [A versions page on the site](steps/15-site-versions.md) | docs + site | todo | |
 
-Steps 01 to 06 and 11 are independent of each other; step 11 is tiny and may be done first. Steps 08 to 10 need step 07 (it opens schema 8) and are easier after step 06. Steps 12 to 15 come last so they describe schema 8; 14 links what 12 and 13 add, and 15 is the last of all.
+Steps 01 to 06 and 11 are independent of each other; step 11 is tiny and may be done first. Steps 08 to 10f need step 07 (it opens schema 8) and are easier after step 06. Steps 12 to 15 come last so they describe schema 8; 14 links what 12 and 13 add, and 15 is the last of all.
 
 **Checkpoint before step 11 (passed 2026-11-12).** The owner chose six more schema 8 features, now steps 10a to 10f: candidates 10, 4, 2, part of 9, 5 and 1, smallest first. Steps 10e and 10f have open questions to settle with the owner after writing their example story and before the spec. Candidates 3 and 8, and the rest of 9, wait for a later schema. 6 and 7 are tools, buildable at any time.
 
@@ -76,10 +76,11 @@ In the same commit:
 - `spec/llm-kit.md`, regenerated: `(cd engines/dart && dart run gamebook_engine:llm_kit)`; a test fails while it is stale;
 - the feature list in `README.md`.
 
-## What every feature (steps 07 to 10) also carries
+## What every feature (steps 07 to 10f) also carries
 - A schema gate: a story below schema 8 that uses the feature is rejected with `needs "schema": 8` at the feature's JSON path, plus an `invalid/<feature>-needs-schema-8.json` case.
 - The site: view model in `site/lib/src/play/`, renderer in `site/lib/src/ui/`, every visitor-facing word in `site/strings/en.json` **and** `pt.json` (never hard-coded in Dart).
 - The tutorial: a section in `site/content/en/<chapter>.md` **and** `site/content/pt/<chapter>.md`, with an example pair `site/examples/<chapter>/<name>.en.json` and `.pt.json`. Copy how the neighbouring sections embed their examples. `site/test/examples_test.dart` requires both languages, no errors, no warnings, and matching structure.
+- A site test that plays the example to show the feature working (as steps 08 to 10 did), `simulate_story` on the example with nothing stuck, a "Try it" line in the chapter, and a row in the chapter's summary table when it has one.
 
 ## Checks (run for every package the commit touches)
 ```
