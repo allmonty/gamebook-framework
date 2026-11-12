@@ -25,7 +25,7 @@ A player that shows the image gives this text to assistive technology; without i
 - `engines/dart/test/story_test.dart`: parses; rejected without the image; rejected below schema 8.
 - Cases: `conformance/cases/invalid/image-alt-needs-schema-8.json`, `invalid/image-alt-without-image.json`. No play case: it is presentation; add it to "Not covered" in `conformance/README.md`.
 - Site: `imageAlt` on the page view model in `site/lib/src/play/views.dart`, filled in `play_session.dart` (next to `image:`, line 121), used by `player_view.dart` instead of `''`. A VM test in `site/test/play_session_test.dart`.
-- Tutorial: a short section "Describe your pictures" in `site/content/en/02-pages-and-choices.md` and the `pt` twin, with the JSON shown inline. No example story: no image files ship with the examples (known shortcut in `roadmap/README.md`).
+- Tutorial: a short section "Describe your pictures" in `site/content/en/02-pages-and-choices.md` and the `pt` twin, with the JSON shown inline. No example story: no image files ship with the examples (known shortcut in `site/README.md`).
 - `README.md` feature list; `spec/llm-kit.md` regenerated.
 
 ## Done when

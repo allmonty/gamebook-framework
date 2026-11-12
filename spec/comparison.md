@@ -95,14 +95,14 @@ All of these reduce to: **stats + a dice roll + a comparison**, optionally repea
 ### d20 / D&D 5e
 - Six ability scores; a modifier derived from each; a check is d20 + modifier (+ proficiency) against a Difficulty Class. Typical DCs: 5 very easy, 10 easy, 15 medium, 20 hard, 25 very hard, 30 nearly impossible. Advantage and disadvantage roll two d20 and keep the higher or lower ([SRD mirror](https://dnd-wiki.org/wiki/SRD5:Check); we did not check the official SRD).
 - License, read on 2026-11-11 on the [publisher's SRD page](https://www.dndbeyond.com/srd): SRD 5.1 is under both OGL 1.0a and CC-BY-4.0; SRD 5.2 and later under CC-BY-4.0 only.
-- Maps to our schema: stats with a modifier formula, a check with `roll: 1d20`, `add: <stat>`, `op: gte`, `vs: <DC>`. `vs-defense` combat mode (attack roll vs a defense number, then damage dice). Advantage is out of scope for v1.
+- Maps to our schema: stats with a modifier formula, a check with `roll: 1d20`, `add: <stat>`, `op: gte`, `vs: <DC>`. `vs-defense` combat mode (attack roll vs a defense number, then damage dice). Advantage is not in the format (section 8).
 - d20-lite (our preset) takes this core and drops classes, levels, skills and spells.
 
 ### Percentile (Mythras / Basic Roleplaying)
-Skill values 0-100; roll d100 and succeed if at or under the skill. Maps to `roll: 1d100`, `op: lte`, `vs: <skill>`. Needs no new engine feature. Not shipped as a preset in v1 ([overview of the differences with D&D](https://thedesignmechanism.com/blog/7-key-differences-between-dd-and-mythras/)).
+Skill values 0-100; roll d100 and succeed if at or under the skill. Maps to `roll: 1d100`, `op: lte`, `vs: <skill>`. Needs no new engine feature. Not shipped as a preset ([overview of the differences with D&D](https://thedesignmechanism.com/blog/7-key-differences-between-dd-and-mythras/)).
 
 ### Dice pools (Forbidden Lands, etc.)
-Roll N dice and count successes. Needs a new check type (`count`). Not in v1.
+Roll N dice and count successes. Needs a new check type (`count`); not in the format (section 8).
 
 ## 4. Comparison
 

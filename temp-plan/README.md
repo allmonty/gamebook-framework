@@ -24,7 +24,7 @@ The survey found no other project with a written spec, a conformance suite, rule
 
 ## How to work
 1. Take the lowest-numbered step below that is not `done`. Do only that step. Set it to `in progress` here.
-2. Work on the branch `schema-8` (create it from `main` if missing). Never push, never open a pull request: ask the owner.
+2. Work on the branch `schema-8` (it exists, with the preparation commits on it). Never push, never open a pull request: ask the owner.
 3. One step is one commit unless the step says otherwise. Each commit passes on its own (see "Checks").
 4. In the same commit: set the step to `done` here and fill its "Handoff notes" (what you did differently, what the next step should know). The commit hash goes into the table with the next commit.
 5. Stuck: set `blocked`, write why in the handoff notes, ask the owner.
@@ -48,6 +48,13 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 14 | [A front door for people and AIs](steps/14-front-door.md) | docs + site | todo | |
 
 Steps 01 to 06 and 11 are independent of each other; step 11 is tiny and may be done first. Steps 08 to 10 need step 07 (it opens schema 8) and are easier after step 06. Steps 12 to 14 come last so they describe schema 8, and 14 links what 12 and 13 add.
+
+## Where things stood when the plan was written (2026-11-11)
+The baseline every step starts from; if your first run of the checks differs, stop and find out why before changing anything.
+- Engine: format and analyze clean, 575 tests pass, the LLM kit check passes.
+- Site: format and analyze clean, 185 VM tests and 5 browser tests pass.
+- The JSON Schema check was not run locally (`jsonschema` not installed); CI runs it.
+- Already done in preparation: the finished site roadmap was retired (its lasting notes are in `../site/README.md`), `../AGENTS.md` points here, an unused `applyEffects` helper was removed from the engine, and `../spec/comparison.md` holds the research behind steps 07 to 14.
 
 ## What every spec change carries (from `../CONTRIBUTING.md`)
 In the same commit:
@@ -103,7 +110,7 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 
 ## Waiting on the owner (outward-facing, never do these unasked)
 - Push the `schema-8` branch and open the pull request.
-- Enable GitHub Pages (still pending from `../roadmap/README.md`); step 14's addresses work only once it is on.
+- Enable GitHub Pages (Settings > Pages > Source: "GitHub Actions"; the workflow is already there); step 14's addresses work only once it is on.
 - Tag a release when schema 8 is merged, so stories and engines can cite a fixed version.
 - Decide whether to publish the Dart engine on pub.dev (`publish_to: none` today) and to submit the schema to SchemaStore for editor autocompletion.
 
