@@ -13,4 +13,5 @@ same
 same
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- Chapter 5 with three examples in `examples/05-dice/`: `jump-the-gap` (two checks: stat `add` and number `add`), `test-your-luck` (`vs` a stat, `lte`, check `effects`), `search-the-rubble` (1d6 table with per-outcome effects; schema 4).
+- Spec B10 says the UI should show what will be rolled before the tap; the player only marks checks in amber, so the chapter tells authors to put the roll in the choice text. A future player improvement could show it automatically.

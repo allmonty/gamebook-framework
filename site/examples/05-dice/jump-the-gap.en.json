@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "id": "jump-the-gap",
+  "lang": "en",
+  "title": "Jump the Gap",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "edge",
+  "nodes": {
+    "edge": {
+      "text": "A gap between two rooftops, the street ten floors down.",
+      "choices": [
+        {
+          "text": "Leap it (2d6 + Skill, 16 or more)",
+          "check": {
+            "roll": "2d6",
+            "add": "skill",
+            "op": "gte",
+            "vs": 16,
+            "pass": "across",
+            "fail": "fall"
+          }
+        },
+        {
+          "text": "Take the slow way along the gutter (1d6 + 3, 6 or more)",
+          "check": {
+            "roll": "1d6",
+            "add": 3,
+            "op": "gte",
+            "vs": 6,
+            "pass": "across",
+            "fail": "fall"
+          }
+        }
+      ]
+    },
+    "fall": {
+      "text": "You slip, catch a cable, and climb back up, scraped and shaking.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Try again",
+          "to": "edge"
+        }
+      ]
+    },
+    "across": {
+      "text": "You land on the far roof and roll to your feet.",
+      "ending": "victory"
+    }
+  }
+}

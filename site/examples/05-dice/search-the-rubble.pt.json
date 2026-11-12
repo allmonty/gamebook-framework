@@ -1,0 +1,80 @@
+{
+  "schema": 4,
+  "id": "search-the-rubble",
+  "lang": "pt",
+  "title": "Revirar os Escombros",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      },
+      "gold": {
+        "label": "Ouro",
+        "roll": "0"
+      }
+    }
+  },
+  "items": {
+    "gem": {
+      "name": "Gema rúnica"
+    }
+  },
+  "start": "rubble",
+  "nodes": {
+    "rubble": {
+      "text": "Um santuário desabado. Pode haver algo enterrado nos escombros.",
+      "choices": [
+        {
+          "text": "Cavar (role 1d6)",
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 2,
+                "to": "nothing"
+              },
+              {
+                "upTo": 5,
+                "to": "coins",
+                "effects": [
+                  {
+                    "stat": "gold",
+                    "add": 3
+                  }
+                ]
+              },
+              {
+                "upTo": 6,
+                "to": "gem",
+                "effects": [
+                  {
+                    "give": "gem"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "nothing": {
+      "text": "Poeira e pedra quebrada. Nada.",
+      "ending": "victory"
+    },
+    "coins": {
+      "text": "Três moedas antigas, ainda brilhando.",
+      "ending": "victory"
+    },
+    "gem": {
+      "text": "Uma gema rúnica, morna ao toque.",
+      "ending": "victory"
+    }
+  }
+}

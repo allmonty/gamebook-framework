@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "id": "test-your-luck",
+  "lang": "en",
+  "title": "Test Your Luck",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "trap",
+  "nodes": {
+    "trap": {
+      "text": "Click. You stepped on a pressure plate. Somewhere, a dart launcher whirs.",
+      "choices": [
+        {
+          "text": "Test your Luck (2d6, your Luck or less)",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "luck",
+            "effects": [
+              {
+                "stat": "luck",
+                "add": -1
+              }
+            ],
+            "pass": "safe",
+            "fail": "hit"
+          }
+        }
+      ]
+    },
+    "hit": {
+      "text": "A dart grazes your neck. It burns.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -4
+        }
+      ],
+      "choices": [
+        {
+          "text": "Stagger on",
+          "to": "safe"
+        }
+      ]
+    },
+    "safe": {
+      "text": "You are through the corridor of darts.",
+      "ending": "victory"
+    }
+  }
+}

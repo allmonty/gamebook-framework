@@ -1,0 +1,71 @@
+{
+  "schema": 4,
+  "id": "search-the-rubble",
+  "lang": "en",
+  "title": "Search the Rubble",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "gold": {
+        "label": "Gold",
+        "roll": "0"
+      }
+    }
+  },
+  "items": {
+    "gem": {
+      "name": "Rune gem"
+    }
+  },
+  "start": "rubble",
+  "nodes": {
+    "rubble": {
+      "text": "A collapsed shrine. Something might be buried in the rubble.",
+      "choices": [
+        {
+          "text": "Dig (roll 1d6)",
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 2,
+                "to": "nothing"
+              },
+              {
+                "upTo": 5,
+                "to": "coins",
+                "effects": [
+                  {
+                    "stat": "gold",
+                    "add": 3
+                  }
+                ]
+              },
+              {
+                "upTo": 6,
+                "to": "gem",
+                "effects": [
+                  {
+                    "give": "gem"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "nothing": {
+      "text": "Dust and broken stone. Nothing.",
+      "ending": "victory"
+    },
+    "coins": {
+      "text": "Three old coins, still bright.",
+      "ending": "victory"
+    },
+    "gem": {
+      "text": "A rune gem, warm to the touch.",
+      "ending": "victory"
+    }
+  }
+}

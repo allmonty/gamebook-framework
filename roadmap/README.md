@@ -19,8 +19,8 @@ Status values: `todo`, `in progress`, `done`, `blocked`.
 | 10 | [Tutorial 1: Getting started](steps/10-tutorial-01.md) | done | 0274b8e |
 | 11 | [Tutorial 2: Pages and choices](steps/11-tutorial-02.md) | done | 35dc451 |
 | 12 | [Tutorial 3: Items](steps/12-tutorial-03.md) | done | 11592c3 |
-| 13 | [Tutorial 4: Stats and your hero](steps/13-tutorial-04.md) | done | |
-| 14 | [Tutorial 5: Dice](steps/14-tutorial-05.md) | todo | |
+| 13 | [Tutorial 4: Stats and your hero](steps/13-tutorial-04.md) | done | b7f29a5 |
+| 14 | [Tutorial 5: Dice](steps/14-tutorial-05.md) | done | |
 | 15 | [Tutorial 6: Combat](steps/15-tutorial-06.md) | todo | |
 | 16 | [Tutorial 7: A living world](steps/16-tutorial-07.md) | todo | |
 | 17 | [Tutorial 8: Check and publish](steps/17-tutorial-08.md) | todo | |
