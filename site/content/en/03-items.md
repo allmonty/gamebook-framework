@@ -23,7 +23,7 @@ Items are unique: the reader either has the rusty key or not. Giving it twice ch
 
 ## Items the reader can use
 
-An item with `use` gets a **Use** button in the pack. Using it applies its effects and spends it. This needs `"schema": 2` or higher.
+An item with `use` gets a **Use** button in the pack. Using it applies its effects and spends it.
 
 ```gamebook
 examples/03-items/healing-potion

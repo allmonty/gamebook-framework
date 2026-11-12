@@ -130,7 +130,7 @@ examples/04-stats-and-hero/pick-your-kit
 }
 ```
 
-- `rerolls`: how many times the reader may roll all stats again (Fighting Fantasy allows 2). The last roll is kept.
+- `rerolls`: how many times the reader may roll all stats again (the presets give 2; the printed books give none). The last roll is kept.
 - `"name": true` asks for the hero's name; write `{name}` in any text to use it.
 - `picks`: groups of options, each with how many to choose (`count`). Every chosen option applies its `effects` before the first page. `{ "set": "lucky" }` raises a **flag**, an on/off switch a condition can test with `{ "flag": "lucky" }`; chapter 7 has more.
 

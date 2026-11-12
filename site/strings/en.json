@@ -122,7 +122,7 @@
   "home.features.kicker": "Capabilities",
   "home.features.title": "Everything a gamebook needs, built in",
   "home.f1.title": "Pages and choices",
-  "home.f1.text": "Branching pages with victory and death endings. Choices can be hidden, greyed out with a reason, or vanish once taken.",
+  "home.f1.text": "Branching pages with victory, defeat and death endings. Choices can be hidden, greyed out with a reason, or vanish once taken.",
   "home.f2.title": "Items and the pack",
   "home.f2.text": "Keys that unlock choices, potions you use, swords that add to Skill, a pack with limited room, containers, swaps, even thieves.",
   "home.f3.title": "Stats and heroes",
