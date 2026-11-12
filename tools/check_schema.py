@@ -24,5 +24,13 @@ for path in paths:
         for e in errors[:5]:
             print(f"{path}: {'/'.join(map(str, e.path)) or '(root)'}: {e.message}")
         failed += bool(errors)
+# The schema checks shape only, but what it can say it must: these invalid
+# cases break a rule of shape, so the schema has to refuse them too.
+for name in ["bad-dice", "dice-too-many", "integer-too-big", "media-path-outside-folder",
+             "unknown-key", "two-exits", "no-way-out", "enemy-health-at-least-1"]:
+    story = json.load(open(f"conformance/cases/invalid/{name}.json"))["story"]
+    if validator.is_valid(story):
+        print(f"conformance/cases/invalid/{name}.json: the schema accepts it")
+        failed += 1
 print(f"{len(paths)} stories, {failed} not matching the schema")
 sys.exit(1 if failed else 0)
