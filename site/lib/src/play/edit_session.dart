@@ -40,6 +40,13 @@ class EditSession {
   /// A game of the current text; null while the text has errors.
   PlaySession? play;
 
+  /// The name to save the text under: `story.<lang>.json`, as a game folder
+  /// wants it (spec B1), or `story.json` while the text has errors.
+  String get fileName {
+    final lang = play?.story.lang;
+    return lang == null ? 'story.json' : 'story.$lang.json';
+  }
+
   bool get hasErrors => issues.any((i) => i.error);
 
   void update(String text) {

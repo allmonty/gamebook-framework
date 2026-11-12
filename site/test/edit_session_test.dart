@@ -13,6 +13,13 @@ String _rustyDoor() {
 }
 
 void main() {
+  test('the file to save is named after the story language', () {
+    final edit = EditSession(_rustyDoor(), Random(1));
+    expect(edit.fileName, 'story.en.json');
+    edit.update('{oops');
+    expect(edit.fileName, 'story.json');
+  });
+
   test('a valid story has no errors and can be played', () {
     final edit = EditSession(_rustyDoor(), Random(1));
     expect(edit.hasErrors, isFalse);

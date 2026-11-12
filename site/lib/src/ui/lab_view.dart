@@ -186,11 +186,13 @@ class LabView {
       BlobPropertyBag(type: 'application/json'),
     );
     final url = URL.createObjectURL(blob);
-    (el(
-      'a',
-      attrs: {'href': url, 'download': 'story.json'},
-    ) as HTMLAnchorElement).click();
-    URL.revokeObjectURL(url);
+    final link = el('a', attrs: {'href': url, 'download': edit.fileName});
+    // In the page while clicked, and the address kept a moment longer: some
+    // browsers drop a download whose link or address is already gone.
+    host.append(link);
+    link.click();
+    link.remove();
+    Timer(const Duration(seconds: 1), () => URL.revokeObjectURL(url));
   }
 
   HTMLElement _openFile() {
