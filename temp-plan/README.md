@@ -50,6 +50,8 @@ The survey found no other project with a written spec, a conformance suite, rule
 
 Steps 01 to 06 and 11 are independent of each other; step 11 is tiny and may be done first. Steps 08 to 10 need step 07 (it opens schema 8) and are easier after step 06. Steps 12 to 15 come last so they describe schema 8; 14 links what 12 and 13 add, and 15 is the last of all.
 
+**Checkpoint before step 11 (the owner's request, 2026-11-11):** stop and ask the owner which candidates below join schema 8, each with a short example story. Steps 12 to 15 describe the newest schema, so a feature that joins after them means a schema 9 and redoing those pages. The owner liked four ideas about debuffs: a bonus that depends on a condition (candidate 4, the best fit for schema 8), a debuff that runs out on its own and a loss on every page (both part of candidate 5, to design together), and a lower limit per stat (candidate 10, needed by no story yet). New steps go after step 10 and before step 11.
+
 ## Where things stood when the plan was written (2026-11-11)
 The baseline every step starts from; if your first run of the checks differs, stop and find out why before changing anything.
 - Engine: format and analyze clean, 575 tests pass, the LLM kit check passes.
