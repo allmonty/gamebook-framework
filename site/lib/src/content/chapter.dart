@@ -15,7 +15,9 @@ class Chapter {
 }
 
 final _heading = RegExp(r'^# (.+)$', multiLine: true);
-final _mdLink = RegExp(r'href="([\w./-]+?)\.md(#[\w-]+)?"');
+// A chapter is named by its bare file name; a path leads outside the
+// chapters and is left alone.
+final _mdLink = RegExp(r'href="([\w-]+)\.md(#[\w-]+)?"');
 
 /// Renders a chapter's Markdown: example blocks become embeds, links to
 /// other `.md` chapters become links to their pages (so the same files
