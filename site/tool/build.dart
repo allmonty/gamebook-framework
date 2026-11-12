@@ -23,5 +23,7 @@ Future<void> main(List<String> args) async {
       ..write(result.stderr);
     exit(result.exitCode);
   }
+  // The compiler's dependency list holds build-machine paths; never publish it.
+  File('${output.path}/js/main.dart.js.deps').deleteSync();
   stdout.writeln('Built ${output.path}');
 }

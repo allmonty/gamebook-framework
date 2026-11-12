@@ -13,4 +13,7 @@ the build runs locally the same way
 Workflow file reviewed; owner told how to enable Pages.
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- `.github/workflows/pages.yml`: on push to `main` (or by hand), builds `site/` with Dart 3.13.7 and deploys `site/build/` with the official Pages actions.
+- The owner must set Settings > Pages > Source to "GitHub Actions" once. Not done by us (outward-facing).
+- The local build runs the same commands and produces about 830 KB (the compiled player is about 200 KB). The build now deletes `main.dart.js.deps`, which lists build-machine paths.
+- The site uses relative links only, so it works under the project path (`https://<owner>.github.io/gamebook-framework/`).
