@@ -46,4 +46,12 @@ Exact rules to write:
 The example leaves the fight on the first wound and after the round limit on the site; all cases pass; checks green.
 
 ## Handoff notes
-(fill in)
+- Two commits: `b75ed5c` adds the format, engine and tools; the second adds the site tests and the tutorial and marks the step done.
+- **The engine counts rounds, not the combat functions.** `fightRound`, `groupRound`, `enemyStrike` and `testFightLuck` keep `CombatState.round` as it is; `GameEngine._afterRound` adds one and decides (death, win, `wounded`, `rounds`). It runs after `fight` (both branches) and once after the strikes of an item that costs the round. That way a group fight's item use, where several enemies strike, counts once. A wound is "health lower than before the round", measured after the item's own effects, so it holds in every mode.
+- `CombatState(enemy, health, [luck, round = 0])`; JSON has `round`; a save without it reads 0; `stateFits` rejects a negative count.
+- **One case differs from the plan.** `fight-win-beats-wounded` is a `table` round, not a group fight. In a group fight only the target takes damage, so the round that kills the last enemy has no other enemy left to strike. Table results are `[enemy loses, player loses]` pairs, so one round can do both.
+- Graph: `EdgeKind.wounded` (port 2) and `EdgeKind.rounds` (port 3, label "after N rounds"), orange in DOT. Mermaid needs nothing: its arrows are plain by default.
+- Validator: both targets checked and followed for reachability; `lint/unreachable-fight-events.json` expects no warnings.
+- Site: no code change. The round is logged, then the next page follows; three VM tests (two on the cases, one on the tutorial example).
+- Tutorial: "Fights that end early" / "Lutas que acabam antes" in chapter 6, with `examples/06-combat/poison-sting` (one victory by winning, one by the round limit, a defeat on the sting), and a "Try it" line. The simulator reaches all three exits.
+- Done on the branch `step-09-fight-events` from `main`.

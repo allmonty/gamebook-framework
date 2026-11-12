@@ -1,0 +1,60 @@
+{
+  "schema": 8,
+  "id": "poison-sting",
+  "lang": "pt",
+  "title": "O Ferrão Venenoso",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "nest",
+  "nodes": {
+    "nest": {
+      "text": "Numa cavidade de areia quente, um escorpião gigante ergue a cauda. Uma ferroada e o veneno estará no seu sangue.",
+      "choices": [
+        {
+          "text": "Sacar a lâmina",
+          "to": "fight"
+        }
+      ]
+    },
+    "fight": {
+      "text": "O escorpião anda em volta de você. Vença antes que ele ferroe, e rápido: depois de três rodadas ele se cansa e se enterra.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Escorpião gigante",
+            "attack": 7,
+            "health": 6
+          }
+        ],
+        "win": "won",
+        "wounded": "stung",
+        "rounds": {
+          "after": 3,
+          "to": "gone"
+        }
+      }
+    },
+    "stung": {
+      "text": "A cauda passa pela sua guarda. Um fogo sobe pelo braço e as pernas fraquejam. Você vai viver, mas esta viagem acabou.",
+      "ending": "defeat"
+    },
+    "gone": {
+      "text": "Três rodadas, e o escorpião se cansa. Ele afunda na areia e some. Nenhum troféu, mas nenhuma ferroada também.",
+      "choices": [
+        {
+          "text": "Seguir em frente",
+          "to": "road"
+        }
+      ]
+    },
+    "won": {
+      "text": "O escorpião fica imóvel. Você corta o ferrão: um belo troféu para levar à cidade.",
+      "ending": "victory"
+    },
+    "road": {
+      "text": "Depois das dunas a estrada segue até os portões da cidade.",
+      "ending": "victory"
+    }
+  }
+}
