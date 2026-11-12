@@ -777,10 +777,14 @@ bool stateFits(GameState state, Story story, Rules rules) {
       !stats.containsAll(state.stats.keys)) {
     return false;
   }
-  if (!state.stats.values.every(
-    (s) => s.value >= 0 && (s.max == null || s.value <= s.max!),
-  )) {
-    return false;
+  // Each stat within its floor and ceiling, and the floor the story's.
+  for (final rule in rules.stats) {
+    final s = state.stats[rule.id]!;
+    if (s.min != rule.min ||
+        s.value < s.min ||
+        (s.max != null && s.value > s.max!)) {
+      return false;
+    }
   }
   if (!state.inventory.every(item) || !state.offers.every(item)) return false;
   // Counts only for countable items held or offered, and at least 1 each.

@@ -1,0 +1,30 @@
+{
+  "description": "The health stat cannot have a min: health at 0 is death.",
+  "spec": [
+    "B4"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "d20-lite",
+      "stats": {
+        "hp": {
+          "min": -1
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Might {might}.",
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "rules.stats.hp.min"
+  }
+}

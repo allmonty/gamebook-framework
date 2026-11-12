@@ -211,6 +211,10 @@
                 "description": "Schema 5. A ceiling that does not depend on the roll (not with max: true)",
                 "type": "integer",
                 "minimum": 1
+              },
+              "min": {
+                "description": "Schema 8. The floor, which may be negative (default 0); not on the health stat",
+                "type": "integer"
               }
             }
           }

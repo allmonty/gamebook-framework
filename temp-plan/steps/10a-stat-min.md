@@ -21,4 +21,10 @@ Spec B4 (stats table, "clamped at 0" becomes "clamped at `min`, 0 by default"), 
 The example shows Might -2 with the gauntlet on the site in both languages; checks green.
 
 ## Handoff notes
-(fill in)
+- One commit, on the shared branch `steps-10a-10d`.
+- `StatValue(value, [max, min = 0])`: the floor travels with the stat, like `max`, set from the rules at creation. `clampedTo`, `adjusted` and `GameState.stat()` use it, so every effect, bonus and combat change already respects it. JSON writes `min` only when it is not 0, and an old save reads 0.
+- `StatRules.min` (default 0) comes from `StatSpec.min`, merged with the preset like `limit`. `Rules.resolve` rejects a `min` on the health stat ("the health stat cannot have a min"), and `_checkedMin` rejects a `min` at or above the `limit`.
+- `stateFits` now checks each stat against its rule: the saved floor must equal the story's `min`, and the value must lie between the floor and the ceiling. A story that changes a `min` drops old saves.
+- The conformance runner turns given start values into stats the way the creation roll would, so it also raises a value below the `min` (README updated).
+- Example `examples/04-stats-and-hero/cursed-gauntlet` (d20-lite: a cursed gauntlet at -4 Might, a door to force at `1d20 + might` ≥ 12, a defeat if it holds); the simulator wins about half and gets stuck nowhere. Tutorial "Below zero" / "Abaixo de zero" in chapter 4, plus a "Try it" line; the chapter has no summary table. A site test plays it in both languages.
+- The site needed no change: the stats bar shows negative values as they are (the "low" style only applies to stats with a ceiling).

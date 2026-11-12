@@ -116,6 +116,9 @@ String? _schema7(Story story) {
 
 String? _schema8(Story story) {
   if (story.coverAlt != null) return 'coverAlt';
+  for (final MapEntry(:key, :value) in story.rules.stats.entries) {
+    if (value.min != null) return 'rules.stats.$key.min';
+  }
   for (final MapEntry(:key, :value) in story.items.entries) {
     if (value.imageAlt != null) return 'items.$key.imageAlt';
     if (value.stack != null) return 'items.$key.stack';

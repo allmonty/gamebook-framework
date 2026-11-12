@@ -177,7 +177,7 @@ class PickOption {
 }
 
 class StatSpec {
-  const StatSpec({this.label, this.roll, this.max, this.limit});
+  const StatSpec({this.label, this.roll, this.max, this.limit, this.min});
 
   factory StatSpec.fromJson(String _, Object? json, String path) {
     final obj = JsonObject(json, path);
@@ -186,6 +186,7 @@ class StatSpec {
       roll: obj.optString('roll'),
       max: obj.has('max') ? obj.optBool('max') : null,
       limit: obj.optInt('limit'),
+      min: obj.optInt('min'),
     );
     if (spec.limit != null && spec.limit! < 1) {
       throw obj.error('limit', 'must be at least 1');
@@ -200,6 +201,9 @@ class StatSpec {
 
   /// A ceiling independent of the roll (schema 5).
   final int? limit;
+
+  /// The floor (schema 8), which may be negative; null is 0.
+  final int? min;
 }
 
 class CombatSpec {

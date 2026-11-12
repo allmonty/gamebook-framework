@@ -1,0 +1,55 @@
+{
+  "description": "A stat with a negative min goes below 0, and an effect stops at the min.",
+  "spec": [
+    "B4",
+    "B9"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "d20-lite",
+      "stats": {
+        "might": {
+          "min": -3
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Might {might}.",
+        "effects": [
+          {
+            "stat": "might",
+            "add": -10
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "might": 1,
+    "agility": 2,
+    "wits": 2,
+    "hp": 12
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "stats": {
+      "might": -3
+    },
+    "paragraphs": [
+      "Might -3."
+    ]
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": 8,
+  "id": "cursed-gauntlet",
+  "lang": "pt",
+  "title": "A Manopla Amaldiçoada",
+  "rules": {
+    "preset": "d20-lite",
+    "stats": {
+      "might": {
+        "label": "Força",
+        "min": -3
+      },
+      "agility": {
+        "label": "Agilidade"
+      },
+      "wits": {
+        "label": "Astúcia"
+      },
+      "hp": {
+        "label": "PV"
+      }
+    }
+  },
+  "items": {
+    "gauntlet": {
+      "name": "Manopla de ferro",
+      "description": "Fria, pesada, e não sai mais. -4 de Força.",
+      "bonus": {
+        "might": -4
+      }
+    }
+  },
+  "start": "vault",
+  "nodes": {
+    "vault": {
+      "text": "Sobre um pedestal no cofre há uma manopla de ferro, escura de tão velha. Sua Força é {might}.",
+      "choices": [
+        {
+          "text": "Vestir a manopla",
+          "to": "cursed",
+          "effects": [
+            {
+              "give": "gauntlet"
+            }
+          ]
+        },
+        {
+          "text": "Deixá-la e ir até a porta",
+          "to": "door"
+        }
+      ]
+    },
+    "cursed": {
+      "text": "A manopla se fecha na sua mão como uma armadilha e não sai mais. O braço pesa como chumbo. Sua Força agora é {might}; ela pode até ficar abaixo de zero.",
+      "choices": [
+        {
+          "text": "Ir até a porta",
+          "to": "door"
+        }
+      ]
+    },
+    "door": {
+      "text": "A porta do cofre está emperrada no batente. Forçá-la pede um d20 mais a sua Força ({might}), e você precisa de 12.",
+      "choices": [
+        {
+          "text": "Forçar a porta (1d20 + Força, 12 ou mais)",
+          "check": {
+            "roll": "1d20",
+            "add": "might",
+            "op": "gte",
+            "vs": 12,
+            "pass": "out",
+            "fail": "stuck"
+          }
+        }
+      ]
+    },
+    "out": {
+      "text": "A porta range e se abre, e a luz do dia entra. Você saiu.",
+      "ending": "victory"
+    },
+    "stuck": {
+      "text": "A porta não se mexe. Você se senta na poeira; este cofre vai segurar você por mais um tempo.",
+      "ending": "defeat"
+    }
+  }
+}

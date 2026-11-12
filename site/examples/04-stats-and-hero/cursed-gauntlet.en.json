@@ -1,0 +1,77 @@
+{
+  "schema": 8,
+  "id": "cursed-gauntlet",
+  "lang": "en",
+  "title": "The Cursed Gauntlet",
+  "rules": {
+    "preset": "d20-lite",
+    "stats": {
+      "might": {
+        "min": -3
+      }
+    }
+  },
+  "items": {
+    "gauntlet": {
+      "name": "Iron gauntlet",
+      "description": "Cold, heavy, and it will not come off. -4 Might.",
+      "bonus": {
+        "might": -4
+      }
+    }
+  },
+  "start": "vault",
+  "nodes": {
+    "vault": {
+      "text": "On a plinth in the vault lies an iron gauntlet, black with age. Your Might is {might}.",
+      "choices": [
+        {
+          "text": "Put on the gauntlet",
+          "to": "cursed",
+          "effects": [
+            {
+              "give": "gauntlet"
+            }
+          ]
+        },
+        {
+          "text": "Leave it and go to the door",
+          "to": "door"
+        }
+      ]
+    },
+    "cursed": {
+      "text": "The gauntlet closes on your hand like a trap and will not come off. Your arm feels like lead. Your Might is now {might}; it can even go below zero.",
+      "choices": [
+        {
+          "text": "Go to the door",
+          "to": "door"
+        }
+      ]
+    },
+    "door": {
+      "text": "The vault door is stuck in its frame. Forcing it takes a d20 plus your Might ({might}), and you need 12.",
+      "choices": [
+        {
+          "text": "Force the door (1d20 + Might, 12 or more)",
+          "check": {
+            "roll": "1d20",
+            "add": "might",
+            "op": "gte",
+            "vs": 12,
+            "pass": "out",
+            "fail": "stuck"
+          }
+        }
+      ]
+    },
+    "out": {
+      "text": "The door grinds open and daylight floods in. You are out.",
+      "ending": "victory"
+    },
+    "stuck": {
+      "text": "The door does not move. You sit down in the dust; this vault will keep you a while longer.",
+      "ending": "defeat"
+    }
+  }
+}

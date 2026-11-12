@@ -1,0 +1,59 @@
+{
+  "description": "An item bonus takes a stat below 0 down to its min, and no further.",
+  "spec": [
+    "B4",
+    "B5"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "d20-lite",
+      "stats": {
+        "might": {
+          "min": -3
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Might {might}.",
+        "effects": [
+          {
+            "give": "gauntlet"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    },
+    "items": {
+      "gauntlet": {
+        "name": "Gauntlet",
+        "bonus": {
+          "might": -4
+        }
+      }
+    }
+  },
+  "stats": {
+    "might": 0,
+    "agility": 2,
+    "wits": 2,
+    "hp": 12
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "stats": {
+      "might": -3
+    }
+  }
+}

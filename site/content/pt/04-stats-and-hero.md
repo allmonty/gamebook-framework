@@ -47,7 +47,7 @@ examples/04-stats-and-hero/ghost-market
 - `"max": true` faz da rolagem inicial um teto: curas nunca passam dele.
 - `limit` é um teto fixo (schema 5): aqui o ouro nunca passa de 10.
 - `health` diz qual atributo significa vida. Quando chega a 0, o leitor morre, onde quer que esteja.
-- Nenhum atributo fica abaixo de 0.
+- Nenhum atributo fica abaixo de 0, a não ser que você dê a ele um `min` (abaixo).
 
 ### Mudando atributos
 
@@ -59,6 +59,20 @@ Atributos mudam com efeitos em páginas, escolhas e itens:
 | `{ "stat": "gold", "set": 0 }` | deixa o Ouro em exatamente 0 (schema 5) |
 
 E condições os comparam: `{ "stat": "gold", "gte": 3 }` (3 ou mais), `lte` (ou menos), `eq` (exatamente).
+
+### Abaixo de zero
+
+Em jogos de mesa um atributo muitas vezes é um modificador somado a uma rolagem, e um herói fraco ou amaldiçoado tem um negativo: "Força -2". Dê ao atributo um `min` e ele pode descer até lá (schema 8):
+
+```gamebook
+examples/04-stats-and-hero/cursed-gauntlet
+```
+
+```json
+"rules": { "preset": "d20-lite", "stats": { "might": { "min": -3 } } }
+```
+
+O `bonus` de -4 da manopla agora leva a Força abaixo de zero, e o `1d20 + might` da porta sente isso. Efeitos e bônus param no `min`, como param em 0 para qualquer outro atributo. O atributo de `health` não pode ter um: em 0 o herói está morto.
 
 ## Preços e atributos que apontam para atributos
 
@@ -110,5 +124,6 @@ A tela de personagem aparece quando a história tem `creation` ou define seu pr�
 - No mercado fantasma, mude o `roll` do ouro para `"20"`. O limite ainda segura em 10.
 - Em Escolha seu Equipamento, mude `count` para `1` ou adicione uma quarta opção.
 - No mercado noturno, faça a jaqueta custar 2.
+- No cofre, tire o `"min": -3`: a manopla agora para a Força em 0, e a porta fica mais fácil.
 
 A seguir: rolar dados quando importa.

@@ -47,7 +47,7 @@ examples/04-stats-and-hero/ghost-market
 - `"max": true` makes the starting roll a ceiling: healing never goes above it.
 - `limit` is a fixed ceiling instead (schema 5): gold here can never pass 10.
 - `health` names the stat that means alive. When it hits 0 the reader dies, wherever that happens.
-- No stat ever goes below 0.
+- No stat goes below 0, unless you give it a `min` (below).
 
 ### Changing stats
 
@@ -59,6 +59,20 @@ Stats change through effects on pages, choices and items:
 | `{ "stat": "gold", "set": 0 }` | set Gold to exactly 0 (schema 5) |
 
 And conditions compare them: `{ "stat": "gold", "gte": 3 }` (3 or more), `lte` (or less), `eq` (exactly).
+
+### Below zero
+
+In tabletop games a stat is often a modifier added to a roll, and a weak or cursed hero has a negative one: "Might -2". Give the stat a `min` and it can go down that far (schema 8):
+
+```gamebook
+examples/04-stats-and-hero/cursed-gauntlet
+```
+
+```json
+"rules": { "preset": "d20-lite", "stats": { "might": { "min": -3 } } }
+```
+
+The gauntlet's `bonus` of -4 now takes Might below zero, and the door's `1d20 + might` feels it. Effects and bonuses stop at the `min`, as they stop at 0 for any other stat. The `health` stat cannot have one: at 0 the hero is dead.
 
 ## Prices and other stats that point at stats
 
@@ -110,5 +124,6 @@ The character screen appears when the story has `creation` or sets its own `rero
 - In the ghost market, change the gold `roll` to `"20"`. The limit still caps it at 10.
 - In Pick Your Kit, change `count` to `1`, or add a fourth option.
 - In the night market, make the jacket cost 2.
+- In the vault, remove `"min": -3`: the gauntlet now stops Might at 0, and the door gets easier.
 
 Next: rolling dice when it matters.

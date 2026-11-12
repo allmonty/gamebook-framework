@@ -4,6 +4,7 @@ import 'package:gamebook_site/src/play/play_session.dart';
 import 'package:gamebook_site/src/play/views.dart';
 import 'package:test/test.dart';
 
+import 'support/scripted_random.dart';
 import 'support/stories.dart';
 
 void main() {
@@ -159,6 +160,19 @@ void main() {
     session.choose(0);
     expect(session.view.image, 'images/b.webp');
     expect(session.view.imageAlt, isNull);
+  });
+
+  test('the cursed gauntlet takes Might below zero', () {
+    for (final lang in ['en', 'pt']) {
+      // Might 1, Agility 1, Wits 1, HP 2+2+8.
+      final session = PlaySession.start(
+        storyFile('examples/04-stats-and-hero/cursed-gauntlet.$lang.json'),
+        random: ScriptedRandom([1, 1, 1, 2, 2]),
+      )..choose(0);
+      final might = session.view.stats.firstWhere((s) => s.id == 'might');
+      expect((might.value, might.bonus), (-3, -4), reason: lang);
+      expect(session.view.paragraphs.single, contains('-3'), reason: lang);
+    }
   });
 
   test('without showTitles the heading is the story title', () {

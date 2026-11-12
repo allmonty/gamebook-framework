@@ -85,6 +85,7 @@ Stats are numbers that describe the hero — things like Skill, Stamina, Luck, G
 - **Define any stats** you need with custom names and labels (translated per story file).
 - Each stat is **rolled at the start** using dice notation, or given a fixed starting value.
 - Stats can have a **ceiling**: health that can't go above what it started at; gold that can never exceed 50.
+- Stats can also go **below zero** when you allow it (`min`), for modifiers like "Might -2" under a cursed gauntlet.
 - Effects throughout the story can **raise or lower** any stat, or **set it to a specific value**.
 - A stat can be set to a **dynamic value** ("pay the price stored in another stat"), so prices and costs can be part of the story data.
 
