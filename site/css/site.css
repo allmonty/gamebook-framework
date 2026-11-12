@@ -1,4 +1,11 @@
 /* Arcane Cyberpunk Codex: tokens and signature pieces are documented in site/README.md. */
+/* The fonts are served from here (Latin subset, variable weight; licenses in
+   assets/fonts/OFL-*.txt), so no page asks another server for anything. */
+@font-face { font-family: 'JetBrains Mono'; font-weight: 100 800; font-display: swap; src: url('../assets/fonts/jetbrains-mono.woff2') format('woff2'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 200 800; font-display: swap; src: url('../assets/fonts/plus-jakarta-sans.woff2') format('woff2'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-style: italic; font-weight: 200 800; font-display: swap; src: url('../assets/fonts/plus-jakarta-sans-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Space Grotesk'; font-weight: 300 700; font-display: swap; src: url('../assets/fonts/space-grotesk.woff2') format('woff2'); }
+
 :root {
   color-scheme: dark;
   --canvas: #0b0e15;

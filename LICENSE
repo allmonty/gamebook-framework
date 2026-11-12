@@ -11,4 +11,7 @@ This repository uses two licenses.
    the MIT License, so it can be copied into any project.
    Full text: LICENSE-MIT
 
+3. The font files under `site/assets/fonts/` are not ours. Each is under
+   the SIL Open Font License 1.1, in the `OFL-*.txt` file beside it.
+
 Copyright (c) 2026 Allan Monteiro and the contributors.
