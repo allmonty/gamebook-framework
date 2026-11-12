@@ -1,14 +1,12 @@
 # What's next
 
-The plan that built version 1 of the format is finished (its steps are in the git history up to the commit that deleted `temp-plan/`). This file holds what is left: the owner's to-do list, and ideas for later.
+The plan that built version 1 of the format is finished (its steps are in the git history up to the commit that deleted `temp-plan/`). An audit of the whole repository followed it, and its fixes are merged; the audit itself is in the git history (`docs/audit-2026-11-12.md`, deleted once carried out). This file holds what is left: the owner's to-do list, and ideas for later.
 
 ## Owner's to-do
 Outward-facing, so only the owner does these. Tick them off here as they are done.
 
-- [ ] **Merge the audit's fixes** (branch `audit-fixes`; the audit and what was done are in `docs/audit-2026-11-12.md`).
-  - Open one pull request from `audit-fixes` into `main` and let CI run.
-  - Before merging, five minutes on the built site with the keyboard only, and with a screen reader if one is at hand: every button shows where focus is, Esc then Tab leaves the story editor, a fight's rolls are spoken, the header does not cover the page on a phone. These were checked by tests and screenshots only.
-  - Tag version 1 (next item) only after this: the branch adds limits to the format (condition depth, media paths, the size of integers, a living hero).
+- [ ] **Try the site with the keyboard only**, and with a screen reader if one is at hand. The audit's fixes for these were checked by tests and screenshots, never by a person: every button shows where focus is, Esc then Tab leaves the story editor, a fight's rolls are spoken, the header does not cover the page on a phone.
+- [ ] **Play the five newer starters through once** on the site's Starters page (*The Ash Road*, *The Clockmaker's Will*, *Market Day at Three Bridges*, *The Sunken Chapel*, *The Lighthouse Year*). They validate and survive random play, but nobody has read them as a reader does.
 - [ ] **Check what Twine's editor does with a broken link**, then fix the comparison.
   - In Twine, link to a passage that does not exist and look at the story map. If it marks the link, the home page's "Checked before players see it" for Twine is "Partly", not "No": change `home.compare.twine3` in `site/strings/en.json` ("Partly: the editor marks broken links") and `pt.json` ("Em parte: o editor marca links quebrados"), and the Twine row of section 4 in `spec/comparison.md`.
 - [ ] **Read Harlowe's license** in a browser (its repository refuses automated requests): <https://foss.heptapod.net/games/harlowe>. Write it in the Twine entry and the table of `spec/comparison.md`, and take it off section 7 ("Not verified").
@@ -40,5 +38,9 @@ Tools, not format changes, which need no new version:
 
 5. **Export to a printable book** of numbered, shuffled sections.
 6. **The engine as a tool server (MCP) for AI assistants**: the assistant tells the story, the engine owns the dice and the state.
+
+7. **Opening a `.gamebook` in the site's playground**, with the package's own pictures and sounds (`readPackage` already runs in a browser). Open question: whether a full player belongs on this site at all, or only in an app.
+
+Never read closely, by the audit or since: the conformance cases one by one, and the prose of the site's example stories. Tests run every case and validate every example, so the risk is in the wording, not in whether they work.
 
 Left out on purpose: a second engine in another language. The conformance suite is ready for one; it is a project of its own.
