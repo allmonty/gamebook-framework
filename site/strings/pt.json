@@ -164,5 +164,14 @@
   "home.t8.title": "Suíte de conformidade",
   "home.t8.text": "Casos de teste neutros de linguagem, para que um motor em TypeScript, Python ou C# jogue cada história igual à referência.",
   "home.end.title": "Seu primeiro livro-jogo está a dez minutos",
-  "home.end.lead": "Abra o playground, mude uma página e jogue. Sem instalar nada, sem conta."
+  "home.end.lead": "Comece o tutorial ou abra o playground, mude uma página e jogue. Sem instalar nada, sem conta.",
+  "nav.tutorial": "Tutorial",
+  "home.cta.tutorial": "Começar o tutorial",
+  "tutorial.title": "Tutorial para escritores",
+  "tutorial.kicker": "Aprenda // jogando",
+  "tutorial.lead": "Oito capítulos curtos levam você da primeira página até lutas, dados e traduções. Cada exemplo é um livro-jogo pequeno que você joga, edita e quebra ali mesmo.",
+  "tutorial.contents": "Capítulos",
+  "tutorial.pager": "Capítulo anterior e próximo",
+  "tutorial.previous": "Anterior",
+  "tutorial.next": "Próximo"
 }

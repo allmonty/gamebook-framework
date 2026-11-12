@@ -164,5 +164,14 @@
   "home.t8.title": "Conformance suite",
   "home.t8.text": "Language-neutral test cases, so an engine in TypeScript, Python or C# plays every story exactly like the reference.",
   "home.end.title": "Your first gamebook is ten minutes away",
-  "home.end.lead": "Open the playground, change a page and play it. No install, no account."
+  "home.end.lead": "Start the tutorial or open the playground, change a page and play it. No install, no account.",
+  "nav.tutorial": "Tutorial",
+  "home.cta.tutorial": "Start the tutorial",
+  "tutorial.title": "Writer's tutorial",
+  "tutorial.kicker": "Learn // by playing",
+  "tutorial.lead": "Eight short chapters take you from your first page to fights, dice and translations. Every example is a tiny gamebook you can play, edit and break right on the page.",
+  "tutorial.contents": "Chapters",
+  "tutorial.pager": "Previous and next chapter",
+  "tutorial.previous": "Previous",
+  "tutorial.next": "Next"
 }

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "id": "hello-world",
+  "lang": "en",
+  "title": "Hello, Neon City",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "gate",
+  "nodes": {
+    "gate": {
+      "text": "Rain hisses on the gate of the neon city. A rune above it flickers: WELCOME, TRAVELLER.",
+      "choices": [
+        {
+          "text": "Walk through the gate",
+          "to": "city"
+        }
+      ]
+    },
+    "city": {
+      "text": "Lights, noise and a thousand stories. Yours starts here.",
+      "ending": "victory"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'chapter.dart';
 import 'embed.dart';
 import 'template.dart';
 
@@ -29,7 +30,81 @@ class SiteBuilder {
     final strings = loadStrings(lang);
     _writePage(lang, 'index.html', strings, _read('templates/index.html'));
     _writePage(lang, 'play.html', strings, _read('templates/play.html'));
+    _buildTutorial(lang, strings);
   }
+
+  /// Every `content/<lang>/*.md` becomes `<lang>/tutorial/<slug>.html`, with
+  /// a contents list and previous/next links; `tutorial/index.html` lists
+  /// them all.
+  void _buildTutorial(String lang, Map<String, String> strings) {
+    final chapters = loadChapters(lang);
+    _writePage(
+      lang,
+      'tutorial/index.html',
+      strings,
+      _read('templates/tutorial-index.html'),
+      {'toc': _toc(chapters, null)},
+    );
+    for (var i = 0; i < chapters.length; i++) {
+      final chapter = chapters[i];
+      _writePage(
+        lang,
+        'tutorial/${chapter.slug}.html',
+        strings,
+        _read('templates/tutorial.html'),
+        {
+          'page.title': '${chapter.title} · ${strings['tutorial.title']}',
+          'toc': _toc(chapters, chapter),
+          'chapter.html': chapter.html,
+          'pager': _pager(
+            i == 0 ? null : chapters[i - 1],
+            i == chapters.length - 1 ? null : chapters[i + 1],
+            strings,
+          ),
+        },
+      );
+    }
+  }
+
+  /// The chapters of [lang], in file-name order.
+  List<Chapter> loadChapters(String lang) {
+    final dir = Directory('${source.path}/content/$lang');
+    if (!dir.existsSync()) return const [];
+    final files =
+        dir
+            .listSync()
+            .whereType<File>()
+            .where((f) => f.path.endsWith('.md'))
+            .toList()
+          ..sort((a, b) => a.path.compareTo(b.path));
+    return [
+      for (final file in files)
+        renderChapter(
+          file.uri.pathSegments.last.replaceFirst(RegExp(r'\.md$'), ''),
+          file.readAsStringSync(),
+          exampleLookup(lang),
+        ),
+    ];
+  }
+
+  static String _toc(List<Chapter> chapters, Chapter? current) => [
+    '<ol class="toc-list">',
+    for (final c in chapters)
+      '<li><a href="${c.slug}.html"${identical(c, current) ? ' aria-current="page"' : ''}>'
+          '${_html.convert(c.title)}</a></li>',
+    '</ol>',
+  ].join();
+
+  static String _pager(
+    Chapter? previous,
+    Chapter? next,
+    Map<String, String> strings,
+  ) => [
+    if (previous != null)
+      '<a class="prev" href="${previous.slug}.html"><span class="label">${strings['tutorial.previous']}</span>${_html.convert(previous.title)}</a>',
+    if (next != null)
+      '<a class="next" href="${next.slug}.html"><span class="label">${strings['tutorial.next']}</span>${_html.convert(next.title)}</a>',
+  ].join();
 
   /// The visitor-facing text for [lang], from `strings/<lang>.json`.
   Map<String, String> loadStrings(String lang) =>
@@ -42,8 +117,9 @@ class SiteBuilder {
     String lang,
     String path,
     Map<String, String> strings,
-    String body,
-  ) {
+    String body, [
+    Map<String, String> extra = const {},
+  ]) {
     final depth = path.split('/').length;
     final values = {
       ...strings,
@@ -52,6 +128,7 @@ class SiteBuilder {
       'root': '../' * depth,
       'path': path,
       'otherLang': lang == 'en' ? 'pt' : 'en',
+      ...extra,
     };
     final page = fillTemplate(_read('templates/layout.html'), {
       ...values,
@@ -71,6 +148,8 @@ class SiteBuilder {
     for (final MapEntry(:key, :value) in strings.entries)
       if (key.startsWith('player.')) key: value,
   }).replaceAll('</', r'<\/');
+
+  static const _html = HtmlEscape();
 
   String _read(String path) => File('${source.path}/$path').readAsStringSync();
 

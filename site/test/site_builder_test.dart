@@ -22,6 +22,21 @@ void main() {
     expect(File('${output.path}/css/site.css').existsSync(), isTrue);
   });
 
+  test('every language has the same chapters, each with a page', () {
+    final builder = SiteBuilder(source: Directory.current, output: output)
+      ..build();
+    final slugs = {
+      for (final lang in SiteBuilder.languages)
+        lang: builder.loadChapters(lang).map((c) => c.slug).toList(),
+    };
+    expect(slugs['en'], isNotEmpty);
+    expect(slugs['pt'], slugs['en']);
+    for (final slug in slugs['en']!) {
+      final page = File('${output.path}/en/tutorial/$slug.html');
+      expect(page.readAsStringSync(), isNot(contains('{{')), reason: slug);
+    }
+  });
+
   test('every language has the same string keys', () {
     final builder = SiteBuilder(source: Directory.current, output: output);
     final keys = {
