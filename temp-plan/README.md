@@ -1,4 +1,4 @@
-# Plan: harden the framework, add schema 8, open the front door
+# Plan: harden the framework, fill the gaps, open the front door
 
 Temporary working plan, written 2026-11-11 after a review of the whole repo and a survey of other gamebook engines (recorded in `../spec/comparison.md`, sections 2, 3 and 8). Delete this folder when every step is done. Read `../AGENTS.md` first; it still rules.
 
@@ -7,7 +7,7 @@ The review found the framework solid (spec, JSON Schema, 112 conformance cases a
 
 - **Five holes**, each confirmed by running the engine (steps 01 to 05).
 - **One structural outlier**: `engines/dart/lib/story.dart`, 929 lines, a third of it the schema-version gate (step 06).
-- **Four gaps against real gamebooks**, chosen by the owner, added together as **schema 8** (steps 07 to 10), joined at the checkpoint by six more (steps 10a to 10f).
+- **Four gaps against real gamebooks**, chosen by the owner, added together as **schema 8** (steps 07 to 10), joined at the checkpoint by six more (steps 10a to 10f). Before release, step 10g merged every schema version into version 1.
 - **The repo is hard to pick up from outside** (steps 11 to 15): the kit for chatbots tells them to write schema 6 while the format is at 7; the presets exist only as Dart code and spec tables; every example lives under `site/`; nothing tells a person or an AI that arrives cold which of three jobs (write a story, build an app, write an engine) starts where; the site never says which schema version a feature needs.
 
 ## The goal
@@ -77,7 +77,8 @@ In the same commit:
 - `spec/llm-kit.md`, regenerated: `(cd engines/dart && dart run gamebook_engine:llm_kit)`; a test fails while it is stale;
 - the feature list in `README.md`.
 
-## What every feature (steps 07 to 10f) also carries
+## What every feature (steps 07 to 10f) also carried
+Since step 10g those features are all version 1, with no gate; a feature after the release needs a new version and a gate again (`CONTRIBUTING.md`). Steps 12 to 15 add no feature.
 - A schema gate: a story below schema 8 that uses the feature is rejected with `needs "schema": 8` at the feature's JSON path, plus an `invalid/<feature>-needs-schema-8.json` case.
 - The site: view model in `site/lib/src/play/`, renderer in `site/lib/src/ui/`, every visitor-facing word in `site/strings/en.json` **and** `pt.json` (never hard-coded in Dart).
 - The tutorial: a section in `site/content/en/<chapter>.md` **and** `site/content/pt/<chapter>.md`, with an example pair `site/examples/<chapter>/<name>.en.json` and `.pt.json`. Copy how the neighbouring sections embed their examples. `site/test/examples_test.dart` requires both languages, no errors, no warnings, and matching structure.
@@ -130,7 +131,7 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 
 ## Waiting on the owner (outward-facing, never do these unasked)
 - Enable GitHub Pages (Settings > Pages > Source: "GitHub Actions"; the workflow is already there); step 14's addresses work only once it is on.
-- Tag a release when schema 8 is merged, so stories and engines can cite a fixed version.
+- Tag a release once the plan is done, so stories and engines can cite a fixed version (version 1 of the format).
 - Decide whether to publish the Dart engine on pub.dev (`publish_to: none` today) and to submit the schema to SchemaStore for editor autocompletion.
 
 ## Left out on purpose
