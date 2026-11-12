@@ -24,7 +24,7 @@ The survey found no other project with a written spec, a conformance suite, rule
 
 ## How to work
 1. Take the lowest-numbered step below that is not `done`. Do only that step. Set it to `in progress` here.
-2. Work on one branch per step, `step-NN-<name>`, cut from an up-to-date `main`. Push it and open its pull request only when the owner asks.
+2. Work on one branch per step, `step-NN-<name>`, cut from an up-to-date `main`. Push it and open its pull request only when the owner asks. Exception (owner, 2026-11-12): steps 10a to 10d share one branch and pull request (`steps-10a-10d`), and so do 10e and 10f, each step still in its own commits.
 3. One step is one commit unless the step says otherwise. Each commit passes on its own (see "Checks").
 4. In the same commit: set the step to `done` here and fill its "Handoff notes" (what you did differently, what the next step should know). The commit hash goes into the table with the next commit.
 5. Stuck: set `blocked`, write why in the handoff notes, ask the owner.
