@@ -125,7 +125,10 @@ class PlaySession {
     choices: _engine.offer != null || _engine.combat != null
         ? const []
         : [for (final c in _engine.choices) _choice(c)],
-    stats: [for (final s in rules.stats) _stat(s)],
+    stats: [
+      for (final s in rules.stats)
+        if (!s.hidden) _stat(s),
+    ],
     pack: PackView(
       items: [for (final id in _engine.state.inventory) _item(id)],
       used: _engine.slotsUsed,

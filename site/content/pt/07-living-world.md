@@ -103,11 +103,34 @@ examples/07-living-world/captured
 
 Dois dos três finais são derrotas, e o herói está vivo nos dois. Vida em 0 continua sendo morte, diga a página o que disser.
 
+## Regras em toda página
+
+Algumas coisas acontecem em toda página: uma febre drena você até ser curada, um feitiço passa depois de alguns passos, um herói se recupera um pouco sempre que não há luta. Escreva isso uma vez, em `rules.everyPage` (schema 8):
+
+```gamebook
+examples/07-living-world/marsh-fever
+```
+
+```json
+"everyPage": [
+  { "if": { "flag": "fever" }, "effects": [ { "stat": "stamina", "add": -1 } ] },
+  { "if": { "stat": "hex", "gte": 1 }, "effects": [ { "stat": "hex", "add": -1 } ] }
+],
+"bonuses": [ { "if": { "stat": "hex", "gte": 1 }, "bonus": { "skill": -2 } } ]
+```
+
+- Cada regra vale em toda página em que se entra, a primeira inclusive, **antes** dos efeitos da própria página. Então a febre pega nos juncos começa a drenar na página seguinte, e a página do curandeiro drena uma última vez antes da cura.
+- **Um efeito que passa sozinho** é um contador: a bruxa põe `hex` em 3, a segunda regra desconta página a página, e o bônus (capítulo 4) vale enquanto ele estiver acima de 0. Posto em 3, ele dura as próximas três páginas.
+- `"hidden": true` tira o contador da barra de atributos: ele continua sendo um atributo para condições, efeitos e `{hex}`.
+- `"calm": true` numa regra pula páginas com luta: `{ "calm": true, "effects": [ { "stat": "stamina", "add": 1 } ] }` cura entre as lutas.
+- As regras valem em ordem, e uma regra que leva a vida do herói a 0 encerra o jogo como qualquer outro efeito.
+
 ### Experimente
 
 - Na estalagem, mude `"gte": 4` para `"gte": 2`: o estalajadeiro cede mais cedo.
 - No poço, adicione a parte `{ "if": { "stat": "luck", "gte": 12 }, "text": "Você se sente muito sortudo." }`.
 - No escritório, torne a conquista Cartógrafo visível tirando `"hidden": true`.
 - Na fronteira, troque o `"defeat"` da cela por `"death"` e veja o que o leitor fica sabendo.
+- No pântano, ponha o `hex` da bruxa em 5: agora até o caminho do curandeiro deixa você enfeitiçado na vala.
 
 A seguir: garantir que um livro longo não tem links quebrados, e compartilhá-lo.

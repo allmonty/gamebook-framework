@@ -8,7 +8,8 @@
     "stats": {
       "hex": {
         "label": "Hex",
-        "roll": "0"
+        "roll": "0",
+        "hidden": true
       }
     },
     "everyPage": [
@@ -60,7 +61,7 @@
       ]
     },
     "reeds": {
-      "text": "Clouds of midges rise from the reeds. By the time you are through them your skin burns and your head swims: marsh fever. It will drain you a little with every step until someone treats it.",
+      "text": "Clouds of midges rise from the reeds. By the time you are through them your skin burns and your head swims: marsh fever. From now on every step costs you 1 Stamina, until someone treats it.",
       "effects": [
         {
           "set": "fever"
@@ -78,7 +79,7 @@
       ]
     },
     "hut": {
-      "text": "A hedge witch opens the door, takes one look at your muddy boots and spits a word at you. Your arms go heavy: a hex, -2 Skill while it lasts. \"It'll wear off in three steps,\" she says, and shuts the door.",
+      "text": "A hedge witch opens the door, takes one look at your muddy boots and spits a word at you. Your arms go heavy: a hex, -2 Skill. \"It'll wear off in three steps,\" she says, and shuts the door.",
       "effects": [
         {
           "stat": "hex",
@@ -93,25 +94,38 @@
       ]
     },
     "stones": {
-      "text": "The stones lead deeper in. Hex {hex}, Skill {skill}.",
-      "choices": [
+      "text": [
+        "The stones lead deeper in. Thin smoke rises from a hummock to your left; ahead, a deep ditch cuts across the way out.",
         {
-          "text": "Go on",
-          "to": "heron"
+          "if": {
+            "stat": "hex",
+            "gte": 1
+          },
+          "text": "The witch's hex still weighs on your arms (-2 Skill)."
         }
-      ]
-    },
-    "heron": {
-      "text": "A grey heron watches you pass. Hex {hex}, Skill {skill}.",
+      ],
       "choices": [
         {
-          "text": "Go on",
+          "text": "Climb the hummock towards the smoke",
           "to": "healer"
+        },
+        {
+          "text": "Make straight for the ditch",
+          "to": "ditch"
         }
       ]
     },
     "healer": {
-      "text": "On a dry hummock an old man is boiling willow bark. He hands you a cup without a word. The fever breaks.",
+      "text": [
+        "On the hummock an old man is boiling willow bark. He hands you a cup without a word, and the fever breaks.",
+        {
+          "if": {
+            "stat": "hex",
+            "gte": 1
+          },
+          "text": "The witch's hex still weighs on your arms (-2 Skill)."
+        }
+      ],
       "effects": [
         {
           "clear": "fever"
@@ -119,13 +133,22 @@
       ],
       "choices": [
         {
-          "text": "Thank him and go on",
+          "text": "Thank him and go on to the ditch",
           "to": "ditch"
         }
       ]
     },
     "ditch": {
-      "text": "A deep ditch cuts across the last stretch. You will have to jump it: roll two dice, and you need your Skill ({skill}) or less.",
+      "text": [
+        "The ditch is too wide to wade. You will have to jump it: roll two dice, and you need your Skill ({skill}) or less.",
+        {
+          "if": {
+            "stat": "hex",
+            "gte": 1
+          },
+          "text": "The witch's hex still weighs on your arms (-2 Skill)."
+        }
+      ],
       "choices": [
         {
           "text": "Jump",

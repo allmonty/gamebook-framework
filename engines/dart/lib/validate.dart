@@ -172,6 +172,7 @@ class _Validator {
     }
     _creation();
     _ruleBonuses();
+    _pageRules();
     _image('cover', story.cover);
     for (final MapEntry(:key, :value) in story.items.entries) {
       _image('items.$key.image', value.image);
@@ -202,6 +203,17 @@ class _Validator {
     _summaries();
     _reachability();
     return issues;
+  }
+
+  /// Every-page rules: conditions and effects checked like any other.
+  void _pageRules() {
+    final rules = story.rules.everyPage;
+    for (var i = 0; i < rules.length; i++) {
+      if (rules[i].condition case final c?) {
+        _condition('rules.everyPage[$i].if', c);
+      }
+      _effects('rules.everyPage[$i].effects', rules[i].effects);
+    }
   }
 
   /// Rule bonuses: conditions and stats checked like any other.

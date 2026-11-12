@@ -777,6 +777,13 @@ class GameEngine {
       visited: {..._state.visited, id},
       visits: {..._state.visits, id: _state.visitsTo(id) + 1},
     );
+    // Every-page rules come first, so a counter a page sets starts with the
+    // next page (B10, schema 8).
+    for (final rule in story.rules.everyPage) {
+      if (rule.calm && next.combat != null) continue;
+      if (rule.condition case final c? when !evaluate(c, _state)) continue;
+      _applyEffects(rule.effects, events);
+    }
     if (!next.once || first) _applyEffects(next.effects, events);
     if (next.music case final music?) {
       final file = music == stopMusic ? null : music;

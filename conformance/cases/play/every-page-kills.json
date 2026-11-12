@@ -1,0 +1,79 @@
+{
+  "description": "An every-page rule that brings health to 0 ends the game in death, and the page's own effects do not apply.",
+  "spec": [
+    "B4",
+    "B10"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "stats": {
+        "tick": {
+          "label": "Tick",
+          "roll": "0",
+          "hidden": true
+        }
+      },
+      "everyPage": [
+        {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -1
+            }
+          ]
+        }
+      ]
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "B",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "effects": [
+          {
+            "set": "reached"
+          }
+        ],
+        "choices": [
+          {
+            "text": "A",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 2,
+      "max": 24
+    },
+    "luck": 8,
+    "tick": 0
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "b",
+    "ending": "death",
+    "flags": []
+  }
+}

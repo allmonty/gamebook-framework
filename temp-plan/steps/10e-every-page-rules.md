@@ -30,4 +30,10 @@ Spec B4 (rules), B10 step 4 (when the rules run, and that health at 0 stops them
 On the site the fever drains Stamina page by page until cured, and the hex wears off after 3 pages, in both languages; checks green.
 
 ## Handoff notes
-(fill in)
+- One commit, on the shared branch `steps-10e-10f`, built on the owner's decisions above.
+- `PageRule(effects, {condition, calm})` in `rules_spec.dart`, from `rules.everyPage` (`effects` required, `if` and `calm` optional). `GameEngine._enter` applies the rules right after recording the visit and **before** the page's effects. They go through `_applyEffects`, so health at 0 stops them like any effect, and a death on entry leaves the page's own effects unapplied.
+- `StatSpec.hidden`/`StatRules.hidden`, merged with the preset like `min`. The site leaves hidden stats out of the stats bar and the creation panel; placeholders and conditions still see them.
+- `Story.effectLists()` includes the rules' effects (path `rules.everyPage[i].effects`), so the gate and the validator's B16 summaries count them. The validator checks each rule's `if` and effects.
+- The draft example changed in one way: the hex always wore off before the ditch, so it never mattered. Now the stones lead either to the healer (cured, and the hex runs out on the way) or straight to the ditch (jumping hexed). `examples/07-living-world/marsh-fever`: the simulator gives 78% out, 22% in the mud, nothing stuck. A site test checks each page's Stamina and Skill in both languages.
+- Cases: `every-page-rule`, `-calm`, `-before-page`, `-countdown` (with a rule bonus), `-order`, `-kills`, and the gate cases for `everyPage` and `hidden`. Stamina is given with a ceiling of 24 there: a plain number would also be its ceiling under Fighting Fantasy.
+- Tutorial "Rules on every page" / "Regras em toda página" in chapter 7, and a "Try it" line.

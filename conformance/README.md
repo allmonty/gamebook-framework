@@ -82,7 +82,7 @@ Play cases cover every rule of Part B:
 - **Stats and creation:** the rolls of both presets in B8 order, rerolls, ceilings and limits, floors below 0 (`min`), quantities in effects, creation picks.
 - **Items:** usable items, bonuses (of items, and of rules while a condition holds), pack capacity with `auto` and `choose`, offers (in order, left, ignored, swapped, discarded at the end), containers (room, and what is lost when one goes), `takeAll`; counted items (slots per stack, give, take and `has` with a count, use, `auto` and `choose` pickup with what fits, lost room, `takeAll`, a cap per item).
 - **Combat:** `opposed`, `vs-defense` and `table` rounds, duels, fights against several at once, armor, luck in fights (lucky, unlucky, when it is not offered, kills, the group total, after armor), fleeing (free, and at the cost of a round), items in a fight, the wounded and round-limit exits and their order.
-- **The rest:** the journal, page audio, achievements.
+- **The rest:** the journal, page audio, achievements, rules on every page (calm pages, order, before the page, a countdown, a rule that kills).
 
 Invalid cases cover the schema gate of every version, unknown references, impossible combat rules and the common load errors. Lint cases cover every warning code of B16, translations included.
 

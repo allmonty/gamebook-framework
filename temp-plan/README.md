@@ -47,7 +47,7 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 10b | [A bonus that depends on a condition](steps/10b-conditional-bonus.md) | feature | done | f2d6096 |
 | 10c | [A flee that costs a round](steps/10c-flee-costs-round.md) | feature | done | 3858d96 |
 | 10d | [Item counts in text, and a cap on a counted item](steps/10d-item-counts-in-text.md) | feature | done | a9a50fb |
-| 10e | [Rules on every page](steps/10e-every-page-rules.md) | feature | todo | |
+| 10e | [Rules on every page](steps/10e-every-page-rules.md) | feature | done | |
 | 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | todo | |
 | 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | todo | |
 | 12 | [Presets as data](steps/12-presets-as-data.md) | docs + test | todo | |

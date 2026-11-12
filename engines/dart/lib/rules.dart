@@ -13,6 +13,7 @@ class StatRules {
     required this.max,
     this.limit,
     this.min = 0,
+    this.hidden = false,
   });
 
   final String id;
@@ -27,6 +28,9 @@ class StatRules {
 
   /// The floor (schema 8), 0 unless the story says otherwise.
   final int min;
+
+  /// Kept off the stats bar (schema 8): a counter the reader need not see.
+  final bool hidden;
 }
 
 enum CombatMode {
@@ -248,6 +252,7 @@ List<StatRules> _mergeStats(
             (overrides[id]?.limit != null ? false : base[id]?.max),
         limit: overrides[id]?.limit ?? base[id]?.limit,
         min: overrides[id]?.min ?? base[id]?.min,
+        hidden: overrides[id]?.hidden ?? base[id]?.hidden,
       ),
   };
   if (merged.isEmpty) {
@@ -262,6 +267,7 @@ List<StatRules> _mergeStats(
         max: value.max ?? false,
         limit: _checkedLimit(key, value),
         min: _checkedMin(key, value),
+        hidden: value.hidden ?? false,
       ),
   ];
 }

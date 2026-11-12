@@ -118,8 +118,10 @@ String? _schema7(Story story) {
 String? _schema8(Story story) {
   if (story.coverAlt != null) return 'coverAlt';
   if (story.rules.bonuses.isNotEmpty) return 'rules.bonuses';
+  if (story.rules.everyPage.isNotEmpty) return 'rules.everyPage';
   for (final MapEntry(:key, :value) in story.rules.stats.entries) {
     if (value.min != null) return 'rules.stats.$key.min';
+    if (value.hidden != null) return 'rules.stats.$key.hidden';
   }
   for (final MapEntry(:key, :value) in story.items.entries) {
     if (value.imageAlt != null) return 'items.$key.imageAlt';

@@ -1,0 +1,77 @@
+{
+  "description": "An every-page rule applies on every page entered, the start page included.",
+  "spec": [
+    "B4",
+    "B10"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "stats": {
+        "tick": {
+          "label": "Tick",
+          "roll": "0",
+          "hidden": true
+        }
+      },
+      "everyPage": [
+        {
+          "effects": [
+            {
+              "stat": "tick",
+              "add": 1
+            }
+          ]
+        }
+      ]
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "B",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "A",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 10,
+      "max": 24
+    },
+    "luck": 8,
+    "tick": 0
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "stats": {
+      "tick": 3
+    }
+  }
+}

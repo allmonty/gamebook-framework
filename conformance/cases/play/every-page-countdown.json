@@ -1,0 +1,118 @@
+{
+  "description": "A counter set to 3 on a page lasts the next three pages, and a rule bonus lasts while it is above 0.",
+  "spec": [
+    "B4",
+    "B10"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "stats": {
+        "tick": {
+          "label": "Tick",
+          "roll": "0",
+          "hidden": true
+        }
+      },
+      "everyPage": [
+        {
+          "if": {
+            "stat": "tick",
+            "gte": 1
+          },
+          "effects": [
+            {
+              "stat": "tick",
+              "add": -1
+            }
+          ]
+        }
+      ],
+      "bonuses": [
+        {
+          "if": {
+            "stat": "tick",
+            "gte": 1
+          },
+          "bonus": {
+            "skill": -2
+          }
+        }
+      ]
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "stat": "tick",
+            "set": 3
+          }
+        ],
+        "choices": [
+          {
+            "text": "B",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "C",
+            "to": "c"
+          }
+        ]
+      },
+      "c": {
+        "text": "C",
+        "choices": [
+          {
+            "text": "D",
+            "to": "d"
+          }
+        ]
+      },
+      "d": {
+        "text": "D",
+        "choices": [
+          {
+            "text": "A",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 10,
+      "max": 24
+    },
+    "luck": 8,
+    "tick": 0
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "c",
+    "stats": {
+      "tick": 1,
+      "skill": 7
+    }
+  }
+}

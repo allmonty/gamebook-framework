@@ -1,0 +1,183 @@
+{
+  "schema": 8,
+  "id": "marsh-fever",
+  "lang": "pt",
+  "title": "Febre do Pântano",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "hex": {
+        "label": "Feitiço",
+        "roll": "0",
+        "hidden": true
+      },
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    },
+    "everyPage": [
+      {
+        "if": {
+          "flag": "fever"
+        },
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": -1
+          }
+        ]
+      },
+      {
+        "if": {
+          "stat": "hex",
+          "gte": 1
+        },
+        "effects": [
+          {
+            "stat": "hex",
+            "add": -1
+          }
+        ]
+      }
+    ],
+    "bonuses": [
+      {
+        "if": {
+          "stat": "hex",
+          "gte": 1
+        },
+        "bonus": {
+          "skill": -2
+        }
+      }
+    ]
+  },
+  "start": "edge",
+  "nodes": {
+    "edge": {
+      "text": "A calçada termina na beira do pântano. Daqui em diante são juncos, água escura e pedras de travessia.",
+      "choices": [
+        {
+          "text": "Entrar na água",
+          "to": "reeds"
+        }
+      ]
+    },
+    "reeds": {
+      "text": "Nuvens de mosquitos sobem dos juncos. Quando você passa por elas, a pele arde e a cabeça gira: febre do pântano. A partir de agora cada passo custa 1 de Energia, até alguém tratar.",
+      "effects": [
+        {
+          "set": "fever"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir a fumaça até uma cabana",
+          "to": "hut"
+        },
+        {
+          "text": "Ficar nas pedras de travessia",
+          "to": "stones"
+        }
+      ]
+    },
+    "hut": {
+      "text": "Uma bruxa abre a porta, olha suas botas enlameadas e cospe uma palavra para você. Seus braços pesam: um feitiço, -2 de Habilidade. \"Passa em três passos\", diz ela, e fecha a porta.",
+      "effects": [
+        {
+          "stat": "hex",
+          "set": 3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar para as pedras",
+          "to": "stones"
+        }
+      ]
+    },
+    "stones": {
+      "text": [
+        "As pedras levam mais para dentro. Uma fumaça fina sobe de um morrinho à esquerda; à frente, uma vala funda corta a saída.",
+        {
+          "if": {
+            "stat": "hex",
+            "gte": 1
+          },
+          "text": "O feitiço da bruxa ainda pesa nos seus braços (-2 de Habilidade)."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Subir o morrinho até a fumaça",
+          "to": "healer"
+        },
+        {
+          "text": "Ir direto para a vala",
+          "to": "ditch"
+        }
+      ]
+    },
+    "healer": {
+      "text": [
+        "No morrinho um velho ferve casca de salgueiro. Ele lhe dá uma caneca sem dizer nada, e a febre passa.",
+        {
+          "if": {
+            "stat": "hex",
+            "gte": 1
+          },
+          "text": "O feitiço da bruxa ainda pesa nos seus braços (-2 de Habilidade)."
+        }
+      ],
+      "effects": [
+        {
+          "clear": "fever"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Agradecer e seguir até a vala",
+          "to": "ditch"
+        }
+      ]
+    },
+    "ditch": {
+      "text": [
+        "A vala é larga demais para atravessar a pé. Você vai ter que pular: role dois dados, e precisa da sua Habilidade ({skill}) ou menos.",
+        {
+          "if": {
+            "stat": "hex",
+            "gte": 1
+          },
+          "text": "O feitiço da bruxa ainda pesa nos seus braços (-2 de Habilidade)."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Pular",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "skill",
+            "pass": "out",
+            "fail": "mud"
+          }
+        }
+      ]
+    },
+    "mud": {
+      "text": "Você cai antes da margem e a lama pega você até a cintura. Leva uma hora para sair, e a luz está acabando. Você volta.",
+      "ending": "defeat"
+    },
+    "out": {
+      "text": "Você cai em terra firme. À frente, o pântano dá lugar a campos e a uma estrada.",
+      "ending": "victory"
+    }
+  }
+}

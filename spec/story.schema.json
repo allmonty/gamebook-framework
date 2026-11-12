@@ -215,6 +215,10 @@
               "min": {
                 "description": "Schema 8. The floor, which may be negative (default 0); not on the health stat",
                 "type": "integer"
+              },
+              "hidden": {
+                "description": "Schema 8. Kept off the stats bar",
+                "type": "boolean"
               }
             }
           }
@@ -426,6 +430,31 @@
                 "additionalProperties": {
                   "type": "integer"
                 }
+              }
+            }
+          }
+        },
+        "everyPage": {
+          "description": "Schema 8. Effects applied on entering every page, before its own",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "effects"
+            ],
+            "properties": {
+              "if": {
+                "$ref": "#/$defs/condition"
+              },
+              "effects": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/effect"
+                }
+              },
+              "calm": {
+                "type": "boolean"
               }
             }
           }

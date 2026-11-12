@@ -190,6 +190,33 @@ void main() {
     }
   });
 
+  test('marsh fever drains page by page; the hex wears off on its own', () {
+    for (final lang in ['en', 'pt']) {
+      // Skill 9, Stamina 18, Luck 9.
+      final session = PlaySession.start(
+        storyFile('examples/07-living-world/marsh-fever.$lang.json'),
+        random: ScriptedRandom([3, 3, 3, 3]),
+      );
+      int stat(String id) =>
+          session.view.stats.firstWhere((s) => s.id == id).value;
+      expect(
+        session.view.stats.map((s) => s.id),
+        isNot(contains('hex')),
+        reason: '$lang: the hex counter is hidden',
+      );
+      session.choose(0); // the reeds: fever caught, no drain yet
+      expect(stat('stamina'), 18, reason: lang);
+      session.choose(0); // the hut: -1, and the hex
+      expect((stat('stamina'), stat('skill')), (17, 7), reason: lang);
+      session
+        ..choose(0) // the stones: hex 2
+        ..choose(0); // the healer: hex 1, last drain, cured
+      expect((stat('stamina'), stat('skill')), (15, 7), reason: lang);
+      session.choose(0); // the ditch: hex 0
+      expect((stat('stamina'), stat('skill')), (15, 9), reason: lang);
+    }
+  });
+
   test('without showTitles the heading is the story title', () {
     final session = PlaySession.start(
       conformanceStory('locked-choice'),

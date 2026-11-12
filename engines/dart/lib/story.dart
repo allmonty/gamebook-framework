@@ -762,12 +762,15 @@ class Story {
   }
 
   /// Every list of effects in the story with its JSON path: pages, choices,
-  /// checks, table outcomes, items' use and creation picks.
+  /// checks, table outcomes, items' use, every-page rules and creation picks.
   Iterable<(String, List<Effect>)> effectLists() sync* {
     for (final MapEntry(:key, :value) in items.entries) {
       if (value.use case final use?) {
         yield ('items.$key.use.effects', use.effects);
       }
+    }
+    for (var i = 0; i < rules.everyPage.length; i++) {
+      yield ('rules.everyPage[$i].effects', rules.everyPage[i].effects);
     }
     final picks = rules.creation?.picks ?? const <PickGroup>[];
     for (var g = 0; g < picks.length; g++) {
