@@ -1,4 +1,5 @@
 import 'package:gamebook_engine/engine.dart';
+import 'package:gamebook_engine/quantity.dart';
 import 'package:gamebook_engine/rules.dart';
 import 'package:gamebook_engine/state.dart';
 import 'package:gamebook_engine/story.dart';
@@ -154,6 +155,21 @@ void main() {
         expect(engine.state.stat('skill'), 9);
       },
     );
+
+    test('a pick that takes health to 0 stops the picks after it', () {
+      final story = Story.fromJson(storyJson(rules: creation()));
+
+      final engine = start(
+        story,
+        effects: const [
+          StatChange('stamina', Quantity.value(-20)),
+          StatChange('stamina', Quantity.value(5)),
+        ],
+      );
+
+      expect(engine.state.stat('stamina'), 0);
+      expect(engine.ending, Ending.death);
+    });
 
     test('a pack too small drops the newest pick', () {
       final story = Story.fromJson(storyJson(rules: creation()));

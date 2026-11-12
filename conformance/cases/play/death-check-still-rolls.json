@@ -1,0 +1,86 @@
+{
+  "description": "After a fatal choice effect the check still rolls and picks the target, but its effects do not apply.",
+  "spec": [
+    "B4",
+    "B9",
+    "B10"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Fall",
+            "effects": [
+              {
+                "stat": "stamina",
+                "add": -5
+              }
+            ],
+            "check": {
+              "roll": "2d6",
+              "op": "gte",
+              "vs": 7,
+              "pass": "p",
+              "fail": "f",
+              "effects": [
+                {
+                  "stat": "stamina",
+                  "add": 4
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "p": {
+        "text": "P",
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      },
+      "f": {
+        "text": "F",
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 2,
+    "luck": 8
+  },
+  "dice": [
+    6,
+    6
+  ],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "p",
+    "ending": "death",
+    "stats": {
+      "stamina": 0
+    }
+  }
+}

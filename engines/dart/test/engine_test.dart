@@ -273,6 +273,50 @@ void main() {
     });
   });
 
+  group('health at 0 is final (B4)', () {
+    final story = Story.fromJson(
+      jsonDecode('''
+{
+  "schema": 1, "id": "final", "lang": "en", "title": "Final",
+  "rules": { "preset": "fighting-fantasy" },
+  "start": "a",
+  "nodes": {
+    "a": { "text": "A",
+      "choices": [
+        { "text": "Fall", "to": "spring",
+          "effects": [ { "stat": "stamina", "add": -5 } ] },
+        { "text": "Fall and drink", "to": "a",
+          "effects": [ { "stat": "stamina", "add": -5 },
+            { "stat": "stamina", "add": 4 }, { "set": "drank" } ] }
+      ] },
+    "spring": { "text": "Spring", "effects": [ { "stat": "stamina", "add": 4 } ],
+      "choices": [ { "text": "On", "to": "a" } ] }
+  }
+}''') as Map<String, Object?>,
+    );
+
+    test('a page entered after death applies no effects', () {
+      final (engine, _) = start(story, initial: stats(stamina: 2));
+
+      final events = engine.choose(0);
+
+      expect(engine.node.id, 'spring');
+      expect(engine.state.visited, contains('spring'));
+      expect(engine.state.stat('stamina'), 0);
+      expect((events.last as Ended).ending, Ending.death);
+    });
+
+    test('effects after the fatal one in a list do not apply', () {
+      final (engine, _) = start(story, initial: stats(stamina: 2));
+
+      engine.choose(1);
+
+      expect(engine.state.stat('stamina'), 0);
+      expect(engine.state.flags, isNot(contains('drank')));
+      expect(engine.ending, Ending.death);
+    });
+  });
+
   group('fights', () {
     final story = arena();
 

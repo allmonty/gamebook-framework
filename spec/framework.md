@@ -135,7 +135,7 @@ Each stat: `{ "label": string, "roll": dice, "max": bool }`.
 - `roll`: dice notation (B8) rolled at character creation. A plain integer gives a fixed start (`"0"` for gold).
 - `max: true`: the creation roll is also the ceiling. Effects can never raise the stat above it (healing stops at full health).
 - Every stat is clamped at 0 from below.
-- `health` names the stat that means "alive". When it reaches 0 the game ends with a **death** ending, wherever that happens.
+- `health` names the stat that means "alive". When it reaches 0 the game ends with a **death** ending, wherever that happens. Health at 0 is final: from then on no effect applies, so nothing later in the same action (or the game) can bring the hero back (B9, B10).
 
 ### Stat limits and quantities (schema 5)
 `limit` (integer ≥ 1) is a ceiling that does not depend on the roll: `{ "label": "Gold", "roll": "0", "limit": 50 }` starts at 0 and can never pass 50. A stat has either `max: true` or a `limit`, not both. A creation roll above the limit is cut to it.
@@ -351,7 +351,7 @@ An effect is an object with exactly one kind:
 
 `give` follows the story's inventory rules (B4): added at once, refused when the pack is full (`pickup: "auto"`), or turned into an offer (`pickup: "choose"`).
 
-Effects in a list apply in order.
+Effects in a list apply in order, except that once the `health` stat is 0 no further effect applies, in this list or any later one (B4).
 
 ## B10. Choices
 ```json
@@ -401,7 +401,7 @@ Locked choices are shown **disabled** with their reason, and can't be chosen.
 2. Apply the choice's `effects`.
 3. If there is a `check`: roll it, apply `check.effects`, pick `pass` or `fail` as the target. If there is a `table`: roll it, apply the outcome's `effects` and use its `to`. Otherwise the target is `to`. A `once` choice is marked as taken at this point.
 4. **Enter the target node**: record it as visited and count the visit. Apply its `effects` (skipped if `once` and it was already visited).
-5. If the `health` stat is 0 (after step 2, 3 or 4) the game ends with **death**, whatever the node says.
+5. If the `health` stat is 0 (after step 2, 3 or 4) the game ends with **death**, whatever the node says. Once health is 0, the steps after it still run but apply no effects: a check or table still rolls and decides the target, and the target is still entered (visited, visit counted, music and sound as usual).
 6. If the node has `ending`, the game ends. If it has `combat`, the fight starts.
 
 While there are pending offers (B4) no choice can be taken and no fight round can be played until each offer is resolved.

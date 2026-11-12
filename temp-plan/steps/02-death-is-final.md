@@ -23,4 +23,7 @@ The existing case `conformance/cases/play/death-at-zero-health.json` (dies on a 
 The three cases pass, the old death case passes unchanged, checks green.
 
 ## Handoff notes
-(fill in)
+- As planned: `_dead` in `engine.dart` (also used by `ending`) and a `break` at the top of the loops in `_applyEffects` and `_applyCreation`. `achieve` is an effect too, so it is also skipped after death.
+- Tests: two engine tests (choice kills then the page would heal; `[-5, +4, set]` in one list) and one creation test (a pick at -20 then +5). All three fail without the fix. The creation one needs `Quantity.value(...)`, not a bare int, in `StatChange`.
+- Cases: `death-is-final.json`, `death-stops-effect-list.json`, `death-check-still-rolls.json` (2d6 consumed, pass target entered). `death-at-zero-health.json` unchanged and still passes. The conformance README's coverage line mentions it.
+- Done on the branch `step-02-death-is-final` from `main`.
