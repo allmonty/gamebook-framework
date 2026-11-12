@@ -641,8 +641,15 @@ bool stateFits(GameState state, Story story, Rules rules) {
       !stats.containsAll(state.stats.keys)) {
     return false;
   }
+  if (!state.stats.values.every(
+    (s) => s.value >= 0 && (s.max == null || s.value <= s.max!),
+  )) {
+    return false;
+  }
   if (!state.inventory.every(item) || !state.offers.every(item)) return false;
-  if (!state.visited.every(node) || !state.visits.keys.every(node)) {
+  if (!state.visited.every(node) ||
+      !state.visits.keys.every(node) ||
+      !state.visits.values.every((n) => n >= 1)) {
     return false;
   }
   if (!state.journal.every(story.journal.containsKey)) return false;
@@ -650,15 +657,27 @@ bool stateFits(GameState state, Story story, Rules rules) {
     final hash = taken.lastIndexOf('#');
     final choices = story.nodes[taken.substring(0, hash < 0 ? 0 : hash)];
     final index = int.tryParse(taken.substring(hash + 1));
-    if (choices == null || index == null || index >= choices.choices.length) {
+    if (choices == null ||
+        index == null ||
+        index < 0 ||
+        index >= choices.choices.length) {
       return false;
     }
   }
   if (state.combat case final fight?) {
     final enemies = current.combat?.enemies;
+    bool enemy(int i) => i >= 0 && i < (enemies?.length ?? 0);
     if (enemies == null ||
         fight.enemyHealth.length != enemies.length ||
-        fight.enemy >= enemies.length) {
+        !enemy(fight.enemy)) {
+      return false;
+    }
+    for (var i = 0; i < enemies.length; i++) {
+      final health = fight.enemyHealth[i];
+      if (health < 0 || health > enemies[i].health) return false;
+    }
+    if (fight.luck case final luck?
+        when !enemy(luck.enemy) || luck.dealt < 0 || luck.taken < 0) {
       return false;
     }
   }

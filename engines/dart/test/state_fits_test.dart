@@ -72,6 +72,22 @@ void main() {
       saved.copyWith(taken: {'door#5'}),
       null,
     ),
+    'a stat is below 0': (
+      saved.copyWith(stats: {...stats, 'luck': const StatValue(-5, 8)}),
+      null,
+    ),
+    'a stat is above its ceiling': (
+      saved.copyWith(stats: {...stats, 'luck': const StatValue(9, 8)}),
+      null,
+    ),
+    'a taken choice has a negative index': (
+      saved.copyWith(taken: {'door#-2'}),
+      null,
+    ),
+    'a page was visited 0 times': (
+      saved.copyWith(visits: {...saved.visits, 'door': 0}),
+      null,
+    ),
     'a fight is under way on a page without one': (
       saved.withCombat(const CombatState(0, [3])),
       null,
@@ -99,5 +115,58 @@ void main() {
     final fighting = saved.withCombat(const CombatState(0, [2]));
     expect(fits(fighting, arena()), isTrue);
     expect(fits(fighting, arena(enemies: 2)), isFalse);
+  });
+
+  group('a fight with impossible numbers does not fit', () {
+    final arena = story(
+      mutate: (j) => nodes(j)['door'] = {
+        'text': 'Two rats.',
+        'combat': {
+          'enemies': [
+            {'name': 'Rat', 'attack': 1, 'health': 2},
+            {'name': 'Big rat', 'attack': 1, 'health': 4},
+          ],
+          'win': 'treasure',
+        },
+      },
+    );
+    LuckChance luck({int enemy = 0, int dealt = 2, int taken = 0}) =>
+        LuckChance(enemy: enemy, dealt: dealt, taken: taken);
+
+    final bad = <String, CombatState>{
+      'the enemy index is negative': const CombatState(-1, [2, 4]),
+      'an enemy health is negative': const CombatState(0, [-3, 4]),
+      'an enemy health is above its start': const CombatState(0, [2, 5]),
+      'the luck test names a negative enemy': CombatState(0, [
+        2,
+        4,
+      ], luck(enemy: -1)),
+      'the luck test names an enemy past the list': CombatState(0, [
+        2,
+        4,
+      ], luck(enemy: 2)),
+      'the luck test has a negative wound dealt': CombatState(0, [
+        2,
+        4,
+      ], luck(dealt: -1)),
+      'the luck test has a negative wound taken': CombatState(0, [
+        2,
+        4,
+      ], luck(taken: -1)),
+    };
+    for (final MapEntry(:key, value: fight) in bad.entries) {
+      test(key, () {
+        expect(fits(saved.withCombat(fight), arena), isFalse);
+      });
+    }
+
+    test('a fight saved with an open luck test still fits', () {
+      final fight = CombatState(1, [0, 3], luck(enemy: 1, dealt: 1, taken: 2));
+      final reloaded = GameState.fromJson(
+        jsonDecode(jsonEncode(saved.withCombat(fight).toJson()))
+            as Map<String, Object?>,
+      );
+      expect(fits(reloaded, arena), isTrue);
+    });
   });
 }
