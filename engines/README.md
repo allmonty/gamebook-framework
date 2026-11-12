@@ -8,7 +8,7 @@
 New engines are welcome: TypeScript for the web, Python for tools, C# for Unity, anything.
 
 1. Make a folder `engines/<language>/` (one per language; lowercase, e.g. `typescript`, `python`).
-2. Implement the spec ([../spec/framework.md](../spec/framework.md) Part B) for the versions you choose, starting at 1. Keep the engine **pure**: no UI and no file or network I/O in its core, and **randomness passed in**, so tests can script the dice.
+2. Implement the spec ([../spec/framework.md](../spec/framework.md) Part B) for the versions you choose, starting at 1. Keep the engine **pure**: no UI and no file or network I/O in its core, and **randomness passed in**, so tests can script the dice. The two presets are data in [../spec/presets/](../spec/presets/): build them in from those files rather than from the tables in B4.
 3. Write a runner for the [conformance cases](../conformance/README.md). It reads the JSON files in place (do not copy them), so new cases reach every engine. `dart/test/conformance_test.dart` is about 200 lines and a good model. The `lint` cases are optional: run them only if the engine reports warnings (spec B16).
 4. Add a CI job for it in `.github/workflows/ci.yml` (build, lint, its own tests, the conformance runner).
 5. Add its row to the table above, with the versions it supports and passes. An engine may skip cases for versions it does not claim; it must pass all the others.

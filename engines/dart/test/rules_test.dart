@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:gamebook_engine/json_reader.dart';
@@ -17,7 +19,49 @@ String failure(Map<String, Object?> json) {
   fail('expected a StoryFormatException');
 }
 
+/// Everything a resolved [Rules] holds, as plain values, so two can be
+/// compared.
+Map<String, Object?> describe(Rules r) => {
+  'stats': [
+    for (final s in r.stats)
+      [s.id, s.label, '${s.roll}', s.max, s.limit, s.min, s.hidden],
+  ],
+  'health': r.health,
+  'rerolls': r.rerolls,
+  'undo': r.undo,
+  'combat': switch (r.combat) {
+    null => null,
+    final c => [
+      c.mode,
+      '${c.attackRoll}',
+      c.attackStat,
+      '${c.damage}',
+      c.defenseStat,
+      c.defenseBase,
+      c.luck == null,
+      c.table.length,
+      '${c.tableRoll}',
+    ],
+  },
+};
+
 void main() {
+  group('the preset files in spec/presets are the presets', () {
+    for (final name in ['fighting-fantasy', 'd20-lite']) {
+      test(name, () {
+        final file = jsonDecode(
+          File('../../spec/presets/$name.json').readAsStringSync(),
+        );
+        expect(
+          describe(
+            Rules.resolve(RulesSpec.fromJson(JsonObject(file, 'rules'))),
+          ),
+          describe(Rules.resolve(RulesSpec(preset: name))),
+        );
+      });
+    }
+  });
+
   group('presets', () {
     test('fighting-fantasy', () {
       final rules = resolve({'preset': 'fighting-fantasy'});

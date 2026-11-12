@@ -6,7 +6,8 @@ This repository uses two licenses.
    https://creativecommons.org/licenses/by/4.0/legalcode
 
 2. Everything else, including the engines, the tools, the JSON Schema
-   (spec/story.schema.json) and the conformance tests, is licensed under
+   (spec/story.schema.json), the preset files (spec/presets/*.json) and
+   the conformance tests, is licensed under
    the MIT License, so it can be copied into any project.
    Full text: LICENSE-MIT
 

@@ -120,6 +120,7 @@ At character creation each stat is rolled once. The player may roll all stats ag
 - Ids must be the same in every translation.
 
 #### Presets (exact numbers)
+Each preset is also a file, the normative numbers in data: [presets/fighting-fantasy.json](presets/fighting-fantasy.json) and [presets/d20-lite.json](presets/d20-lite.json). Each is exactly the `rules` object a story would write to get the preset without naming it, so an engine can load it instead of retyping the tables below, and an author can copy it to change one thing. The reference engine's tests check that the files and its built-in presets agree.
 
 **`fighting-fantasy`**: Fighting Fantasy style.
 
