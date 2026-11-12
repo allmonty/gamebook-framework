@@ -129,11 +129,11 @@ Build our own JSON graph format with rules expressed as data, plus presets for F
 ## 7. Not verified
 - Harlowe's license (its repository refused our request).
 - "Jumbo Grove", which an early search result described as a gamebook tool with a JSON-heavy markup: still nothing found, so we do not know that it exists.
-- Lone Wolf's Combat Results Table values.
-- The official Fighting Fantasy rulebook wording: every rule here comes from fan adventures, a fan wiki or blogs that restate it. They agree with each other.
+- Lone Wolf's Combat Results Table values. Project Aon publishes [the table](https://www.projectaon.org/en/xhtml/lw/01fftd/crtable.htm) as two pictures (seen on 2026-11-12), which we did not transcribe.
+- The official Fighting Fantasy rulebook wording: every rule here comes from fan adventures, a fan wiki or blogs that restate it. They agree with each other. The primary source is the rules section at the front of each book (for example *The Warlock of Firetop Mountain*, Jackson and Livingstone, Puffin, 1982); we have not had one in hand.
 - The license and file format of GoDungeon.
 - The licenses of gamebook.js and fantasy-gamebook-engine (none shown), and how active any of the small engines in section 2 is.
-- The official D&D 5e SRD rules text (we used a wiki mirror; the license is now checked).
+- The official D&D 5e SRD rules text (we used a wiki mirror; the license is now checked). The official text is the [SRD 5.1 PDF](https://media.dndbeyond.com/compendium-images/srd/5.1/SRD_CC_v5.1.pdf), listed on the publisher's SRD page on 2026-11-12; we have not compared the mirror with it.
 - The maintenance state of `flutter_ink`.
 
 ## 8. Where we stand (2026-11-11)
