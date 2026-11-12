@@ -126,6 +126,7 @@ code, pre { font-family: var(--font-mono); font-size: 0.9em; }
 .site-nav a.coffee:hover { color: var(--canvas); background: #ffc533; }
 
 main { display: block; }
+.noscript { max-width: var(--max); margin: var(--s4) auto 0; padding: var(--s3) var(--s4); color: var(--amber); border-left: 2px solid var(--amber); background: var(--amber-soft); }
 
 .site-footer {
   margin-top: var(--s12);
@@ -376,7 +377,6 @@ main { display: block; }
 
 .grid { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); margin-top: var(--s6); }
 .feature p:last-child, .tool p { color: var(--muted); margin: 0; }
-.feature .label { color: var(--amber); margin-bottom: var(--s2); }
 .feature h3, .tool h3 { margin-bottom: var(--s2); }
 .tool { display: grid; gap: var(--s3); align-content: start; }
 .tool code { color: var(--cyan); font-size: 12px; }

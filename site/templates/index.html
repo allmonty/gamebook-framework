@@ -14,7 +14,7 @@
       <li><span class="label">03 //</span> {{home.point3}}</li>
     </ul>
   </div>
-  <div class="phone" aria-label="{{home.phone}}">
+  <div class="phone" role="group" aria-label="{{home.phone}}">
     <div class="phone-bar label"><span>{{home.phone.bar}}</span><span class="dot"></span></div>
 ```gamebook
 examples/showcase/rune-vault
@@ -50,15 +50,15 @@ examples/home/rusty-door
   <p class="label kicker">{{home.features.kicker}}</p>
   <h2>{{home.features.title}}</h2>
   <div class="grid">
-    <article class="card feature"><p class="label">B6 // B10</p><h3>{{home.f1.title}}</h3><p>{{home.f1.text}}</p></article>
-    <article class="card feature"><p class="label">B5</p><h3>{{home.f2.title}}</h3><p>{{home.f2.text}}</p></article>
-    <article class="card feature"><p class="label">B4</p><h3>{{home.f3.title}}</h3><p>{{home.f3.text}}</p></article>
-    <article class="card feature"><p class="label">B8 // B10</p><h3>{{home.f4.title}}</h3><p>{{home.f4.text}}</p></article>
-    <article class="card feature"><p class="label">B11</p><h3>{{home.f5.title}}</h3><p>{{home.f5.text}}</p></article>
-    <article class="card feature"><p class="label">B6 // B7</p><h3>{{home.f6.title}}</h3><p>{{home.f6.text}}</p></article>
-    <article class="card feature"><p class="label">B6 // B15</p><h3>{{home.f7.title}}</h3><p>{{home.f7.text}}</p></article>
-    <article class="card feature"><p class="label">B1</p><h3>{{home.f8.title}}</h3><p>{{home.f8.text}}</p></article>
-    <article class="card feature"><p class="label">B13 // B14</p><h3>{{home.f9.title}}</h3><p>{{home.f9.text}}</p></article>
+    <article class="card feature"><h3>{{home.f1.title}}</h3><p>{{home.f1.text}}</p></article>
+    <article class="card feature"><h3>{{home.f2.title}}</h3><p>{{home.f2.text}}</p></article>
+    <article class="card feature"><h3>{{home.f3.title}}</h3><p>{{home.f3.text}}</p></article>
+    <article class="card feature"><h3>{{home.f4.title}}</h3><p>{{home.f4.text}}</p></article>
+    <article class="card feature"><h3>{{home.f5.title}}</h3><p>{{home.f5.text}}</p></article>
+    <article class="card feature"><h3>{{home.f6.title}}</h3><p>{{home.f6.text}}</p></article>
+    <article class="card feature"><h3>{{home.f7.title}}</h3><p>{{home.f7.text}}</p></article>
+    <article class="card feature"><h3>{{home.f8.title}}</h3><p>{{home.f8.text}}</p></article>
+    <article class="card feature"><h3>{{home.f9.title}}</h3><p>{{home.f9.text}}</p></article>
   </div>
 </section>
 
@@ -69,7 +69,7 @@ examples/home/rusty-door
   <div class="table-wrap">
     <table class="compare">
       <thead>
-        <tr><th scope="col"></th><th scope="col">{{home.compare.c1}}</th><th scope="col">{{home.compare.c2}}</th><th scope="col">{{home.compare.c3}}</th><th scope="col">{{home.compare.c4}}</th></tr>
+        <tr><td></td><th scope="col">{{home.compare.c1}}</th><th scope="col">{{home.compare.c2}}</th><th scope="col">{{home.compare.c3}}</th><th scope="col">{{home.compare.c4}}</th></tr>
       </thead>
       <tbody>
         <tr><th scope="row">Ink</th><td>{{home.compare.ink1}}</td><td>{{home.compare.ink2}}</td><td>{{home.compare.ink3}}</td><td>{{home.compare.ink4}}</td></tr>

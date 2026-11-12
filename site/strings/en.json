@@ -3,6 +3,7 @@
   "page.description": "An open JSON format for gamebooks with stats, dice, items and combat built in. Play and edit stories right in your browser.",
   "nav.skip": "Skip to content",
   "nav.coffee": "☕ Buy me a coffee",
+  "nav.noscript": "Turn on JavaScript to play the examples on this page.",
   "nav.label": "Main",
   "nav.otherLanguage.name": "Português (PT)",
   "nav.otherLanguage": "PT",

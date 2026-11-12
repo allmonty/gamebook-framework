@@ -3,6 +3,7 @@
   "page.description": "Um formato JSON aberto para livros-jogo com atributos, dados, itens e combate. Jogue e edite histórias no navegador.",
   "nav.skip": "Pular para o conteúdo",
   "nav.coffee": "☕ Me pague um café",
+  "nav.noscript": "Ative o JavaScript para jogar os exemplos desta página.",
   "nav.label": "Principal",
   "nav.otherLanguage.name": "English (EN)",
   "nav.otherLanguage": "EN",
