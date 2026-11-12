@@ -13,4 +13,9 @@ VM tests on PlaySession with conformance-style stories and seeded/scripted Rando
 A tiny story plays to an ending in the browser.
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- `PlaySession` (`site/lib/src/play/play_session.dart`) wraps `GameEngine`: `start`, `restart`, `choose`, and `view` (a fresh `PageView` each call). Add the next use cases (use item, offer, fight...) as methods here, and their data as fields on the view models in `views.dart`.
+- Locked choices carry structured `Requirement`s; `ui/wording.dart` words them from `player.*` strings (pure Dart, VM-tested). Put every new player text in `strings/{en,pt}.json` under `player.`.
+- `PlayerView` (`ui/player_view.dart`) redraws everything after each action and focuses the page (`aria-live`). Build DOM only with `el()`/`onClick()` from `ui/dom.dart` (text via textContent, never innerHTML).
+- `web/main.dart` mounts a player on every `.gb-embed`. The home page has a temporary Rusty Door embed (`examples/home/rusty-door`), to become the "Rules are data" section in step 08.
+- Engine events are ignored for now (step 04 shows them). Preset stat labels are English; Portuguese stories must override labels in `rules.stats`.
+- Test helpers: `test/support/stories.dart` loads conformance stories or builds one inline.

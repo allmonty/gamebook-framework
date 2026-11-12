@@ -14,8 +14,10 @@ Checks (all must pass before a commit):
 ```
 dart format --output=none --set-exit-if-changed .
 dart analyze --fatal-infos
-dart test
+dart test                           # VM tests (application, content, wording)
+dart test -p chrome test/browser    # DOM smoke tests (needs Chrome)
 ```
+Headless Chrome cannot go below 500px wide, so check phone layouts in a real browser's device mode.
 
 ## Layout
 | Path | What |
@@ -31,6 +33,8 @@ dart test
 | `examples/` | example stories, one file per language |
 | `css/site.css`, `assets/` | copied as they are |
 
+Strings whose key starts with `player.` are also sent to the browser (a JSON script `#gb-strings` in the layout) for the player's own text.
+
 Templates use `{{key}}` placeholders, filled from the strings plus `lang`, `root` (relative path to the site root), `path` (the page path, the same in every language) and `otherLang`. A missing value fails the build.
 
 ## Adding a playable example to a chapter
@@ -41,7 +45,7 @@ Templates use `{{key}}` placeholders, filled from the strings plus `lang`, `root
    examples/<chapter>/<name>
    ```
    ````
-The build swaps the block for an embed carrying the story JSON of the page's language; the browser turns it into a player with an editor. Tests validate every example.
+The same block works inside an HTML template. The build swaps the block for an embed carrying the story JSON of the page's language; the browser turns it into a player with an editor. Tests validate every example.
 
 ## Design: Arcane Cyberpunk Codex
 Taken from the gamebook app (`../gamebook/docs/design-system.md`, dark "Codex" theme) and the owner's Google Stitch export (Arcane Cyberpunk Codex). Mood: an occult grimoire fused with a cyberware terminal; deep void backgrounds pierced by cyan plasma and molten amber.

@@ -62,6 +62,6 @@ Why: the play logic is tested fast on the VM without a browser; the DOM code sta
 python3 tools/check_schema.py [story.json...]       # JSON Schema check (pip install jsonschema)
 
 # site (from step 01)
-(cd site && dart pub get && dart format --output=none --set-exit-if-changed . && dart analyze --fatal-infos && dart test)
+(cd site && dart pub get && dart format --output=none --set-exit-if-changed . && dart analyze --fatal-infos && dart test && dart test -p chrome test/browser)
 (cd site && dart run tool/build.dart && python3 -m http.server -d build 8000)
 ```

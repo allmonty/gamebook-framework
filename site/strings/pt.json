@@ -9,5 +9,16 @@
   "home.title": "Escreva livros-jogo. Jogue em qualquer lugar.",
   "home.lead": "Um arquivo JSON guarda sua história e suas regras: atributos, dados, itens e lutas. Qualquer motor joga do mesmo jeito.",
   "footer.license": "Código sob MIT, especificação e conteúdo sob CC BY 4.0.",
-  "footer.made": "Feito com o motor de referência em Dart"
+  "footer.made": "Feito com o motor de referência em Dart",
+  "player.stats": "Atributos",
+  "player.choices": "Decisões",
+  "player.restart": "Jogar de novo",
+  "player.ending.victory": "Vitória // fim",
+  "player.ending.death": "Você morreu // fim",
+  "player.locked": "Bloqueado",
+  "player.needs": "Precisa: {list}",
+  "player.not": "sem {what}",
+  "player.visited": "{name} visitado",
+  "player.visits": "{name} visitas {op} {target}",
+  "home.try": "Experimente: a história acima é este arquivo pequeno, jogado ao vivo pelo motor real."
 }

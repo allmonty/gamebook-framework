@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "id": "rusty-door",
+  "lang": "pt",
+  "title": "A Porta Enferrujada",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "items": {
+    "rusty-key": {
+      "name": "Chave enferrujada"
+    }
+  },
+  "start": "cellar",
+  "nodes": {
+    "cellar": {
+      "text": "Você acorda num porão frio.",
+      "choices": [
+        {
+          "text": "Revistar as prateleiras",
+          "to": "shelves"
+        },
+        {
+          "text": "Ir até a porta",
+          "to": "door"
+        }
+      ]
+    },
+    "shelves": {
+      "text": "Atrás de um pote você acha uma chave enferrujada.",
+      "once": true,
+      "effects": [
+        {
+          "give": "rusty-key"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar",
+          "to": "cellar"
+        }
+      ]
+    },
+    "door": {
+      "text": "A porta está trancada.",
+      "choices": [
+        {
+          "text": "Destrancar",
+          "to": "treasure",
+          "if": {
+            "has": "rusty-key"
+          }
+        },
+        {
+          "text": "Arrombar com um chute",
+          "check": {
+            "roll": "2d6",
+            "add": "skill",
+            "op": "gte",
+            "vs": 15,
+            "pass": "treasure",
+            "fail": "door"
+          }
+        }
+      ]
+    },
+    "treasure": {
+      "text": "Um baú de ouro. Você venceu!",
+      "ending": "victory"
+    }
+  }
+}

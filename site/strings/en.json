@@ -9,5 +9,16 @@
   "home.title": "Write gamebooks. Play anywhere.",
   "home.lead": "One JSON file holds your story and its rules: stats, dice, items and fights. Any engine plays it the same way.",
   "footer.license": "Code under MIT, spec and content under CC BY 4.0.",
-  "footer.made": "Built with the reference Dart engine"
+  "footer.made": "Built with the reference Dart engine",
+  "player.stats": "Stats",
+  "player.choices": "Decisions",
+  "player.restart": "Play again",
+  "player.ending.victory": "Victory // the end",
+  "player.ending.death": "You died // the end",
+  "player.locked": "Locked",
+  "player.needs": "Needs: {list}",
+  "player.not": "no {what}",
+  "player.visited": "{name} visited",
+  "player.visits": "{name} visits {op} {target}",
+  "home.try": "Try it: the whole story above is this tiny file, played live by the real engine."
 }
