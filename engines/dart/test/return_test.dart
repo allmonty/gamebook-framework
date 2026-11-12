@@ -11,7 +11,7 @@ import 'support/scripted_random.dart';
 /// Two roads that call a shop (`shop` returns), a road that can meet a wolf
 /// through a table (the wolf's win returns), and a page that calls itself
 /// (to test the depth limit).
-Map<String, Object?> json({int schema = 8, Map<String, Object?>? extra}) => {
+Map<String, Object?> json({int schema = 1, Map<String, Object?>? extra}) => {
   'schema': schema,
   'id': 'ret',
   'lang': 'en',
@@ -165,7 +165,7 @@ void main() {
   });
 
   group('parse', () {
-    String failure(Map<String, Object?> extra, {int schema = 8}) {
+    String failure(Map<String, Object?> extra, {int schema = 1}) {
       try {
         Story.fromJson(json(schema: schema, extra: extra));
       } on StoryFormatException catch (e) {
@@ -209,13 +209,6 @@ void main() {
           },
         }),
         'nodes.x.combat.win.return: expected a node id or { "return": true }',
-      );
-    });
-
-    test('call and return need schema 8', () {
-      expect(
-        failure(const {}, schema: 7),
-        'nodes.a.choices[0].call: needs "schema": 8',
       );
     });
   });

@@ -9,7 +9,7 @@ import 'support/scripted_random.dart';
 Map<String, Object?> storyJson({
   bool simultaneous = true,
   bool luck = true,
-  int schema = 5,
+  int schema = 1,
 }) => {
   'schema': schema,
   'id': 'g',
@@ -64,7 +64,7 @@ GameEngine start(List<int> dice) {
 }
 
 void main() {
-  test('simultaneous is read, and needs schema 5', () {
+  test('simultaneous is read', () {
     expect(
       Story.fromJson(storyJson()).nodes['ring']!.combat!.simultaneous,
       isTrue,
@@ -75,16 +75,6 @@ void main() {
           .combat!
           .simultaneous,
       isFalse,
-    );
-    expect(
-      () => Story.fromJson(storyJson(schema: 4, luck: false)),
-      throwsA(
-        isA<StoryFormatException>().having(
-          (e) => e.toString(),
-          'message',
-          'nodes.ring.combat.simultaneous: needs "schema": 5',
-        ),
-      ),
     );
   });
 

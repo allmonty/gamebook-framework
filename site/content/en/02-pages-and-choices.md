@@ -32,7 +32,7 @@ The path is relative to the story's folder, so `images/hall.webp` sits next to `
 
 ### Describe your pictures
 
-Some readers cannot see the picture: they read with a screen reader, or the image did not load. Give them the picture in words with `imageAlt` (schema 8):
+Some readers cannot see the picture: they read with a screen reader, or the image did not load. Give them the picture in words with `imageAlt`:
 
 ```json
 "hall": {
@@ -67,7 +67,7 @@ The third choice, the maintenance hatch, has `"hideIfLocked": true`: until its c
 
 ## Back where you came from
 
-Printed gamebooks say "visit the pedlar, then return to the section you came from". One page can serve many callers (schema 8):
+Printed gamebooks say "visit the pedlar, then return to the section you came from". One page can serve many callers:
 
 ```gamebook
 examples/02-pages-and-choices/the-pedlar
@@ -88,14 +88,14 @@ examples/02-pages-and-choices/the-pedlar
 |---|---|---|
 | `text` | page, choice | What the reader sees. `\n\n` starts a paragraph. |
 | `image` | page | A picture above the text. |
-| `imageAlt` | page, item | What the picture shows, for readers who cannot see it (schema 8). |
+| `imageAlt` | page, item | What the picture shows, for readers who cannot see it. |
 | `choices` | page | The buttons. |
 | `to` | choice | The page the choice leads to. |
 | `ending` | page | `"victory"` or `"death"`: the game is over. |
 | `if` | choice | A condition; while it is false the choice is locked. |
 | `lockedText` | choice | Your words for why it is locked. |
 | `hideIfLocked` | choice | Hide it completely while locked. |
-| `call` | choice | Remember this page for a later return (schema 8). |
-| `return` | choice, fight `win` or `flee` | Go back to the page last remembered (schema 8). |
+| `call` | choice | Remember this page for a later return. |
+| `return` | choice, fight `win` or `flee` | Go back to the page last remembered. |
 
 `visited` is the first of many conditions. Next, the reader starts carrying things.

@@ -32,7 +32,7 @@ Use the example below. In Edit JSON:
 
 ## Organising a long book
 
-Schema 6 adds fields for authors. None of them changes how the story plays, except `showTitles`:
+Some fields are for authors only. None of them changes how the story plays, except `showTitles`:
 
 ```gamebook
 examples/08-check-and-publish/tidy-book

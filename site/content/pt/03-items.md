@@ -44,7 +44,7 @@ A Energia nunca passa do valor inicial: a poção não cura além do máximo.
 
 ## Itens que melhoram você
 
-Com `bonus` um item muda um atributo enquanto estiver na mochila (schema 5). Largou o item, o bônus vai junto.
+Com `bonus` um item muda um atributo enquanto estiver na mochila. Largou o item, o bônus vai junto.
 
 ```gamebook
 examples/03-items/rune-blade
@@ -54,7 +54,7 @@ O portão pede `{ "stat": "skill", "gte": 12 }`: Habilidade 12 ou mais (`gte` qu
 
 ## Uma mochila com espaço limitado
 
-Sem regras, a mochila guarda tudo. Para o espaço importar, adicione `inventory` em `rules` (schema 3):
+Sem regras, a mochila guarda tudo. Para o espaço importar, adicione `inventory` em `rules`:
 
 ```json
 "rules": { "preset": "fighting-fantasy", "inventory": { "capacity": 2, "pickup": "choose" } }
@@ -82,7 +82,7 @@ Leia o registro acima da página: a gema é recusada por falta de espaço e, dep
 
 ## Coisas que vêm em quantidade
 
-Cinco refeições, uma aljava de flechas, três ervas de cura: dê ao item um `stack` e o leitor pode carregar vários (schema 8).
+Cinco refeições, uma aljava de flechas, três ervas de cura: dê ao item um `stack` e o leitor pode carregar vários.
 
 ```gamebook
 examples/03-items/provisions
@@ -108,14 +108,14 @@ A página da noite é um clássico: "Comer uma refeição" precisa de uma e a ga
 |---|---|---|
 | `"items": { "id": { "name": ... } }` | topo do arquivo | declara um item |
 | `{ "give": "id" }` / `{ "take": "id" }` | `effects` de página ou escolha | adiciona / remove |
-| `{ "takeAll": true }` | `effects` | esvazia a mochila (schema 3) |
+| `{ "takeAll": true }` | `effects` | esvazia a mochila |
 | `{ "has": "id" }` | `if` de uma escolha | precisa do item |
-| `"use": { "effects": [...], "when": [...] }` | um item | item usável (schema 2) |
-| `"bonus": { "skill": 3 }` | um item | bônus enquanto carregado (schema 5) |
-| `"inventory": { "capacity": 2, "pickup": "choose" }` | `rules` | mochila limitada, ofertas (schema 3) |
+| `"use": { "effects": [...], "when": [...] }` | um item | item usável |
+| `"bonus": { "skill": 3 }` | um item | bônus enquanto carregado |
+| `"inventory": { "capacity": 2, "pickup": "choose" }` | `rules` | mochila limitada, ofertas |
 | `"capacity": 2` | um item | um recipiente |
-| `"stack": 5` | um item | contável: qualquer quantidade, 5 por espaço (schema 8) |
-| `"count": 2` | um `give`, `take` ou `has` | quantos (schema 8) |
-| `"max": 6` | um item contável | o máximo que o leitor pode carregar (schema 8) |
+| `"stack": 5` | um item | contável: qualquer quantidade, 5 por espaço |
+| `"count": 2` | um `give`, `take` ou `has` | quantos |
+| `"max": 6` | um item contável | o máximo que o leitor pode carregar |
 
 A seguir: os atributos do herói e como rolá-los.

@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 import 'package:web/web.dart';
 
 final _story = Story.fromJson({
-  'schema': 5,
+  'schema': 1,
   'id': 't',
   'lang': 'en',
   'title': 'Hero',

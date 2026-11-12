@@ -5,7 +5,7 @@ import 'json_reader.dart';
 /// What `give` does: add the item at once, or let the player decide.
 enum PickupMode { auto, choose }
 
-/// The `rules.inventory` block as written (schema 3).
+/// The `rules.inventory` block as written.
 class InventorySpec {
   const InventorySpec({this.capacity, this.pickup});
 
@@ -73,21 +73,21 @@ class RulesSpec {
   final CombatSpec? combat;
   final InventorySpec? inventory;
 
-  /// What the player decides when making the character (schema 5).
+  /// What the player decides when making the character.
   final CreationSpec? creation;
 
-  /// How many pages the player can go back (schema 5); null means none.
+  /// How many pages the player can go back; null means none.
   final int? undo;
 
-  /// Bonuses that apply while a condition holds (schema 8, B5).
+  /// Bonuses that apply while a condition holds (B5).
   final List<RuleBonus> bonuses;
 
-  /// Effects applied on entering every page (schema 8, B10).
+  /// Effects applied on entering every page (B10).
   final List<PageRule> everyPage;
 }
 
 /// Effects applied each time a page is entered, before the page's own
-/// (schema 8, B10): while [condition] holds, and with [calm] only on a page
+/// (B10): while [condition] holds, and with [calm] only on a page
 /// without a fight.
 class PageRule {
   const PageRule(this.effects, {this.condition, this.calm = false});
@@ -110,7 +110,7 @@ class PageRule {
   final bool calm;
 }
 
-/// A bonus to stats while [condition] holds, like an item's (schema 8).
+/// A bonus to stats while [condition] holds, like an item's.
 class RuleBonus {
   const RuleBonus(this.condition, this.bonus);
 
@@ -267,13 +267,13 @@ class StatSpec {
   final String? roll;
   final bool? max;
 
-  /// A ceiling independent of the roll (schema 5).
+  /// A ceiling independent of the roll.
   final int? limit;
 
-  /// The floor (schema 8), which may be negative; null is 0.
+  /// The floor, which may be negative; null is 0.
   final int? min;
 
-  /// Kept off the stats bar (schema 8), as written; null is shown.
+  /// Kept off the stats bar, as written; null is shown.
   final bool? hidden;
 }
 
@@ -314,7 +314,7 @@ class CombatSpec {
   final int? defenseBase;
   final String? damage;
 
-  /// Testing your Luck in a fight (schema 5).
+  /// Testing your Luck in a fight.
   final LuckSpec? luck;
 
   /// Dice notation for `table` mode; null means `1d10-1`.

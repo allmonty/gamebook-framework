@@ -55,7 +55,7 @@ Os `effects` de um teste acontecem depois da rolagem, passe ou falhe, e a rolage
 
 ## Tabelas de resultado aleatório
 
-Quando há mais de dois resultados, use uma `table` (schema 4). O dado escolhe o primeiro resultado cujo `upTo` seja pelo menos o valor rolado:
+Quando há mais de dois resultados, use uma `table`. O dado escolhe o primeiro resultado cujo `upTo` seja pelo menos o valor rolado:
 
 ```gamebook
 examples/05-dice/search-the-rubble

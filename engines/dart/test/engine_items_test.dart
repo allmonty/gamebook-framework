@@ -13,7 +13,7 @@ import 'support/scripted_random.dart';
 /// 6 and costs the round, a tonic that heals 2 for free in a fight, a scroll
 /// that only works on a page, poison that kills, and a key with no use.
 Story story(String preset, {Map<String, Object?>? enemy}) => Story.fromJson({
-  'schema': 2,
+  'schema': 1,
   'id': 'items',
   'lang': 'en',
   'title': 'Items',

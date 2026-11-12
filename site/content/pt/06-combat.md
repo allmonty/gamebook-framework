@@ -47,7 +47,7 @@ examples/06-combat/d20-skirmish
 examples/06-combat/golem-and-rat
 ```
 
-- `"simultaneous": true` na luta: todo inimigo vivo ataca em toda rodada, e o leitor **escolhe um alvo** a cada rodada (schema 5).
+- `"simultaneous": true` na luta: todo inimigo vivo ataca em toda rodada, e o leitor **escolhe um alvo** a cada rodada.
 - `"armor": 1` num inimigo: seus golpes causam 1 a menos nele, nunca menos que 0.
 - `"luck": { "stat": "luck" }` no `combat` das regras liga o **Teste de Sorte nas lutas**: depois de uma rodada em que alguém se feriu, o leitor pode rolar 2d6 contra a Sorte. Com sorte, seu ferimento no inimigo cresce 2 ou o ferimento que você levou diminui 1; sem sorte, o contrário. A Sorte cai 1 de qualquer jeito.
 
@@ -78,7 +78,7 @@ Cada par é `[inimigo perde, você perde]`. Uma linha cobre toda razão até o s
 
 ## Lutas que acabam antes
 
-Livros-jogo adoram "se a criatura ferir você, vá para 55" e "se você não vencer em três rodadas, vá para 120". Dois campos em `combat` dizem isso (schema 8):
+Livros-jogo adoram "se a criatura ferir você, vá para 55" e "se você não vencer em três rodadas, vá para 120". Dois campos em `combat` dizem isso:
 
 ```gamebook
 examples/06-combat/poison-sting
@@ -100,7 +100,7 @@ Depois de cada rodada a ordem é: morte, depois a vitória, depois um ferimento,
 
 ### Fugir custa uma rodada
 
-Em Lobo Solitário a fuga é diferente: na rodada em que você vira para fugir, só o inimigo pode ferir você, então fugir pode matar. Ponha `"fleeCost": "round"` ao lado de `flee` (schema 8):
+Em Lobo Solitário a fuga é diferente: na rodada em que você vira para fugir, só o inimigo pode ferir você, então fugir pode matar. Ponha `"fleeCost": "round"` ao lado de `flee`:
 
 ```gamebook
 examples/06-combat/the-evasion

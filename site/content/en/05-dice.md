@@ -55,7 +55,7 @@ A check's `effects` apply after the roll whichever way it went, and the roll its
 
 ## Random outcome tables
 
-When there are more than two outcomes, use a `table` (schema 4). The die picks the first outcome whose `upTo` is at least the roll:
+When there are more than two outcomes, use a `table`. The die picks the first outcome whose `upTo` is at least the roll:
 
 ```gamebook
 examples/05-dice/search-the-rubble

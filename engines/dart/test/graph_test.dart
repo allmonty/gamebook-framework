@@ -122,7 +122,7 @@ void main() {
   test('DOT colours a defeat ending apart from victory and death', () {
     final out = toDot(
       Story.fromJson({
-        'schema': 8,
+        'schema': 1,
         'id': 'd',
         'lang': 'en',
         'title': 'D',
@@ -147,9 +147,9 @@ void main() {
     );
   });
 
-  test("a fight's events are exits of their own (schema 8)", () {
+  test("a fight's events are exits of their own", () {
     final story = Story.fromJson({
-      'schema': 8,
+      'schema': 1,
       'id': 'e',
       'lang': 'en',
       'title': 'E',
@@ -231,7 +231,7 @@ void main() {
 
   test('a random table has one edge per outcome with its range', () {
     final story = Story.fromJson({
-      'schema': 4,
+      'schema': 1,
       'id': 's',
       'lang': 'en',
       'title': 'S',
@@ -278,7 +278,7 @@ void main() {
 
   test('once-only choices say so on the edge', () {
     final story = Story.fromJson({
-      'schema': 4,
+      'schema': 1,
       'id': 's',
       'lang': 'en',
       'title': 'S',
@@ -303,7 +303,7 @@ void main() {
     final json =
         jsonDecode(File('test/fixtures/rusty-door.en.json').readAsStringSync())
               as Map<String, Object?>
-          ..['schema'] = 6
+          ..['schema'] = 1
           ..['chapters'] = {
             'start': {'title': 'Act "1"'},
           };

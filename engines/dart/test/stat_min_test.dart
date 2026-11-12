@@ -10,7 +10,7 @@ import 'support/scripted_random.dart';
 /// offers a gauntlet (-4 Might).
 Story floored({
   int? min = -3,
-  int schema = 8,
+  int schema = 1,
   Map<String, Object?> might = const {},
   List<Map<String, Object?>> effects = const [],
 }) => Story.fromJson({
@@ -82,7 +82,7 @@ void main() {
       expect(
         failure(
           () => Story.fromJson({
-            'schema': 8,
+            'schema': 1,
             'id': 'hp',
             'lang': 'en',
             'title': 'HP',
@@ -106,13 +106,6 @@ void main() {
       expect(
         failure(() => floored(min: 5, might: {'limit': 5})),
         'rules.stats.might.min: must be below the limit (5)',
-      );
-    });
-
-    test('it needs schema 8', () {
-      expect(
-        failure(() => floored(schema: 7)),
-        'rules.stats.might.min: needs "schema": 8',
       );
     });
   });

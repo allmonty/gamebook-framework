@@ -14,9 +14,9 @@ export 'json_reader.dart' show StoryFormatException;
 export 'rules_spec.dart';
 
 /// The schema versions this engine can read.
-const supportedSchemas = {1, 2, 3, 4, 5, 6, 7, 8};
+const supportedSchemas = {1};
 
-/// How an adventure ends: won, over without a win (schema 8), or dead.
+/// How an adventure ends: won, over without a win, or dead.
 enum Ending { victory, defeat, death }
 
 enum CheckOp { gte, lte }
@@ -46,7 +46,7 @@ enum UseWhen { story, combat }
 
 enum CombatCost { round, free }
 
-/// What happens when the player uses an item (schema 2). The item is removed
+/// What happens when the player uses an item. The item is removed
 /// from the inventory by the engine. See spec/framework.md B5.
 class ItemUse {
   const ItemUse({
@@ -96,8 +96,8 @@ class ItemUse {
 /// The value of a node's `music` that stops the music.
 const stopMusic = 'stop';
 
-/// A note the player unlocks through play and can reread (schema 5).
-/// Something a player can earn, kept across games (schema 7, B15).
+/// A note the player unlocks through play and can reread.
+/// Something a player can earn, kept across games (B15).
 class Achievement {
   const Achievement({
     required this.title,
@@ -140,7 +140,7 @@ class JournalEntry {
   final String text;
 }
 
-/// A named group of pages, for authors and editors (schema 6, B13).
+/// A named group of pages, for authors and editors (B13).
 class Chapter {
   const Chapter({required this.title});
 
@@ -211,23 +211,23 @@ class Item {
   final String? description;
   final String? image;
 
-  /// What [image] shows, for players who cannot see it (schema 8).
+  /// What [image] shows, for players who cannot see it.
   final String? imageAlt;
 
   /// Null for an item that is only held.
   final ItemUse? use;
 
-  /// Extra pack slots while carried (a container, schema 3); it uses no slot.
+  /// Extra pack slots while carried (a container); it uses no slot.
   final int? capacity;
 
-  /// How many fit in one pack slot (schema 8). Null: the item is unique, and
+  /// How many fit in one pack slot. Null: the item is unique, and
   /// the pack holds one at most; otherwise it holds any number.
   final int? stack;
 
-  /// The most of a countable item the player can hold (schema 8).
+  /// The most of a countable item the player can hold.
   final int? max;
 
-  /// Changes to stats while the item is in the pack (schema 5), by stat id.
+  /// Changes to stats while the item is in the pack, by stat id.
   final Map<String, int> bonus;
 }
 
@@ -297,7 +297,7 @@ class TableOutcome {
 }
 
 /// Roll dice and pick the first outcome whose `upTo` is at least the total
-/// (schema 4). See spec/framework.md B10.
+///. See spec/framework.md B10.
 class RandomTable {
   const RandomTable({required this.roll, required this.outcomes});
 
@@ -394,21 +394,21 @@ class Choice {
   final String? to;
   final Check? check;
 
-  /// A random outcome table (schema 4).
+  /// A random outcome table.
   final RandomTable? table;
   final Condition? condition;
   final List<Effect> effects;
   final bool hideIfLocked;
   final String? lockedText;
 
-  /// Gone for the rest of the game once taken (schema 4).
+  /// Gone for the rest of the game once taken.
   final bool once;
 
   /// Remembers this page as the place a later `return` leads back to
-  /// (schema 8), whatever target the choice leads to.
+  ///, whatever target the choice leads to.
   final bool call;
 
-  /// Leads back to the page last remembered (schema 8), instead of [to].
+  /// Leads back to the page last remembered, instead of [to].
   final bool returns;
 }
 
@@ -443,11 +443,11 @@ class Enemy {
   final int? defense;
   final String? damage;
 
-  /// Taken off every wound the player deals to this enemy (schema 5).
+  /// Taken off every wound the player deals to this enemy.
   final int armor;
 }
 
-/// A fight that ends on its own once [after] rounds are played (schema 8).
+/// A fight that ends on its own once [after] rounds are played.
 class RoundLimit {
   const RoundLimit({required this.after, required this.to});
 
@@ -466,7 +466,7 @@ class RoundLimit {
   final String to;
 }
 
-/// A fight's `win` or `flee`: a node id, or `{ "return": true }` (schema 8).
+/// A fight's `win` or `flee`: a node id, or `{ "return": true }`.
 (String?, bool) _target(JsonObject obj, String key) {
   final raw = obj.raw(key);
   if (raw is String || raw == null) {
@@ -534,37 +534,37 @@ class Combat {
   /// Where winning leads; null when it returns ([winReturns]).
   final String? win;
 
-  /// Winning leads back to the page last remembered (schema 8).
+  /// Winning leads back to the page last remembered.
   final bool winReturns;
   final String? flee;
 
-  /// Fleeing leads back to the page last remembered (schema 8).
+  /// Fleeing leads back to the page last remembered.
   final bool fleeReturns;
 
   /// Whether the fight can be fled at all.
   bool get canFlee => flee != null || fleeReturns;
 
-  /// As written (schema 8); null is `free`. With `round`, fleeing lets the
+  /// As written; null is `free`. With `round`, fleeing lets the
   /// enemies strike first.
   final CombatCost? fleeCost;
 
   /// Where the fight goes the first time the player is wounded and still
-  /// alive (schema 8).
+  /// alive.
   final String? wounded;
 
-  /// Where the fight goes when it lasts too long (schema 8).
+  /// Where the fight goes when it lasts too long.
   final RoundLimit? rounds;
 
   /// All enemies fight at once and the player picks a target each round
-  /// (schema 5).
+  ///.
   final bool simultaneous;
 
   /// Resolved by the results table of the rules instead of the combat mode
-  /// (schema 5).
+  ///.
   final bool duel;
 }
 
-/// A paragraph of page text, shown only while [condition] holds (schema 4).
+/// A paragraph of page text, shown only while [condition] holds.
 class TextPart {
   const TextPart(this.text, [this.condition]);
 
@@ -678,17 +678,17 @@ class Node {
   /// The page text; every part is shown, or only those whose `if` holds.
   final List<TextPart> parts;
 
-  /// Whether the story wrote `text` as a list (schema 4).
+  /// Whether the story wrote `text` as a list.
   final bool textIsList;
   final String? image;
 
-  /// What [image] shows, for players who cannot see it (schema 8).
+  /// What [image] shows, for players who cannot see it.
   final String? imageAlt;
 
-  /// A music file that loops from this page on, or [stopMusic] (schema 5).
+  /// A music file that loops from this page on, or [stopMusic].
   final String? music;
 
-  /// A sound played once when the page is entered (schema 5).
+  /// A sound played once when the page is entered.
   final String? sound;
   final List<Effect> effects;
   final bool once;
@@ -700,21 +700,21 @@ class Node {
   final Ending? ending;
 
   /// A short name for the page; players see it only with
-  /// [Story.showTitles] (schema 6).
+  /// [Story.showTitles].
   final String? title;
 
-  /// For authors only, never shown to players (schema 6).
+  /// For authors only, never shown to players.
   final String? note;
 
-  /// The id of the chapter this page belongs to (schema 6).
+  /// The id of the chapter this page belongs to.
   final String? chapter;
 
-  /// Not written yet (schema 6): may lack text and a way out, and offers no
+  /// Not written yet: may lack text and a way out, and offers no
   /// choices, fight or ending when entered.
   final bool draft;
 }
 
-/// The text [key] that describes [image] (schema 8, B6): optional, not
+/// The text [key] that describes [image] (B6): optional, not
 /// empty, and only next to a picture.
 String? _altText(JsonObject obj, String key, String? image) {
   final alt = obj.optString(key);
@@ -766,7 +766,6 @@ class Story {
     if (!RegExp(r'^[a-z0-9-]+$').hasMatch(id)) {
       throw obj.error('id', 'expected a slug (lowercase letters, digits, "-")');
     }
-    final usesShowTitles = obj.has('showTitles');
     final cover = obj.optString('cover');
     final story = Story(
       schema: schema,
@@ -791,13 +790,8 @@ class Story {
       nodes: obj.idMap('nodes', Node.fromJson),
     );
     obj.finish();
-    // Placeholders are checked before the gate, as they were when the gate
-    // ran version by version: they only exist from schema 4 on.
-    if (schema >= 4) story._checkTemplates();
-    if (firstNewerFeature(story, usesShowTitles: usesShowTitles) case (
-      final version,
-      final path,
-    )) {
+    story._checkTemplates();
+    if (firstNewerFeature(story) case (final version, final path)) {
       throw StoryFormatException(path, 'needs "schema": $version');
     }
     for (final MapEntry(:key, :value) in story.nodes.entries) {
@@ -849,7 +843,7 @@ class Story {
     }
   }
 
-  /// Schema 4 text: every placeholder must be well formed.
+  /// Text: every placeholder must be well formed.
   void _checkTemplates() {
     for (final MapEntry(:key, :value) in nodes.entries) {
       for (var i = 0; i < value.parts.length; i++) {
@@ -874,22 +868,22 @@ class Story {
   final String? description;
   final String? cover;
 
-  /// What [cover] shows, for players who cannot see it (schema 8).
+  /// What [cover] shows, for players who cannot see it.
   final String? coverAlt;
   final RulesSpec rules;
   final Map<String, Item> items;
 
-  /// Notes the player can unlock, by id (schema 5).
+  /// Notes the player can unlock, by id.
   final Map<String, JournalEntry> journal;
   final String start;
   final Map<String, Node> nodes;
 
-  /// Groups of pages, in reading order, by id (schema 6).
+  /// Groups of pages, in reading order, by id.
   final Map<String, Chapter> chapters;
 
-  /// Whether players see each page's title as its heading (schema 6).
+  /// Whether players see each page's title as its heading.
   final bool showTitles;
 
-  /// Things a player can earn, by id (schema 7).
+  /// Things a player can earn, by id.
   final Map<String, Achievement> achievements;
 }

@@ -48,9 +48,9 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 10c | [A flee that costs a round](steps/10c-flee-costs-round.md) | feature | done | 3858d96 |
 | 10d | [Item counts in text, and a cap on a counted item](steps/10d-item-counts-in-text.md) | feature | done | a9a50fb |
 | 10e | [Rules on every page](steps/10e-every-page-rules.md) | feature | done | 4f40b08 |
-| 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | done | |
-| 10g | [One schema version](steps/10g-one-schema.md) | format | todo | |
-| 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | todo | |
+| 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | done | 253ce0c |
+| 10g | [One schema version](steps/10g-one-schema.md) | format | done | |
+| 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | done (in 10g) | |
 | 12 | [Presets as data](steps/12-presets-as-data.md) | docs + test | todo | |
 | 13 | [Starter games](steps/13-starters.md) | docs + test | todo | |
 | 14 | [A front door for people and AIs](steps/14-front-door.md) | docs + site | todo | |
@@ -124,7 +124,8 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 
 ## Where things stand (2026-11-12, end of a session)
 - Steps 01 to 10f are done and merged into `main`.
-- **Next:** step 10g (the owner merged the eight schema versions into one, 2026-11-12), then 12 to 15. Step 11 is done by 10g.
+- Step 10g merged the eight schema versions into version 1 (and did step 11).
+- **Next:** step 12, then 13 to 15, one branch and pull request each.
 - After 10f: steps 11 to 15, back to one branch and pull request per step.
 
 ## Waiting on the owner (outward-facing, never do these unasked)

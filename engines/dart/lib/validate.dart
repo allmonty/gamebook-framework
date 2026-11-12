@@ -315,9 +315,9 @@ class _Validator {
     if (node.combat case final combat?) _combat('$at.combat', combat);
   }
 
-  /// Schema 4 text: every `{stat}` must name a stat of the story.
+  /// Text: every `{stat}` must name a stat of the story, every
+  /// `{item.count}` an item.
   void _placeholders(String where, String text) {
-    if (story.schema < 4) return;
     for (final stat in placeholderStats(text)) {
       // {name} is the hero's name when the story asks for one.
       if (stat == 'name' && (story.rules.creation?.name ?? false)) continue;
@@ -385,7 +385,7 @@ class _Validator {
     }
   }
 
-  /// More than one of an item needs the item to be countable (schema 8).
+  /// More than one of an item needs the item to be countable.
   void _count(String at, String item, int amount) {
     final known = story.items[item];
     if (amount > 1 && known != null && known.stack == null) {
@@ -520,7 +520,7 @@ class _Validator {
   void _reachability() {
     if (!story.nodes.containsKey(story.start)) return;
     final seen = _reached();
-    // A return reached with nothing remembered is locked (schema 8).
+    // A return reached with nothing remembered is locked.
     for (final id in _reached(calls: false)) {
       final node = story.nodes[id]!;
       if (node.choices.any((c) => c.returns) ||

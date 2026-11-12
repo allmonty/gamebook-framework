@@ -37,7 +37,7 @@ void main() {
       host,
       EditSession(
         jsonEncode({
-          'schema': 8,
+          'schema': 1,
           'id': 't',
           'lang': 'en',
           'title': 'Lab',

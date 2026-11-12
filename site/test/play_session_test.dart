@@ -92,18 +92,15 @@ void main() {
 
   test('a defeat ending ends the game with the hero alive', () {
     final session = PlaySession.start(
-      storyOf(
-        {
-          'start': {
-            'text': 'Go.',
-            'choices': [
-              {'text': 'Surrender', 'to': 'cell'},
-            ],
-          },
-          'cell': {'text': 'Locked up.', 'ending': 'defeat'},
+      storyOf({
+        'start': {
+          'text': 'Go.',
+          'choices': [
+            {'text': 'Surrender', 'to': 'cell'},
+          ],
         },
-        extra: {'schema': 8},
-      ),
+        'cell': {'text': 'Locked up.', 'ending': 'defeat'},
+      }),
       random: Random(1),
     )..choose(0);
     expect(session.view.ending, Ending.defeat);
@@ -140,20 +137,17 @@ void main() {
 
   test('the page image comes with its description, or none', () {
     final session = PlaySession.start(
-      storyOf(
-        {
-          'a': {
-            'text': 'A.',
-            'image': 'images/gate.webp',
-            'imageAlt': 'An iron gate in the fog.',
-            'choices': [
-              {'text': 'On', 'to': 'b'},
-            ],
-          },
-          'b': {'text': 'B.', 'image': 'images/b.webp', 'ending': 'victory'},
+      storyOf({
+        'a': {
+          'text': 'A.',
+          'image': 'images/gate.webp',
+          'imageAlt': 'An iron gate in the fog.',
+          'choices': [
+            {'text': 'On', 'to': 'b'},
+          ],
         },
-        extra: {'schema': 8},
-      ),
+        'b': {'text': 'B.', 'image': 'images/b.webp', 'ending': 'victory'},
+      }),
       random: Random(1),
     );
     expect(session.view.imageAlt, 'An iron gate in the fog.');

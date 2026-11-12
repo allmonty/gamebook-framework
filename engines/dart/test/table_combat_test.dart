@@ -33,7 +33,7 @@ Map<String, Object?> combatRules({
 
 Map<String, Object?> storyJson({
   Map<String, Object?>? combat,
-  int schema = 5,
+  int schema = 1,
   Map<String, Object?>? enemy,
   bool simultaneous = false,
 }) => {
@@ -179,13 +179,6 @@ void main() {
         'rules.combat.luck: cannot be combined with "table" mode',
       );
     });
-
-    test('needs schema 5', () {
-      expect(
-        error(storyJson(schema: 4)),
-        'rules.combat.mode: needs "schema": 5',
-      );
-    });
   });
 
   group('a round', () {
@@ -273,7 +266,7 @@ void main() {
       Object? table = true,
       bool duel = true,
       bool simultaneous = false,
-      int schema = 5,
+      int schema = 1,
       Object? roll,
     }) => {
       'schema': schema,
@@ -356,18 +349,11 @@ void main() {
       expect(strike.damageToPlayer, 2);
     });
 
-    test('errors name the path, and a duel needs schema 5', () {
+    test('errors name the path', () {
       expect(
         error(mixedJson(table: null, roll: '1d10-1')),
         'rules.combat.table: missing',
       );
-      expect(
-        error(mixedJson(schema: 4)),
-        'rules.combat.luck: needs "schema": 5',
-      );
-      final noLuck = mixedJson(schema: 4);
-      ((noLuck['rules']! as Map)['combat']! as Map).remove('luck');
-      expect(error(noLuck), 'rules.combat.table: needs "schema": 5');
     });
 
     test('the validator wants a table, and no groups', () {

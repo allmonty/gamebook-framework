@@ -32,7 +32,7 @@ O caminho é relativo à pasta da história, então `images/hall.webp` fica ao l
 
 ### Descreva suas imagens
 
-Alguns leitores não conseguem ver a imagem: leem com um leitor de tela, ou a imagem não carregou. Dê a imagem a eles em palavras com `imageAlt` (schema 8):
+Alguns leitores não conseguem ver a imagem: leem com um leitor de tela, ou a imagem não carregou. Dê a imagem a eles em palavras com `imageAlt`:
 
 ```json
 "hall": {
@@ -67,7 +67,7 @@ A terceira escolha, a escotilha de manutenção, tem `"hideIfLocked": true`: enq
 
 ## De volta para onde você veio
 
-Livros-jogo impressos dizem "visite o mascate e depois volte à seção de onde veio". Uma página pode servir a muitas outras (schema 8):
+Livros-jogo impressos dizem "visite o mascate e depois volte à seção de onde veio". Uma página pode servir a muitas outras:
 
 ```gamebook
 examples/02-pages-and-choices/the-pedlar
@@ -88,14 +88,14 @@ examples/02-pages-and-choices/the-pedlar
 |---|---|---|
 | `text` | página, escolha | O que o leitor vê. `\n\n` começa um parágrafo. |
 | `image` | página | Uma imagem acima do texto. |
-| `imageAlt` | página, item | O que a imagem mostra, para leitores que não conseguem vê-la (schema 8). |
+| `imageAlt` | página, item | O que a imagem mostra, para leitores que não conseguem vê-la. |
 | `choices` | página | Os botões. |
 | `to` | escolha | A página para onde a escolha leva. |
 | `ending` | página | `"victory"` ou `"death"`: o jogo acabou. |
 | `if` | escolha | Uma condição; enquanto for falsa, a escolha fica trancada. |
 | `lockedText` | escolha | Suas palavras para explicar por que está trancada. |
 | `hideIfLocked` | escolha | Esconde a escolha enquanto estiver trancada. |
-| `call` | escolha | Lembra esta página para um retorno depois (schema 8). |
-| `return` | escolha, `win` ou `flee` de uma luta | Volta à última página lembrada (schema 8). |
+| `call` | escolha | Lembra esta página para um retorno depois. |
+| `return` | escolha, `win` ou `flee` de uma luta | Volta à última página lembrada. |
 
 `visited` é a primeira de muitas condições. A seguir, o leitor começa a carregar coisas.

@@ -20,10 +20,10 @@ enum EdgeKind {
   win,
   flee,
 
-  /// Back to a page that called (schema 8): a return goes to one of them.
+  /// Back to a page that called: a return goes to one of them.
   back,
 
-  /// A fight ended by a wound / by its round limit (schema 8).
+  /// A fight ended by a wound / by its round limit.
   wounded,
   rounds,
 }
@@ -221,7 +221,7 @@ String _dotEscape(String s) =>
 /// gated by a condition, checks split into green (pass) and red (fail) edges,
 /// fights are red boxes and endings are green (victory), amber (defeat) or
 /// grey (death).
-/// Chapters (schema 6) are drawn as labelled clusters.
+/// Chapters are drawn as labelled clusters.
 String toDot(Story story) {
   final out = StringBuffer()
     ..writeln('digraph "${_dotEscape(story.id)}" {')

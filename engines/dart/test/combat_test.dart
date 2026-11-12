@@ -247,7 +247,7 @@ void main() {
     });
   });
 
-  group('armor (schema 5)', () {
+  group('armor', () {
     final r = rules('fighting-fantasy');
 
     RoundResult round(Map<String, Object?> enemy, List<int> faces) {
@@ -305,7 +305,7 @@ void main() {
       expect(result.damageToEnemy, 3);
     });
 
-    test('is 0 by default, must not be negative, and needs schema 5', () {
+    test('is 0 by default, must not be negative', () {
       expect(Enemy.fromJson(goblin, 'e').armor, 0);
       expect(
         () => Enemy.fromJson({...goblin, 'armor': -1}, 'e'),
@@ -337,21 +337,11 @@ void main() {
           'w': {'text': 't', 'ending': 'victory'},
         },
       };
-      expect(
-        () => Story.fromJson(json(4)),
-        throwsA(
-          isA<StoryFormatException>().having(
-            (e) => e.toString(),
-            'message',
-            'nodes.n.combat.enemies[0].armor: needs "schema": 5',
-          ),
-        ),
-      );
-      expect(Story.fromJson(json(5)).nodes['n']!.combat!.enemies[0].armor, 1);
+      expect(Story.fromJson(json(1)).nodes['n']!.combat!.enemies[0].armor, 1);
     });
   });
 
-  group('luck in a fight (schema 5)', () {
+  group('luck in a fight', () {
     final r = Rules.resolve(
       RulesSpec.fromJson(
         JsonObject({
@@ -514,7 +504,7 @@ void main() {
     });
   });
 
-  group('several enemies at once (schema 5)', () {
+  group('several enemies at once', () {
     Combat pack({bool defense = false}) => Combat.fromJson(
       JsonObject({
         'enemies': [

@@ -12,7 +12,7 @@ class StatValue {
       return StatValue(
         json['value']! as int,
         json['max'] as int?,
-        // Saves from before schema 8 have floors of 0.
+        // Older saves have floors of 0.
         json['min'] as int? ?? 0,
       );
     }
@@ -22,7 +22,7 @@ class StatValue {
   final int value;
   final int? max;
 
-  /// 0, or what the story set (schema 8; may be negative).
+  /// 0, or what the story set (may be negative).
   final int min;
 
   /// The stat set to [next], kept within `min..max`.
@@ -56,7 +56,7 @@ class CombatState {
         json['enemy']! as int,
         (json['health']! as List<Object?>).cast<int>(),
         json['luck'] == null ? null : LuckChance.fromJson(json['luck']),
-        // A save from before schema 8 has no count.
+        // An older save has no count.
         json['round'] as int? ?? 0,
       );
     }
@@ -70,10 +70,10 @@ class CombatState {
   final List<int> enemyHealth;
 
   /// The wounds of the last round, while the player may still test luck on
-  /// them (schema 5); null otherwise.
+  /// them; null otherwise.
   final LuckChance? luck;
 
-  /// Rounds played so far, items that cost a round included (schema 8).
+  /// Rounds played so far, items that cost a round included.
   final int round;
 
   Map<String, Object?> toJson() => {
@@ -164,10 +164,10 @@ class GameState {
       offers: json['offers'] == null
           ? const []
           : _strings(json['offers']).toList(),
-      // Saves from before counted items (schema 8) hold one of each.
+      // Saves from before counted items hold one of each.
       counts: _ints(json['counts']),
       offerCounts: _ints(json['offerCounts']),
-      // Saves from before schema 8 remember no pages.
+      // Older saves remember no pages.
       returnTo: json['returnTo'] == null ? const [] : _list(json['returnTo']),
       taken: json['taken'] == null ? const {} : _strings(json['taken']),
       visits: _visits(json['visits'], _strings(json['visited'])),
@@ -224,14 +224,14 @@ class GameState {
   /// they were found (`pickup: "choose"`).
   final List<String> offers;
 
-  /// How many of a countable item (schema 8) are held, for every one held
+  /// How many of a countable item are held, for every one held
   /// more than once; any other item held counts 1. See [count].
   final Map<String, int> counts;
 
   /// The same for the offers: how many are offered at once.
   final Map<String, int> offerCounts;
 
-  /// The pages a `return` leads back to, oldest first (schema 8): the last
+  /// The pages a `return` leads back to, oldest first: the last
   /// one is where the next `return` goes.
   final List<String> returnTo;
 
@@ -254,13 +254,13 @@ class GameState {
   /// engine from the story's items; not part of the saved state.
   final Map<String, int> statBonus;
 
-  /// The hero's name, when the story asks for one (schema 5).
+  /// The hero's name, when the story asks for one.
   final String? name;
 
-  /// Ids of the journal entries unlocked, oldest first (schema 5).
+  /// Ids of the journal entries unlocked, oldest first.
   final List<String> journal;
 
-  /// The music file now playing, if any (schema 5); kept in the save so a
+  /// The music file now playing, if any; kept in the save so a
   /// resumed game picks it up again.
   final String? music;
 

@@ -13,7 +13,7 @@ import 'support/scripted_random.dart';
 /// door that needs Skill 10, and a fight.
 Story story({Map<String, Object?>? swordBonus, String pickup = 'auto'}) =>
     Story.fromJson({
-      'schema': 5,
+      'schema': 1,
       'id': 'smith',
       'lang': 'en',
       'title': 'Smith',
@@ -113,7 +113,7 @@ void main() {
     });
 
     test('errors name the path', () {
-      String error(Object? bonus, {int schema = 5}) {
+      String error(Object? bonus, {int schema = 1}) {
         final json = {
           'schema': schema,
           'id': 'x',
@@ -139,10 +139,6 @@ void main() {
       expect(error({'skill': 1.5}), 'items.a.bonus.skill: expected an integer');
       expect(error({'skill': 'a'}), 'items.a.bonus.skill: expected an integer');
       expect(error({'bad id': 1}), startsWith('items.a.bonus: invalid id'));
-      expect(
-        error({'skill': 1}, schema: 4),
-        'items.a.bonus: needs "schema": 5',
-      );
     });
   });
 

@@ -96,7 +96,7 @@ class HasItem extends Condition {
   const HasItem(this.item, [this.count]);
   final String item;
 
-  /// At least this many (schema 8); null when the file has no `count`.
+  /// At least this many; null when the file has no `count`.
   final int? count;
   int get amount => count ?? 1;
 }
@@ -111,7 +111,7 @@ class Visited extends Condition {
   final String node;
 }
 
-/// How many times a node was entered (schema 4).
+/// How many times a node was entered.
 class VisitCount extends Condition {
   const VisitCount(this.node, this.op, this.value);
   final String node;
@@ -124,7 +124,7 @@ class StatCompare extends Condition {
   final String stat;
   final CompareOp op;
 
-  /// What the stat is compared with: a number, or another stat (schema 5).
+  /// What the stat is compared with: a number, or another stat.
   final Quantity value;
 }
 

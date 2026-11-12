@@ -18,4 +18,4 @@ Step 10g merges every version into 1, and makes the kit say `"schema": 1`. What 
 The kit says schema 7 now, and will say 8 after step 07 with no hand edit; checks green.
 
 ## Handoff notes
-(fill in)
+- Done inside step 10g: `bin/llm_kit.dart` writes `"schema"` from `supportedSchemas` (the newest version), so the kit names version 1 now and follows when version 2 is added. The existing `llm_kit_test` keeps the generated file up to date.

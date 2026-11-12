@@ -98,11 +98,11 @@ void main() {
     expect(() => engine.choose(0), throwsStateError);
   });
 
-  group('draft pages (schema 6)', () {
+  group('draft pages', () {
     Story drafted() => Story.fromJson(
       jsonDecode('''
 {
-  "schema": 6, "id": "d", "lang": "en", "title": "D",
+  "schema": 1, "id": "d", "lang": "en", "title": "D",
   "rules": { "preset": "fighting-fantasy" },
   "start": "hall",
   "nodes": {
@@ -273,9 +273,9 @@ void main() {
     });
   });
 
-  group('a defeat ending (schema 8)', () {
+  group('a defeat ending', () {
     Story captured({int hurt = 0}) => Story.fromJson({
-      'schema': 8,
+      'schema': 1,
       'id': 'captured',
       'lang': 'en',
       'title': 'Captured',
@@ -444,7 +444,7 @@ void main() {
 
   group('a shop with stat quantities and a gold limit', () {
     Story shop() => Story.fromJson({
-      'schema': 5,
+      'schema': 1,
       'id': 'shop',
       'lang': 'en',
       'title': 'Shop',
@@ -537,7 +537,7 @@ void main() {
   });
 
   group('page text and placeholders', () {
-    Story inn({int schema = 4}) => Story.fromJson({
+    Story inn({int schema = 1}) => Story.fromJson({
       'schema': schema,
       'id': 'inn',
       'lang': 'en',
@@ -615,34 +615,11 @@ void main() {
       expect(e.choices.map((c) => c.text), ['Greet him', 'Pay 6 crowns']);
       expect(e.choices.last.choice.text, 'Pay {luck} crowns');
     });
-
-    test('a story before schema 4 keeps its braces', () {
-      final s = Story.fromJson({
-        'schema': 3,
-        'id': 'old',
-        'lang': 'en',
-        'title': 'Old',
-        'rules': {'preset': 'fighting-fantasy'},
-        'start': 'a',
-        'nodes': {
-          'a': {
-            'text': 'Keep {luck} as it is.',
-            'choices': [
-              {'text': 'Go {skill}', 'to': 'a'},
-            ],
-          },
-        },
-      });
-      final e = play(story: s);
-
-      expect(e.paragraphs, ['Keep {luck} as it is.']);
-      expect(e.choices.single.text, 'Go {skill}');
-    });
   });
 
   group('random tables', () {
     Story searching() => Story.fromJson({
-      'schema': 4,
+      'schema': 1,
       'id': 'table',
       'lang': 'en',
       'title': 'Table',
@@ -741,7 +718,7 @@ void main() {
 
     test('a page that links to itself counts each time', () {
       final s = Story.fromJson({
-        'schema': 4,
+        'schema': 1,
         'id': 'loop',
         'lang': 'en',
         'title': 'Loop',
@@ -800,7 +777,7 @@ void main() {
 
   group('once-only choices', () {
     Story searching() => Story.fromJson({
-      'schema': 4,
+      'schema': 1,
       'id': 'once',
       'lang': 'en',
       'title': 'Once',

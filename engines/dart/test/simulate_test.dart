@@ -13,7 +13,7 @@ Story rusty() =>
 
 Story story(Map<String, Object?> nodes, {Map<String, Object?>? extra}) =>
     Story.fromJson({
-      'schema': 3,
+      'schema': 1,
       'id': 's',
       'lang': 'en',
       'title': 'S',
@@ -49,7 +49,7 @@ void main() {
           },
           'b': {'text': 'B', 'ending': 'defeat'},
         },
-        extra: {'schema': 8},
+        extra: {'schema': 1},
       ),
       games: 10,
       random: Random(1),
@@ -165,7 +165,7 @@ void main() {
   test('fights, groups, luck and fleeing are played', () {
     final json = jsonDecode(
       File('test/fixtures/rusty-door.en.json').readAsStringSync(),
-    ) as Map<String, Object?>..['schema'] = 5;
+    ) as Map<String, Object?>..['schema'] = 1;
     (json['rules']! as Map<String, Object?>)['combat'] = {
       'luck': {'stat': 'luck'},
     };

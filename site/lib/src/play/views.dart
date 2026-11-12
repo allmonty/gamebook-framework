@@ -38,7 +38,7 @@ class PageView {
   final String? heading;
   final String? image;
 
-  /// What [image] shows, for players who cannot see it (schema 8); without
+  /// What [image] shows, for players who cannot see it; without
   /// it the image is decoration.
   final String? imageAlt;
   final List<String> paragraphs;
@@ -176,7 +176,7 @@ class PackItem {
   /// Extra slots it gives: set only for a container.
   final int? room;
 
-  /// How many are held, or offered (schema 8: more than 1 only for a
+  /// How many are held, or offered (more than 1 only for a
   /// countable item).
   final int count;
 }
@@ -225,7 +225,7 @@ class CombatView {
   final bool pickTarget;
   final bool canFlee;
 
-  /// Fleeing lets the enemies strike first (schema 8): the button says so.
+  /// Fleeing lets the enemies strike first: the button says so.
   final bool fleeCostsRound;
   final bool canTestLuck;
 }

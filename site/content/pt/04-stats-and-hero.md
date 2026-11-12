@@ -45,7 +45,7 @@ examples/04-stats-and-hero/ghost-market
 - `label` é o que o leitor vê; o id (`nerve`) é o que você escreve em condições e efeitos.
 - `roll` usa notação de dados: `1d6` é um dado de seis lados, `2d6+6` são dois dados mais 6, e um número puro como `"3"` é um valor fixo. O capítulo 5 trata de dados.
 - `"max": true` faz da rolagem inicial um teto: curas nunca passam dele.
-- `limit` é um teto fixo (schema 5): aqui o ouro nunca passa de 10.
+- `limit` é um teto fixo: aqui o ouro nunca passa de 10.
 - `health` diz qual atributo significa vida. Quando chega a 0, o leitor morre, onde quer que esteja.
 - Nenhum atributo fica abaixo de 0, a não ser que você dê a ele um `min` (abaixo).
 
@@ -56,13 +56,13 @@ Atributos mudam com efeitos em páginas, escolhas e itens:
 | Efeito | Significado |
 |---|---|
 | `{ "stat": "nerve", "add": -4 }` | perde 4 de Coragem (números positivos somam) |
-| `{ "stat": "gold", "set": 0 }` | deixa o Ouro em exatamente 0 (schema 5) |
+| `{ "stat": "gold", "set": 0 }` | deixa o Ouro em exatamente 0 |
 
 E condições os comparam: `{ "stat": "gold", "gte": 3 }` (3 ou mais), `lte` (ou menos), `eq` (exatamente).
 
 ### Abaixo de zero
 
-Em jogos de mesa um atributo muitas vezes é um modificador somado a uma rolagem, e um herói fraco ou amaldiçoado tem um negativo: "Força -2". Dê ao atributo um `min` e ele pode descer até lá (schema 8):
+Em jogos de mesa um atributo muitas vezes é um modificador somado a uma rolagem, e um herói fraco ou amaldiçoado tem um negativo: "Força -2". Dê ao atributo um `min` e ele pode descer até lá:
 
 ```gamebook
 examples/04-stats-and-hero/cursed-gauntlet
@@ -76,7 +76,7 @@ O `bonus` de -4 da manopla agora leva a Força abaixo de zero, e o `1d20 + might
 
 ### Bônus com condição
 
-O `bonus` de um item (capítulo 3) conta enquanto o item é carregado. Alguns bônus dependem de mais: um herói sem nenhuma arma luta com -4 de Habilidade. Escreva isso uma vez nas regras (schema 8):
+O `bonus` de um item (capítulo 3) conta enquanto o item é carregado. Alguns bônus dependem de mais: um herói sem nenhuma arma luta com -4 de Habilidade. Escreva isso uma vez nas regras:
 
 ```gamebook
 examples/04-stats-and-hero/unarmed
@@ -93,7 +93,7 @@ Enquanto o `if` valer, o bônus conta em toda parte, como o de um item: testes, 
 
 ## Preços e atributos que apontam para atributos
 
-Uma **quantidade** pode ficar onde vai um número, em `add`, `set` e condições: `{ "stat": "price" }` quer dizer "o valor atual de Preço", e `"times": -1` inverte o sinal (schema 5). Assim uma única escolha "Comprar" serve para todas as barracas:
+Uma **quantidade** pode ficar onde vai um número, em `add`, `set` e condições: `{ "stat": "price" }` quer dizer "o valor atual de Preço", e `"times": -1` inverte o sinal. Assim uma única escolha "Comprar" serve para todas as barracas:
 
 ```gamebook
 examples/04-stats-and-hero/merchant-price
@@ -109,7 +109,7 @@ Cada barraca define `price` quando você chega nela. O leitor vê Preço nos atr
 
 ## Criando o herói
 
-Adicione `creation` às regras (schema 5) e a história abre com uma tela de personagem:
+Adicione `creation` às regras e a história abre com uma tela de personagem:
 
 ```gamebook
 examples/04-stats-and-hero/pick-your-kit

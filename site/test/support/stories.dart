@@ -13,7 +13,7 @@ Story conformanceStory(String name) {
 /// A story from inline JSON with the boilerplate filled in.
 Story storyOf(Map<String, Object?> nodes, {Map<String, Object?>? extra}) =>
     Story.fromJson({
-      'schema': 7,
+      'schema': 1,
       'id': 'test',
       'lang': 'en',
       'title': 'Test',

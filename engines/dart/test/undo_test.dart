@@ -8,7 +8,7 @@ import 'support/scripted_random.dart';
 
 /// a -> b -> c -> d (an ending). Each step costs 1 gold; `b` gives a coin and
 /// has a once-only choice; `c` rolls a check; `d` ends the game.
-Map<String, Object?> storyJson({Object? undo, int schema = 5}) => {
+Map<String, Object?> storyJson({Object? undo, int schema = 1}) => {
   'schema': schema,
   'id': 'u',
   'lang': 'en',
@@ -100,10 +100,6 @@ void main() {
 
       expect(error(storyJson(undo: -1)), 'rules.undo: must not be negative');
       expect(error(storyJson(undo: 'a')), 'rules.undo: expected an integer');
-      expect(
-        error(storyJson(undo: 2, schema: 4)),
-        'rules.undo: needs "schema": 5',
-      );
     });
   });
 
@@ -187,7 +183,7 @@ void main() {
 
     test('a fight is undone as a whole, not round by round', () {
       final story = Story.fromJson({
-        'schema': 5,
+        'schema': 1,
         'id': 'f',
         'lang': 'en',
         'title': 'F',

@@ -5,7 +5,7 @@
     "B16"
   ],
   "story": {
-    "schema": 8,
+    "schema": 1,
     "id": "lint",
     "lang": "en",
     "title": "Lint",

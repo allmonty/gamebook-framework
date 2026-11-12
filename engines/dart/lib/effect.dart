@@ -18,8 +18,8 @@ sealed class Effect {
       'journal',
       'achieve',
     ];
-    // With `stat` present, `add` or `set` is a stat effect (schema 5 added
-    // `set` and quantities); `set` alone is a flag.
+    // With `stat` present, `add` or `set` is a stat effect; `set` alone is a
+    // flag.
     if (obj.has('stat')) return _statChange(obj);
     final present = kinds.where(obj.has).toList();
     if (present.length != 1) {
@@ -71,7 +71,7 @@ sealed class Effect {
   }
 }
 
-/// The optional `count` of a give, a take or a `has` (schema 8): at least 1.
+/// The optional `count` of a give, a take or a `has`: at least 1.
 int? itemCount(JsonObject obj) {
   final count = obj.optInt('count');
   if (count != null && count < 1) {
@@ -103,7 +103,7 @@ class StatChange extends Effect {
   const StatChange(this.stat, this.amount, {this.replace = false});
   final String stat;
 
-  /// A number, or another stat's value (schema 5).
+  /// A number, or another stat's value.
   final Quantity amount;
 
   /// True for `set`: the stat becomes [amount] instead of changing by it.
@@ -120,13 +120,13 @@ class SetFlag extends Effect {
   final String flag;
 }
 
-/// Unlocks a journal entry (schema 5); a second unlock does nothing.
+/// Unlocks a journal entry; a second unlock does nothing.
 class UnlockEntry extends Effect {
   const UnlockEntry(this.entry);
   final String entry;
 }
 
-/// Earns an achievement (schema 7). It changes nothing in the game: the
+/// Earns an achievement. It changes nothing in the game: the
 /// engine reports it, and the app keeps it for the player.
 class Achieve extends Effect {
   const Achieve(this.achievement);

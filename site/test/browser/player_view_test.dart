@@ -65,7 +65,7 @@ void main() {
       host,
       PlaySession.start(
         Story.fromJson({
-          'schema': 8,
+          'schema': 1,
           'id': 't',
           'lang': 'en',
           'title': 'Border',
@@ -100,7 +100,7 @@ void main() {
       host,
       PlaySession.start(
         Story.fromJson({
-          'schema': 8,
+          'schema': 1,
           'id': 't',
           'lang': 'en',
           'title': 'Pictures',

@@ -11,13 +11,13 @@ examples/07-living-world/search-once
 There are two kinds of "once":
 
 - `"once": true` on a **page** makes its `effects` happen only the first time the reader arrives. The chest pays 5 gold once, however often you open it. Use it for every pickup and every heal, so revisiting cannot be farmed.
-- `"once": true` on a **choice** makes the choice disappear after it is taken (schema 4). The nap is gone after one go.
+- `"once": true` on a **choice** makes the choice disappear after it is taken. The nap is gone after one go.
 
 ## Flags, visits and conditions that combine
 
 A **flag** is an on/off switch with any name you like. Effects `{ "set": "paid" }` and `{ "clear": "paid" }` switch it; the condition `{ "flag": "paid" }` tests it. You never declare flags; writing them is enough.
 
-**Visits** count how many times the reader has entered a page: `{ "visits": "inn", "gte": 2 }` (schema 4). The start page counts as its first visit.
+**Visits** count how many times the reader has entered a page: `{ "visits": "inn", "gte": 2 }`. The start page counts as its first visit.
 
 Conditions combine with `all` (every one is true), `any` (at least one is true) and `not`:
 
@@ -33,7 +33,7 @@ examples/07-living-world/the-innkeeper
 
 ## Text that changes
 
-A page's `text` can be a **list of parts** (schema 4). A plain string is always shown; an object with `if` is shown only while its condition holds. That is how the innkeeper greets a stranger the first time and an old friend after:
+A page's `text` can be a **list of parts**. A plain string is always shown; an object with `if` is shown only while its condition holds. That is how the innkeeper greets a stranger the first time and an old friend after:
 
 ```json
 "text": [
@@ -45,21 +45,21 @@ A page's `text` can be a **list of parts** (schema 4). A plain string is always 
 
 ### Numbers in text
 
-Write a stat id in braces and the reader sees its current value (schema 4): `{gold}`, `{luck}`. `{luck.max}` is its ceiling. `{name}` is the hero's name when the story asks for one (chapter 4). It works in page text and in choice text:
+Write a stat id in braces and the reader sees its current value: `{gold}`, `{luck}`. `{luck.max}` is its ceiling. `{name}` is the hero's name when the story asks for one (chapter 4). It works in page text and in choice text:
 
 ```gamebook
 examples/07-living-world/gold-counter
 ```
 
-`{meal.count}` (schema 8) is how many of the item `meal` the reader carries: the provisions in chapter 3 count down with it.
+`{meal.count}` is how many of the item `meal` the reader carries: the provisions in chapter 3 count down with it.
 
 To show real braces, write them twice: `{{` and `}}`.
 
 ## The journal and achievements
 
-A `journal` at the top of the file lists entries the reader can unlock, each with a `title` and `text` (schema 5). The effect `{ "journal": "letter" }` unlocks one, once, and the log announces it. Unlocked entries appear in the journal panel, newest first.
+A `journal` at the top of the file lists entries the reader can unlock, each with a `title` and `text`. The effect `{ "journal": "letter" }` unlocks one, once, and the log announces it. Unlocked entries appear in the journal panel, newest first.
 
-**Achievements** (schema 7) are marks the reader keeps across games: replay value. Declare them in `achievements`, earn them with `{ "achieve": "scholar" }`. `"hidden": true` keeps an achievement secret until it is earned. They change nothing in the game itself.
+**Achievements** are marks the reader keeps across games: replay value. Declare them in `achievements`, earn them with `{ "achieve": "scholar" }`. `"hidden": true` keeps an achievement secret until it is earned. They change nothing in the game itself.
 
 ```gamebook
 examples/07-living-world/journal-clues
@@ -72,7 +72,7 @@ examples/07-living-world/journal-clues
 
 ## Music and sound
 
-A page can set music and sounds (schema 5):
+A page can set music and sounds:
 
 ```json
 "crypt": { "text": "...", "music": "audio/crypt.ogg", "sound": "audio/door.wav", "choices": [ ... ] }
@@ -85,7 +85,7 @@ Paths are relative to the story's folder, like images. Readers can turn audio of
 
 ## Undo
 
-`"undo": 1` in the rules lets the reader step back that many pages (schema 5). Everything returns to how it was before the choice: stats, items, flags, visits. Dice are rolled fresh if the same choice is taken again.
+`"undo": 1` in the rules lets the reader step back that many pages. Everything returns to how it was before the choice: stats, items, flags, visits. Dice are rolled fresh if the same choice is taken again.
 
 ```gamebook
 examples/07-living-world/undo-the-trap
@@ -95,7 +95,7 @@ Undo is generous: it even takes back a death. Leave it off for a classic, unforg
 
 ## Endings that are not a death
 
-Caught at the border, lost in the woods, gone home: many adventures end without a win and without a death. Mark such a page `"ending": "defeat"` (schema 8). The reader is told the adventure is over, not that they died.
+Caught at the border, lost in the woods, gone home: many adventures end without a win and without a death. Mark such a page `"ending": "defeat"`. The reader is told the adventure is over, not that they died.
 
 ```gamebook
 examples/07-living-world/captured
@@ -105,7 +105,7 @@ Two of its three endings are defeats, and the hero is alive in both. Health at 0
 
 ## Rules on every page
 
-Some things happen on every page: a fever drains you until it is cured, a curse wears off after a few steps, a hero heals a little whenever there is no fight. Write them once, in `rules.everyPage` (schema 8):
+Some things happen on every page: a fever drains you until it is cured, a curse wears off after a few steps, a hero heals a little whenever there is no fight. Write them once, in `rules.everyPage`:
 
 ```gamebook
 examples/07-living-world/marsh-fever

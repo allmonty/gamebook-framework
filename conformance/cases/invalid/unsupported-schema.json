@@ -1,11 +1,10 @@
 {
-  "description": "Achievements need schema 7.",
+  "description": "A story whose schema version the engine does not know is rejected (B2).",
   "spec": [
-    "B2",
-    "B15"
+    "B2"
   ],
   "story": {
-    "schema": 6,
+    "schema": 2,
     "id": "case",
     "lang": "en",
     "title": "Case",
@@ -16,16 +15,11 @@
     "nodes": {
       "a": {
         "text": "A",
-        "effects": [
-          {
-            "achieve": "x"
-          }
-        ],
         "ending": "victory"
       }
     }
   },
   "error": {
-    "path": "nodes.a.effects[0]"
+    "path": "schema"
   }
 }
