@@ -91,12 +91,15 @@ For a new example story also run `(cd engines/dart && dart run gamebook_engine:s
 
 ## Candidates after this plan (not steps)
 From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes and a short story example before it is specified. In the order the evidence suggests:
-1. **Limits per kind of item** (Lone Wolf: 2 weapons next to an 8-item backpack).
-2. **A bonus that depends on a condition** (Lone Wolf: +2 with one weapon, -4 unarmed).
-3. **Rules that apply on every page** (Lone Wolf's Healing: +1 Endurance per page without a fight).
-4. **Export to a printable book** of numbered, shuffled sections: a tool, no format change.
-5. **New check kinds**: advantage and disadvantage, dice pools.
-6. "Return to the page you came from", conditional effects, text emphasis, `{item}` counts in text.
+1. **A page that returns to where the player came from** (a shop, a wandering monster, "fight this, then go back"): seen in printed books and as `fight`/`return` in the Python fighting-fantasy engine. The request with the most evidence.
+2. **A `flee` that costs a round** (Lone Wolf: in the evading round only the hero can be hurt).
+3. **Limits per kind of item** (Lone Wolf: 2 weapons next to an 8-item backpack).
+4. **A bonus that depends on a condition** (Lone Wolf: +2 with one weapon, -4 unarmed).
+5. **Rules that apply on every page** (Lone Wolf's Healing: +1 Endurance per page without a fight).
+6. **Export to a printable book** of numbered, shuffled sections: a tool, no format change.
+7. **The engine as a tool server (MCP) for AI assistants**: the assistant narrates and the engine owns dice and state. A tool, no format change; fits the goal of being usable by AIs.
+8. **New check kinds**: advantage and disadvantage, dice pools.
+9. Conditional effects, text emphasis, `{item}` counts in text, a total cap on a countable item.
 
 ## Waiting on the owner (outward-facing, never do these unasked)
 - Push the `schema-8` branch and open the pull request.
