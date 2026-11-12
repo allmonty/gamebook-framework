@@ -48,13 +48,8 @@ class LabView {
   Timer? _debounce;
   late final _playTab = _tab(m('player.tab.play'), () => _show(play: true));
   late final _editTab = _tab(m('player.tab.edit'), () => _show(play: false));
-  late final _tabs = el(
-    'div',
-    cls: 'gb-tabs',
-    attrs: {'role': 'tablist'},
-    children: [_playTab, _editTab],
-  );
-  late final _playPane = el('div', cls: 'gb-pane', attrs: {'role': 'tabpanel'});
+  late final _tabs = el('div', cls: 'gb-tabs', children: [_playTab, _editTab]);
+  late final _playPane = el('div', cls: 'gb-pane');
   late final _issues = el(
     'ul',
     cls: 'gb-issues',
@@ -67,7 +62,6 @@ class LabView {
   late final _editPane = el(
     'div',
     cls: 'gb-pane gb-edit',
-    attrs: {'role': 'tabpanel'},
     children: [
       _textarea,
       _hint,
@@ -94,14 +88,14 @@ class LabView {
     ],
   );
 
-  HTMLElement _tab(String label, void Function() select) => onClick(
-    el('button', cls: 'gb-tab label', text: label, attrs: {'role': 'tab'}),
-    select,
-  );
+  /// Two toggle buttons, not ARIA tabs: that pattern promises arrow keys
+  /// and linked panels, which two buttons do not need.
+  HTMLElement _tab(String label, void Function() select) =>
+      onClick(el('button', cls: 'gb-tab label', text: label), select);
 
   void _show({required bool play}) {
-    _playTab.setAttribute('aria-selected', '$play');
-    _editTab.setAttribute('aria-selected', '${!play}');
+    _playTab.setAttribute('aria-pressed', '$play');
+    _editTab.setAttribute('aria-pressed', '${!play}');
     _playPane.hidden = (!play).toJS;
     _editPane.hidden = play.toJS;
   }

@@ -154,4 +154,24 @@ void main() {
     expect(lab.audio.playing, isNull);
     host.remove();
   });
+
+  test('Play and Edit are toggle buttons that show one pane', () {
+    final host = el('div');
+    document.body!.append(host);
+    LabView(host, EditSession(_source, Random(1)), const Messages({}));
+    final [play, edit] = [
+      for (var i = 0; i < 2; i++)
+        host.querySelectorAll('.gb-tab').item(i)! as HTMLElement,
+    ];
+    expect(host.querySelector('[role]'), isNull);
+    expect(play.getAttribute('aria-pressed'), 'true');
+    expect((host.querySelector('.gb-edit')! as HTMLElement).hidden, isNotNull);
+
+    edit.click();
+
+    expect(play.getAttribute('aria-pressed'), 'false');
+    expect(edit.getAttribute('aria-pressed'), 'true');
+    expect(host.querySelector('.gb-edit:not([hidden])'), isNotNull);
+    host.remove();
+  });
 }

@@ -297,7 +297,7 @@ main { display: block; }
 .gb-tabs { display: flex; gap: var(--s1); border-bottom: 1px solid var(--line); }
 .gb-tab { min-height: 40px; padding: var(--s2) var(--s4); color: var(--muted); background: none; border: 0;
   border-bottom: 2px solid transparent; cursor: pointer; }
-.gb-tab[aria-selected='true'] { color: var(--cyan); border-bottom-color: var(--cyan); text-shadow: var(--glow); }
+.gb-tab[aria-pressed='true'] { color: var(--cyan); border-bottom-color: var(--cyan); text-shadow: var(--glow); }
 .gb-edit { display: grid; gap: var(--s3); }
 .gb-edit textarea {
   width: 100%; min-height: 420px; resize: vertical; padding: var(--s4);
