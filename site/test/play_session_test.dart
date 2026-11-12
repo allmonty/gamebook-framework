@@ -175,6 +175,21 @@ void main() {
     }
   });
 
+  test('unarmed, the hero fights at -4 Skill until they find a club', () {
+    for (final lang in ['en', 'pt']) {
+      // Skill 9, Stamina 18, Luck 9.
+      final session = PlaySession.start(
+        storyFile('examples/04-stats-and-hero/unarmed.$lang.json'),
+        random: ScriptedRandom([3, 3, 3, 3]),
+      )..choose(0);
+      int skill() =>
+          session.view.stats.firstWhere((s) => s.id == 'skill').value;
+      expect(skill(), 5, reason: lang);
+      session.choose(0);
+      expect(skill(), 9, reason: lang);
+    }
+  });
+
   test('without showTitles the heading is the story title', () {
     final session = PlaySession.start(
       conformanceStory('locked-choice'),

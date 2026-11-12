@@ -233,11 +233,20 @@ class GameEngine {
 
   Map<String, int> _bonusOf(GameState s) {
     final bonus = <String, int>{};
-    for (final item in s.inventory) {
-      for (final MapEntry(:key, :value)
-          in (story.items[item]?.bonus ?? const <String, int>{}).entries) {
+    void add(Map<String, int> more) {
+      for (final MapEntry(:key, :value) in more.entries) {
         bonus[key] = (bonus[key] ?? 0) + value;
       }
+    }
+
+    for (final item in s.inventory) {
+      add(story.items[item]?.bonus ?? const {});
+    }
+    // Rule bonuses see the item bonuses only, so none can switch itself on or
+    // off (B5).
+    final withItems = s.withBonus({...bonus});
+    for (final rule in story.rules.bonuses) {
+      if (evaluate(rule.condition, withItems)) add(rule.bonus);
     }
     return bonus;
   }

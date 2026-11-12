@@ -1,0 +1,54 @@
+{
+  "description": "A rule bonus to the health stat is not allowed.",
+  "spec": [
+    "B5"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "bonuses": [
+        {
+          "if": {
+            "has": "sword"
+          },
+          "bonus": {
+            "stamina": 2
+          }
+        }
+      ]
+    },
+    "items": {
+      "sword": {
+        "name": "Sword"
+      },
+      "ring": {
+        "name": "Ring",
+        "bonus": {
+          "skill": 1
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Skill {skill}.",
+        "once": true,
+        "effects": [],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a",
+            "effects": []
+          }
+        ]
+      }
+    }
+  },
+  "error": {
+    "path": "rules.bonuses[0].bonus.stamina"
+  }
+}

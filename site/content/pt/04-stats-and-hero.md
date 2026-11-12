@@ -74,6 +74,23 @@ examples/04-stats-and-hero/cursed-gauntlet
 
 O `bonus` de -4 da manopla agora leva a Força abaixo de zero, e o `1d20 + might` da porta sente isso. Efeitos e bônus param no `min`, como param em 0 para qualquer outro atributo. O atributo de `health` não pode ter um: em 0 o herói está morto.
 
+### Bônus com condição
+
+O `bonus` de um item (capítulo 3) conta enquanto o item é carregado. Alguns bônus dependem de mais: um herói sem nenhuma arma luta com -4 de Habilidade. Escreva isso uma vez nas regras (schema 8):
+
+```gamebook
+examples/04-stats-and-hero/unarmed
+```
+
+```json
+"bonuses": [
+  { "if": { "not": { "any": [ { "has": "sword" }, { "has": "club" } ] } },
+    "bonus": { "skill": -4 } }
+]
+```
+
+Enquanto o `if` valer, o bônus conta em toda parte, como o de um item: testes, lutas, condições, `{skill}` no texto e a barra de atributos. Perca a espada e ele começa; pegue o porrete e ele para. A condição vê os bônus de itens mas não os de outras regras, então uma regra não consegue se ligar ou desligar sozinha.
+
 ## Preços e atributos que apontam para atributos
 
 Uma **quantidade** pode ficar onde vai um número, em `add`, `set` e condições: `{ "stat": "price" }` quer dizer "o valor atual de Preço", e `"times": -1` inverte o sinal (schema 5). Assim uma única escolha "Comprar" serve para todas as barracas:
@@ -125,5 +142,6 @@ A tela de personagem aparece quando a história tem `creation` ou define seu pr�
 - Em Escolha seu Equipamento, mude `count` para `1` ou adicione uma quarta opção.
 - No mercado noturno, faça a jaqueta custar 2.
 - No cofre, tire o `"min": -3`: a manopla agora para a Força em 0, e a porta fica mais fácil.
+- Em Desarmado, troque `-4` por `-1`, ou tire o `{ "has": "club" }` para o porrete não ajudar mais.
 
 A seguir: rolar dados quando importa.

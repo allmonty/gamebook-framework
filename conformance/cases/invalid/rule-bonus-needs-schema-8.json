@@ -1,0 +1,57 @@
+{
+  "description": "Rule bonuses need schema 8.",
+  "spec": [
+    "B2",
+    "B5"
+  ],
+  "story": {
+    "schema": 7,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "bonuses": [
+        {
+          "if": {
+            "not": {
+              "has": "sword"
+            }
+          },
+          "bonus": {
+            "skill": -4
+          }
+        }
+      ]
+    },
+    "items": {
+      "sword": {
+        "name": "Sword"
+      },
+      "ring": {
+        "name": "Ring",
+        "bonus": {
+          "skill": 1
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Skill {skill}.",
+        "once": true,
+        "effects": [],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a",
+            "effects": []
+          }
+        ]
+      }
+    }
+  },
+  "error": {
+    "path": "rules.bonuses"
+  }
+}

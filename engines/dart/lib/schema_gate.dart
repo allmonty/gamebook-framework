@@ -116,6 +116,7 @@ String? _schema7(Story story) {
 
 String? _schema8(Story story) {
   if (story.coverAlt != null) return 'coverAlt';
+  if (story.rules.bonuses.isNotEmpty) return 'rules.bonuses';
   for (final MapEntry(:key, :value) in story.rules.stats.entries) {
     if (value.min != null) return 'rules.stats.$key.min';
   }

@@ -403,6 +403,32 @@
               }
             }
           }
+        },
+        "bonuses": {
+          "description": "Schema 8. Bonuses to stats while a condition holds",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "if",
+              "bonus"
+            ],
+            "properties": {
+              "if": {
+                "$ref": "#/$defs/condition"
+              },
+              "bonus": {
+                "type": "object",
+                "propertyNames": {
+                  "$ref": "#/$defs/id"
+                },
+                "additionalProperties": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
         }
       }
     },

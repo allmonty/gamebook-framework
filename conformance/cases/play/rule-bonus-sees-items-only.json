@@ -1,0 +1,65 @@
+{
+  "description": "A rule bonus's condition sees item bonuses but no rule bonus: a -2 while Skill is 9 or more applies at Skill 9, and does not switch itself off.",
+  "spec": [
+    "B4",
+    "B5"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "bonuses": [
+        {
+          "if": {
+            "stat": "skill",
+            "gte": 9
+          },
+          "bonus": {
+            "skill": -2
+          }
+        }
+      ]
+    },
+    "items": {
+      "sword": {
+        "name": "Sword"
+      },
+      "ring": {
+        "name": "Ring",
+        "bonus": {
+          "skill": 1
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Skill {skill}.",
+        "once": true,
+        "effects": [],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a",
+            "effects": []
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "stats": {
+      "skill": 7
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "description": "A rule bonus applies while its condition holds: without the sword, -4 Skill.",
+  "spec": [
+    "B4",
+    "B5"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "bonuses": [
+        {
+          "if": {
+            "not": {
+              "has": "sword"
+            }
+          },
+          "bonus": {
+            "skill": -4
+          }
+        }
+      ]
+    },
+    "items": {
+      "sword": {
+        "name": "Sword"
+      },
+      "ring": {
+        "name": "Ring",
+        "bonus": {
+          "skill": 1
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Skill {skill}.",
+        "once": true,
+        "effects": [
+          {
+            "give": "sword"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a",
+            "effects": [
+              {
+                "take": "sword"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "stats": {
+      "skill": 5
+    },
+    "paragraphs": [
+      "Skill 5."
+    ]
+  }
+}

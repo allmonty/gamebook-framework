@@ -69,6 +69,7 @@ Some items can be **actively used** by the player:
 
 #### Item bonuses
 - An item can give **passive bonuses** while carried: a sword that adds +1 to Skill, a cursed ring that lowers Luck. The bonus is applied automatically everywhere — in checks, combat and displayed stats.
+- A bonus can also depend on a **condition** instead of an item: -4 Skill while the hero has no weapon at all.
 
 #### Carrying limits and containers
 - Optionally, set a **pack capacity**: the player can only carry *N* items at a time.

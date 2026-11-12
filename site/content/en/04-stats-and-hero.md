@@ -74,6 +74,23 @@ examples/04-stats-and-hero/cursed-gauntlet
 
 The gauntlet's `bonus` of -4 now takes Might below zero, and the door's `1d20 + might` feels it. Effects and bonuses stop at the `min`, as they stop at 0 for any other stat. The `health` stat cannot have one: at 0 the hero is dead.
 
+### Bonuses with a condition
+
+An item's `bonus` (chapter 3) counts while the item is carried. Some bonuses depend on more: a hero with no weapon at all fights at -4 Skill. Write it once in the rules (schema 8):
+
+```gamebook
+examples/04-stats-and-hero/unarmed
+```
+
+```json
+"bonuses": [
+  { "if": { "not": { "any": [ { "has": "sword" }, { "has": "club" } ] } },
+    "bonus": { "skill": -4 } }
+]
+```
+
+While the `if` holds, the bonus counts everywhere, like an item's: checks, fights, conditions, `{skill}` in text and the stats bar. Lose the sword and it starts; pick up the club and it stops. The condition sees item bonuses but not other rule bonuses, so a rule cannot switch itself on or off.
+
 ## Prices and other stats that point at stats
 
 A **quantity** can stand where a number goes, in `add`, `set` and conditions: `{ "stat": "price" }` means "the current value of Price", and `"times": -1` flips its sign (schema 5). That lets one "Buy it" choice work for every stall:
@@ -125,5 +142,6 @@ The character screen appears when the story has `creation` or sets its own `rero
 - In Pick Your Kit, change `count` to `1`, or add a fourth option.
 - In the night market, make the jacket cost 2.
 - In the vault, remove `"min": -3`: the gauntlet now stops Might at 0, and the door gets easier.
+- In Unarmed, change `-4` to `-1`, or remove `{ "has": "club" }` so the club no longer helps.
 
 Next: rolling dice when it matters.
