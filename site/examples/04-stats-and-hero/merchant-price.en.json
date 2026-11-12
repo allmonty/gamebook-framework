@@ -1,0 +1,125 @@
+{
+  "schema": 5,
+  "id": "merchant-price",
+  "lang": "en",
+  "title": "The Night Market",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "gold": {
+        "label": "Gold",
+        "roll": "2d6"
+      },
+      "price": {
+        "label": "Price",
+        "roll": "0"
+      }
+    }
+  },
+  "items": {
+    "noodles": {
+      "name": "Noodles"
+    },
+    "jacket": {
+      "name": "Glowing jacket"
+    }
+  },
+  "start": "street",
+  "nodes": {
+    "street": {
+      "text": "Two stalls are still open.",
+      "choices": [
+        {
+          "text": "Visit the noodle stand",
+          "to": "cheap",
+          "effects": [
+            {
+              "stat": "price",
+              "set": 3
+            }
+          ]
+        },
+        {
+          "text": "Visit the jacket tailor",
+          "to": "dear",
+          "effects": [
+            {
+              "stat": "price",
+              "set": 9
+            }
+          ]
+        },
+        {
+          "text": "Go home",
+          "to": "home"
+        }
+      ]
+    },
+    "cheap": {
+      "text": "Hot noodles, 3 gold.",
+      "choices": [
+        {
+          "text": "Buy it",
+          "to": "street",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "noodles"
+            }
+          ]
+        },
+        {
+          "text": "Back to the street",
+          "to": "street"
+        }
+      ]
+    },
+    "dear": {
+      "text": "A glowing jacket, 9 gold.",
+      "choices": [
+        {
+          "text": "Buy it",
+          "to": "street",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "jacket"
+            }
+          ]
+        },
+        {
+          "text": "Back to the street",
+          "to": "street"
+        }
+      ]
+    },
+    "home": {
+      "text": "Home, with or without shopping.",
+      "ending": "victory"
+    }
+  }
+}

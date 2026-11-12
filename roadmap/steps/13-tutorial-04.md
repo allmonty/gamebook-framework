@@ -13,4 +13,6 @@ same
 same
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- Chapter 4 with four examples in `examples/04-stats-and-hero/`: `d20-hero` (d20-lite preset, Portuguese label overrides), `ghost-market` (no preset: own stats, `health`, `max`, `limit`, `add`, `set`), `merchant-price` (quantities `{stat, times}` in a condition and an effect), `pick-your-kit` (creation: `rerolls`, `name`, a pick group; first mention of flags and `{name}`).
+- The presets table states the exact preset numbers from spec B4.
+- Flags and `{name}` are only previewed; chapter 7 covers flags, visits and placeholders.

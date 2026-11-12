@@ -1,0 +1,115 @@
+{
+  "schema": 5,
+  "id": "pick-your-kit",
+  "lang": "pt",
+  "title": "Escolha seu Equipamento",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "rerolls": 3,
+    "creation": {
+      "name": true,
+      "picks": [
+        {
+          "id": "kit",
+          "title": "Escolha duas coisas para levar",
+          "count": 2,
+          "options": [
+            {
+              "id": "torch",
+              "label": "Uma tocha",
+              "description": "Luz em lugares escuros.",
+              "effects": [
+                {
+                  "give": "torch"
+                }
+              ]
+            },
+            {
+              "id": "rope",
+              "label": "Uma corda",
+              "effects": [
+                {
+                  "give": "rope"
+                }
+              ]
+            },
+            {
+              "id": "charm",
+              "label": "Um amuleto da sorte",
+              "description": "+1 de Sorte, e a sorte pode abrir portas.",
+              "effects": [
+                {
+                  "stat": "luck",
+                  "add": 1
+                },
+                {
+                  "set": "lucky"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "torch": {
+      "name": "Uma tocha"
+    },
+    "rope": {
+      "name": "Uma corda"
+    }
+  },
+  "start": "door",
+  "nodes": {
+    "door": {
+      "text": "{name}, a boca da tumba é negra como tinta. O que você trouxe?",
+      "choices": [
+        {
+          "text": "Acender a tocha",
+          "to": "in",
+          "if": {
+            "has": "torch"
+          }
+        },
+        {
+          "text": "Descer o poço pela corda",
+          "to": "in",
+          "if": {
+            "has": "rope"
+          }
+        },
+        {
+          "text": "Confiar no amuleto",
+          "to": "in",
+          "if": {
+            "flag": "lucky"
+          }
+        },
+        {
+          "text": "Tatear no escuro",
+          "to": "lost"
+        }
+      ]
+    },
+    "in": {
+      "text": "Você encontra a escada. Sua aventura começa.",
+      "ending": "victory"
+    },
+    "lost": {
+      "text": "Você cai num buraco que nunca viu.",
+      "ending": "death"
+    }
+  }
+}

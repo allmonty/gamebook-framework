@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "id": "d20-hero",
+  "lang": "pt",
+  "title": "Um Herói d20",
+  "rules": {
+    "preset": "d20-lite",
+    "stats": {
+      "might": {
+        "label": "Força"
+      },
+      "agility": {
+        "label": "Agilidade"
+      },
+      "wits": {
+        "label": "Astúcia"
+      },
+      "hp": {
+        "label": "PV"
+      }
+    }
+  },
+  "start": "bridge",
+  "nodes": {
+    "bridge": {
+      "text": "Uma ponte de corda sobre um cânion de cabos zumbindo. Metade das tábuas sumiu.",
+      "choices": [
+        {
+          "text": "Dançar entre os buracos (Agilidade 3+)",
+          "to": "across",
+          "if": {
+            "stat": "agility",
+            "gte": 3
+          }
+        },
+        {
+          "text": "Se puxar pelas cordas (Força 3+)",
+          "to": "across",
+          "if": {
+            "stat": "might",
+            "gte": 3
+          }
+        },
+        {
+          "text": "Só correr e torcer",
+          "to": "across",
+          "effects": [
+            {
+              "stat": "hp",
+              "add": -3
+            }
+          ]
+        }
+      ]
+    },
+    "across": {
+      "text": "Você chega do outro lado.",
+      "ending": "victory"
+    }
+  }
+}

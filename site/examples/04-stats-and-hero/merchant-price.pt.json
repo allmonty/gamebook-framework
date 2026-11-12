@@ -1,0 +1,134 @@
+{
+  "schema": 5,
+  "id": "merchant-price",
+  "lang": "pt",
+  "title": "O Mercado Noturno",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      },
+      "gold": {
+        "label": "Ouro",
+        "roll": "2d6"
+      },
+      "price": {
+        "label": "Preço",
+        "roll": "0"
+      }
+    }
+  },
+  "items": {
+    "noodles": {
+      "name": "Lámen"
+    },
+    "jacket": {
+      "name": "Jaqueta brilhante"
+    }
+  },
+  "start": "street",
+  "nodes": {
+    "street": {
+      "text": "Duas barracas ainda estão abertas.",
+      "choices": [
+        {
+          "text": "Ir à barraca de lámen",
+          "to": "cheap",
+          "effects": [
+            {
+              "stat": "price",
+              "set": 3
+            }
+          ]
+        },
+        {
+          "text": "Ir ao alfaiate de jaquetas",
+          "to": "dear",
+          "effects": [
+            {
+              "stat": "price",
+              "set": 9
+            }
+          ]
+        },
+        {
+          "text": "Ir para casa",
+          "to": "home"
+        }
+      ]
+    },
+    "cheap": {
+      "text": "Lámen quente, 3 de ouro.",
+      "choices": [
+        {
+          "text": "Comprar",
+          "to": "street",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "noodles"
+            }
+          ]
+        },
+        {
+          "text": "Voltar para a rua",
+          "to": "street"
+        }
+      ]
+    },
+    "dear": {
+      "text": "Uma jaqueta brilhante, 9 de ouro.",
+      "choices": [
+        {
+          "text": "Comprar",
+          "to": "street",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "jacket"
+            }
+          ]
+        },
+        {
+          "text": "Voltar para a rua",
+          "to": "street"
+        }
+      ]
+    },
+    "home": {
+      "text": "Em casa, com ou sem compras.",
+      "ending": "victory"
+    }
+  }
+}
