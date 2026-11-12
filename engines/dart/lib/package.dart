@@ -66,6 +66,8 @@ GamePackage readPackage(
   int maxBytes = maxPackageBytes,
   int maxFiles = maxPackageFiles,
 }) {
+  // A file already over the limit packed is over it unpacked: nothing to open.
+  if (bytes.length > maxBytes) throw _tooBig(maxBytes);
   // Every zip starts with "PK"; the decoder takes some other bytes for an
   // empty archive, which would read as "no story file".
   if (bytes.length < 4 || bytes[0] != 0x50 || bytes[1] != 0x4B) {
@@ -101,7 +103,9 @@ GamePackage readPackage(
       throw PackageException('${entry.name}: cannot be unpacked');
     }
     // shortcut: an entry that lies about its size is only caught after it is
-    // decompressed; stream with a cap if packages ever come from a server.
+    // decompressed, and the zip decoder unpacks an entry marked as a Unix link
+    // before any check here; stream with a cap if packages ever come from a
+    // server.
     total += data.length;
     if (total > maxBytes) throw _tooBig(maxBytes);
     if (_storyFile.hasMatch(entry.name)) {

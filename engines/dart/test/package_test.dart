@@ -157,6 +157,13 @@ void main() {
       );
     });
 
+    test('a file over the limit before it is even opened', () {
+      expect(
+        () => readPackage(List.filled(4096, 0), maxBytes: 2048),
+        refused('too big: more than 0 MB unpacked'),
+      );
+    });
+
     test('a story that does not parse, naming the file and the path', () {
       expect(
         () => readPackage(
