@@ -1,11 +1,11 @@
 # Starter games
 
-Three complete game folders to copy and make your own. Each one is a folder laid out as the spec says ([B1](../spec/framework.md)): one `story.<lang>.json` per language, plus `images/` and `audio/` if you add them. Every story starts with `"$schema"`, so an editor that knows JSON Schema checks it as you type.
+Complete game folders to copy and make your own, each in English and Portuguese. Each one is a folder laid out as the spec says ([B1](../spec/framework.md)): one `story.<lang>.json` per language, plus `images/` and `audio/` if you add them. Every story starts with `"$schema"`, so an editor that knows JSON Schema checks it as you type.
 
 | Folder | What it is |
 |---|---|
-| [blank/](blank/) | The smallest valid game: the Fighting Fantasy preset, three pages, one ending. English only. Start here for a story of your own. |
-| [fighting-fantasy/](fighting-fantasy/) | *The Salt Mine*, in English and Portuguese: the classic shape. A fight, a Luck test, Provisions you eat from your pack (a counted item), a door that needs a key, and all three endings: victory, death and defeat. |
+| [blank/](blank/) | The smallest valid game: the Fighting Fantasy preset, three pages, one ending. Start here for a story of your own. |
+| [fighting-fantasy/](fighting-fantasy/) | *The Salt Mine*: the classic shape. A fight, a Luck test, Provisions you eat from your pack (a counted item), a door that needs a key, and all three endings: victory, death and defeat. |
 | [custom-rules/](custom-rules/) | *The Archive at Night*: **no preset**. The story defines its own stats (Nerve and Wits), which one is health, and how fights work, then uses them in a check and a fight. Rules are data. |
 
 Copy a folder, rename it (for example `games/my-story/`), change the `id` in every language to the same new slug, and write.

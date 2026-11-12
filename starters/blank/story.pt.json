@@ -1,0 +1,47 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "blank",
+  "lang": "pt",
+  "title": "Em branco",
+  "author": "Você",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "start",
+  "nodes": {
+    "start": {
+      "text": "A primeira página. Troque este texto pelo começo da sua história.",
+      "choices": [
+        {
+          "text": "Virar a página",
+          "to": "middle"
+        }
+      ]
+    },
+    "middle": {
+      "text": "Uma página no meio. Adicione escolhas que levam a outras páginas.",
+      "choices": [
+        {
+          "text": "Seguir até o fim",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "O fim. Uma página com um final não tem escolhas.",
+      "ending": "victory"
+    }
+  }
+}
