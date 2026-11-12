@@ -1,0 +1,377 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "three-bridges",
+  "lang": "pt",
+  "title": "Dia de Feira em Três Pontes",
+  "author": "Você",
+  "description": "Uma cidade para onde voltar: uma loja alcançada de vários lugares, preços guardados num atributo, mochila de três espaços com trocas e gente que lembra de você.",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "gold": {
+        "label": "Ouro",
+        "roll": "1d6+5",
+        "limit": 60
+      },
+      "price": {
+        "label": "Preço",
+        "roll": "0",
+        "hidden": true
+      },
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    },
+    "inventory": {
+      "capacity": 3,
+      "pickup": "choose"
+    }
+  },
+  "items": {
+    "lantern": {
+      "name": "Lampião",
+      "description": "Lata e chifre. Ilumina a descida."
+    },
+    "rope": {
+      "name": "Corda",
+      "description": "Dez metros, alcatroada."
+    },
+    "chart": {
+      "name": "Carta antiga",
+      "description": "O rio como corria cem anos atrás. Um colecionador pagaria por ela."
+    },
+    "bread": {
+      "name": "Pão de mel",
+      "description": "+2 de Energia.",
+      "stack": 3,
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 2
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    }
+  },
+  "start": "square",
+  "nodes": {
+    "square": {
+      "title": "A praça",
+      "text": [
+        "Três Pontes em dia de feira: toldos, gansos, um rabequeiro. Todo mundo diz que a velha barca da alfândega afundou junto ao cais com o cofre ainda a bordo, e que ninguém desceu para olhar.",
+        {
+          "if": {
+            "visits": "square",
+            "gte": 3
+          },
+          "text": "Os feirantes agora cumprimentam você. Já são algumas voltas pela praça."
+        },
+        "Você tem {gold} de ouro."
+      ],
+      "choices": [
+        {
+          "text": "Ir à barraca da vendeira",
+          "to": "shop",
+          "call": true
+        },
+        {
+          "text": "Descer até o cais",
+          "to": "quay"
+        },
+        {
+          "text": "Descer a escada do porão da casa da guilda",
+          "to": "cellar",
+          "if": {
+            "has": "lantern"
+          },
+          "lockedText": "Escuro demais sem um lampião."
+        },
+        {
+          "text": "Dar o dia por encerrado e ir para casa",
+          "to": "home"
+        }
+      ]
+    },
+    "quay": {
+      "title": "O cais",
+      "text": [
+        "Água verde, argolas de amarração e, debaixo da terceira ponte, o vulto escuro da barca, três metros abaixo.",
+        {
+          "if": {
+            "not": {
+              "all": [
+                {
+                  "has": "rope"
+                },
+                {
+                  "has": "lantern"
+                }
+              ]
+            }
+          },
+          "text": "Você precisaria de uma corda para descer e de uma luz para enxergar."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Ir à barraca da vendeira",
+          "to": "shop",
+          "call": true
+        },
+        {
+          "text": "Descarregar caixotes por uma hora (+3 de ouro)",
+          "to": "quay",
+          "once": true,
+          "effects": [
+            {
+              "stat": "gold",
+              "add": 3
+            }
+          ]
+        },
+        {
+          "text": "Descer até a barca",
+          "to": "barge",
+          "if": {
+            "all": [
+              {
+                "has": "rope"
+              },
+              {
+                "has": "lantern"
+              }
+            ]
+          },
+          "lockedText": "Não sem corda e lampião."
+        },
+        {
+          "text": "Pagar o mergulhador de enguias para descer por você (9 de ouro)",
+          "to": "diver",
+          "if": {
+            "stat": "gold",
+            "gte": 9
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -9
+            }
+          ],
+          "lockedText": "Ele quer 9 de ouro, adiantado."
+        },
+        {
+          "text": "Voltar à praça",
+          "to": "square"
+        }
+      ]
+    },
+    "shop": {
+      "title": "A barraca da vendeira",
+      "text": [
+        "Cordas, lampiões, velas, ganchos. A vendeira, uma mulher grande e vagarosa chamada Osa, também vende pão.",
+        {
+          "if": {
+            "visits": "shop",
+            "gte": 2
+          },
+          "text": "\"Você de novo\", diz Osa, sem má vontade."
+        },
+        "Você tem {gold} de ouro e {bread.count} pães de mel."
+      ],
+      "choices": [
+        {
+          "text": "Perguntar pelo lampião",
+          "to": "stall-lantern"
+        },
+        {
+          "text": "Perguntar pela corda",
+          "to": "stall-rope"
+        },
+        {
+          "text": "Perguntar pelo pão de mel",
+          "to": "stall-bread"
+        },
+        {
+          "text": "Vender a ela a carta antiga (+6 de ouro)",
+          "to": "shop",
+          "if": {
+            "has": "chart"
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "take": "chart"
+            },
+            {
+              "stat": "gold",
+              "add": 6
+            }
+          ]
+        },
+        {
+          "text": "Voltar por onde veio",
+          "return": true
+        }
+      ]
+    },
+    "stall-lantern": {
+      "title": "O lampião",
+      "text": "\"Cinco\", diz Osa. \"Já desceu numa mina e voltou.\" Você tem {gold} de ouro.",
+      "effects": [
+        {
+          "stat": "price",
+          "set": 5
+        }
+      ],
+      "choices": [
+        {
+          "text": "Comprar",
+          "to": "shop",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "lantern"
+            }
+          ],
+          "lockedText": "Você não tem como pagar."
+        },
+        {
+          "text": "Deixar",
+          "to": "shop"
+        }
+      ]
+    },
+    "stall-rope": {
+      "title": "A corda",
+      "text": "\"Quatro. Alcatroada semana passada.\" Você tem {gold} de ouro.",
+      "effects": [
+        {
+          "stat": "price",
+          "set": 4
+        }
+      ],
+      "choices": [
+        {
+          "text": "Comprar",
+          "to": "shop",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "rope"
+            }
+          ],
+          "lockedText": "Você não tem como pagar."
+        },
+        {
+          "text": "Deixar",
+          "to": "shop"
+        }
+      ]
+    },
+    "stall-bread": {
+      "title": "O pão de mel",
+      "text": "\"Um cada, assado hoje cedo.\" Você tem {gold} de ouro.",
+      "effects": [
+        {
+          "stat": "price",
+          "set": 1
+        }
+      ],
+      "choices": [
+        {
+          "text": "Comprar",
+          "to": "shop",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "bread"
+            }
+          ],
+          "lockedText": "Você não tem como pagar."
+        },
+        {
+          "text": "Deixar",
+          "to": "shop"
+        }
+      ]
+    },
+    "cellar": {
+      "title": "O porão da casa da guilda",
+      "text": "Barris, teias de aranha e uma arca de livros-caixa podres. Debaixo deles, enrolada em lona encerada, há uma carta do rio.",
+      "once": true,
+      "effects": [
+        {
+          "give": "chart"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Subir de volta à praça",
+          "to": "square"
+        }
+      ]
+    },
+    "barge": {
+      "title": "A barca da alfândega",
+      "text": "Você amarra a corda, acende o lampião e desce mão ante mão. O cofre está onde disseram, verde de limo, e mais pesado que um dia de trabalho honesto.",
+      "ending": "victory"
+    },
+    "diver": {
+      "title": "O mergulhador de enguias",
+      "text": "O garoto conta suas nove moedas duas vezes, toma fôlego e pula pela borda. Fica lá embaixo um bom tempo. O cofre sobe no ombro dele, e ele não pede parte: você já pagou a dele.",
+      "ending": "victory"
+    },
+    "home": {
+      "title": "Casa",
+      "text": "Você volta para casa pela primeira ponte com {gold} de ouro no bolso e a barca ainda por visitar. Sempre tem a próxima feira.",
+      "ending": "defeat"
+    }
+  }
+}

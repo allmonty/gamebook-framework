@@ -25,6 +25,7 @@ void main() {
       'blank',
       'custom-rules',
       'fighting-fantasy',
+      'hub-and-shop',
       'percentile-mystery',
       'results-table',
     ]);
