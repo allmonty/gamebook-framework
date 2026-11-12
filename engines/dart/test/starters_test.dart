@@ -27,6 +27,7 @@ void main() {
       'd20-dungeon',
       'fighting-fantasy',
       'hub-and-shop',
+      'long-book',
       'percentile-mystery',
       'results-table',
     ]);
