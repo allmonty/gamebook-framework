@@ -115,7 +115,7 @@ Roll N dice and count successes. Needs a new check type (`count`); not in the fo
 | Gamebook Engine (`.gbook`) | Numbers only, no dice | No (Swift, web player) | Partly (its analyzer) | Good (in the app) | Low (MPL-2.0) | Medium |
 | GoDungeon | Dice, stats, items; no combat | No (hosted) | Unknown | Good (visual) | Unknown | Low |
 | fighting-fantasy (Python) | Yes, one rule set in code | No (Python) | Partly (its tests) | Medium (JSON by hand) | Low (MIT) | Medium |
-| **Own JSON + rules as data** | **Yes** | **Yes (pure Dart)** | **Yes (our validator)** | Medium (hand/AI, schema, graph tool) | None | **High** |
+| **Own JSON + rules as data** | **Yes** | **Yes (pure Dart)** | **Yes (our validator)** | Medium (hand/AI, schema, graph tool) | Low (our own text; two presets are named after published games) | **High** |
 
 ## 5. Decision
 Build our own JSON graph format with rules expressed as data, plus presets for Fighting Fantasy and d20-lite. Reasons: it is the only option where stats, dice, inventory and combat are first-class and a pure-Dart engine runs them with no external runtime. We pay for it by building the engine, validator and graph tool ourselves, and by having no visual editor here. The decision is cheap to revisit: the Twine importer exists, an Ink one could follow, and `combat.mode` and check types can grow. The second round of research (section 8) found nothing that changes it.

@@ -10,6 +10,7 @@
   "home.title": "Write gamebooks. Play anywhere.",
   "home.lead": "One JSON file holds your whole adventure: pages, choices, items, stats, dice and fights. The engine reads the rules from the story itself, so one player runs Fighting Fantasy, d20 or your own system.",
   "footer.license": "Code under MIT, spec and content under CC BY 4.0.",
+  "footer.trademarks": "Fighting Fantasy, Lone Wolf and Dungeons &amp; Dragons are trademarks of their owners. This project is not affiliated with them or endorsed by them; the names only say which published rule styles the format can express.",
   "footer.versions": "Format versions",
   "footer.made": "Built with the reference Dart engine",
   "player.stats": "Stats",

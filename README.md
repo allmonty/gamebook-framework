@@ -247,3 +247,5 @@ Schema version 1 is specified. The Dart engine, which runs the gamebook app for 
 
 ## License
 The spec text is [CC BY 4.0](LICENSE-CC-BY-4.0); code, the JSON Schema and the conformance cases are [MIT](LICENSE-MIT). Details: [LICENSE](LICENSE).
+
+Fighting Fantasy, Lone Wolf and Dungeons & Dragons are trademarks of their owners. This project is not affiliated with them or endorsed by them; the names only say which published rule styles the format can express.

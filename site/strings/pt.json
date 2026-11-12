@@ -10,6 +10,7 @@
   "home.title": "Escreva livros-jogo. Jogue em qualquer lugar.",
   "home.lead": "Um arquivo JSON guarda a aventura inteira: páginas, escolhas, itens, atributos, dados e lutas. O motor lê as regras da própria história, então um único jogador roda Fighting Fantasy, d20 ou o seu sistema.",
   "footer.license": "Código sob MIT, especificação e conteúdo sob CC BY 4.0.",
+  "footer.trademarks": "Fighting Fantasy, Lone Wolf e Dungeons &amp; Dragons são marcas de seus donos. Este projeto não é afiliado a eles nem endossado por eles; os nomes só dizem quais estilos de regras publicados o formato consegue expressar.",
   "footer.versions": "Versões do formato",
   "footer.made": "Feito com o motor de referência em Dart",
   "player.stats": "Atributos",
