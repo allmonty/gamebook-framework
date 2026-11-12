@@ -217,6 +217,22 @@ void main() {
     }
   });
 
+  test('the pedlar sends the reader back to the road they came from', () {
+    for (final lang in ['en', 'pt']) {
+      for (final road in [0, 1, 2]) {
+        final session = PlaySession.start(
+          storyFile('examples/02-pages-and-choices/the-pedlar.$lang.json'),
+          random: ScriptedRandom([3, 3, 3, 3, 3]),
+        )..choose(road);
+        final roadText = session.view.paragraphs.single;
+        session
+          ..choose(0) // hail the pedlar
+          ..choose(2); // say goodbye
+        expect(session.view.paragraphs.single, roadText, reason: '$lang $road');
+      }
+    }
+  });
+
   test('without showTitles the heading is the story title', () {
     final session = PlaySession.start(
       conformanceStory('locked-choice'),

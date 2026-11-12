@@ -28,4 +28,12 @@ Spec B10 (choices, steps 3 to 4), B11 (`win`), B14 (saves), B16 (a new warning c
 On the site the pedlar returns the reader to each of the three roads, and the monster returns them where they were, in both languages; checks green.
 
 ## Handoff notes
-(fill in)
+- One commit, on the shared branch `steps-10e-10f`, built on the owner's decisions above.
+- Model: `Choice.call` and `Choice.returns` (the JSON key `return` is a Dart keyword). A choice needs exactly one of `to`, `check`, `table` or `return`, and cannot both call and return. `Combat.win` is now nullable, with `winReturns`; `flee` likewise has `fleeReturns`, and `Combat.canFlee` covers both. A fight target is parsed by `_target` in `story.dart`: a node id, or `{ "return": true }`.
+- State: `GameState.returnTo`, oldest first, saved; a save without it remembers nothing. `stateFits` checks the nodes and the bound of 16 (`GameEngine.maxReturns`).
+- Engine: `choose` pops for a return, and pushes the page left for a call, whatever the target. `_win` returns (or, with nothing remembered, ends the fight and leaves the player on the page); `flee` returns, and `canFlee` is false with nothing remembered. A return choice with nothing remembered is locked in `_view`. Undo needs nothing: the stack is state.
+- Validator: `_reached({calls})` replaces the inline walk. The new B16 code `return-without-call` warns on a page with a return that can be reached without following any call. Graph: `EdgeKind.back`, from a return to every page that has a calling choice, dashed.
+- Conformance: new expect key `returnTo` (runner and README table). Cases `return-to-caller`, `-locked`, `-call-table`, `-flee`, `-depth`, `-undo`, `-win-nothing-remembered`, two invalid cases and the lint case.
+- Two existing story tests changed their expected message ("needs exactly one of ... or \"return\"").
+- Example `examples/02-pages-and-choices/the-pedlar` (moved from the draft): the simulator gives 99.9% to town, nothing stuck. A site test checks all three roads in both languages. Tutorial "Back where you came from" / "De volta para onde você veio" in chapter 2, with its own "Try it" and two table rows. The site needed no code change: a return is just a choice that may be locked.
+- `temp-plan/drafts/` is empty and gone.

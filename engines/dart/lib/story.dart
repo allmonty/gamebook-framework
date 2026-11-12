@@ -348,6 +348,8 @@ class Choice {
     this.hideIfLocked = false,
     this.lockedText,
     this.once = false,
+    this.call = false,
+    this.returns = false,
   });
 
   factory Choice.fromJson(Object? json, String path) {
@@ -355,11 +357,19 @@ class Choice {
     final check = obj.optObject('check');
     final table = obj.optObject('table');
     final to = obj.optString('to');
-    if ([check, table, to].where((x) => x != null).length != 1) {
+    final returns = obj.has('return');
+    if (returns && !obj.optBool('return')) {
+      throw obj.error('return', 'must be true');
+    }
+    if ([check, table, to, if (returns) true].nonNulls.length != 1) {
       throw StoryFormatException(
         path,
-        'needs exactly one of "to", "check" or "table"',
+        'needs exactly one of "to", "check", "table" or "return"',
       );
+    }
+    final call = obj.optBool('call');
+    if (call && returns) {
+      throw obj.error('call', 'a choice cannot both call and return');
     }
     final choice = Choice(
       text: obj.string('text'),
@@ -373,6 +383,8 @@ class Choice {
       hideIfLocked: obj.optBool('hideIfLocked'),
       lockedText: obj.optString('lockedText'),
       once: obj.optBool('once'),
+      call: call,
+      returns: returns,
     );
     obj.finish();
     return choice;
@@ -391,6 +403,13 @@ class Choice {
 
   /// Gone for the rest of the game once taken (schema 4).
   final bool once;
+
+  /// Remembers this page as the place a later `return` leads back to
+  /// (schema 8), whatever target the choice leads to.
+  final bool call;
+
+  /// Leads back to the page last remembered (schema 8), instead of [to].
+  final bool returns;
 }
 
 class Enemy {
@@ -447,11 +466,27 @@ class RoundLimit {
   final String to;
 }
 
+/// A fight's `win` or `flee`: a node id, or `{ "return": true }` (schema 8).
+(String?, bool) _target(JsonObject obj, String key) {
+  final raw = obj.raw(key);
+  if (raw is String || raw == null) {
+    return (checkId(obj.string(key), obj.childPath(key)), false);
+  }
+  final target = JsonObject(raw, obj.childPath(key));
+  if (!target.optBool('return')) {
+    throw target.error('return', 'expected a node id or { "return": true }');
+  }
+  target.finish();
+  return (null, true);
+}
+
 class Combat {
   const Combat({
     required this.enemies,
-    required this.win,
+    this.win,
+    this.winReturns = false,
     this.flee,
+    this.fleeReturns = false,
     this.fleeCost,
     this.wounded,
     this.rounds,
@@ -462,21 +497,26 @@ class Combat {
   factory Combat.fromJson(JsonObject obj) {
     final enemies = obj.list('enemies', Enemy.fromJson);
     if (enemies.isEmpty) throw obj.error('enemies', 'needs at least one enemy');
-    final flee = obj.optString('flee');
+    final (win, winReturns) = _target(obj, 'win');
+    final (flee, fleeReturns) = obj.has('flee')
+        ? _target(obj, 'flee')
+        : (null, false);
     final costName = obj.optString('fleeCost');
     final fleeCost = costName == null
         ? null
         : CombatCost.values.where((c) => c.name == costName).firstOrNull ??
               (throw obj.error('fleeCost', 'expected "round" or "free"'));
-    if (fleeCost != null && flee == null) {
+    if (fleeCost != null && flee == null && !fleeReturns) {
       throw obj.error('fleeCost', 'only applies to a fight with "flee"');
     }
     final wounded = obj.optString('wounded');
     final rounds = obj.optObject('rounds');
     final combat = Combat(
       enemies: enemies,
-      win: checkId(obj.string('win'), obj.childPath('win')),
-      flee: flee == null ? null : checkId(flee, obj.childPath('flee')),
+      win: win,
+      winReturns: winReturns,
+      flee: flee,
+      fleeReturns: fleeReturns,
       fleeCost: fleeCost,
       wounded: wounded == null
           ? null
@@ -490,8 +530,19 @@ class Combat {
   }
 
   final List<Enemy> enemies;
-  final String win;
+
+  /// Where winning leads; null when it returns ([winReturns]).
+  final String? win;
+
+  /// Winning leads back to the page last remembered (schema 8).
+  final bool winReturns;
   final String? flee;
+
+  /// Fleeing leads back to the page last remembered (schema 8).
+  final bool fleeReturns;
+
+  /// Whether the fight can be fled at all.
+  bool get canFlee => flee != null || fleeReturns;
 
   /// As written (schema 8); null is `free`. With `round`, fleeing lets the
   /// enemies strike first.

@@ -896,6 +896,14 @@
         },
         "table": {
           "$ref": "#/$defs/randomTable"
+        },
+        "call": {
+          "description": "Schema 8. Remember this page for a later return",
+          "type": "boolean"
+        },
+        "return": {
+          "description": "Schema 8. Lead back to the page last remembered, instead of to",
+          "const": true
         }
       },
       "oneOf": [
@@ -913,8 +921,20 @@
           "required": [
             "table"
           ]
+        },
+        {
+          "required": [
+            "return"
+          ]
         }
-      ]
+      ],
+      "not": {
+        "description": "A choice cannot both call and return",
+        "required": [
+          "call",
+          "return"
+        ]
+      }
     },
     "enemy": {
       "type": "object",
@@ -964,10 +984,10 @@
           }
         },
         "win": {
-          "$ref": "#/$defs/id"
+          "$ref": "#/$defs/target"
         },
         "flee": {
-          "$ref": "#/$defs/id"
+          "$ref": "#/$defs/target"
         },
         "fleeCost": {
           "description": "Schema 8. \"round\": fleeing lets the enemies strike first",
@@ -1245,6 +1265,26 @@
             },
             "times": {
               "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    "target": {
+      "description": "A node id, or (schema 8) back to the page last remembered",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "return"
+          ],
+          "properties": {
+            "return": {
+              "const": true
             }
           }
         }

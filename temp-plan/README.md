@@ -47,8 +47,8 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 10b | [A bonus that depends on a condition](steps/10b-conditional-bonus.md) | feature | done | f2d6096 |
 | 10c | [A flee that costs a round](steps/10c-flee-costs-round.md) | feature | done | 3858d96 |
 | 10d | [Item counts in text, and a cap on a counted item](steps/10d-item-counts-in-text.md) | feature | done | a9a50fb |
-| 10e | [Rules on every page](steps/10e-every-page-rules.md) | feature | done | |
-| 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | todo | |
+| 10e | [Rules on every page](steps/10e-every-page-rules.md) | feature | done | 4f40b08 |
+| 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | done | |
 | 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | todo | |
 | 12 | [Presets as data](steps/12-presets-as-data.md) | docs + test | todo | |
 | 13 | [Starter games](steps/13-starters.md) | docs + test | todo | |
@@ -123,7 +123,8 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 
 ## Where things stand (2026-11-12, end of a session)
 - Steps 01 to 10d are done and merged into `main` (10a to 10d in pull request #15).
-- **Next:** steps 10e and 10f on `steps-10e-10f` (drafts of their examples are in `drafts/`; the owner settled their open questions, now in each step file).
+- Steps 10e and 10f are done on `steps-10e-10f`, waiting for the owner's pull request review.
+- **Next:** step 11, on its own branch from `main` once 10e and 10f are merged.
 - After 10f: steps 11 to 15, back to one branch and pull request per step.
 
 ## Waiting on the owner (outward-facing, never do these unasked)

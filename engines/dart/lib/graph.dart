@@ -20,6 +20,9 @@ enum EdgeKind {
   win,
   flee,
 
+  /// Back to a page that called (schema 8): a return goes to one of them.
+  back,
+
   /// A fight ended by a wound / by its round limit (schema 8).
   wounded,
   rounds,
@@ -84,28 +87,52 @@ String _operand(Operand? operand) => switch (operand) {
   StatRef(:final stat) => stat,
 };
 
-/// Every link of [story], page by page in file order.
-List<StoryEdge> storyEdges(Story story) => [
-  for (final MapEntry(:key, :value) in story.nodes.entries) ...[
-    for (var i = 0; i < value.choices.length; i++)
-      ..._choiceEdges(key, i, value.choices[i]),
-    if (value.combat case final combat?) ...[
-      StoryEdge(key, combat.win, 'win', EdgeKind.win),
-      if (combat.flee case final flee?)
-        StoryEdge(key, flee, 'flee', EdgeKind.flee, port: 1),
-      if (combat.wounded case final wounded?)
-        StoryEdge(key, wounded, 'wounded', EdgeKind.wounded, port: 2),
-      if (combat.rounds case final rounds?)
-        StoryEdge(
-          key,
-          rounds.to,
-          'after ${rounds.after} rounds',
-          EdgeKind.rounds,
-          port: 3,
-        ),
+/// Every link of [story], page by page in file order. A return links to
+/// every page with a choice that calls: it goes back to one of them.
+List<StoryEdge> storyEdges(Story story) {
+  final callers = [
+    for (final MapEntry(:key, :value) in story.nodes.entries)
+      if (value.choices.any((c) => c.call)) key,
+  ];
+  List<StoryEdge> back(
+    String from,
+    String label, {
+    int? choice,
+    int port = 0,
+  }) => [
+    for (final to in callers)
+      StoryEdge(from, to, label, EdgeKind.back, choice: choice, port: port),
+  ];
+  return [
+    for (final MapEntry(:key, :value) in story.nodes.entries) ...[
+      for (var i = 0; i < value.choices.length; i++)
+        if (value.choices[i].returns)
+          ...back(key, value.choices[i].text, choice: i)
+        else
+          ..._choiceEdges(key, i, value.choices[i]),
+      if (value.combat case final combat?) ...[
+        if (combat.win case final win?)
+          StoryEdge(key, win, 'win', EdgeKind.win)
+        else
+          ...back(key, 'win'),
+        if (combat.flee case final flee?)
+          StoryEdge(key, flee, 'flee', EdgeKind.flee, port: 1)
+        else if (combat.fleeReturns)
+          ...back(key, 'flee', port: 1),
+        if (combat.wounded case final wounded?)
+          StoryEdge(key, wounded, 'wounded', EdgeKind.wounded, port: 2),
+        if (combat.rounds case final rounds?)
+          StoryEdge(
+            key,
+            rounds.to,
+            'after ${rounds.after} rounds',
+            EdgeKind.rounds,
+            port: 3,
+          ),
+      ],
     ],
-  ],
-];
+  ];
+}
 
 List<StoryEdge> _choiceEdges(String from, int index, Choice choice) {
   final text = choice.once ? '${choice.text} (once)' : choice.text;
@@ -230,7 +257,7 @@ String toDot(Story story) {
       'label="${_dotEscape(e.label)}"',
       switch (e.kind) {
         EdgeKind.plain || EdgeKind.outcome => null,
-        EdgeKind.locked || EdgeKind.flee => 'style=dashed',
+        EdgeKind.locked || EdgeKind.flee || EdgeKind.back => 'style=dashed',
         EdgeKind.pass || EdgeKind.win => 'color="#2e7d32"',
         EdgeKind.fail => 'color="#c62828"',
         EdgeKind.wounded || EdgeKind.rounds => 'color="#ef6c00"',
@@ -276,7 +303,7 @@ String toMermaid(Story story) {
   for (final e in storyEdges(story)) {
     final label = '"${_mermaidEscape(e.label)}"';
     final arrow = switch (e.kind) {
-      EdgeKind.locked || EdgeKind.flee => '-.->|$label|',
+      EdgeKind.locked || EdgeKind.flee || EdgeKind.back => '-.->|$label|',
       _ => '-->|$label|',
     };
     out.writeln('  ${_mermaidId(e.from)} $arrow ${_mermaidId(e.to)}');

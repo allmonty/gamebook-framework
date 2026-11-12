@@ -320,7 +320,10 @@ class GameEngine {
       unmet: choice.condition == null
           ? const []
           : explain(choice.condition!, _state),
-      locked: choice.condition != null && !evaluate(choice.condition!, _state),
+      // A return with nowhere to go back to is locked (schema 8).
+      locked:
+          (choice.condition != null && !evaluate(choice.condition!, _state)) ||
+          (choice.returns && _state.returnTo.isEmpty),
     );
   }
 
@@ -328,7 +331,9 @@ class GameEngine {
   Combat? get combat =>
       ending == null && _state.combat != null ? node.combat : null;
 
-  bool get canFlee => combat?.flee != null;
+  bool get canFlee =>
+      combat?.flee != null ||
+      ((combat?.fleeReturns ?? false) && _state.returnTo.isNotEmpty);
 
   bool isContainer(String item) => story.items[item]?.capacity != null;
 
@@ -424,7 +429,9 @@ class GameEngine {
         _state = _state.copyWith(taken: {..._state.taken, '${node.id}#$index'});
       }
       _applyEffects(choice.effects, events);
-      var target = choice.to;
+      // A call remembers this page for a later return (schema 8).
+      final from = node.id;
+      var target = choice.returns ? _popReturn() : choice.to;
       if (choice.check case final check?) {
         final result = resolveCheck(check, _state, random);
         _applyEffects(check.effects, events);
@@ -438,6 +445,7 @@ class GameEngine {
         events.add(TableRolled(roll));
         target = outcome.to;
       }
+      if (choice.call) _pushReturn(from);
       _enter(target!, events);
     });
   }
@@ -516,7 +524,7 @@ class GameEngine {
     List<GameEvent> events,
   ) {
     if (ending != null) return;
-    if (outcome == CombatOutcome.won) return _enter(fightNode.win, events);
+    if (outcome == CombatOutcome.won) return _win(fightNode, events);
     final fight = _state.combat!;
     final round = fight.round + 1;
     _state = _state.withCombat(
@@ -549,7 +557,7 @@ class GameEngine {
       );
       _state = result.state;
       events.add(CombatLuck(result));
-      if (result.outcome == CombatOutcome.won) _enter(fightNode.win, events);
+      if (result.outcome == CombatOutcome.won) _win(fightNode, events);
     });
   }
 
@@ -590,15 +598,45 @@ class GameEngine {
   /// Runs away from the fight, to the page the story names.
   List<GameEvent> flee() {
     final fightNode = combat;
-    final target = fightNode?.flee;
-    if (target == null) throw StateError('cannot flee');
+    if (fightNode == null || !canFlee) throw StateError('cannot flee');
     _requireNoOffer();
     return _run((events) {
       // Running costs the round (schema 8): the enemies strike first. It is
       // no wound for `wounded`, nor a round for `rounds`: the player left.
-      if (fightNode!.fleeCost == CombatCost.round) _strikes(fightNode, events);
-      if (ending == null) _enter(target, events);
+      if (fightNode.fleeCost == CombatCost.round) _strikes(fightNode, events);
+      if (ending != null) return;
+      _enter(fightNode.fleeReturns ? _popReturn() : fightNode.flee!, events);
     });
+  }
+
+  /// The fight is won: on to `win`, or back to the page last remembered. A
+  /// return with nothing remembered ends the fight and leaves the player on
+  /// the page, with nothing to do (the validator warns about it, B16).
+  void _win(Combat fightNode, List<GameEvent> events) {
+    if (!fightNode.winReturns) return _enter(fightNode.win!, events);
+    if (_state.returnTo.isEmpty) {
+      _state = _state.withCombat(null);
+      return;
+    }
+    _enter(_popReturn(), events);
+  }
+
+  /// How deep calls nest: a deeper one forgets the oldest page (B10).
+  static const maxReturns = 16;
+
+  void _pushReturn(String page) {
+    final stack = [..._state.returnTo, page];
+    _state = _state.copyWith(
+      returnTo: stack.length > maxReturns
+          ? stack.sublist(stack.length - maxReturns)
+          : stack,
+    );
+  }
+
+  String _popReturn() {
+    final stack = _state.returnTo;
+    _state = _state.copyWith(returnTo: stack.sublist(0, stack.length - 1));
+    return stack.last;
   }
 
   /// The enemies strike while the player does something else (B5): the
@@ -872,6 +910,10 @@ bool stateFits(GameState state, Story story, Rules rules) {
     return false;
   }
   if (!state.journal.every(story.journal.containsKey)) return false;
+  if (state.returnTo.length > GameEngine.maxReturns ||
+      !state.returnTo.every(node)) {
+    return false;
+  }
   for (final taken in state.taken) {
     final hash = taken.lastIndexOf('#');
     final choices = story.nodes[taken.substring(0, hash < 0 ? 0 : hash)];

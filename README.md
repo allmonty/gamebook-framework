@@ -147,6 +147,7 @@ Pages can be **fight scenes**. The player taps a button to fight round by round.
 - Pages can track **how many times** the player has visited them, and show different text or unlock different choices based on that count.
 - **Flags** are simple on/off switches you can set anywhere and check anywhere — useful for "has the player met the innkeeper?" or "has the secret been revealed?".
 - **Multiple endings**: mark any page as a `victory`, `defeat` or `death` ending. A defeat is an ending that is neither a win nor a death: captured, lost, gone home. The player's health hitting zero always triggers death automatically.
+- **Go back where you came from**: a shop, a wandering monster or a side room can send the player back to whichever page they came from, as printed gamebooks do ("return to the section you came from").
 - **Rules on every page**: healing between fights, a poison that drains until cured, a curse that wears off after a few pages. Counters can be hidden from the stats bar.
 - **Undo**: let the player step back up to a set number of pages, with everything restored exactly as it was (stats, items, flags). Dice are rerolled if the same choice is taken again.
 

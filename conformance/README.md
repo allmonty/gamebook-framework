@@ -53,6 +53,7 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
 | `visits` | for each node listed, how many times it was entered (0 if never) |
 | `journal` | unlocked entry ids, in unlock order |
 | `offers` | pending offers, in order |
+| `returnTo` | the pages a `return` would lead back to, oldest first (schema 8) |
 | `paragraphs` | the current page's text as shown: the parts that apply, placeholders filled, split on blank lines (B6) |
 | `choices` | the choices shown (hidden and spent ones left out), each `{ "index", "text", "locked" }`; `text` has placeholders filled |
 | `title` | the current node's `title` (B13), or `null` |
@@ -77,7 +78,7 @@ Load the story (it must have no errors) and validate it. The warnings reported m
 
 ## Coverage
 Play cases cover every rule of Part B:
-- **Pages and choices:** locks, hidden and once-only choices, once nodes, visits, checks and their effects, random tables, conditional text and placeholders (`{item.count}` too), the hero's name, death at 0 health (and that it is final), the defeat ending, undo (after death too), a page with no open choice, draft pages, titles.
+- **Pages and choices:** locks, hidden and once-only choices, once nodes, visits, checks and their effects, random tables, conditional text and placeholders (`{item.count}` too), the hero's name, death at 0 health (and that it is final), the defeat ending, undo (after death too), a page with no open choice, draft pages, titles, calls and returns (to the caller, locked with nothing remembered, from a table, a fight's win and flee, 16 deep, undo).
 - **Conditions:** `has`, `flag`, `visited`, `visits`, stat comparisons (`gte`, `lte`, `eq`, quantities), `all`, `any` and `not`, empty ones included.
 - **Stats and creation:** the rolls of both presets in B8 order, rerolls, ceilings and limits, floors below 0 (`min`), quantities in effects, creation picks.
 - **Items:** usable items, bonuses (of items, and of rules while a condition holds), pack capacity with `auto` and `choose`, offers (in order, left, ignored, swapped, discarded at the end), containers (room, and what is lost when one goes), `takeAll`; counted items (slots per stack, give, take and `has` with a count, use, `auto` and `choose` pickup with what fits, lost room, `takeAll`, a cap per item).

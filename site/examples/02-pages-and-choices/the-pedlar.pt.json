@@ -1,0 +1,187 @@
+{
+  "schema": 8,
+  "id": "the-pedlar",
+  "lang": "pt",
+  "title": "O Mascate",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      },
+      "gold": {
+        "label": "Ouro",
+        "roll": "5"
+      }
+    }
+  },
+  "items": {
+    "rope": {
+      "name": "Corda"
+    },
+    "lamp": {
+      "name": "Lampião"
+    }
+  },
+  "start": "crossroads",
+  "nodes": {
+    "crossroads": {
+      "text": "Três estradas se encontram num marco de pedra. Um mascate com uma mochila pesada anda entre elas, vendendo para quem o chamar.",
+      "choices": [
+        {
+          "text": "Pegar a estrada do norte",
+          "to": "north"
+        },
+        {
+          "text": "Pegar a estrada do moinho",
+          "to": "mill"
+        },
+        {
+          "text": "Pegar a estrada do rio",
+          "to": "river"
+        }
+      ]
+    },
+    "north": {
+      "text": "A estrada do norte sobe entre faias. O mascate descansa num toco.",
+      "choices": [
+        {
+          "text": "Chamar o mascate",
+          "to": "pedlar",
+          "call": true
+        },
+        {
+          "text": "Seguir até a cidade",
+          "to": "town"
+        }
+      ]
+    },
+    "mill": {
+      "text": "A estrada do moinho passa por uma roda d'água que range. O mascate está comprando farinha.",
+      "choices": [
+        {
+          "text": "Chamar o mascate",
+          "to": "pedlar",
+          "call": true
+        },
+        {
+          "text": "Seguir até a cidade",
+          "to": "town"
+        }
+      ]
+    },
+    "river": {
+      "text": "A estrada do rio termina num vau. O mascate lava os pés na parte rasa.",
+      "choices": [
+        {
+          "text": "Chamar o mascate",
+          "to": "pedlar",
+          "call": true
+        },
+        {
+          "text": "Atravessar o vau",
+          "call": true,
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 3,
+                "to": "wolf"
+              },
+              {
+                "upTo": 6,
+                "to": "town"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "pedlar": {
+      "text": "\"Corda, lampiões, tudo bom como novo\", diz o mascate. Você tem {gold} de ouro.",
+      "choices": [
+        {
+          "text": "Comprar corda (2 de ouro)",
+          "to": "pedlar",
+          "if": {
+            "all": [
+              {
+                "not": {
+                  "has": "rope"
+                }
+              },
+              {
+                "stat": "gold",
+                "gte": 2
+              }
+            ]
+          },
+          "effects": [
+            {
+              "give": "rope"
+            },
+            {
+              "stat": "gold",
+              "add": -2
+            }
+          ]
+        },
+        {
+          "text": "Comprar um lampião (3 de ouro)",
+          "to": "pedlar",
+          "if": {
+            "all": [
+              {
+                "not": {
+                  "has": "lamp"
+                }
+              },
+              {
+                "stat": "gold",
+                "gte": 3
+              }
+            ]
+          },
+          "effects": [
+            {
+              "give": "lamp"
+            },
+            {
+              "stat": "gold",
+              "add": -3
+            }
+          ]
+        },
+        {
+          "text": "Despedir-se",
+          "return": true
+        }
+      ]
+    },
+    "wolf": {
+      "text": "No meio do vau, um lobo desce para beber, e não gosta nada de ser incomodado.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Lobo",
+            "attack": 6,
+            "health": 5
+          }
+        ],
+        "win": {
+          "return": true
+        }
+      }
+    },
+    "town": {
+      "text": "O portão da cidade está aberto. Qualquer que tenha sido a estrada, você chegou.",
+      "ending": "victory"
+    }
+  }
+}

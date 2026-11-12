@@ -11,7 +11,7 @@ A story says which version it needs in its `schema` field. Each version only add
 | 5 | Stat limits and quantities, item bonuses, character creation choices, combat extensions (several enemies, armor, luck in fights), the results-table combat mode and duels, undo, the journal, page audio | B4-B7, B9, B11 |
 | 6 | Authoring fields: node `title`, `note`, `chapter` and `draft`; story `chapters` and `showTitles` | B13 |
 | 7 | Achievements: story `achievements` and the `achieve` effect | B15 |
-| 8 | Descriptions of pictures: node and item `imageAlt`, story `coverAlt`; the neutral ending `"ending": "defeat"`; fight events `wounded` and `rounds`; counted items: item `stack`, `count` on `give`, `take` and `has`; a stat's `min`; rule bonuses `rules.bonuses`; a flee that costs a round `fleeCost`; `{item.count}` in text and an item's `max`; rules on every page `rules.everyPage` and hidden stats | B3, B4, B5, B6, B7, B8, B9, B10, B11 |
+| 8 | Descriptions of pictures: node and item `imageAlt`, story `coverAlt`; the neutral ending `"ending": "defeat"`; fight events `wounded` and `rounds`; counted items: item `stack`, `count` on `give`, `take` and `has`; a stat's `min`; rule bonuses `rules.bonuses`; a flee that costs a round `fleeCost`; `{item.count}` in text and an item's `max`; rules on every page `rules.everyPage` and hidden stats; calls and returns (`call`, `return`) | B3, B4, B5, B6, B7, B8, B9, B10, B11, B16 |
 
 Not versioned with `schema`: game packages (`.gamebook`, B14), which can hold a story of any version, and the validator warnings with their codes (B16), which change no story.
 
