@@ -281,6 +281,24 @@ void main() {
     }
   });
 
+  group('a neutral ending (schema 8)', () {
+    test('"defeat" ends the story without a victory or a death', () {
+      final json = validJson()..['schema'] = 8;
+      node(json, 'treasure')['ending'] = 'defeat';
+      expect(Story.fromJson(json).nodes['treasure']!.ending, Ending.defeat);
+    });
+
+    test('it needs schema 8', () {
+      expect(
+        failure((j) {
+          j['schema'] = 7;
+          node(j, 'treasure')['ending'] = 'defeat';
+        }),
+        'nodes.treasure.ending: needs "schema": 8',
+      );
+    });
+  });
+
   group('draft pages (schema 6)', () {
     test('a draft may have no text and no way out', () {
       final json = validJson()..['schema'] = 6;
@@ -312,7 +330,7 @@ void main() {
             ..['draft'] = true
             ..['ending'] = 'maybe';
         }),
-        'nodes.door.ending: expected "victory" or "death"',
+        'nodes.door.ending: expected "victory", "defeat" or "death"',
       );
     });
 

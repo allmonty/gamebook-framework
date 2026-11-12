@@ -45,7 +45,7 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
 | Key | Compared with |
 |---|---|
 | `node` | id of the current node |
-| `ending` | `"victory"`, `"death"` or `null` (still playing) |
+| `ending` | `"victory"`, `"defeat"`, `"death"` or `null` (still playing) |
 | `stats` | for each stat listed, its current value **with item bonuses** (B5) |
 | `inventory` | the items carried, sorted by id |
 | `flags` | the flags set, sorted |
@@ -76,7 +76,7 @@ Load the story (it must have no errors) and validate it. The warnings reported m
 
 ## Coverage
 Play cases cover every rule of Part B:
-- **Pages and choices:** locks, hidden and once-only choices, once nodes, visits, checks and their effects, random tables, conditional text and placeholders, the hero's name, death at 0 health (and that it is final), undo (after death too), a page with no open choice, draft pages, titles.
+- **Pages and choices:** locks, hidden and once-only choices, once nodes, visits, checks and their effects, random tables, conditional text and placeholders, the hero's name, death at 0 health (and that it is final), the defeat ending, undo (after death too), a page with no open choice, draft pages, titles.
 - **Conditions:** `has`, `flag`, `visited`, `visits`, stat comparisons (`gte`, `lte`, `eq`, quantities), `all`, `any` and `not`, empty ones included.
 - **Stats and creation:** the rolls of both presets in B8 order, rerolls, ceilings and limits, quantities in effects, creation picks.
 - **Items:** usable items, bonuses, pack capacity with `auto` and `choose`, offers (in order, left, ignored, swapped, discarded at the end), containers (room, and what is lost when one goes), `takeAll`.

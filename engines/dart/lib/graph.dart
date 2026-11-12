@@ -176,7 +176,8 @@ String _dotEscape(String s) =>
 
 /// The story as a Graphviz graph: render with `dot -Tsvg`. Dashed edges are
 /// gated by a condition, checks split into green (pass) and red (fail) edges,
-/// fights are red boxes and endings are green (victory) or grey (death).
+/// fights are red boxes and endings are green (victory), amber (defeat) or
+/// grey (death).
 /// Chapters (schema 6) are drawn as labelled clusters.
 String toDot(Story story) {
   final out = StringBuffer()
@@ -192,6 +193,8 @@ String toDot(Story story) {
       if (node.combat != null) 'style="rounded,filled", fillcolor="#f4c7c3"',
       if (node.ending == Ending.victory)
         'style="rounded,filled", fillcolor="#c8e6c9"',
+      if (node.ending == Ending.defeat)
+        'style="rounded,filled", fillcolor="#ffe0b2"',
       if (node.ending == Ending.death)
         'style="rounded,filled", fillcolor="#cccccc"',
     ];

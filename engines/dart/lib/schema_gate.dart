@@ -121,6 +121,7 @@ String? _schema8(Story story) {
   }
   for (final MapEntry(:key, :value) in story.nodes.entries) {
     if (value.imageAlt != null) return 'nodes.$key.imageAlt';
+    if (value.ending == Ending.defeat) return 'nodes.$key.ending';
   }
   return null;
 }

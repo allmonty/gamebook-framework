@@ -119,6 +119,34 @@ void main() {
     expect(toDot(rustyDoor()), dot);
   });
 
+  test('DOT colours a defeat ending apart from victory and death', () {
+    final out = toDot(
+      Story.fromJson({
+        'schema': 8,
+        'id': 'd',
+        'lang': 'en',
+        'title': 'D',
+        'rules': {'preset': 'fighting-fantasy'},
+        'start': 'a',
+        'nodes': {
+          'a': {
+            'text': 'A',
+            'choices': [
+              {'text': 'Go', 'to': 'b'},
+            ],
+          },
+          'b': {'text': 'Lost', 'ending': 'defeat'},
+        },
+      }),
+    );
+    expect(
+      out,
+      contains(
+        '"b" [label="b\\nLost", style="rounded,filled", fillcolor="#ffe0b2"];',
+      ),
+    );
+  });
+
   test('Mermaid output for the rusty door', () {
     expect(toMermaid(rustyDoor()), mermaid);
   });
