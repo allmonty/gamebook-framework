@@ -30,6 +30,7 @@ Headless Chrome cannot go below 500px wide, so check phone layouts in a real bro
 | `templates/` | `layout.html` wraps every page; one template per page; `root.html` picks the language |
 | `strings/{en,pt}.json` | every visitor-facing text of templates; both files must have the same keys (tested) |
 | `content/{en,pt}/` | tutorial chapters in Markdown |
+| `pages/{en,pt}/versions.md` | the format versions page (`<lang>/versions.html`), outside the tutorial; a test wants a section for every version the engine supports |
 | `examples/` | example stories, one file per language |
 | `css/site.css`, `assets/` | copied as they are |
 | `../llms.txt`, `../spec/llm-kit.md`, `../spec/story.schema.json`, `../spec/presets/*.json` | published from the repo at the site root (`llms.txt`, `llm-kit.md`, `schema/story.schema.json`, `presets/`), so stories and AI tools have stable addresses; the schema's `$id` and every `"$schema"` use them |

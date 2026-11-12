@@ -35,4 +35,9 @@ Then make it part of the routine:
 `<lang>/versions.html` is built in English and Portuguese, explaining versioning and listing version 1's features, each linking to its chapter; removing the version 1 section from either file, or adding a version to the engine without a section, fails a test; checks green.
 
 ## Handoff notes
-(fill in)
+- `site/pages/{en,pt}/versions.md` (outside `content/`, so it is no tutorial chapter and has no pager) becomes `<lang>/versions.html` through `SiteBuilder._buildVersions`, `renderChapter` and a small `templates/page.html`. The page has two parts: "How versions work" (versions only add, say the version you use, an app plays only what it knows, new versions appear here) and "Version 1", with its features grouped by tutorial chapter, each linking to the chapter.
+- Links: the footer of every page (`footer.versions`) and the tutorial index (`tutorial.versions`), in both languages. The changelog points authors to the page, and the page points engine writers to the changelog. `llms.txt` lists both.
+- `site/test/versions_test.dart`: each language has a `## Version N` / `## Versão N` heading for every version in `supportedSchemas`, newest first, and no others; every relative link on the built page leads to a built file. Renaming the Portuguese heading fails it, which I checked by hand.
+- `AGENTS.md` ("Changing the format") and `CONTRIBUTING.md` ("Spec changes") now list the versions page among what a new version touches. `site/README.md` lists `pages/`.
+- Checked by eye in headless Chrome (Portuguese page).
+- Still to do, with the owner's OK: delete `temp-plan/`, and replace `AGENTS.md`'s "Know what to do next" row and its "Plan protocol" pointer (step 14's note).
