@@ -21,13 +21,7 @@ class StatValue {
       StatValue(next < 0 ? 0 : (max != null && next > max! ? max! : next), max);
 
   /// [value] plus [delta], kept within `0..max`.
-  StatValue adjusted(int delta) {
-    final next = value + delta;
-    return StatValue(
-      next < 0 ? 0 : (max != null && next > max! ? max! : next),
-      max,
-    );
-  }
+  StatValue adjusted(int delta) => clampedTo(value + delta);
 
   Map<String, Object?> toJson() => {'value': value, 'max': max};
 }
