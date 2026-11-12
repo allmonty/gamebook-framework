@@ -12,10 +12,13 @@ dependencies:
 ```
 ```dart
 final story = Story.parse(json);                  // throws StoryFormatException naming the JSON path
-final issues = validateStory(story);              // cross-reference checks: errors and warnings
+final errors = validateStory(story).where((i) => i.severity == Severity.error);
+if (errors.isNotEmpty) throw StateError(errors.join('\n'));   // never play a story with errors
+final rules = Rules.resolve(story.rules);
+final random = Random();
 final (engine, events) = GameEngine.newGame(
-  story: story, rules: Rules.resolve(story.rules), random: Random(), stats: rolledStats);
-engine.choose(0);                                 // returns the events of what happened
+  story: story, rules: rules, random: random, stats: rules.rollStats(random));
+engine.choose(engine.choices.first.index);        // returns the events of what happened
 ```
 | Library | Holds |
 |---|---|
@@ -44,7 +47,7 @@ dart run gamebook_engine:llm_kit [--check]                                # rege
 ```
 dart pub get
 dart format --output=none --set-exit-if-changed .
-dart analyze
+dart analyze --fatal-infos
 dart test
 ```
 Tests never sleep and seed or script the dice (`test/support/scripted_random.dart`). Rules for changes: [../../CONTRIBUTING.md](../../CONTRIBUTING.md).
