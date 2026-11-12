@@ -91,6 +91,7 @@ code, pre { font-family: var(--font-mono); font-size: 0.9em; }
   top: 0;
   z-index: 50;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--s4);
@@ -108,6 +109,8 @@ code, pre { font-family: var(--font-mono); font-size: 0.9em; }
 .site-nav a { color: var(--muted); text-decoration: none; font-family: var(--font-head); font-weight: 500; }
 .site-nav a:hover, .site-nav a[aria-current='page'] { color: var(--cyan); }
 .lang-switch { border: 1px solid var(--line-cyan); padding: var(--s1) var(--s2); }
+.site-nav a.coffee { white-space: nowrap; color: var(--canvas); background: var(--amber); padding: var(--s1) var(--s3); border-radius: var(--radius); font-weight: 600; }
+.site-nav a.coffee:hover { color: var(--canvas); background: #ffc533; }
 
 main { display: block; }
 
