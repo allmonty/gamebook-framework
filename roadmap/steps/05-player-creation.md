@@ -13,4 +13,7 @@ VM tests: reroll limit, pick-N validation, creation effects reach the engine.
 The conformance creation stories start correctly.
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- `play/hero_draft.dart`: `HeroDraft` (roll, `reroll`, `name`, `toggle(group, option)`, `ready`, `effects` in file order, `view` -> `CreationView`).
+- `PlaySession.creation` is non-null while creating; `beginAdventure()` starts the game; `view` throws until then. `restart()` goes back through creation.
+- Decision: the creation screen shows only when the story has `rules.creation` or sets `rules.rerolls` itself. Preset-only stories (most tutorial examples) start straight on the first page, though the presets allow 2 rerolls. Tutorial chapter 4 must set `rerolls` (or `creation`) to demonstrate rolling again.
+- UI: `ui/creation_panel.dart`; typing the name updates the Begin button without redrawing (keeps focus).

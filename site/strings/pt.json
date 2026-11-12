@@ -54,5 +54,10 @@
   "player.flee": "Fugir",
   "player.journal": "Diário // {count}",
   "player.undo": "Desfazer",
-  "player.restartNow": "Recomeçar"
+  "player.restartNow": "Recomeçar",
+  "player.create": "Crie seu herói",
+  "player.reroll": "Rolar de novo // restam {count}",
+  "player.name": "Nome do herói",
+  "player.pick": "{title} // {picked}/{count}",
+  "player.begin": "Começar a aventura"
 }

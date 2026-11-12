@@ -265,3 +265,18 @@ main { display: block; }
 .gb-controls { display: flex; justify-content: flex-end; gap: var(--s2); }
 .gb-controls .btn { min-height: 36px; padding: var(--s2) var(--s4); font-size: 11px; }
 .gb-achievement strong { color: var(--amber); }
+
+.gb-creation { display: grid; gap: var(--s4); justify-items: start; }
+.gb-creation .gb-title { margin: 0; }
+.gb-field { display: grid; gap: var(--s2); width: 100%; }
+.gb-field .label { color: var(--muted); }
+.gb-field input {
+  min-height: 44px; padding: var(--s2) var(--s3); width: 100%;
+  font: 500 16px var(--font-body); color: var(--text);
+  background: var(--canvas); border: 1px solid var(--line-cyan); border-radius: var(--radius);
+}
+.gb-field input:focus { outline: none; border-color: var(--cyan); box-shadow: var(--glow-soft); }
+.gb-picks { display: grid; gap: var(--s2); width: 100%; margin: 0; padding: 0; border: 0; }
+.gb-picks legend { color: var(--amber); margin-bottom: var(--s2); }
+.gb-choice.picked { border-color: var(--cyan); background: var(--elevated); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; filter: none; }

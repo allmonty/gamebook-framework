@@ -4,6 +4,7 @@ import 'package:gamebook_engine/engine.dart';
 import 'package:gamebook_engine/rules.dart';
 import 'package:gamebook_engine/story.dart';
 
+import 'hero_draft.dart';
 import 'log.dart';
 import 'views.dart';
 
@@ -11,8 +12,10 @@ import 'views.dart';
 class PlaySession {
   PlaySession._(this.story, this.rules, this._random);
 
-  /// Starts a new game with freshly rolled stats. Throws
-  /// `StoryFormatException` if the rules cannot be resolved.
+  /// Starts a new game. If the story has character creation (a name, picks,
+  /// or its own `rerolls`), the session waits in [creation] until
+  /// [beginAdventure]; otherwise stats are rolled and the first page shown.
+  /// Throws `StoryFormatException` if the rules cannot be resolved.
   factory PlaySession.start(Story story, {required Random random}) {
     final session = PlaySession._(story, Rules.resolve(story.rules), random);
     session.restart();
@@ -23,19 +26,45 @@ class PlaySession {
   final Rules rules;
   final Random _random;
   late GameEngine _engine;
+
+  /// Character creation under way; null once the adventure has begun.
+  HeroDraft? creation;
   List<GameEvent> _events = const [];
   String? _music;
 
   /// Earned in any game since this session began; ids in earning order.
   final Set<String> _achievements = {};
 
-  /// Starts over from the first page with new stats.
+  /// Starts over: character creation again if the story has it, else the
+  /// first page with new stats.
   void restart() {
+    final draft = HeroDraft(rules, _random);
+    if (_hasCreation) {
+      creation = draft;
+    } else {
+      _begin(draft);
+    }
+  }
+
+  bool get _hasCreation =>
+      rules.creation != null || story.rules.rerolls != null;
+
+  /// Starts the adventure from the finished [creation].
+  void beginAdventure() {
+    final draft = creation ?? (throw StateError('no character creation'));
+    if (!draft.ready) throw StateError('character creation is not finished');
+    creation = null;
+    _begin(draft);
+  }
+
+  void _begin(HeroDraft draft) {
     final (engine, events) = GameEngine.newGame(
       story: story,
       rules: rules,
       random: _random,
-      stats: rules.rollStats(_random),
+      stats: draft.stats,
+      name: draft.asksName ? draft.name.trim() : null,
+      creationEffects: draft.effects,
     );
     _engine = engine;
     _music = null;
@@ -80,7 +109,13 @@ class PlaySession {
     }
   }
 
-  PageView get view => PageView(
+  /// The page now. Only once the adventure has begun ([creation] is null).
+  PageView get view {
+    if (creation != null) throw StateError('character creation comes first');
+    return _view;
+  }
+
+  PageView get _view => PageView(
     storyTitle: story.title,
     title: story.showTitles ? _engine.node.title : null,
     image: _engine.node.image,

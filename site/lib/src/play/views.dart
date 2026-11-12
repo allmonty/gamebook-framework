@@ -237,3 +237,56 @@ class EnemyView {
 
   bool get alive => health > 0;
 }
+
+/// The character creation screen.
+class CreationView {
+  const CreationView({
+    required this.stats,
+    required this.rerollsLeft,
+    required this.asksName,
+    required this.name,
+    required this.groups,
+    required this.ready,
+  });
+
+  final List<StatPill> stats;
+  final int rerollsLeft;
+  final bool asksName;
+  final String name;
+  final List<PickGroupView> groups;
+
+  /// Everything required is filled in: the adventure can begin.
+  final bool ready;
+}
+
+class PickGroupView {
+  const PickGroupView({
+    required this.id,
+    required this.title,
+    required this.count,
+    required this.options,
+  });
+
+  final String id;
+  final String title;
+
+  /// How many options must be picked.
+  final int count;
+  final List<PickOptionView> options;
+
+  int get picked => options.where((o) => o.picked).length;
+}
+
+class PickOptionView {
+  const PickOptionView({
+    required this.id,
+    required this.label,
+    required this.picked,
+    this.description,
+  });
+
+  final String id;
+  final String label;
+  final String? description;
+  final bool picked;
+}

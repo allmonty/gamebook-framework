@@ -4,6 +4,7 @@ import '../play/play_session.dart';
 import '../play/views.dart';
 import 'audio.dart';
 import 'combat_panel.dart';
+import 'creation_panel.dart';
 import 'dom.dart';
 import 'log_panel.dart';
 import 'pack_panel.dart';
@@ -22,6 +23,18 @@ class PlayerView {
   final _audio = AudioOutput();
 
   void render() {
+    if (session.creation case final draft?) {
+      _audio.stop();
+      host.replaceChildren(
+        CreationPanel(
+          draft,
+          m,
+          onChange: render,
+          onBegin: () => _act(session.beginAdventure),
+        ).element,
+      );
+      return;
+    }
     final view = session.view;
     host.replaceChildren(
       el(

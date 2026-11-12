@@ -54,5 +54,10 @@
   "player.flee": "Flee",
   "player.journal": "Journal // {count}",
   "player.undo": "Undo",
-  "player.restartNow": "Restart"
+  "player.restartNow": "Restart",
+  "player.create": "Create your hero",
+  "player.reroll": "Roll again // {count} left",
+  "player.name": "Hero name",
+  "player.pick": "{title} // {picked}/{count}",
+  "player.begin": "Begin the adventure"
 }
