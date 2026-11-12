@@ -156,7 +156,7 @@ Future modes are new `mode` values. Schema 5 adds one, `table` (B11).
 `luck` turns on **Testing your Luck in a fight** (B11). Optional fields, with Fighting Fantasy's numbers as defaults: `"roll": "2d6"`, `"lucky": { "dealt": 2, "taken": -1 }`, `"unlucky": { "dealt": -1, "taken": 1 }`.
 
 #### Undo (schema 5)
-`"undo": 3` lets the player step back up to 3 pages (default 0: no undo). Going back restores everything as it was before the choice: stats, items, flags, offers, visits. Dice are not remembered, so taking the choice again rolls again; a story that wants no rerolls leaves undo off. Fights are not undoable round by round; going back from a fight returns to the page before the choice that started it. The history lives in memory only (it is not saved), so a restored game starts with none.
+`"undo": 3` lets the player step back up to 3 pages (default 0: no undo). Going back restores everything as it was before the choice: stats, items, flags, offers, visits. Dice are not remembered, so taking the choice again rolls again; a story that wants no rerolls leaves undo off. Fights are not undoable round by round; going back from a fight returns to the page before the choice that started it. Going back is also allowed after the game ended (a death or an ending page): the game is then running again, as it was before that choice. The history lives in memory only (it is not saved), so a restored game starts with none.
 
 #### Inventory rules (schema 3)
 ```json
@@ -352,6 +352,8 @@ Locked choices are shown **disabled** with their reason, and can't be chosen.
 4. **Enter the target node**: record it as visited and count the visit. Apply its `effects` (skipped if `once` and it was already visited).
 5. If the `health` stat is 0 (after step 2, 3 or 4) the game ends with **death**, whatever the node says. Once health is 0, the steps after it still run but apply no effects: a check or table still rolls and decides the target, and the target is still entered (visited, visit counted, music and sound as usual).
 6. If the node has `ending`, the game ends. If it has `combat`, the fight starts.
+
+**A page with no open choice.** If every choice of a page is spent (`once`), hidden (`hideIfLocked`) or locked, and the page has no `ending` and no `combat`, the player has nothing to tap. The game is **not** ended: the engine offers nothing, and undo (if the story allows it, B4) leads out. This is an author's mistake, but no check of the story alone can always find it, because it depends on what the player did. Tools should look for it by playing: the Dart `simulate_story` tool reports such games as "stuck".
 
 While there are pending offers (B4) no choice can be taken and no fight round can be played until each offer is resolved.
 

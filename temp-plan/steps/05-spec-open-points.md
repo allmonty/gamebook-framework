@@ -23,4 +23,6 @@ Case `conformance/cases/play/undo-after-death.json` (model: `undo.json`).
 Both cases pass on the unchanged engine; checks green.
 
 ## Handoff notes
-(fill in)
+- No engine change, as planned. B10 has a new paragraph "A page with no open choice" after the list of steps; B4 "Undo" says going back is allowed after any ending (death or an ending page), since `undo()` never checks the ending.
+- Cases: `stuck-page.json` (schema 4, one `once` choice back to the same page: `choices: []`, `ending: null`) and `undo-after-death.json` (schema 5, `undo: 1`: back on `a`, Stamina 12, `ending: null`, `b` at 0 visits). Both pass on the unchanged engine. The Coverage line in `conformance/README.md` names both.
+- Done on the branch `step-05-spec-open-points` from `main`.
