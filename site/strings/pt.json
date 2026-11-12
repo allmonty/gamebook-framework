@@ -78,6 +78,7 @@
   "play.step3": "Volte para Jogar para testar. Baixar guarda seu trabalho; Abrir arquivo carrega uma história do seu computador.",
   "player.tab.play": "Jogar",
   "player.tab.edit": "Editar JSON",
+  "player.editHint": "Tab recua o texto. Aperte Esc e depois Tab para sair do editor.",
   "player.reset": "Restaurar",
   "player.download": "Baixar",
   "player.open": "Abrir arquivo",

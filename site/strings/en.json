@@ -78,6 +78,7 @@
   "play.step3": "Switch to Play to try it. Download keeps your work; Open file loads a story from your computer.",
   "player.tab.play": "Play",
   "player.tab.edit": "Edit JSON",
+  "player.editHint": "Tab indents. Press Esc, then Tab, to leave the editor.",
   "player.reset": "Reset",
   "player.download": "Download",
   "player.open": "Open file",

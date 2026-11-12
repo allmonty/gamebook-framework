@@ -311,7 +311,8 @@ main { display: block; }
 .gb-issues li.warning .label { color: var(--amber); }
 .gb-issues li.ok { color: var(--teal); border-left-color: var(--teal); }
 .gb-issues code { color: var(--cyan); word-break: break-all; }
-.gb-cannot { color: var(--muted); }
+.gb-cannot, .gb-hint { color: var(--muted); }
+.gb-hint { margin: 0; font-size: 13px; }
 .gb-file { position: absolute; width: 1px; height: 1px; opacity: 0; }
 
 .steps { color: var(--muted); max-width: 70ch; margin: 0 0 var(--s8); padding-left: 1.25rem; }

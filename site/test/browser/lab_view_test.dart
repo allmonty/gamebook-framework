@@ -94,4 +94,35 @@ void main() {
       host.remove();
     },
   );
+
+  test('Tab indents; Escape then Tab leaves the editor', () {
+    final host = el('div');
+    document.body!.append(host);
+    LabView(host, EditSession(_source, Random(1)), const Messages({}));
+    final area = host.querySelector('textarea')! as HTMLTextAreaElement
+      ..value = ''
+      ..setSelectionRange(0, 0);
+    KeyboardEvent press(String key) {
+      final event = KeyboardEvent(
+        'keydown',
+        KeyboardEventInit(key: key, cancelable: true),
+      );
+      area.dispatchEvent(event);
+      return event;
+    }
+
+    expect(press('Tab').defaultPrevented, isTrue);
+    expect(area.value, '  ');
+
+    press('Escape');
+    expect(press('Tab').defaultPrevented, isFalse);
+    expect(area.value, '  ');
+    // Only the Tab right after Escape leaves.
+    expect(press('Tab').defaultPrevented, isTrue);
+    expect(
+      host.querySelector('#${area.getAttribute('aria-describedby')}'),
+      isNotNull,
+    );
+    host.remove();
+  });
 }

@@ -55,6 +55,9 @@ class LabView {
     cls: 'gb-issues',
     attrs: {'aria-live': 'polite'},
   );
+  static int _labs = 0;
+  late final _hint = el('p', cls: 'gb-hint', text: m('player.editHint'))
+    ..id = 'gb-hint-${_labs++}';
   late final _textarea = _editor();
   late final _editPane = el(
     'div',
@@ -62,6 +65,7 @@ class LabView {
     attrs: {'role': 'tabpanel'},
     children: [
       _textarea,
+      _hint,
       _issues,
       el(
         'div',
@@ -104,6 +108,7 @@ class LabView {
         'spellcheck': 'false',
         'autocapitalize': 'off',
         'aria-label': m('player.tab.edit'),
+        'aria-describedby': _hint.id,
       },
     ) as HTMLTextAreaElement;
     area
@@ -124,10 +129,14 @@ class LabView {
     return area;
   }
 
-  /// Tab inserts two spaces instead of leaving the editor. Shift+Tab and
-  /// Escape-then-Tab still move focus, so keyboard users are not trapped.
-  static void _indent(KeyboardEvent e, HTMLTextAreaElement area) {
-    if (e.key != 'Tab' || e.shiftKey) return;
+  bool _escaped = false;
+
+  /// Tab inserts two spaces instead of leaving the editor. Shift+Tab, or
+  /// Escape then Tab, still moves focus, so keyboard users are not trapped.
+  void _indent(KeyboardEvent e, HTMLTextAreaElement area) {
+    final leaving = _escaped;
+    _escaped = e.key == 'Escape';
+    if (e.key != 'Tab' || e.shiftKey || leaving) return;
     e.preventDefault();
     final start = area.selectionStart;
     area.setRangeText('  ', start, area.selectionEnd, 'end');
