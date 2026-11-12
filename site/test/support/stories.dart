@@ -22,3 +22,6 @@ Story storyOf(Map<String, Object?> nodes, {Map<String, Object?>? extra}) =>
       'nodes': nodes,
       ...?extra,
     });
+
+/// A story file of the site, e.g. `examples/home/rusty-door.en.json`.
+Story storyFile(String path) => Story.parse(File(path).readAsStringSync());
