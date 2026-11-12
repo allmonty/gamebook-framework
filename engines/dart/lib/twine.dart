@@ -15,7 +15,7 @@ class _Passage {
   final (double, double)? position;
 }
 
-/// A Twine story turned into this format (roadmap step 38): the story file
+/// A Twine story turned into this format: the story file
 /// as JSON, card positions for the Builder, and a report of everything that
 /// could not be converted and was left out or guessed.
 class TwineImport {

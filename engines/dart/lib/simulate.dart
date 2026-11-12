@@ -20,7 +20,7 @@ enum Policy {
 /// How one simulated game ended.
 enum Outcome { victory, death, stuck, endless }
 
-/// What many simulated games of a story did (roadmap step 36). It finds
+/// What many simulated games of a story did. It finds
 /// what no static check can: dead ends that depend on state, endings that
 /// are never reached, stories that are much too hard or too easy.
 class SimulationReport {
