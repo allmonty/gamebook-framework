@@ -302,6 +302,8 @@ A condition is an object with exactly one kind:
 | `{ "any": [c, ...] }` | at least one true (empty = false) |
 | `{ "not": c }` | negation |
 
+Conditions nest at most **32** deep: a condition written directly (a choice's `if`) is level 1, and each `all`, `any` or `not` puts what it holds one level deeper. A condition at level 33 is an error, so a story from a stranger cannot exhaust an engine.
+
 ### B8. Dice notation
 `NdM` with optional `+K` or `-K`, or a plain integer. No spaces. `N` is the number of dice (at least 1, at most 100), `M` the number of faces (at least 2, at most 1000). `K` and a plain integer have at most 6 digits. Anything larger is invalid notation, so a story from a stranger cannot make an engine roll forever.
 Examples: `1d6`, `2d6+6`, `1d20`, `2d6-1`, `3` (fixed).

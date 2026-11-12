@@ -9,7 +9,20 @@ enum CompareOp { gte, lte, eq }
 sealed class Condition {
   const Condition();
 
-  factory Condition.fromJson(Object? json, String path) {
+  /// How deep conditions nest (B7): the limit keeps a story from a stranger
+  /// from exhausting the stack.
+  static const maxDepth = 32;
+
+  /// [depth] is how many conditions this one is inside of.
+  factory Condition.fromJson(Object? json, String path, [int depth = 0]) {
+    if (depth >= maxDepth) {
+      throw StoryFormatException(
+        path,
+        'conditions nest more than $maxDepth deep',
+      );
+    }
+    Condition inner(Object? json, String path) =>
+        Condition.fromJson(json, path, depth + 1);
     final obj = JsonObject(json, path);
     const kinds = [
       'has',
@@ -44,13 +57,11 @@ sealed class Condition {
       case 'visits':
         condition = _visits(obj);
       case 'all':
-        condition = All(obj.list('all', Condition.fromJson));
+        condition = All(obj.list('all', inner));
       case 'any':
-        condition = Any(obj.list('any', Condition.fromJson));
+        condition = Any(obj.list('any', inner));
       case 'not':
-        condition = Not(
-          Condition.fromJson(obj.raw('not'), obj.childPath('not')),
-        );
+        condition = Not(inner(obj.raw('not'), obj.childPath('not')));
       default:
         condition = _stat(obj);
     }

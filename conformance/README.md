@@ -85,7 +85,7 @@ Play cases cover every rule of Part B:
 - **Combat:** `opposed`, `vs-defense` and `table` rounds, duels, fights against several at once, armor, luck in fights (lucky, unlucky, when it is not offered, kills, the group total, after armor), fleeing (free, and at the cost of a round), items in a fight, the wounded and round-limit exits and their order.
 - **The rest:** the journal, page audio, achievements, rules on every page (calm pages, order, before the page, a countdown, a rule that kills).
 
-Invalid cases cover an unknown schema version (there is one version so far, so no gate between versions yet), unknown references, impossible combat rules and the common load errors. Lint cases cover every warning code of B16, translations included.
+Invalid cases cover an unknown schema version (there is one version so far, so no gate between versions yet), unknown references, impossible combat rules, the limits (dice, condition depth) and the common load errors. Lint cases cover every warning code of B16, translations included.
 
 Not covered: game packages (B14), which need binary fixtures; and what is only presentation, so not compared (the default text of a locked choice, `lockedText`, `showTitles`, `imageAlt` and `coverAlt`).
 
