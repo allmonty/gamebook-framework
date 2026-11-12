@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "id": "the-terminal",
+  "lang": "pt",
+  "title": "O Terminal",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "lobby",
+  "nodes": {
+    "lobby": {
+      "text": "Uma porta de cofre lacrada e, ao lado, um terminal piscando.",
+      "choices": [
+        {
+          "text": "Ler o terminal",
+          "to": "terminal"
+        },
+        {
+          "text": "Abrir a porta do cofre",
+          "to": "vault",
+          "if": {
+            "visited": "terminal"
+          },
+          "lockedText": "Trancada. Talvez o terminal saiba o código."
+        },
+        {
+          "text": "Usar a escotilha de manutenção que o terminal citou",
+          "to": "secret",
+          "if": {
+            "visited": "terminal"
+          },
+          "hideIfLocked": true
+        }
+      ]
+    },
+    "terminal": {
+      "text": "A tela rola: CÓDIGO DO COFRE 7-7-1. ESCOTILHA DE MANUTENÇÃO ATRÁS DO PAINEL 3.",
+      "choices": [
+        {
+          "text": "Afastar-se",
+          "to": "lobby"
+        }
+      ]
+    },
+    "vault": {
+      "text": "7-7-1. A porta do cofre se abre com um suspiro.",
+      "ending": "victory"
+    },
+    "secret": {
+      "text": "Atrás do painel 3, uma escotilha estreita leva direto para fora. Ninguém vai saber.",
+      "ending": "victory"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "id": "two-doors",
+  "lang": "en",
+  "title": "Two Doors",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "hall",
+  "nodes": {
+    "hall": {
+      "text": "The lift opens on a hall of mirrors. Two doors wait at the end: one glows red, one glows blue.\n\nSomewhere behind you, the lift doors close for good.",
+      "choices": [
+        {
+          "text": "Open the red door",
+          "to": "red"
+        },
+        {
+          "text": "Open the blue door",
+          "to": "blue"
+        }
+      ]
+    },
+    "red": {
+      "text": "Behind the red door: an empty shaft and a long, long fall.",
+      "ending": "death"
+    },
+    "blue": {
+      "text": "A stairway lit by blue runes climbs into the dark.",
+      "choices": [
+        {
+          "text": "Climb the stairs",
+          "to": "roof"
+        },
+        {
+          "text": "Go back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "roof": {
+      "text": "The stairs end on a rooftop. Rain, wind, and a waiting airship. You made it.",
+      "ending": "victory"
+    }
+  }
+}

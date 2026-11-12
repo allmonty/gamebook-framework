@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "id": "two-doors",
+  "lang": "pt",
+  "title": "Duas Portas",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "hall",
+  "nodes": {
+    "hall": {
+      "text": "O elevador se abre num salão de espelhos. Duas portas esperam no fim: uma brilha vermelha, outra azul.\n\nEm algum lugar atrás de você, as portas do elevador se fecham de vez.",
+      "choices": [
+        {
+          "text": "Abrir a porta vermelha",
+          "to": "red"
+        },
+        {
+          "text": "Abrir a porta azul",
+          "to": "blue"
+        }
+      ]
+    },
+    "red": {
+      "text": "Atrás da porta vermelha: um poço vazio e uma queda longa, muito longa.",
+      "ending": "death"
+    },
+    "blue": {
+      "text": "Uma escada iluminada por runas azuis sobe para o escuro.",
+      "choices": [
+        {
+          "text": "Subir a escada",
+          "to": "roof"
+        },
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "roof": {
+      "text": "A escada termina num telhado. Chuva, vento e uma aeronave à espera. Você conseguiu.",
+      "ending": "victory"
+    }
+  }
+}

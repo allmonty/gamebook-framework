@@ -13,4 +13,5 @@ same
 same
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- Chapter 2 (`content/{en,pt}/02-pages-and-choices.md`) with examples `two-doors` (branches, both endings, a loop, paragraphs) and `the-terminal` (`visited`, `lockedText`, `hideIfLocked`). Images are explained with a snippet, not an embed (no image files ship with the examples).
+- Examples are written with a small Python helper kept outside the repo (scratchpad); writing JSON by hand works as well. Portuguese files override the preset stat labels.
