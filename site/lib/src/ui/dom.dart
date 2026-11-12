@@ -28,3 +28,11 @@ HTMLElement onClick(HTMLElement element, void Function() action) {
   element.addEventListener('click', ((Event _) => action()).toJS);
   return element;
 }
+
+/// Replaces the children of [element] with [children].
+void setChildren(HTMLElement element, List<Node> children) {
+  element.textContent = '';
+  for (final child in children) {
+    element.append(child);
+  }
+}

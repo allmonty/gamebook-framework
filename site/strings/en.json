@@ -59,5 +59,21 @@
   "player.reroll": "Roll again // {count} left",
   "player.name": "Hero name",
   "player.pick": "{title} // {picked}/{count}",
-  "player.begin": "Begin the adventure"
+  "player.begin": "Begin the adventure",
+  "nav.play": "Playground",
+  "play.kicker": "Playground // live engine",
+  "play.title": "Write a story, play it at once",
+  "play.lead": "Edit the JSON on the Edit tab. After every change the real engine checks your story and, if nothing is broken, starts a new game on the Play tab.",
+  "play.step1": "Open Edit JSON and change a text, an item or a number.",
+  "play.step2": "Read the checker: errors say where the problem is, like nodes.door.choices[0].",
+  "play.step3": "Switch to Play to try it. Download keeps your work; Open file loads a story from your computer.",
+  "player.tab.play": "Play",
+  "player.tab.edit": "Edit JSON",
+  "player.reset": "Reset",
+  "player.download": "Download",
+  "player.open": "Open file",
+  "player.issues.ok": "No problems found",
+  "player.issue.error": "Error",
+  "player.issue.warning": "Warning",
+  "player.cannotPlay": "Fix the errors on the Edit tab to play again."
 }

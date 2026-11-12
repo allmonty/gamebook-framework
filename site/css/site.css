@@ -32,6 +32,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
@@ -280,3 +281,31 @@ main { display: block; }
 .gb-picks legend { color: var(--amber); margin-bottom: var(--s2); }
 .gb-choice.picked { border-color: var(--cyan); background: var(--elevated); }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; filter: none; }
+
+/* ---------- Lab: play + edit ---------- */
+.gb-lab { display: grid; gap: var(--s3); max-width: 720px; }
+.gb-tabs { display: flex; gap: var(--s1); border-bottom: 1px solid var(--line); }
+.gb-tab { min-height: 40px; padding: var(--s2) var(--s4); color: var(--muted); background: none; border: 0;
+  border-bottom: 2px solid transparent; cursor: pointer; }
+.gb-tab[aria-selected='true'] { color: var(--cyan); border-bottom-color: var(--cyan); text-shadow: var(--glow); }
+.gb-edit { display: grid; gap: var(--s3); }
+.gb-edit textarea {
+  width: 100%; min-height: 420px; resize: vertical; padding: var(--s4);
+  font: 13px/1.6 var(--font-mono); color: var(--text); tab-size: 2;
+  background: var(--canvas); border: 1px solid var(--line-cyan); border-radius: var(--radius);
+}
+.gb-edit textarea:focus { outline: none; border-color: var(--cyan); box-shadow: var(--glow-soft); }
+.gb-issues { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+.gb-issues li { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: baseline; padding: var(--s2) var(--s3);
+  font-size: 14px; background: var(--card); border-left: 2px solid var(--amber); }
+.gb-issues li.error { border-left-color: var(--crimson); }
+.gb-issues li.error .label { color: var(--crimson); }
+.gb-issues li.warning .label { color: var(--amber); }
+.gb-issues li.ok { color: var(--teal); border-left-color: var(--teal); }
+.gb-issues code { color: var(--cyan); word-break: break-all; }
+.gb-cannot { color: var(--muted); }
+.gb-file { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.gb-actions label.btn:focus-within { box-shadow: var(--glow); }
+
+.steps { color: var(--muted); max-width: 70ch; margin: 0 0 var(--s8); padding-left: 1.25rem; }
+.steps li { margin-bottom: var(--s2); }

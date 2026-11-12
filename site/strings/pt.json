@@ -59,5 +59,21 @@
   "player.reroll": "Rolar de novo // restam {count}",
   "player.name": "Nome do herói",
   "player.pick": "{title} // {picked}/{count}",
-  "player.begin": "Começar a aventura"
+  "player.begin": "Começar a aventura",
+  "nav.play": "Playground",
+  "play.kicker": "Playground // motor ao vivo",
+  "play.title": "Escreva uma história e jogue na hora",
+  "play.lead": "Edite o JSON na aba Editar. A cada mudança o motor real confere sua história e, se nada estiver quebrado, começa um jogo novo na aba Jogar.",
+  "play.step1": "Abra Editar JSON e mude um texto, um item ou um número.",
+  "play.step2": "Leia o verificador: os erros dizem onde está o problema, como nodes.door.choices[0].",
+  "play.step3": "Volte para Jogar para testar. Baixar guarda seu trabalho; Abrir arquivo carrega uma história do seu computador.",
+  "player.tab.play": "Jogar",
+  "player.tab.edit": "Editar JSON",
+  "player.reset": "Restaurar",
+  "player.download": "Baixar",
+  "player.open": "Abrir arquivo",
+  "player.issues.ok": "Nenhum problema encontrado",
+  "player.issue.error": "Erro",
+  "player.issue.warning": "Aviso",
+  "player.cannotPlay": "Corrija os erros na aba Editar para jogar de novo."
 }

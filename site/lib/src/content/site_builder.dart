@@ -28,6 +28,7 @@ class SiteBuilder {
   void _buildLanguage(String lang) {
     final strings = loadStrings(lang);
     _writePage(lang, 'index.html', strings, _read('templates/index.html'));
+    _writePage(lang, 'play.html', strings, _read('templates/play.html'));
   }
 
   /// The visitor-facing text for [lang], from `strings/<lang>.json`.
