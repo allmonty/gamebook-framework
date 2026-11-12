@@ -1,0 +1,60 @@
+{
+  "schema": 5,
+  "id": "rune-blade",
+  "lang": "en",
+  "title": "The Rune Blade",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "items": {
+    "rune-blade": {
+      "name": "Rune blade",
+      "description": "+3 Skill while you carry it.",
+      "bonus": {
+        "skill": 3
+      }
+    }
+  },
+  "start": "armory",
+  "nodes": {
+    "armory": {
+      "text": "An abandoned armory. One weapon is left on the rack: a rune blade, humming softly.",
+      "choices": [
+        {
+          "text": "Take the rune blade",
+          "to": "gate",
+          "effects": [
+            {
+              "give": "rune-blade"
+            }
+          ]
+        },
+        {
+          "text": "Leave it",
+          "to": "gate"
+        }
+      ]
+    },
+    "gate": {
+      "text": "A gate of black iron. Its sigil reads: ONLY THE SKILLED MAY PASS.",
+      "choices": [
+        {
+          "text": "Cut through the sigil",
+          "to": "free",
+          "if": {
+            "stat": "skill",
+            "gte": 12
+          }
+        },
+        {
+          "text": "Go back to the armory",
+          "to": "armory"
+        }
+      ]
+    },
+    "free": {
+      "text": "The sigil splits. The gate swings open.",
+      "ending": "victory"
+    }
+  }
+}

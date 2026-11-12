@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "id": "locked-door",
+  "lang": "pt",
+  "title": "A Porta Trancada",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "rusty-key": {
+      "name": "Chave enferrujada",
+      "description": "Ferro velho, mais velho que a cidade."
+    }
+  },
+  "start": "cellar",
+  "nodes": {
+    "cellar": {
+      "text": "Um porão frio sob um bar de lámen. Prateleiras numa parede, uma porta na outra.",
+      "choices": [
+        {
+          "text": "Revistar as prateleiras",
+          "to": "shelves"
+        },
+        {
+          "text": "Tentar a porta",
+          "to": "door"
+        }
+      ]
+    },
+    "shelves": {
+      "text": "Atrás de um pote de enguias em conserva: uma chave enferrujada.",
+      "effects": [
+        {
+          "give": "rusty-key"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar",
+          "to": "cellar"
+        }
+      ]
+    },
+    "door": {
+      "text": "Uma porta pesada com uma fechadura antiga.",
+      "choices": [
+        {
+          "text": "Destrancar com a chave enferrujada",
+          "to": "street",
+          "if": {
+            "has": "rusty-key"
+          },
+          "effects": [
+            {
+              "take": "rusty-key"
+            }
+          ]
+        },
+        {
+          "text": "Voltar",
+          "to": "cellar"
+        }
+      ]
+    },
+    "street": {
+      "text": "A chave gira e se parte na fechadura. Tudo bem: você está fora, numa rua cheia de neon.",
+      "ending": "victory"
+    }
+  }
+}

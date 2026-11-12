@@ -1,0 +1,71 @@
+{
+  "schema": 5,
+  "id": "rune-blade",
+  "lang": "pt",
+  "title": "A Lâmina Rúnica",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "rune-blade": {
+      "name": "Lâmina rúnica",
+      "description": "+3 de Habilidade enquanto você a carrega.",
+      "bonus": {
+        "skill": 3
+      }
+    }
+  },
+  "start": "armory",
+  "nodes": {
+    "armory": {
+      "text": "Um arsenal abandonado. Só resta uma arma no suporte: uma lâmina rúnica, zumbindo baixinho.",
+      "choices": [
+        {
+          "text": "Pegar a lâmina rúnica",
+          "to": "gate",
+          "effects": [
+            {
+              "give": "rune-blade"
+            }
+          ]
+        },
+        {
+          "text": "Deixar",
+          "to": "gate"
+        }
+      ]
+    },
+    "gate": {
+      "text": "Um portão de ferro negro. O sigilo diz: SÓ OS HÁBEIS PASSAM.",
+      "choices": [
+        {
+          "text": "Cortar o sigilo",
+          "to": "free",
+          "if": {
+            "stat": "skill",
+            "gte": 12
+          }
+        },
+        {
+          "text": "Voltar ao arsenal",
+          "to": "armory"
+        }
+      ]
+    },
+    "free": {
+      "text": "O sigilo se parte. O portão se abre.",
+      "ending": "victory"
+    }
+  }
+}

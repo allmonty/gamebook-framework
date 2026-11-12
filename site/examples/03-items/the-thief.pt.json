@@ -1,0 +1,69 @@
+{
+  "schema": 3,
+  "id": "the-thief",
+  "lang": "pt",
+  "title": "O Ladrão",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "inventory": {
+      "capacity": 1
+    },
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "coin": {
+      "name": "Moeda da sorte"
+    },
+    "gem": {
+      "name": "Gema"
+    }
+  },
+  "start": "market",
+  "nodes": {
+    "market": {
+      "text": "Você ganha uma moeda da sorte numa mesa de dados, e o crupiê ainda dá uma gema. Seu bolso pequeno só cabe uma coisa.",
+      "effects": [
+        {
+          "give": "coin"
+        },
+        {
+          "give": "gem"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Entrar na multidão",
+          "to": "crowd"
+        }
+      ]
+    },
+    "crowd": {
+      "text": "Alguém esbarra em você. Quando você confere o bolso, está vazio.",
+      "effects": [
+        {
+          "takeAll": true
+        }
+      ],
+      "choices": [
+        {
+          "text": "Rir da situação",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "O que vem fácil vai fácil.",
+      "ending": "victory"
+    }
+  }
+}

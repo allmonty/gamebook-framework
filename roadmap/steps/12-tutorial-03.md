@@ -13,4 +13,6 @@ same
 same
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- Chapter 3 with five examples in `examples/03-items/`: `locked-door` (declare, give, has, take), `healing-potion` (use, when, ceiling; schema 2), `rune-blade` (bonus and a `stat` condition with `gte`; schema 5), `full-pack` (capacity, `pickup: choose`, swap, container; schema 3), `the-thief` (auto pickup refusing an item, `takeAll`; schema 3).
+- Stat effects (`add`) and `gte/lte/eq` are introduced briefly here; chapter 4 must explain stats properly (labels, presets, `set`, `limit`, quantities) without repeating the item parts.
+- `once` is promised for chapter 7 (the key can be picked up again).
