@@ -1,0 +1,368 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "three-bridges",
+  "lang": "en",
+  "title": "Market Day at Three Bridges",
+  "author": "You",
+  "description": "A town to come back to: one shop reached from several places, prices kept in a stat, a pack of three with swaps, and people who remember you.",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "gold": {
+        "label": "Gold",
+        "roll": "1d6+5",
+        "limit": 60
+      },
+      "price": {
+        "label": "Price",
+        "roll": "0",
+        "hidden": true
+      }
+    },
+    "inventory": {
+      "capacity": 3,
+      "pickup": "choose"
+    }
+  },
+  "items": {
+    "lantern": {
+      "name": "Lantern",
+      "description": "Tin and horn. Lights the way down."
+    },
+    "rope": {
+      "name": "Rope",
+      "description": "Thirty feet, tarred."
+    },
+    "chart": {
+      "name": "Old chart",
+      "description": "The river as it ran a hundred years ago. A collector would pay for it."
+    },
+    "bread": {
+      "name": "Honey bread",
+      "description": "+2 Stamina.",
+      "stack": 3,
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 2
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    }
+  },
+  "start": "square",
+  "nodes": {
+    "square": {
+      "title": "The square",
+      "text": [
+        "Three Bridges on market day: awnings, geese, a fiddler. Everyone says the old customs barge sank by the quay with its strongbox still aboard, and nobody has been down to look.",
+        {
+          "if": {
+            "visits": "square",
+            "gte": 3
+          },
+          "text": "The stallholders nod to you now. You have been round the square a few times."
+        },
+        "You have {gold} gold."
+      ],
+      "choices": [
+        {
+          "text": "Go to the chandler's stall",
+          "to": "shop",
+          "call": true
+        },
+        {
+          "text": "Walk down to the quay",
+          "to": "quay"
+        },
+        {
+          "text": "Take the cellar stairs under the guildhall",
+          "to": "cellar",
+          "if": {
+            "has": "lantern"
+          },
+          "lockedText": "Too dark without a lantern."
+        },
+        {
+          "text": "Call it a day and go home",
+          "to": "home"
+        }
+      ]
+    },
+    "quay": {
+      "title": "The quay",
+      "text": [
+        "Green water, mooring rings, and under the third bridge the dark shape of the barge, ten feet down.",
+        {
+          "if": {
+            "not": {
+              "all": [
+                {
+                  "has": "rope"
+                },
+                {
+                  "has": "lantern"
+                }
+              ]
+            }
+          },
+          "text": "You would need a rope to get down and a light to see by."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Go to the chandler's stall",
+          "to": "shop",
+          "call": true
+        },
+        {
+          "text": "Unload crates for an hour (+3 gold)",
+          "to": "quay",
+          "once": true,
+          "effects": [
+            {
+              "stat": "gold",
+              "add": 3
+            }
+          ]
+        },
+        {
+          "text": "Climb down to the barge",
+          "to": "barge",
+          "if": {
+            "all": [
+              {
+                "has": "rope"
+              },
+              {
+                "has": "lantern"
+              }
+            ]
+          },
+          "lockedText": "Not without a rope and a lantern."
+        },
+        {
+          "text": "Pay the eel-diver to go down for you (9 gold)",
+          "to": "diver",
+          "if": {
+            "stat": "gold",
+            "gte": 9
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -9
+            }
+          ],
+          "lockedText": "He wants 9 gold, in advance."
+        },
+        {
+          "text": "Back to the square",
+          "to": "square"
+        }
+      ]
+    },
+    "shop": {
+      "title": "The chandler's stall",
+      "text": [
+        "Rope, lamps, candles, hooks. The chandler, a big slow woman called Osa, sells bread on the side.",
+        {
+          "if": {
+            "visits": "shop",
+            "gte": 2
+          },
+          "text": "\"You again,\" says Osa, not unkindly."
+        },
+        "You have {gold} gold and {bread.count} honey bread."
+      ],
+      "choices": [
+        {
+          "text": "Ask about the lantern",
+          "to": "stall-lantern"
+        },
+        {
+          "text": "Ask about the rope",
+          "to": "stall-rope"
+        },
+        {
+          "text": "Ask about the honey bread",
+          "to": "stall-bread"
+        },
+        {
+          "text": "Sell her the old chart (+6 gold)",
+          "to": "shop",
+          "if": {
+            "has": "chart"
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "take": "chart"
+            },
+            {
+              "stat": "gold",
+              "add": 6
+            }
+          ]
+        },
+        {
+          "text": "Go back the way you came",
+          "return": true
+        }
+      ]
+    },
+    "stall-lantern": {
+      "title": "The lantern",
+      "text": "\"Five,\" says Osa. \"It has been down a mine and come back up.\" You have {gold} gold.",
+      "effects": [
+        {
+          "stat": "price",
+          "set": 5
+        }
+      ],
+      "choices": [
+        {
+          "text": "Buy it",
+          "to": "shop",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "lantern"
+            }
+          ],
+          "lockedText": "You cannot afford it."
+        },
+        {
+          "text": "Leave it",
+          "to": "shop"
+        }
+      ]
+    },
+    "stall-rope": {
+      "title": "The rope",
+      "text": "\"Four. Tarred last week.\" You have {gold} gold.",
+      "effects": [
+        {
+          "stat": "price",
+          "set": 4
+        }
+      ],
+      "choices": [
+        {
+          "text": "Buy it",
+          "to": "shop",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "rope"
+            }
+          ],
+          "lockedText": "You cannot afford it."
+        },
+        {
+          "text": "Leave it",
+          "to": "shop"
+        }
+      ]
+    },
+    "stall-bread": {
+      "title": "The honey bread",
+      "text": "\"One a piece, baked this morning.\" You have {gold} gold.",
+      "effects": [
+        {
+          "stat": "price",
+          "set": 1
+        }
+      ],
+      "choices": [
+        {
+          "text": "Buy it",
+          "to": "shop",
+          "if": {
+            "stat": "gold",
+            "gte": {
+              "stat": "price"
+            }
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": {
+                "stat": "price",
+                "times": -1
+              }
+            },
+            {
+              "give": "bread"
+            }
+          ],
+          "lockedText": "You cannot afford it."
+        },
+        {
+          "text": "Leave it",
+          "to": "shop"
+        }
+      ]
+    },
+    "cellar": {
+      "title": "The guildhall cellar",
+      "text": "Barrels, cobwebs, and a chest of rotten ledgers. Under them, rolled in oilcloth, is a chart of the river.",
+      "once": true,
+      "effects": [
+        {
+          "give": "chart"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Back up to the square",
+          "to": "square"
+        }
+      ]
+    },
+    "barge": {
+      "title": "The customs barge",
+      "text": "You tie off the rope, light the lantern and go down hand over hand. The strongbox is where they said, green with weed, and heavier than a day's honest work.",
+      "ending": "victory"
+    },
+    "diver": {
+      "title": "The eel-diver",
+      "text": "The boy counts your nine coins twice, takes a breath and goes over the side. He is down a long time. The strongbox comes up on his shoulder, and he does not ask for a share: you already paid him one.",
+      "ending": "victory"
+    },
+    "home": {
+      "title": "Home",
+      "text": "You walk home over the first bridge with {gold} gold in your pocket and the barge still unvisited. There is always next market day.",
+      "ending": "defeat"
+    }
+  }
+}

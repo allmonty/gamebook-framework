@@ -1,0 +1,113 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "night-archive",
+  "lang": "pt",
+  "title": "O Arquivo à Noite",
+  "author": "Você",
+  "rules": {
+    "health": "nerve",
+    "rerolls": 1,
+    "stats": {
+      "nerve": {
+        "label": "Coragem",
+        "roll": "2d6+6",
+        "max": true
+      },
+      "wits": {
+        "label": "Astúcia",
+        "roll": "1d6+2"
+      }
+    },
+    "combat": {
+      "mode": "opposed",
+      "attackRoll": "2d6",
+      "attackStat": "wits",
+      "damage": "2"
+    }
+  },
+  "start": "desk",
+  "nodes": {
+    "desk": {
+      "title": "A mesa da noite",
+      "text": "Sua primeira noite como vigia do arquivo. À meia-noite as luzes da sala dos mapas piscam e se apagam. Coragem {nerve}, Astúcia {wits}.",
+      "choices": [
+        {
+          "text": "Pegar a lanterna e ir ver",
+          "to": "stairs"
+        },
+        {
+          "text": "Ficar na mesa até amanhecer",
+          "to": "morning"
+        }
+      ]
+    },
+    "stairs": {
+      "title": "A escada",
+      "text": "A porta da sala dos mapas tem uma trava com código. Você já ouviu os curadores resmungando esse código. Consegue lembrar?",
+      "choices": [
+        {
+          "text": "Tentar lembrar o código (role 1d6 + Astúcia, 7 ou mais)",
+          "check": {
+            "roll": "1d6",
+            "add": "wits",
+            "op": "gte",
+            "vs": 7,
+            "pass": "maps",
+            "fail": "alarm"
+          }
+        }
+      ]
+    },
+    "alarm": {
+      "title": "O alarme",
+      "text": "O teclado guincha. Lá embaixo, alguma coisa que não é um curador começa a subir a escada. Sua coragem fraqueja (-2 de Coragem).",
+      "effects": [
+        {
+          "stat": "nerve",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Encarar",
+          "to": "shade"
+        }
+      ]
+    },
+    "maps": {
+      "title": "A sala dos mapas",
+      "text": "A porta se abre com um clique. Um vulto cinzento enrola o mapa mais antigo do arquivo, como quem vai levá-lo embora.",
+      "choices": [
+        {
+          "text": "Impedir",
+          "to": "shade"
+        }
+      ]
+    },
+    "shade": {
+      "title": "A sombra",
+      "text": "O vulto se vira para você: uma sombra de mãos manchadas de tinta. Você ergue a lanterna e mantém a calma.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Sombra de tinta",
+            "attack": 7,
+            "health": 6
+          }
+        ],
+        "win": "dawn"
+      }
+    },
+    "dawn": {
+      "title": "Amanhecer",
+      "text": "A sombra se desfaz como fumaça na luz da lanterna. Quando os curadores chegam, cada mapa está na sua gaveta.",
+      "ending": "victory"
+    },
+    "morning": {
+      "title": "Manhã",
+      "text": "Você fica quieto até o sol nascer. Na sala dos mapas, o mapa mais antigo sumiu. Ninguém culpa você; ninguém oferece uma segunda noite, também.",
+      "ending": "defeat"
+    }
+  }
+}

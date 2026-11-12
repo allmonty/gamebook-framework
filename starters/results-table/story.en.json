@@ -1,0 +1,519 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "ash-road",
+  "lang": "en",
+  "title": "The Ash Road",
+  "author": "You",
+  "description": "A results-table adventure: arts picked at the start, a pack of eight, meals, and fights read off a table.",
+  "rules": {
+    "health": "endurance",
+    "rerolls": 1,
+    "stats": {
+      "prowess": {
+        "label": "Prowess",
+        "roll": "1d10+9"
+      },
+      "endurance": {
+        "label": "Endurance",
+        "roll": "1d10+19",
+        "max": true
+      },
+      "gold": {
+        "label": "Gold",
+        "roll": "1d10",
+        "limit": 50
+      }
+    },
+    "combat": {
+      "mode": "table",
+      "attackStat": "prowess",
+      "roll": "1d10-1",
+      "table": [
+        {
+          "upTo": -3,
+          "results": [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ]
+        },
+        {
+          "upTo": 3,
+          "results": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ]
+        },
+        {
+          "results": [
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              9,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              99,
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    "inventory": {
+      "capacity": 8
+    },
+    "creation": {
+      "picks": [
+        {
+          "id": "arts",
+          "title": "Choose two arts",
+          "count": 2,
+          "options": [
+            {
+              "id": "healing",
+              "label": "Mending",
+              "description": "+1 Endurance on every page without a fight.",
+              "effects": [
+                {
+                  "set": "art-mending"
+                }
+              ]
+            },
+            {
+              "id": "tracking",
+              "label": "Tracking",
+              "description": "You read trails others walk past.",
+              "effects": [
+                {
+                  "set": "art-tracking"
+                }
+              ]
+            },
+            {
+              "id": "bladework",
+              "label": "Bladework",
+              "description": "+2 Prowess while you carry the sword.",
+              "effects": [
+                {
+                  "set": "art-blade"
+                }
+              ]
+            },
+            {
+              "id": "foraging",
+              "label": "Foraging",
+              "description": "You never need a meal.",
+              "effects": [
+                {
+                  "set": "art-forage"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "bonuses": [
+      {
+        "if": {
+          "not": {
+            "any": [
+              {
+                "has": "sword"
+              },
+              {
+                "has": "staff"
+              }
+            ]
+          }
+        },
+        "bonus": {
+          "prowess": -4
+        }
+      },
+      {
+        "if": {
+          "all": [
+            {
+              "flag": "art-blade"
+            },
+            {
+              "has": "sword"
+            }
+          ]
+        },
+        "bonus": {
+          "prowess": 2
+        }
+      }
+    ],
+    "everyPage": [
+      {
+        "calm": true,
+        "if": {
+          "flag": "art-mending"
+        },
+        "effects": [
+          {
+            "stat": "endurance",
+            "add": 1
+          }
+        ]
+      }
+    ]
+  },
+  "items": {
+    "sword": {
+      "name": "Road sword",
+      "description": "Plain, sharp, yours."
+    },
+    "staff": {
+      "name": "Ash staff",
+      "description": "Cut from a dead tree. Better than bare hands."
+    },
+    "meal": {
+      "name": "Meal",
+      "description": "Hard bread and smoked fish.",
+      "stack": 2,
+      "max": 4
+    },
+    "satchel": {
+      "name": "Courier's satchel",
+      "description": "Room for two more things.",
+      "capacity": 2
+    }
+  },
+  "start": "camp",
+  "nodes": {
+    "camp": {
+      "title": "The last camp",
+      "text": "Grey flakes fall on the cold fire. The signal tower at the end of the Ash Road has been dark for nine nights, and you were sent to light it.\n\nYou have your sword, {meal.count} meals and {gold} gold. Prowess {prowess}, Endurance {endurance}.",
+      "effects": [
+        {
+          "give": "sword"
+        },
+        {
+          "give": "meal",
+          "count": 2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Take the ridge path",
+          "to": "ridge"
+        },
+        {
+          "text": "Follow the river",
+          "to": "river"
+        },
+        {
+          "text": "Read the courier's trail (Tracking)",
+          "to": "trail",
+          "if": {
+            "flag": "art-tracking"
+          },
+          "hideIfLocked": true
+        }
+      ]
+    },
+    "trail": {
+      "title": "The courier's trail",
+      "text": "Boot prints, a week old, leave the road and stop at a hollow tree. Inside hangs a satchel, and in it six gold coins nobody will come back for.",
+      "once": true,
+      "effects": [
+        {
+          "give": "satchel"
+        },
+        {
+          "stat": "gold",
+          "add": 6
+        }
+      ],
+      "choices": [
+        {
+          "text": "Go down to the river",
+          "to": "river"
+        }
+      ]
+    },
+    "ridge": {
+      "title": "The ridge",
+      "text": "The path narrows to a ledge of loose scree above the valley.",
+      "choices": [
+        {
+          "text": "Cross the scree (roll 1d6)",
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 2,
+                "to": "fall"
+              },
+              {
+                "upTo": 6,
+                "to": "dusk"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "fall": {
+      "title": "The fall",
+      "text": "The ledge goes out from under you. You come to rest against a dead ash tree, bruised (-3 Endurance), and break off a branch to lean on: a staff of sorts.",
+      "once": true,
+      "effects": [
+        {
+          "stat": "endurance",
+          "add": -3
+        },
+        {
+          "give": "staff"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Limp on",
+          "to": "dusk"
+        }
+      ]
+    },
+    "river": {
+      "title": "The ford",
+      "text": "The river runs black with ash. A ferryman watches from a raft and holds up three fingers. You have {gold} gold.",
+      "choices": [
+        {
+          "text": "Pay 3 gold",
+          "to": "dusk",
+          "if": {
+            "stat": "gold",
+            "gte": 3
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -3
+            }
+          ],
+          "lockedText": "You cannot pay."
+        },
+        {
+          "text": "Wade across",
+          "to": "wade"
+        }
+      ]
+    },
+    "wade": {
+      "title": "The current",
+      "text": "Halfway over, the current takes your legs and then your sword. You crawl out on the far bank with empty hands. (Unarmed, you fight at -4 Prowess.)",
+      "effects": [
+        {
+          "take": "sword"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Walk on",
+          "to": "dusk"
+        }
+      ]
+    },
+    "dusk": {
+      "title": "Dusk",
+      "text": [
+        "Night comes early under the ash cloud, and you have walked all day. You must eat.",
+        {
+          "if": {
+            "flag": "art-forage"
+          },
+          "text": "Then again, the ditches here are full of roots you know."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Eat a meal",
+          "to": "gate",
+          "if": {
+            "has": "meal"
+          },
+          "effects": [
+            {
+              "take": "meal"
+            }
+          ]
+        },
+        {
+          "text": "Dig for roots (Foraging)",
+          "to": "gate",
+          "if": {
+            "flag": "art-forage"
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Go hungry (-3 Endurance)",
+          "to": "gate",
+          "effects": [
+            {
+              "stat": "endurance",
+              "add": -3
+            }
+          ]
+        }
+      ]
+    },
+    "gate": {
+      "title": "The tower gate",
+      "text": "The tower stands black against the sky. Something large and grey lies across the gate, breathing.",
+      "choices": [
+        {
+          "text": "Fight the ash wolf",
+          "to": "wolf"
+        },
+        {
+          "text": "Slip past in the dark (1d10, 7 or more)",
+          "check": {
+            "roll": "1d10",
+            "op": "gte",
+            "vs": 7,
+            "pass": "tower",
+            "fail": "wolf"
+          }
+        }
+      ]
+    },
+    "wolf": {
+      "title": "The ash wolf",
+      "text": "It rises, shaking cinders from its coat.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Ash wolf",
+            "attack": 15,
+            "health": 16
+          }
+        ],
+        "win": "tower",
+        "flee": "fled",
+        "fleeCost": "round"
+      }
+    },
+    "fled": {
+      "title": "The road back",
+      "text": "You run until the tower is a notch on the horizon. It stays dark. Someone else will have to try.",
+      "ending": "defeat"
+    },
+    "tower": {
+      "title": "The signal tower",
+      "text": "You climb the last stair and put a flame to the great lamp. Far down the valley, one by one, the other towers answer.",
+      "ending": "victory"
+    }
+  }
+}

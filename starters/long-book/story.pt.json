@@ -1,0 +1,187 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "lighthouse-year",
+  "lang": "pt",
+  "title": "O Ano do Farol",
+  "author": "Você",
+  "description": "O esqueleto de um livro longo: capítulos, títulos de página que o leitor vê, notas para você mesmo, conquistas, um diário e desfazer.",
+  "showTitles": true,
+  "chapters": {
+    "arrival": {
+      "title": "Parte um: Chegada"
+    },
+    "winter": {
+      "title": "Parte dois: Inverno"
+    },
+    "spring": {
+      "title": "Parte três: Primavera"
+    }
+  },
+  "rules": {
+    "preset": "fighting-fantasy",
+    "undo": 2,
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "journal": {
+    "log": {
+      "title": "O diário do último faroleiro",
+      "text": "\"Lubrifique as engrenagens no dia primeiro. Confie na lâmpada, não no tempo. Se o sino tocar sozinho, não desça para olhar.\""
+    }
+  },
+  "achievements": {
+    "keeper": {
+      "title": "Faroleiro",
+      "description": "Assinou para um segundo ano."
+    },
+    "stormwatch": {
+      "title": "Vigia da tempestade",
+      "description": "Manteve a lâmpada acesa durante a grande tempestade.",
+      "hidden": true
+    }
+  },
+  "start": "landing",
+  "nodes": {
+    "landing": {
+      "title": "O desembarque",
+      "chapter": "arrival",
+      "note": "Página de abertura. Seja breve: o leitor quer entrar logo.",
+      "text": "O barco de suprimentos deixa você na rocha com um baú e um contrato de um ano. Acima, o farol se ergue branco contra um céu de ardósia.",
+      "choices": [
+        {
+          "text": "Subir direto à sala da lâmpada",
+          "to": "lamp"
+        },
+        {
+          "text": "Olhar primeiro os aposentos do faroleiro",
+          "to": "quarters"
+        }
+      ]
+    },
+    "quarters": {
+      "title": "Os aposentos do faroleiro",
+      "chapter": "arrival",
+      "note": "Página opcional: dá a entrada do diário. Quem pular não perde nada de que precise.",
+      "text": "Um beliche, um fogão, uma prateleira de tábuas de marés. Na escrivaninha você acha o diário do último faroleiro, com a última página arrancada.",
+      "once": true,
+      "effects": [
+        {
+          "journal": "log"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Subir à sala da lâmpada",
+          "to": "lamp"
+        }
+      ]
+    },
+    "lamp": {
+      "title": "A sala da lâmpada",
+      "chapter": "arrival",
+      "note": "Fim da parte um. Tudo antes daqui é preparação.",
+      "text": "Latão, vidro e um mecanismo de relógio da sua altura. Você dá corda, apara o pavio e, quando a luz do dia acaba, põe a grande lâmpada para girar pela primeira vez.",
+      "choices": [
+        {
+          "text": "Deixar os meses passarem",
+          "to": "storm"
+        }
+      ]
+    },
+    "storm": {
+      "title": "A grande tempestade",
+      "chapter": "winter",
+      "note": "A única escolha difícil do livro. Desfazer está ligado (rules.undo), então o leitor pode voltar e tentar o outro caminho.",
+      "text": "No auge do inverno vem do norte uma tempestade que sacode a torre como um chocalho. Perto da meia-noite o mecanismo emperra. Lá fora, no escuro, soa a buzina de um navio.",
+      "choices": [
+        {
+          "text": "Girar a lâmpada à mão a noite inteira (Teste sua Sorte)",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "luck",
+            "effects": [
+              {
+                "stat": "luck",
+                "add": -1
+              }
+            ],
+            "pass": "dawn",
+            "fail": "dark"
+          }
+        },
+        {
+          "text": "Não tem como. Descer e esperar passar",
+          "to": "thaw"
+        }
+      ]
+    },
+    "dawn": {
+      "title": "Amanhecer",
+      "chapter": "winter",
+      "note": "Dá a conquista escondida.",
+      "text": "Seus braços são chumbo e suas mãos estão em carne viva, mas a lâmpada não parou. Com a primeira luz, uma escuna está a salvo no abrigo da rocha, e a tripulação acena.",
+      "effects": [
+        {
+          "achieve": "stormwatch"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Dormir, enfim",
+          "to": "thaw"
+        }
+      ]
+    },
+    "dark": {
+      "title": "A hora escura",
+      "chapter": "winter",
+      "note": "O final ruim. Desfazer leva de volta à tempestade.",
+      "text": "Passadas as três, suas mãos cedem e a lâmpada para. Você nem chega a ver o navio. De manhã há madeira nas pedras, e uma carta para escrever à Junta.",
+      "ending": "defeat"
+    },
+    "thaw": {
+      "title": "O degelo",
+      "chapter": "spring",
+      "note": "Última escolha. Os dois finais são bons; só um é vitória.",
+      "text": "Primavera, e o barco de suprimentos é um ponto no horizonte. O ano acabou. Seu baú está pronto, ou ficaria em cinco minutos.",
+      "choices": [
+        {
+          "text": "Assinar por mais um ano",
+          "to": "stay"
+        },
+        {
+          "text": "Pegar o barco para casa",
+          "to": "home"
+        }
+      ]
+    },
+    "stay": {
+      "title": "Mais um ano",
+      "chapter": "spring",
+      "text": "Da galeria você se despede do barco com o contrato novo no bolso. Há engrenagens para lubrificar. É dia primeiro.",
+      "effects": [
+        {
+          "achieve": "keeper"
+        }
+      ],
+      "ending": "victory"
+    },
+    "home": {
+      "title": "O barco para casa",
+      "chapter": "spring",
+      "text": "A rocha vai diminuindo atrás de você até ser só a torre branca, e depois só a luz. A luz de outra pessoa, agora.",
+      "ending": "defeat"
+    }
+  }
+}

@@ -1,0 +1,264 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "sunken-chapel",
+  "lang": "en",
+  "title": "The Sunken Chapel",
+  "author": "You",
+  "description": "A small d20 dungeon: the d20-lite preset with one stat changed and one added, two enemies at once, a boss with armor, and a fight against the clock.",
+  "rules": {
+    "preset": "d20-lite",
+    "rerolls": 2,
+    "stats": {
+      "might": {
+        "min": -2
+      },
+      "faith": {
+        "label": "Faith",
+        "roll": "1d4"
+      }
+    }
+  },
+  "items": {
+    "mace": {
+      "name": "Flanged mace",
+      "description": "+1 Might while carried.",
+      "bonus": {
+        "might": 1
+      }
+    },
+    "ring": {
+      "name": "Drowned ring",
+      "description": "Cold, tight, and it will not come off. -3 Might.",
+      "bonus": {
+        "might": -3
+      }
+    },
+    "tonic": {
+      "name": "Marsh tonic",
+      "description": "+5 HP. Quick to drink: it does not cost your turn in a fight.",
+      "use": {
+        "effects": [
+          {
+            "stat": "hp",
+            "add": 5
+          }
+        ],
+        "when": [
+          "story",
+          "combat"
+        ],
+        "combatCost": "free"
+      }
+    },
+    "bandage": {
+      "name": "Bandage",
+      "description": "+8 HP. Binding a wound in a fight costs the round.",
+      "use": {
+        "effects": [
+          {
+            "stat": "hp",
+            "add": 8
+          }
+        ],
+        "when": [
+          "story",
+          "combat"
+        ],
+        "combatCost": "round"
+      }
+    }
+  },
+  "start": "steps",
+  "nodes": {
+    "steps": {
+      "title": "The steps",
+      "text": "The marsh took the chapel a lifetime ago; only the bell tower still shows. You go down the tower steps into green half-light with a mace, a tonic and a bandage.\n\nMight {might}, Agility {agility}, Faith {faith}, HP {hp}.",
+      "effects": [
+        {
+          "give": "mace"
+        },
+        {
+          "give": "tonic"
+        },
+        {
+          "give": "bandage"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Reach into the font (roll 1d6)",
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 2,
+                "to": "ring"
+              },
+              {
+                "upTo": 4,
+                "to": "font-empty"
+              },
+              {
+                "upTo": 6,
+                "to": "font-blessing"
+              }
+            ]
+          }
+        },
+        {
+          "text": "Wade down the nave",
+          "to": "nave"
+        }
+      ]
+    },
+    "ring": {
+      "title": "The drowned ring",
+      "text": "Your fingers close on a ring, and the ring closes on your finger. Your arm goes heavy and cold (-3 Might while you wear it, and you will wear it).",
+      "effects": [
+        {
+          "give": "ring"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Wade down the nave",
+          "to": "nave"
+        }
+      ]
+    },
+    "font-empty": {
+      "title": "Silt",
+      "text": "Silt, a snail, nothing else.",
+      "choices": [
+        {
+          "text": "Wade down the nave",
+          "to": "nave"
+        }
+      ]
+    },
+    "font-blessing": {
+      "title": "Still water",
+      "text": "The water in the font is clear and very still. You drink a handful, and feel watched over (+2 Faith).",
+      "effects": [
+        {
+          "stat": "faith",
+          "add": 2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Wade down the nave",
+          "to": "nave"
+        }
+      ]
+    },
+    "nave": {
+      "title": "The nave",
+      "text": "Two shapes stand up out of the water between the pews: a robed thing with a candle snuffer, and a rat the size of a dog. They come at you together.",
+      "combat": {
+        "simultaneous": true,
+        "enemies": [
+          {
+            "name": "Drowned acolyte",
+            "attack": 1,
+            "defense": 10,
+            "health": 5
+          },
+          {
+            "name": "Bell rat",
+            "attack": 0,
+            "defense": 12,
+            "health": 3,
+            "damage": "1d4"
+          }
+        ],
+        "win": "door",
+        "flee": "retreat"
+      }
+    },
+    "door": {
+      "title": "The crypt door",
+      "text": "A bronze door, green with age, with a prayer cast into it and no handle.",
+      "choices": [
+        {
+          "text": "Say the prayer (1d20 + Faith, 12 or more)",
+          "check": {
+            "roll": "1d20",
+            "add": "faith",
+            "op": "gte",
+            "vs": 12,
+            "pass": "crypt",
+            "fail": "door-hurt"
+          }
+        },
+        {
+          "text": "Put your shoulder to it (1d20 + Might, 13 or more)",
+          "check": {
+            "roll": "1d20",
+            "add": "might",
+            "op": "gte",
+            "vs": 13,
+            "pass": "crypt",
+            "fail": "door-hurt"
+          }
+        },
+        {
+          "text": "Give up and climb out",
+          "to": "retreat"
+        }
+      ]
+    },
+    "door-hurt": {
+      "title": "Bronze",
+      "text": "The door does not move, and the cold of it goes through you (-2 HP).",
+      "effects": [
+        {
+          "stat": "hp",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Try again",
+          "to": "door"
+        }
+      ]
+    },
+    "crypt": {
+      "title": "The crypt",
+      "text": "The abbot sits on his own tomb in rusted mail, holding the chapel bell-rope. The water is rising: you can hear it on the stairs. Finish this before it reaches the roof.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Drowned abbot",
+            "attack": 3,
+            "defense": 12,
+            "health": 8,
+            "armor": 1
+          }
+        ],
+        "win": "bell",
+        "rounds": {
+          "after": 6,
+          "to": "flood"
+        }
+      }
+    },
+    "bell": {
+      "title": "The bell",
+      "text": "The abbot folds into the water. You take the rope from his hand and pull, and far above, for the first time in a lifetime, the chapel bell rings over the marsh.",
+      "ending": "victory"
+    },
+    "flood": {
+      "title": "The flood",
+      "text": "The water is at your chest and the abbot is still standing. You swim for the stairs with your lungs burning. Behind you the crypt fills.",
+      "ending": "defeat"
+    },
+    "retreat": {
+      "title": "Daylight",
+      "text": "You climb back up the tower into daylight, wet to the neck. The bell stays silent. Somebody braver, or luckier, may try next year.",
+      "ending": "defeat"
+    }
+  }
+}

@@ -77,6 +77,7 @@ Lembre de traduzir os nomes dos atributos em `rules.stats` quando usar um preset
 
 ## Para onde ir agora
 
+- Os [modelos de jogo](../starters.html) são oito livros-jogo completos para jogar, ler e copiar.
 - O [livro de receitas](cookbook.md) tem receitas prontas: um baú trancado, um mercador, uma passagem secreta, uma armadilha de veneno, uma luta de chefe.
 - A [especificação completa](https://github.com/allmonty/gamebook-framework/blob/main/spec/framework.md) lista cada campo com precisão.
 - O [playground](../play.html) está pronto para sua primeira história de verdade.

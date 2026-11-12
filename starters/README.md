@@ -1,12 +1,17 @@
 # Starter games
 
-Three complete game folders to copy and make your own. Each one is a folder laid out as the spec says ([B1](../spec/framework.md)): one `story.<lang>.json` per language, plus `images/` and `audio/` if you add them. Every story starts with `"$schema"`, so an editor that knows JSON Schema checks it as you type.
+Complete game folders to copy and make your own, each in English and Portuguese. [Play them on the site](https://allmonty.github.io/gamebook-framework/en/starters.html) before you choose. Each one is a folder laid out as the spec says ([B1](../spec/framework.md)): one `story.<lang>.json` per language, plus `images/` and `audio/` if you add them. Every story starts with `"$schema"`, so an editor that knows JSON Schema checks it as you type.
 
 | Folder | What it is |
 |---|---|
-| [blank/](blank/) | The smallest valid game: the Fighting Fantasy preset, three pages, one ending. English only. Start here for a story of your own. |
-| [fighting-fantasy/](fighting-fantasy/) | *The Salt Mine*, in English and Portuguese: the classic shape. A fight, a Luck test, Provisions you eat from your pack (a counted item), a door that needs a key, and all three endings: victory, death and defeat. |
+| [blank/](blank/) | The smallest valid game: the Fighting Fantasy preset, three pages, one ending. Start here for a story of your own. |
+| [fighting-fantasy/](fighting-fantasy/) | *The Salt Mine*: the classic shape. A fight, a Luck test, Provisions you eat from your pack (a counted item), a door that needs a key, and all three endings: victory, death and defeat. |
 | [custom-rules/](custom-rules/) | *The Archive at Night*: **no preset**. The story defines its own stats (Nerve and Wits), which one is health, and how fights work, then uses them in a check and a fight. Rules are data. |
+| [results-table/](results-table/) | *The Ash Road*: fights read off a **results table** (`"mode": "table"`) instead of dice against dice. The hero picks two arts at the start, carries a pack of eight with a satchel that adds room, eats counted meals, heals on every page without a fight, fights worse unarmed, and can flee at the cost of a round. |
+| [percentile-mystery/](percentile-mystery/) | *The Clockmaker's Will*: **no combat at all**. Skills are rolled from 30 to 75 and tested with `1d100`, your skill or less. Clues go into the **journal**, flags open what people will say, text changes with what you know, and the story ends in one victory or two defeats, never a death. |
+| [hub-and-shop/](hub-and-shop/) | *Market Day at Three Bridges*: a town you **come back to**. One shop is reached from two places with `call` and left with `return`; every stall sets a hidden Price stat and one "Buy it" pays whatever it says; the pack holds three, so finding a fourth thing is a **swap**; people greet you differently on later visits; and a job can be done only `once`. A second way to win needs no item, because an offered item can be declined. |
+| [d20-dungeon/](d20-dungeon/) | *The Sunken Chapel*: the `d20-lite` preset **changed, not taken whole**: Might may go below zero (`min`) and a Faith stat is added. A random table at the font, an item with a bonus and one with a curse, two usable items (one free in a fight, one that costs the round), **two enemies at once**, a boss with `armor`, and a fight that ends after six `rounds` whether you have won or not. |
+| [long-book/](long-book/) | *The Lighthouse Year*: the **skeleton of a long book**, structure rather than rules. Pages grouped in `chapters`, each with a `title` the reader sees (`showTitles`) and a `note` only you see; a journal entry; two achievements, one `hidden`; and `undo`, so a reader can take the hard choice both ways. To leave a page for later, give it `"draft": true`: the validator warns until you finish it. |
 
 Copy a folder, rename it (for example `games/my-story/`), change the `id` in every language to the same new slug, and write.
 

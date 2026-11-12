@@ -1,0 +1,176 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "lighthouse-year",
+  "lang": "en",
+  "title": "The Lighthouse Year",
+  "author": "You",
+  "description": "The skeleton of a long book: chapters, page titles shown to the reader, notes to yourself, achievements, a journal and undo.",
+  "showTitles": true,
+  "chapters": {
+    "arrival": {
+      "title": "Part one: Arrival"
+    },
+    "winter": {
+      "title": "Part two: Winter"
+    },
+    "spring": {
+      "title": "Part three: Spring"
+    }
+  },
+  "rules": {
+    "preset": "fighting-fantasy",
+    "undo": 2
+  },
+  "journal": {
+    "log": {
+      "title": "The last keeper's log",
+      "text": "\"Oil the gears on the first of the month. Trust the lamp, not the weather. If the bell rings by itself, do not go down to look.\""
+    }
+  },
+  "achievements": {
+    "keeper": {
+      "title": "Keeper",
+      "description": "Signed on for a second year."
+    },
+    "stormwatch": {
+      "title": "Stormwatch",
+      "description": "Kept the lamp lit through the great storm.",
+      "hidden": true
+    }
+  },
+  "start": "landing",
+  "nodes": {
+    "landing": {
+      "title": "The landing",
+      "chapter": "arrival",
+      "note": "Opening page. Keep it short: the reader wants to get inside.",
+      "text": "The supply boat leaves you on the rock with a sea chest and a year's contract. Above you the lighthouse stands white against a slate sky.",
+      "choices": [
+        {
+          "text": "Climb straight to the lamp room",
+          "to": "lamp"
+        },
+        {
+          "text": "Look round the keeper's quarters first",
+          "to": "quarters"
+        }
+      ]
+    },
+    "quarters": {
+      "title": "The keeper's quarters",
+      "chapter": "arrival",
+      "note": "Optional page: gives the journal entry. A reader who skips it loses nothing they need.",
+      "text": "A bunk, a stove, a shelf of tide tables. In the desk you find the last keeper's log, its final page torn out.",
+      "once": true,
+      "effects": [
+        {
+          "journal": "log"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Climb to the lamp room",
+          "to": "lamp"
+        }
+      ]
+    },
+    "lamp": {
+      "title": "The lamp room",
+      "chapter": "arrival",
+      "note": "End of part one. Everything before this is setup.",
+      "text": "Brass, glass and a clockwork as tall as you are. You wind it, trim the wick and, as the light goes, set the great lamp turning for the first time.",
+      "choices": [
+        {
+          "text": "Let the months pass",
+          "to": "storm"
+        }
+      ]
+    },
+    "storm": {
+      "title": "The great storm",
+      "chapter": "winter",
+      "note": "The one hard choice of the book. Undo is on (rules.undo), so a reader can come back and try the other way.",
+      "text": "In the dead of winter a storm comes out of the north that shakes the tower like a rattle. Near midnight the clockwork jams. Out in the dark, a ship's horn sounds.",
+      "choices": [
+        {
+          "text": "Turn the lamp by hand all night (Test your Luck)",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "luck",
+            "effects": [
+              {
+                "stat": "luck",
+                "add": -1
+              }
+            ],
+            "pass": "dawn",
+            "fail": "dark"
+          }
+        },
+        {
+          "text": "It cannot be done. Go below and wait it out",
+          "to": "thaw"
+        }
+      ]
+    },
+    "dawn": {
+      "title": "Dawn",
+      "chapter": "winter",
+      "note": "Earns the hidden achievement.",
+      "text": "Your arms are lead and your hands are raw, but the lamp never stopped. At first light a schooner lies safe in the lee of the rock, and her crew are waving.",
+      "effects": [
+        {
+          "achieve": "stormwatch"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Sleep, at last",
+          "to": "thaw"
+        }
+      ]
+    },
+    "dark": {
+      "title": "The dark hour",
+      "chapter": "winter",
+      "note": "The bad ending. Undo leads back to the storm.",
+      "text": "Some time after three your grip fails and the lamp stands still. You never see the ship. In the morning there is timber on the rocks, and a letter to write to the Board.",
+      "ending": "defeat"
+    },
+    "thaw": {
+      "title": "The thaw",
+      "chapter": "spring",
+      "note": "Last choice. Both endings are fine ones; only one is a victory.",
+      "text": "Spring, and the supply boat is a dot on the horizon. The year is up. Your chest is packed, or could be in five minutes.",
+      "choices": [
+        {
+          "text": "Sign on for another year",
+          "to": "stay"
+        },
+        {
+          "text": "Take the boat home",
+          "to": "home"
+        }
+      ]
+    },
+    "stay": {
+      "title": "Another year",
+      "chapter": "spring",
+      "text": "You wave the boat off from the gallery with the new contract in your pocket. There are gears to oil. It is the first of the month.",
+      "effects": [
+        {
+          "achieve": "keeper"
+        }
+      ],
+      "ending": "victory"
+    },
+    "home": {
+      "title": "The boat home",
+      "chapter": "spring",
+      "text": "The rock gets smaller behind you until it is only the white tower, and then only the light. Somebody else's light, now.",
+      "ending": "defeat"
+    }
+  }
+}

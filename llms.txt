@@ -4,7 +4,7 @@
 
 ## Write a story
 - [LLM kit](https://allmonty.github.io/gamebook-framework/llm-kit.md): the one file to give a chatbot: instructions, common mistakes and the full reference
-- [Starter games](https://github.com/allmonty/gamebook-framework/tree/main/starters): three game folders to copy (blank, a Fighting Fantasy adventure, one with its own rules)
+- [Starter games](https://github.com/allmonty/gamebook-framework/tree/main/starters): eight game folders to copy, each in English and Portuguese (blank, a Fighting Fantasy adventure, custom rules, results-table combat, a percentile mystery, a town hub with a shop, a d20 dungeon, the skeleton of a long book); [play them on the site](https://allmonty.github.io/gamebook-framework/en/starters.html)
 - [JSON Schema](https://allmonty.github.io/gamebook-framework/schema/story.schema.json): the shape of a story file, for editors; a story's `"$schema"` points here
 - [Writer's tutorial](https://allmonty.github.io/gamebook-framework/en/tutorial/index.html): eight short chapters and a cookbook, each with stories to play and edit (Portuguese under /pt/)
   - [Getting started](https://allmonty.github.io/gamebook-framework/en/tutorial/01-getting-started.html)

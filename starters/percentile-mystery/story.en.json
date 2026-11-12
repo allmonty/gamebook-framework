@@ -1,0 +1,312 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "clockmakers-will",
+  "lang": "en",
+  "title": "The Clockmaker's Will",
+  "author": "You",
+  "description": "A percentile mystery with no fights: roll under your skills, collect clues in the journal, then name the forger.",
+  "rules": {
+    "health": "composure",
+    "rerolls": 1,
+    "stats": {
+      "insight": {
+        "label": "Insight",
+        "roll": "5d10+25"
+      },
+      "charm": {
+        "label": "Charm",
+        "roll": "5d10+25"
+      },
+      "composure": {
+        "label": "Composure",
+        "roll": "1d10+10",
+        "max": true
+      }
+    }
+  },
+  "journal": {
+    "ledger": {
+      "title": "The ledger",
+      "text": "The workshop ledger was written all year in brown ink. The will, dated last spring, is in blue."
+    },
+    "ink": {
+      "title": "Blue ink",
+      "text": "The niece says only one person in the house buys blue ink: the apprentice, for his drawings."
+    },
+    "key": {
+      "title": "The desk key",
+      "text": "The apprentice admits he kept a key to the master's desk, where the will lay."
+    }
+  },
+  "start": "hall",
+  "nodes": {
+    "hall": {
+      "title": "The reading of the will",
+      "text": [
+        "Old Brant the clockmaker is dead, and his will leaves the workshop to his apprentice instead of his niece. The lawyer frowns at the signature. \"One hour,\" she says to you. \"Then I must file it as it stands.\"\n\nInsight {insight}, Charm {charm}, Composure {composure}.",
+        {
+          "if": {
+            "visits": "hall",
+            "gte": 3
+          },
+          "text": "The clocks on the wall, forty of them, tick on."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Search the study",
+          "to": "study"
+        },
+        {
+          "text": "Talk to the niece",
+          "to": "niece"
+        },
+        {
+          "text": "Question the apprentice",
+          "to": "apprentice"
+        },
+        {
+          "text": "Name the forger",
+          "to": "accuse"
+        }
+      ]
+    },
+    "study": {
+      "title": "The study",
+      "text": "A desk, a lamp, a year of paperwork. The ledger lies open under a magnifying glass.",
+      "choices": [
+        {
+          "text": "Study the ledger (1d100, your Insight or less)",
+          "once": true,
+          "check": {
+            "roll": "1d100",
+            "op": "lte",
+            "vs": "insight",
+            "pass": "ledger",
+            "fail": "study-miss"
+          }
+        },
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "ledger": {
+      "title": "Brown ink, blue ink",
+      "text": "Page after page of brown ink, in Brant's cramped hand. You hold the will beside it. The will is blue.",
+      "once": true,
+      "effects": [
+        {
+          "journal": "ledger"
+        },
+        {
+          "set": "clue-ledger"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "study-miss": {
+      "title": "Columns of figures",
+      "text": "Springs, escapements, a debt to a brass founder. If there is something here you do not see it, and the clocks are counting (-3 Composure).",
+      "effects": [
+        {
+          "stat": "composure",
+          "add": -3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "niece": {
+      "title": "The niece",
+      "text": "Mara Brant stands at the window with her arms folded. She has decided not to like you.",
+      "choices": [
+        {
+          "text": "Win her over (1d100, your Charm or less)",
+          "once": true,
+          "check": {
+            "roll": "1d100",
+            "op": "lte",
+            "vs": "charm",
+            "pass": "niece-talks",
+            "fail": "niece-cold"
+          }
+        },
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "niece-talks": {
+      "title": "What Mara knows",
+      "text": "\"He drew all day,\" she says at last. \"Gears, faces, anything. Blue ink on his cuffs, blue ink on my uncle's good table. Nobody else in this house uses it.\"",
+      "once": true,
+      "effects": [
+        {
+          "journal": "ink"
+        },
+        {
+          "set": "clue-ink"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "niece-cold": {
+      "title": "A closed door",
+      "text": "\"You were hired by the lawyer,\" she says, \"and the lawyer is paid by the estate.\" She turns back to the window (-3 Composure).",
+      "effects": [
+        {
+          "stat": "composure",
+          "add": -3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "apprentice": {
+      "title": "The apprentice",
+      "text": [
+        "Tobin sits among the half-built clocks, turning a screwdriver over and over.",
+        {
+          "if": {
+            "flag": "clue-ink"
+          },
+          "text": "There is blue ink on his cuffs."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Show him the two inks",
+          "to": "key",
+          "if": {
+            "flag": "clue-ledger"
+          },
+          "once": true,
+          "lockedText": "You have nothing to show him."
+        },
+        {
+          "text": "Press him about the blue ink (1d100, your Charm or less)",
+          "once": true,
+          "check": {
+            "roll": "1d100",
+            "op": "lte",
+            "vs": "charm",
+            "pass": "key",
+            "fail": "silent"
+          },
+          "if": {
+            "flag": "clue-ink"
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "silent": {
+      "title": "Silence",
+      "text": "Tobin puts the screwdriver down, picks it up again, and says nothing at all (-3 Composure).",
+      "effects": [
+        {
+          "stat": "composure",
+          "add": -3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "key": {
+      "title": "The desk key",
+      "text": "He is quiet for a long time. \"I had a key to the desk,\" he says. \"He gave it to me. That is all I will say.\"",
+      "once": true,
+      "effects": [
+        {
+          "journal": "key"
+        },
+        {
+          "set": "clue-key"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "accuse": {
+      "title": "The accusation",
+      "text": "The lawyer caps her pen. \"Well?\"",
+      "choices": [
+        {
+          "text": "The apprentice, and here is the proof",
+          "to": "solved",
+          "if": {
+            "flag": "clue-key"
+          },
+          "lockedText": "You need more than a feeling."
+        },
+        {
+          "text": "The apprentice, I am sure of it",
+          "to": "unproven",
+          "if": {
+            "not": {
+              "flag": "clue-key"
+            }
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "The niece",
+          "to": "wrong"
+        },
+        {
+          "text": "Not yet",
+          "to": "hall"
+        }
+      ]
+    },
+    "solved": {
+      "title": "Filed and sealed",
+      "text": "Blue ink and a key. The lawyer tears the will in half. The older one, in brown, leaves the workshop to Mara, and a set of drawing pens to Tobin.",
+      "ending": "victory"
+    },
+    "unproven": {
+      "title": "Not proven",
+      "text": "\"Sure of it,\" the lawyer repeats, and files the will as it stands. Tobin does not look at you as you leave.",
+      "ending": "defeat"
+    },
+    "wrong": {
+      "title": "The wrong name",
+      "text": "Mara laughs once, without any pleasure, and shows you the door herself. Behind you, forty clocks strike the hour.",
+      "ending": "defeat"
+    }
+  }
+}

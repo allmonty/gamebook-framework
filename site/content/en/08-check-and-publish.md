@@ -77,6 +77,7 @@ Remember to translate stat labels in `rules.stats` when you use a preset (chapte
 
 ## Where to go next
 
+- The [starter games](../starters.html) are eight complete gamebooks to play, read and copy.
 - The [cookbook](cookbook.md) has ready-made recipes: a locked chest, a merchant, a hidden passage, a poison trap, a boss fight.
 - The [full specification](https://github.com/allmonty/gamebook-framework/blob/main/spec/framework.md) lists every field precisely.
 - The [playground](../play.html) is ready for your first real story.

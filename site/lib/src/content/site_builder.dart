@@ -41,7 +41,7 @@ class SiteBuilder {
     _writePage(lang, 'index.html', strings, _read('templates/index.html'));
     _writePage(lang, 'play.html', strings, _read('templates/play.html'));
     _buildTutorial(lang, strings);
-    _buildVersions(lang, strings);
+    _buildPages(lang, strings);
   }
 
   /// Every `content/<lang>/*.md` becomes `<lang>/tutorial/<slug>.html`, with
@@ -77,19 +77,29 @@ class SiteBuilder {
     }
   }
 
-  /// `pages/<lang>/versions.md` becomes `<lang>/versions.html`: what the
-  /// format's versions are and what each holds. It is a page of its own, not
-  /// a tutorial chapter.
-  void _buildVersions(String lang, Map<String, String> strings) {
-    final page = renderChapter(
-      'versions',
-      _read('pages/$lang/versions.md'),
-      exampleLookup(lang),
-    );
-    _writePage(lang, 'versions.html', strings, _read('templates/page.html'), {
-      'page.title': '${page.title} · Gamebook Framework',
-      'page.html': page.html,
-    });
+  /// Every `pages/<lang>/<name>.md` becomes `<lang>/<name>.html`: the pages
+  /// that stand on their own, outside the tutorial (the format's versions,
+  /// the starter games).
+  void _buildPages(String lang, Map<String, String> strings) {
+    final files =
+        Directory('${source.path}/pages/$lang')
+            .listSync()
+            .whereType<File>()
+            .where((f) => f.path.endsWith('.md'))
+            .toList()
+          ..sort((a, b) => a.path.compareTo(b.path));
+    for (final file in files) {
+      final name = file.uri.pathSegments.last.replaceFirst('.md', '');
+      final page = renderChapter(
+        name,
+        file.readAsStringSync(),
+        exampleLookup(lang),
+      );
+      _writePage(lang, '$name.html', strings, _read('templates/page.html'), {
+        'page.title': '${page.title} · Gamebook Framework',
+        'page.html': page.html,
+      });
+    }
   }
 
   /// The chapters of [lang], in file-name order.
@@ -158,6 +168,7 @@ class SiteBuilder {
       // Which part of the site this page is in, for the header's links.
       'nav.tutorial.current': _current(path, 'tutorial/'),
       'nav.play.current': _current(path, 'play.html'),
+      'nav.starters.current': _current(path, 'starters.html'),
       ...extra,
     };
     // A chapter's title comes from its Markdown: made safe for an attribute.
