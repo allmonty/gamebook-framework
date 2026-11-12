@@ -1,0 +1,274 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "sunken-chapel",
+  "lang": "pt",
+  "title": "A Capela Submersa",
+  "author": "Você",
+  "description": "Uma masmorra d20 pequena: o preset d20-lite com um atributo mudado e um novo, dois inimigos de uma vez, um chefe de armadura e uma luta contra o relógio.",
+  "rules": {
+    "preset": "d20-lite",
+    "rerolls": 2,
+    "stats": {
+      "might": {
+        "min": -2,
+        "label": "Força"
+      },
+      "faith": {
+        "label": "Fé",
+        "roll": "1d4"
+      },
+      "agility": {
+        "label": "Agilidade"
+      },
+      "wits": {
+        "label": "Astúcia"
+      },
+      "hp": {
+        "label": "PV"
+      }
+    }
+  },
+  "items": {
+    "mace": {
+      "name": "Maça de aletas",
+      "description": "+1 de Força enquanto carregada.",
+      "bonus": {
+        "might": 1
+      }
+    },
+    "ring": {
+      "name": "Anel do afogado",
+      "description": "Frio, apertado, e não sai do dedo. -3 de Força.",
+      "bonus": {
+        "might": -3
+      }
+    },
+    "tonic": {
+      "name": "Tônico do brejo",
+      "description": "+5 PV. Rápido de beber: não custa sua vez numa luta.",
+      "use": {
+        "effects": [
+          {
+            "stat": "hp",
+            "add": 5
+          }
+        ],
+        "when": [
+          "story",
+          "combat"
+        ],
+        "combatCost": "free"
+      }
+    },
+    "bandage": {
+      "name": "Atadura",
+      "description": "+8 PV. Enfaixar um ferimento numa luta custa a rodada.",
+      "use": {
+        "effects": [
+          {
+            "stat": "hp",
+            "add": 8
+          }
+        ],
+        "when": [
+          "story",
+          "combat"
+        ],
+        "combatCost": "round"
+      }
+    }
+  },
+  "start": "steps",
+  "nodes": {
+    "steps": {
+      "title": "A escada",
+      "text": "O brejo engoliu a capela faz uma vida inteira; só a torre do sino ainda aparece. Você desce a escada da torre para uma meia-luz verde com uma maça, um tônico e uma atadura.\n\nForça {might}, Agilidade {agility}, Fé {faith}, PV {hp}.",
+      "effects": [
+        {
+          "give": "mace"
+        },
+        {
+          "give": "tonic"
+        },
+        {
+          "give": "bandage"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Enfiar a mão na pia batismal (role 1d6)",
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 2,
+                "to": "ring"
+              },
+              {
+                "upTo": 4,
+                "to": "font-empty"
+              },
+              {
+                "upTo": 6,
+                "to": "font-blessing"
+              }
+            ]
+          }
+        },
+        {
+          "text": "Avançar pela nave, com água pela cintura",
+          "to": "nave"
+        }
+      ]
+    },
+    "ring": {
+      "title": "O anel do afogado",
+      "text": "Seus dedos se fecham num anel, e o anel se fecha no seu dedo. Seu braço fica pesado e frio (-3 de Força enquanto usar, e você vai usar).",
+      "effects": [
+        {
+          "give": "ring"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Avançar pela nave, com água pela cintura",
+          "to": "nave"
+        }
+      ]
+    },
+    "font-empty": {
+      "title": "Lodo",
+      "text": "Lodo, um caramujo, mais nada.",
+      "choices": [
+        {
+          "text": "Avançar pela nave, com água pela cintura",
+          "to": "nave"
+        }
+      ]
+    },
+    "font-blessing": {
+      "title": "Água parada",
+      "text": "A água da pia é clara e muito parada. Você bebe um punhado e se sente protegido (+2 de Fé).",
+      "effects": [
+        {
+          "stat": "faith",
+          "add": 2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Avançar pela nave, com água pela cintura",
+          "to": "nave"
+        }
+      ]
+    },
+    "nave": {
+      "title": "A nave",
+      "text": "Dois vultos se erguem da água entre os bancos: uma coisa de batina com um apagador de velas e um rato do tamanho de um cachorro. Eles vêm juntos para cima de você.",
+      "combat": {
+        "simultaneous": true,
+        "enemies": [
+          {
+            "name": "Acólito afogado",
+            "attack": 1,
+            "defense": 10,
+            "health": 5
+          },
+          {
+            "name": "Rato do sino",
+            "attack": 0,
+            "defense": 12,
+            "health": 3,
+            "damage": "1d4"
+          }
+        ],
+        "win": "door",
+        "flee": "retreat"
+      }
+    },
+    "door": {
+      "title": "A porta da cripta",
+      "text": "Uma porta de bronze, verde de velha, com uma oração fundida nela e nenhuma maçaneta.",
+      "choices": [
+        {
+          "text": "Dizer a oração (1d20 + Fé, 12 ou mais)",
+          "check": {
+            "roll": "1d20",
+            "add": "faith",
+            "op": "gte",
+            "vs": 12,
+            "pass": "crypt",
+            "fail": "door-hurt"
+          }
+        },
+        {
+          "text": "Forçar com o ombro (1d20 + Força, 13 ou mais)",
+          "check": {
+            "roll": "1d20",
+            "add": "might",
+            "op": "gte",
+            "vs": 13,
+            "pass": "crypt",
+            "fail": "door-hurt"
+          }
+        },
+        {
+          "text": "Desistir e subir de volta",
+          "to": "retreat"
+        }
+      ]
+    },
+    "door-hurt": {
+      "title": "Bronze",
+      "text": "A porta não se mexe, e o frio dela atravessa você (-2 PV).",
+      "effects": [
+        {
+          "stat": "hp",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Tentar de novo",
+          "to": "door"
+        }
+      ]
+    },
+    "crypt": {
+      "title": "A cripta",
+      "text": "O abade está sentado no próprio túmulo, de cota enferrujada, segurando a corda do sino da capela. A água está subindo: dá para ouvir na escada. Termine isso antes que ela chegue ao teto.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Abade afogado",
+            "attack": 3,
+            "defense": 12,
+            "health": 8,
+            "armor": 1
+          }
+        ],
+        "win": "bell",
+        "rounds": {
+          "after": 6,
+          "to": "flood"
+        }
+      }
+    },
+    "bell": {
+      "title": "O sino",
+      "text": "O abade se dobra para dentro da água. Você tira a corda da mão dele e puxa, e lá no alto, pela primeira vez em uma vida inteira, o sino da capela toca sobre o brejo.",
+      "ending": "victory"
+    },
+    "flood": {
+      "title": "A enchente",
+      "text": "A água está no seu peito e o abade continua de pé. Você nada para a escada com os pulmões ardendo. Atrás de você, a cripta se enche.",
+      "ending": "defeat"
+    },
+    "retreat": {
+      "title": "Luz do dia",
+      "text": "Você sobe a torre de volta para a luz do dia, molhado até o pescoço. O sino continua mudo. Alguém mais corajoso, ou com mais sorte, pode tentar no ano que vem.",
+      "ending": "defeat"
+    }
+  }
+}

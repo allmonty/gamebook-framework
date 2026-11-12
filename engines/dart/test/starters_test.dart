@@ -24,6 +24,7 @@ void main() {
     expect(folders.map((f) => f.split('/').last), [
       'blank',
       'custom-rules',
+      'd20-dungeon',
       'fighting-fantasy',
       'hub-and-shop',
       'percentile-mystery',
