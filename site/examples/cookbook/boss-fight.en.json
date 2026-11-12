@@ -1,0 +1,71 @@
+{
+  "schema": 5,
+  "id": "boss-fight",
+  "lang": "en",
+  "title": "The Boss Fight",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "throne",
+  "nodes": {
+    "throne": {
+      "text": "The Lich King rises from his throne, a skeletal guard at his side. Both attack.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Lich King",
+            "attack": 8,
+            "health": 6,
+            "armor": 1
+          },
+          {
+            "name": "Skeletal guard",
+            "attack": 5,
+            "health": 3
+          }
+        ],
+        "simultaneous": true,
+        "win": "kneel",
+        "flee": "fled"
+      }
+    },
+    "kneel": {
+      "text": "The Lich King falls to one knee. \"Mercy,\" he rasps.",
+      "choices": [
+        {
+          "text": "Spare him",
+          "to": "spared"
+        },
+        {
+          "text": "Finish him",
+          "to": "rage"
+        }
+      ]
+    },
+    "rage": {
+      "text": "His crown flares with green fire. The Lich King stands again, burning.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Lich King, burning",
+            "attack": 10,
+            "health": 4
+          }
+        ],
+        "win": "won"
+      }
+    },
+    "spared": {
+      "text": "He bows his head and fades into dust, at peace.",
+      "ending": "victory"
+    },
+    "won": {
+      "text": "The fire dies. The throne room is silent at last.",
+      "ending": "victory"
+    },
+    "fled": {
+      "text": "You run, and the Lich King's laughter follows you into the dark forever.",
+      "ending": "death"
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "schema": 4,
+  "id": "poison-trap",
+  "lang": "en",
+  "title": "The Poison Trap",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "items": {
+    "antidote": {
+      "name": "Antidote",
+      "description": "Cures poison.",
+      "use": {
+        "effects": [
+          {
+            "clear": "poisoned"
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    }
+  },
+  "start": "hall",
+  "nodes": {
+    "hall": {
+      "text": "Needles glint along the walls of a narrow hall.",
+      "choices": [
+        {
+          "text": "Slip through the needles (2d6 + Skill, 15 or more)",
+          "check": {
+            "roll": "2d6",
+            "add": "skill",
+            "op": "gte",
+            "vs": 15,
+            "pass": "tunnel",
+            "fail": "stung"
+          }
+        }
+      ]
+    },
+    "stung": {
+      "text": "A needle stings your arm. Poison! On the floor lies a vial of antidote.",
+      "effects": [
+        {
+          "set": "poisoned"
+        },
+        {
+          "give": "antidote"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Walk on",
+          "to": "tunnel",
+          "if": {
+            "not": {
+              "flag": "poisoned"
+            }
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Walk on, the poison burning (-2 Stamina)",
+          "to": "tunnel",
+          "if": {
+            "flag": "poisoned"
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -2
+            }
+          ]
+        }
+      ]
+    },
+    "tunnel": {
+      "text": [
+        "A damp tunnel.",
+        {
+          "if": {
+            "flag": "poisoned"
+          },
+          "text": "The poison burns in your veins."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Walk on",
+          "to": "cave",
+          "if": {
+            "not": {
+              "flag": "poisoned"
+            }
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Walk on, the poison burning (-2 Stamina)",
+          "to": "cave",
+          "if": {
+            "flag": "poisoned"
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -2
+            }
+          ]
+        }
+      ]
+    },
+    "cave": {
+      "text": [
+        "A cave opens ahead, and daylight.",
+        {
+          "if": {
+            "flag": "poisoned"
+          },
+          "text": "The poison burns in your veins."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Walk on",
+          "to": "out",
+          "if": {
+            "not": {
+              "flag": "poisoned"
+            }
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Walk on, the poison burning (-2 Stamina)",
+          "to": "out",
+          "if": {
+            "flag": "poisoned"
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -2
+            }
+          ]
+        }
+      ]
+    },
+    "out": {
+      "text": "You step into the sun.",
+      "ending": "victory"
+    }
+  }
+}

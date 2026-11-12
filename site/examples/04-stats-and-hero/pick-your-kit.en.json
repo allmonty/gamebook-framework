@@ -1,0 +1,104 @@
+{
+  "schema": 5,
+  "id": "pick-your-kit",
+  "lang": "en",
+  "title": "Pick Your Kit",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "rerolls": 3,
+    "creation": {
+      "name": true,
+      "picks": [
+        {
+          "id": "kit",
+          "title": "Choose two things to bring",
+          "count": 2,
+          "options": [
+            {
+              "id": "torch",
+              "label": "A torch",
+              "description": "Light in dark places.",
+              "effects": [
+                {
+                  "give": "torch"
+                }
+              ]
+            },
+            {
+              "id": "rope",
+              "label": "A rope",
+              "effects": [
+                {
+                  "give": "rope"
+                }
+              ]
+            },
+            {
+              "id": "charm",
+              "label": "A lucky charm",
+              "description": "+1 Luck, and luck may open doors.",
+              "effects": [
+                {
+                  "stat": "luck",
+                  "add": 1
+                },
+                {
+                  "set": "lucky"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "items": {
+    "torch": {
+      "name": "A torch"
+    },
+    "rope": {
+      "name": "A rope"
+    }
+  },
+  "start": "door",
+  "nodes": {
+    "door": {
+      "text": "{name}, the tomb's mouth is black as ink. What did you bring?",
+      "choices": [
+        {
+          "text": "Light the torch",
+          "to": "in",
+          "if": {
+            "has": "torch"
+          }
+        },
+        {
+          "text": "Rope down the shaft",
+          "to": "in",
+          "if": {
+            "has": "rope"
+          }
+        },
+        {
+          "text": "Trust your lucky charm",
+          "to": "in",
+          "if": {
+            "flag": "lucky"
+          }
+        },
+        {
+          "text": "Feel your way in the dark",
+          "to": "lost"
+        }
+      ]
+    },
+    "in": {
+      "text": "You find the stairs down. Your adventure begins.",
+      "ending": "victory"
+    },
+    "lost": {
+      "text": "You walk into a pit you never saw.",
+      "ending": "death"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "id": "test-your-luck",
+  "lang": "pt",
+  "title": "Teste sua Sorte",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "trap",
+  "nodes": {
+    "trap": {
+      "text": "Clique. Você pisou numa placa de pressão. Em algum lugar, um lançador de dardos gira.",
+      "choices": [
+        {
+          "text": "Testar a Sorte (2d6, sua Sorte ou menos)",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "luck",
+            "effects": [
+              {
+                "stat": "luck",
+                "add": -1
+              }
+            ],
+            "pass": "safe",
+            "fail": "hit"
+          }
+        }
+      ]
+    },
+    "hit": {
+      "text": "Um dardo raspa seu pescoço. Arde.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -4
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir cambaleando",
+          "to": "safe"
+        }
+      ]
+    },
+    "safe": {
+      "text": "Você atravessou o corredor de dardos.",
+      "ending": "victory"
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "schema": 4,
+  "id": "search-once",
+  "lang": "pt",
+  "title": "Revistar Uma Vez",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      },
+      "gold": {
+        "label": "Ouro",
+        "roll": "0"
+      }
+    }
+  },
+  "start": "room",
+  "nodes": {
+    "room": {
+      "text": "Uma cabine saqueada numa aeronave. Um baú no canto, um beliche, a porta de saída.",
+      "choices": [
+        {
+          "text": "Abrir o baú",
+          "to": "chest"
+        },
+        {
+          "text": "Cochilar no beliche (só uma vez)",
+          "to": "room",
+          "once": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 2
+            }
+          ]
+        },
+        {
+          "text": "Sair da cabine",
+          "to": "out"
+        }
+      ]
+    },
+    "chest": {
+      "text": "Dentro: 5 moedas de ouro. Você as guarda. (Abra de novo: só paga da primeira vez.)",
+      "once": true,
+      "effects": [
+        {
+          "stat": "gold",
+          "add": 5
+        }
+      ],
+      "choices": [
+        {
+          "text": "Fechar o baú",
+          "to": "room"
+        }
+      ]
+    },
+    "out": {
+      "text": "Você sai da cabine.",
+      "ending": "victory"
+    }
+  }
+}

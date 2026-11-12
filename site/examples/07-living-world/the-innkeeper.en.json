@@ -1,0 +1,101 @@
+{
+  "schema": 4,
+  "id": "the-innkeeper",
+  "lang": "en",
+  "title": "The Innkeeper",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "inn",
+  "nodes": {
+    "inn": {
+      "text": [
+        "The Copper Kettle inn, warm and loud.",
+        {
+          "if": {
+            "visits": "inn",
+            "eq": 1
+          },
+          "text": "The innkeeper looks you over: a stranger."
+        },
+        {
+          "if": {
+            "visits": "inn",
+            "gte": 2
+          },
+          "text": "\"Back again?\" the innkeeper says."
+        },
+        {
+          "if": {
+            "flag": "paid"
+          },
+          "text": "\"Your room is ready, friend.\""
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "asked"
+              },
+              {
+                "not": {
+                  "flag": "paid"
+                }
+              }
+            ]
+          },
+          "text": "\"I told you: rooms are for paying guests.\""
+        }
+      ],
+      "choices": [
+        {
+          "text": "Ask for a room",
+          "to": "inn",
+          "effects": [
+            {
+              "set": "asked"
+            }
+          ]
+        },
+        {
+          "text": "Pay for a room",
+          "to": "inn",
+          "if": {
+            "not": {
+              "flag": "paid"
+            }
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "set": "paid"
+            },
+            {
+              "clear": "asked"
+            }
+          ]
+        },
+        {
+          "text": "Go up to your room",
+          "to": "room",
+          "if": {
+            "any": [
+              {
+                "flag": "paid"
+              },
+              {
+                "visits": "inn",
+                "gte": 4
+              }
+            ]
+          },
+          "lockedText": "Pay first, or wear the innkeeper down."
+        }
+      ]
+    },
+    "room": {
+      "text": "A small room with a big bed. You sleep like a stone.",
+      "ending": "victory"
+    }
+  }
+}

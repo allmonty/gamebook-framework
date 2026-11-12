@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "id": "jump-the-gap",
+  "lang": "pt",
+  "title": "Pular o Vão",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "edge",
+  "nodes": {
+    "edge": {
+      "text": "Um vão entre dois telhados, a rua dez andares abaixo.",
+      "choices": [
+        {
+          "text": "Saltar (2d6 + Habilidade, 16 ou mais)",
+          "check": {
+            "roll": "2d6",
+            "add": "skill",
+            "op": "gte",
+            "vs": 16,
+            "pass": "across",
+            "fail": "fall"
+          }
+        },
+        {
+          "text": "Ir devagar pela calha (1d6 + 3, 6 ou mais)",
+          "check": {
+            "roll": "1d6",
+            "add": 3,
+            "op": "gte",
+            "vs": 6,
+            "pass": "across",
+            "fail": "fall"
+          }
+        }
+      ]
+    },
+    "fall": {
+      "text": "Você escorrega, agarra um cabo e sobe de volta, arranhado e tremendo.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Tentar de novo",
+          "to": "edge"
+        }
+      ]
+    },
+    "across": {
+      "text": "Você cai no outro telhado e rola de pé.",
+      "ending": "victory"
+    }
+  }
+}

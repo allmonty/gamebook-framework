@@ -1,0 +1,77 @@
+{
+  "schema": 2,
+  "id": "goblin-guard",
+  "lang": "en",
+  "title": "The Goblin Guard",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "items": {
+    "tonic": {
+      "name": "Tonic",
+      "description": "Restores 4 Stamina. Costs a round in a fight.",
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story",
+          "combat"
+        ]
+      }
+    }
+  },
+  "start": "door",
+  "nodes": {
+    "door": {
+      "text": "A goblin in a cracked chrome helmet guards the door. You check your pocket: a tonic.",
+      "effects": [
+        {
+          "give": "tonic"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Draw your blade",
+          "to": "fight"
+        }
+      ]
+    },
+    "fight": {
+      "text": "The goblin snarls and lunges. Each round, you both roll 2d6 + your attack; the lower total loses 2 Stamina.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Goblin guard",
+            "attack": 6,
+            "health": 5
+          }
+        ],
+        "win": "won",
+        "flee": "fled"
+      }
+    },
+    "fled": {
+      "text": "You run. The goblin's blade nicks you as you go (-2 Stamina). It is still at the door.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Go back and fight",
+          "to": "fight"
+        }
+      ]
+    },
+    "won": {
+      "text": "The goblin falls. The door is yours.",
+      "ending": "victory"
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "schema": 3,
+  "id": "full-pack",
+  "lang": "pt",
+  "title": "A Mochila Cheia",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "inventory": {
+      "capacity": 2,
+      "pickup": "choose"
+    },
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "rope": {
+      "name": "Corda"
+    },
+    "lamp": {
+      "name": "Lanterna"
+    },
+    "crowbar": {
+      "name": "Pé de cabra"
+    },
+    "satchel": {
+      "name": "Bolsa",
+      "description": "Dá 2 espaços à mochila. Não ocupa nenhum.",
+      "capacity": 2
+    }
+  },
+  "start": "stall",
+  "nodes": {
+    "stall": {
+      "text": "Uma barraca de sucata. O dono está dormindo. Um rolo de corda e uma lanterna estão ao alcance.",
+      "effects": [
+        {
+          "give": "rope"
+        },
+        {
+          "give": "lamp"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir",
+          "to": "crates"
+        }
+      ]
+    },
+    "crates": {
+      "text": "Caixotes de tralha. Um pé de cabra aparece num deles, e uma bolsa vazia pende de um prego.",
+      "effects": [
+        {
+          "give": "crowbar"
+        },
+        {
+          "give": "satchel"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir",
+          "to": "hatch"
+        }
+      ]
+    },
+    "hatch": {
+      "text": "Uma escotilha enferrujada, a única saída.",
+      "choices": [
+        {
+          "text": "Abrir com o pé de cabra",
+          "to": "out",
+          "if": {
+            "has": "crowbar"
+          }
+        },
+        {
+          "text": "Descer pela lateral com a corda",
+          "to": "out",
+          "if": {
+            "has": "rope"
+          }
+        }
+      ]
+    },
+    "out": {
+      "text": "Você saiu do mercado.",
+      "ending": "victory"
+    }
+  }
+}

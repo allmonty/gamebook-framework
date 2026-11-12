@@ -1,0 +1,82 @@
+{
+  "schema": 5,
+  "id": "boss-fight",
+  "lang": "pt",
+  "title": "A Luta com o Chefe",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "throne",
+  "nodes": {
+    "throne": {
+      "text": "O Rei Lich se ergue do trono, com um guarda esqueleto ao lado. Os dois atacam.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Rei Lich",
+            "attack": 8,
+            "health": 6,
+            "armor": 1
+          },
+          {
+            "name": "Guarda esqueleto",
+            "attack": 5,
+            "health": 3
+          }
+        ],
+        "simultaneous": true,
+        "win": "kneel",
+        "flee": "fled"
+      }
+    },
+    "kneel": {
+      "text": "O Rei Lich cai de joelhos. \"Piedade\", ele sussurra.",
+      "choices": [
+        {
+          "text": "Poupá-lo",
+          "to": "spared"
+        },
+        {
+          "text": "Acabar com ele",
+          "to": "rage"
+        }
+      ]
+    },
+    "rage": {
+      "text": "A coroa dele arde em fogo verde. O Rei Lich se levanta de novo, em chamas.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Rei Lich em chamas",
+            "attack": 10,
+            "health": 4
+          }
+        ],
+        "win": "won"
+      }
+    },
+    "spared": {
+      "text": "Ele baixa a cabeça e vira pó, em paz.",
+      "ending": "victory"
+    },
+    "won": {
+      "text": "O fogo se apaga. A sala do trono enfim fica em silêncio.",
+      "ending": "victory"
+    },
+    "fled": {
+      "text": "Você foge, e a risada do Rei Lich segue você no escuro para sempre.",
+      "ending": "death"
+    }
+  }
+}

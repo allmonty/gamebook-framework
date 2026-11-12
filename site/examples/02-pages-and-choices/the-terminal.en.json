@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "id": "the-terminal",
+  "lang": "en",
+  "title": "The Terminal",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "lobby",
+  "nodes": {
+    "lobby": {
+      "text": "A sealed vault door, and beside it a flickering terminal.",
+      "choices": [
+        {
+          "text": "Read the terminal",
+          "to": "terminal"
+        },
+        {
+          "text": "Open the vault door",
+          "to": "vault",
+          "if": {
+            "visited": "terminal"
+          },
+          "lockedText": "Locked. Maybe the terminal knows the code."
+        },
+        {
+          "text": "Take the maintenance hatch the terminal mentioned",
+          "to": "secret",
+          "if": {
+            "visited": "terminal"
+          },
+          "hideIfLocked": true
+        }
+      ]
+    },
+    "terminal": {
+      "text": "The screen scrolls: VAULT CODE 7-7-1. MAINTENANCE HATCH BEHIND PANEL 3.",
+      "choices": [
+        {
+          "text": "Step back",
+          "to": "lobby"
+        }
+      ]
+    },
+    "vault": {
+      "text": "7-7-1. The vault door sighs open.",
+      "ending": "victory"
+    },
+    "secret": {
+      "text": "Behind panel 3, a narrow hatch leads straight outside. Nobody will ever know.",
+      "ending": "victory"
+    }
+  }
+}

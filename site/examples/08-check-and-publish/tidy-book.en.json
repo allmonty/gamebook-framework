@@ -1,0 +1,51 @@
+{
+  "schema": 6,
+  "id": "tidy-book",
+  "lang": "en",
+  "title": "A Tidy Book",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "chapters": {
+    "act1": {
+      "title": "Act 1: The village"
+    },
+    "act2": {
+      "title": "Act 2: The crypt"
+    }
+  },
+  "showTitles": true,
+  "start": "village",
+  "nodes": {
+    "village": {
+      "title": "The village",
+      "chapter": "act1",
+      "note": "Opening page: keep it short.",
+      "text": "Lanterns sway over the village square.",
+      "choices": [
+        {
+          "text": "Take the north road",
+          "to": "road"
+        }
+      ]
+    },
+    "road": {
+      "title": "The north road",
+      "chapter": "act1",
+      "text": "The road climbs into fog.",
+      "choices": [
+        {
+          "text": "Enter the crypt",
+          "to": "crypt"
+        }
+      ]
+    },
+    "crypt": {
+      "title": "The crypt",
+      "chapter": "act2",
+      "note": "TODO: add the guardian fight here.",
+      "text": "Cold air and old bones. The end, for now.",
+      "ending": "victory"
+    }
+  }
+}

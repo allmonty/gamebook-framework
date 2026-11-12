@@ -1,0 +1,193 @@
+{
+  "schema": 5,
+  "id": "duel-table",
+  "lang": "pt",
+  "title": "O Duelo",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "combat": {
+      "roll": "1d10-1",
+      "table": [
+        {
+          "upTo": -3,
+          "results": [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ]
+        },
+        {
+          "upTo": 3,
+          "results": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ]
+        },
+        {
+          "results": [
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              9,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              99,
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "yard",
+  "nodes": {
+    "yard": {
+      "text": "O pátio de treino. Um drone de treino luta do jeito de sempre: dados contra dados.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Drone de treino",
+            "attack": 5,
+            "health": 4
+          }
+        ],
+        "win": "hall"
+      }
+    },
+    "hall": {
+      "text": "No salão o Campeão saúda. É um duelo: a cada rodada uma rolagem na tabela de resultados decide os dois ferimentos, pela diferença entre sua Habilidade e a dele.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "O Campeão",
+            "attack": 9,
+            "health": 12
+          }
+        ],
+        "duel": true,
+        "win": "won"
+      }
+    },
+    "won": {
+      "text": "O Campeão se ajoelha. O título é seu.",
+      "ending": "victory"
+    }
+  }
+}

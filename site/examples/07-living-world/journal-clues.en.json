@@ -1,0 +1,74 @@
+{
+  "schema": 7,
+  "id": "journal-clues",
+  "lang": "en",
+  "title": "The Study",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "journal": {
+    "letter": {
+      "title": "The wizard's letter",
+      "text": "\"The vault answers to the word EMBER.\""
+    },
+    "map": {
+      "title": "The wall map",
+      "text": "A tunnel runs from the cellar to the river."
+    }
+  },
+  "achievements": {
+    "scholar": {
+      "title": "Scholar",
+      "description": "Finished the study."
+    },
+    "cartographer": {
+      "title": "Cartographer",
+      "description": "Studied the wizard's map.",
+      "hidden": true
+    }
+  },
+  "start": "study",
+  "nodes": {
+    "study": {
+      "text": "A dead wizard's study. A letter on the desk, a map on the wall.",
+      "choices": [
+        {
+          "text": "Read the letter",
+          "to": "study",
+          "once": true,
+          "effects": [
+            {
+              "journal": "letter"
+            }
+          ]
+        },
+        {
+          "text": "Study the map",
+          "to": "study",
+          "once": true,
+          "effects": [
+            {
+              "journal": "map"
+            },
+            {
+              "achieve": "cartographer"
+            }
+          ]
+        },
+        {
+          "text": "Leave with what you learned",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "You leave. Open the journal under your pack to reread your clues.",
+      "effects": [
+        {
+          "achieve": "scholar"
+        }
+      ],
+      "ending": "victory"
+    }
+  }
+}

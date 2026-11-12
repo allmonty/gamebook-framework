@@ -1,0 +1,57 @@
+{
+  "schema": 5,
+  "id": "golem-and-rat",
+  "lang": "pt",
+  "title": "O Golem e o Rato",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "combat": {
+      "luck": {
+        "stat": "luck"
+      }
+    },
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "lab",
+  "nodes": {
+    "lab": {
+      "text": "No laboratório em ruínas, um golem de barro se ergue, e um ciber-rato dispara dos pés dele. Os dois atacam juntos: escolha seu alvo a cada rodada.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Golem de barro",
+            "attack": 5,
+            "health": 6,
+            "armor": 1
+          },
+          {
+            "name": "Ciber-rato",
+            "attack": 4,
+            "health": 2
+          }
+        ],
+        "simultaneous": true,
+        "win": "won",
+        "flee": "out"
+      }
+    },
+    "out": {
+      "text": "Você foge pelos esgotos e nunca mais é visto.",
+      "ending": "death"
+    },
+    "won": {
+      "text": "O laboratório fica em silêncio.",
+      "ending": "victory"
+    }
+  }
+}

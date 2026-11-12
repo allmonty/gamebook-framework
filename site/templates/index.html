@@ -1,0 +1,108 @@
+<section class="hero hero-split">
+  <div class="hero-copy">
+    <p class="label kicker">{{home.kicker}}</p>
+    <h1>{{home.title}}</h1>
+    <p class="lead">{{home.lead}}</p>
+    <div class="cta">
+      <a class="btn" href="tutorial/index.html">{{home.cta.tutorial}}</a>
+      <a class="btn btn-ghost" href="play.html">{{home.cta.play}}</a>
+      <a class="btn btn-ghost" href="https://github.com/allmonty/gamebook-framework">{{home.cta.github}}</a>
+    </div>
+    <ul class="hero-points">
+      <li><span class="label">01 //</span> {{home.point1}}</li>
+      <li><span class="label">02 //</span> {{home.point2}}</li>
+      <li><span class="label">03 //</span> {{home.point3}}</li>
+    </ul>
+  </div>
+  <div class="phone" aria-label="{{home.phone}}">
+    <div class="phone-bar label"><span>{{home.phone.bar}}</span><span class="dot"></span></div>
+```gamebook
+examples/showcase/rune-vault
+```
+  </div>
+</section>
+
+<section class="section" id="showcase">
+  <p class="label kicker">{{home.showcase.kicker}}</p>
+  <h2>{{home.showcase.title}}</h2>
+  <p class="lead">{{home.showcase.lead}}</p>
+  <ul class="tags">
+    <li>{{home.showcase.t1}}</li><li>{{home.showcase.t2}}</li><li>{{home.showcase.t3}}</li>
+    <li>{{home.showcase.t4}}</li><li>{{home.showcase.t5}}</li><li>{{home.showcase.t6}}</li>
+    <li>{{home.showcase.t7}}</li><li>{{home.showcase.t8}}</li><li>{{home.showcase.t9}}</li>
+  </ul>
+</section>
+
+<section class="section split" id="rules-are-data">
+  <div>
+    <p class="label kicker">{{home.data.kicker}}</p>
+    <h2>{{home.data.title}}</h2>
+    <p>{{home.data.p1}}</p>
+    <p>{{home.data.p2}}</p>
+    <p class="label muted">{{home.try}}</p>
+  </div>
+```gamebook
+examples/home/rusty-door
+```
+</section>
+
+<section class="section" id="features">
+  <p class="label kicker">{{home.features.kicker}}</p>
+  <h2>{{home.features.title}}</h2>
+  <div class="grid">
+    <article class="card feature"><p class="label">B6 // B10</p><h3>{{home.f1.title}}</h3><p>{{home.f1.text}}</p></article>
+    <article class="card feature"><p class="label">B5</p><h3>{{home.f2.title}}</h3><p>{{home.f2.text}}</p></article>
+    <article class="card feature"><p class="label">B4</p><h3>{{home.f3.title}}</h3><p>{{home.f3.text}}</p></article>
+    <article class="card feature"><p class="label">B8 // B10</p><h3>{{home.f4.title}}</h3><p>{{home.f4.text}}</p></article>
+    <article class="card feature"><p class="label">B11</p><h3>{{home.f5.title}}</h3><p>{{home.f5.text}}</p></article>
+    <article class="card feature"><p class="label">B6 // B7</p><h3>{{home.f6.title}}</h3><p>{{home.f6.text}}</p></article>
+    <article class="card feature"><p class="label">B6 // B15</p><h3>{{home.f7.title}}</h3><p>{{home.f7.text}}</p></article>
+    <article class="card feature"><p class="label">B1</p><h3>{{home.f8.title}}</h3><p>{{home.f8.text}}</p></article>
+    <article class="card feature"><p class="label">B13 // B14</p><h3>{{home.f9.title}}</h3><p>{{home.f9.text}}</p></article>
+  </div>
+</section>
+
+<section class="section" id="compare">
+  <p class="label kicker">{{home.compare.kicker}}</p>
+  <h2>{{home.compare.title}}</h2>
+  <p class="lead">{{home.compare.lead}}</p>
+  <div class="table-wrap">
+    <table class="compare">
+      <thead>
+        <tr><th scope="col"></th><th scope="col">{{home.compare.c1}}</th><th scope="col">{{home.compare.c2}}</th><th scope="col">{{home.compare.c3}}</th><th scope="col">{{home.compare.c4}}</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Ink</th><td>{{home.compare.ink1}}</td><td>{{home.compare.ink2}}</td><td>{{home.compare.ink3}}</td><td>{{home.compare.ink4}}</td></tr>
+        <tr><th scope="row">Twine</th><td>{{home.compare.twine1}}</td><td>{{home.compare.twine2}}</td><td>{{home.compare.twine3}}</td><td>{{home.compare.twine4}}</td></tr>
+        <tr><th scope="row">ChoiceScript</th><td>{{home.compare.cs1}}</td><td>{{home.compare.cs2}}</td><td>{{home.compare.cs3}}</td><td>{{home.compare.cs4}}</td></tr>
+        <tr class="ours"><th scope="row">Gamebook Framework</th><td>{{home.compare.gf1}}</td><td>{{home.compare.gf2}}</td><td>{{home.compare.gf3}}</td><td>{{home.compare.gf4}}</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted">{{home.compare.honest}} <a href="https://github.com/allmonty/gamebook-framework/blob/main/spec/comparison.md">{{home.compare.more}}</a></p>
+</section>
+
+<section class="section" id="tools">
+  <p class="label kicker">{{home.tools.kicker}}</p>
+  <h2>{{home.tools.title}}</h2>
+  <div class="grid">
+    <article class="card tool"><h3>{{home.t1.title}}</h3><p>{{home.t1.text}}</p><code>validate_story --strict</code></article>
+    <article class="card tool"><h3>{{home.t2.title}}</h3><p>{{home.t2.text}}</p><code>story_graph --mermaid</code></article>
+    <article class="card tool"><h3>{{home.t3.title}}</h3><p>{{home.t3.text}}</p><code>simulate_story --games 2000</code></article>
+    <article class="card tool"><h3>{{home.t4.title}}</h3><p>{{home.t4.text}}</p><code>pack_game</code></article>
+    <article class="card tool"><h3>{{home.t5.title}}</h3><p>{{home.t5.text}}</p><code>import_twine</code></article>
+    <article class="card tool"><h3>{{home.t6.title}}</h3><p>{{home.t6.text}}</p><code>llm_kit</code></article>
+    <article class="card tool"><h3>{{home.t7.title}}</h3><p>{{home.t7.text}}</p><code>story.schema.json</code></article>
+    <article class="card tool"><h3>{{home.t8.title}}</h3><p>{{home.t8.text}}</p><code>conformance/cases</code></article>
+  </div>
+</section>
+
+<section class="section cta-band">
+  <h2>{{home.end.title}}</h2>
+  <p class="lead">{{home.end.lead}}</p>
+  <div class="cta">
+    <a class="btn" href="tutorial/index.html">{{home.cta.tutorial}}</a>
+    <a class="btn btn-ghost" href="play.html">{{home.cta.play}}</a>
+    <a class="btn btn-ghost" href="https://github.com/allmonty/gamebook-framework/blob/main/spec/framework.md">{{home.cta.spec}}</a>
+  </div>
+</section>

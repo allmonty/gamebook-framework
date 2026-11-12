@@ -1,0 +1,84 @@
+{
+  "schema": 5,
+  "id": "ghost-market",
+  "lang": "en",
+  "title": "The Ghost Market",
+  "rules": {
+    "health": "nerve",
+    "stats": {
+      "nerve": {
+        "label": "Nerve",
+        "roll": "2d6+6",
+        "max": true
+      },
+      "wits": {
+        "label": "Wits",
+        "roll": "1d6"
+      },
+      "gold": {
+        "label": "Gold",
+        "roll": "1d6",
+        "limit": 10
+      }
+    }
+  },
+  "start": "gate",
+  "nodes": {
+    "gate": {
+      "text": "The ghost market opens at midnight. A spectral guard holds out a see-through hand.",
+      "choices": [
+        {
+          "text": "Pay the toll (3 gold)",
+          "to": "inside",
+          "if": {
+            "stat": "gold",
+            "gte": 3
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -3
+            }
+          ]
+        },
+        {
+          "text": "Walk straight through the guard",
+          "to": "inside",
+          "effects": [
+            {
+              "stat": "nerve",
+              "add": -4
+            }
+          ]
+        }
+      ]
+    },
+    "inside": {
+      "text": "Stalls of whispers and bottled memories. A fortune-teller offers to read you, for everything you own.",
+      "choices": [
+        {
+          "text": "Pay her everything",
+          "to": "end",
+          "effects": [
+            {
+              "stat": "gold",
+              "set": 0
+            },
+            {
+              "stat": "wits",
+              "add": 2
+            }
+          ]
+        },
+        {
+          "text": "Keep walking",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "Dawn comes, and the market fades.",
+      "ending": "victory"
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "id": "locked-door",
+  "lang": "en",
+  "title": "The Locked Door",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "items": {
+    "rusty-key": {
+      "name": "Rusty key",
+      "description": "Old iron, older than the city."
+    }
+  },
+  "start": "cellar",
+  "nodes": {
+    "cellar": {
+      "text": "A cold cellar under a noodle bar. Shelves on one wall, a door on the other.",
+      "choices": [
+        {
+          "text": "Search the shelves",
+          "to": "shelves"
+        },
+        {
+          "text": "Try the door",
+          "to": "door"
+        }
+      ]
+    },
+    "shelves": {
+      "text": "Behind a jar of pickled eels: a rusty key.",
+      "effects": [
+        {
+          "give": "rusty-key"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Go back",
+          "to": "cellar"
+        }
+      ]
+    },
+    "door": {
+      "text": "A heavy door with an old keyhole.",
+      "choices": [
+        {
+          "text": "Unlock it with the rusty key",
+          "to": "street",
+          "if": {
+            "has": "rusty-key"
+          },
+          "effects": [
+            {
+              "take": "rusty-key"
+            }
+          ]
+        },
+        {
+          "text": "Go back",
+          "to": "cellar"
+        }
+      ]
+    },
+    "street": {
+      "text": "The key turns, then snaps in the lock. Never mind: you are out, on a street full of neon.",
+      "ending": "victory"
+    }
+  }
+}

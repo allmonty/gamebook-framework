@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "id": "d20-skirmish",
+  "lang": "en",
+  "title": "A d20 Skirmish",
+  "rules": {
+    "preset": "d20-lite"
+  },
+  "start": "road",
+  "nodes": {
+    "road": {
+      "text": "A rust-bandit blocks the road. You hit on 1d20 + Might of 11 or more; it hits you on 1d20 + 2 against 10 + your Agility.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Rust-bandit",
+            "attack": 2,
+            "defense": 11,
+            "health": 6,
+            "damage": "1d4"
+          }
+        ],
+        "win": "won"
+      }
+    },
+    "won": {
+      "text": "The bandit flees into the scrap fields.",
+      "ending": "victory"
+    }
+  }
+}

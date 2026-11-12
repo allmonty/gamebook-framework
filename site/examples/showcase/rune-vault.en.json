@@ -1,0 +1,420 @@
+{
+  "schema": 7,
+  "id": "rune-vault",
+  "lang": "en",
+  "title": "Escape from the Rune Vault",
+  "author": "Gamebook Framework",
+  "description": "A cyber-mage wakes in a corporate vault where spells run on neon. Get out.",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Skill"
+      },
+      "stamina": {
+        "label": "Stamina"
+      },
+      "luck": {
+        "label": "Luck"
+      },
+      "credits": {
+        "label": "Credits",
+        "roll": "1d6+2",
+        "limit": 20
+      }
+    },
+    "creation": {
+      "name": true,
+      "picks": [
+        {
+          "id": "kit",
+          "title": "Choose what you smuggled in",
+          "count": 1,
+          "options": [
+            {
+              "id": "shiv",
+              "label": "Rune shiv",
+              "description": "A blade etched with an unlocking sigil.",
+              "effects": [
+                {
+                  "give": "shiv"
+                }
+              ]
+            },
+            {
+              "id": "stim",
+              "label": "Stim pack",
+              "description": "Restores 4 Stamina. Free to use in a fight.",
+              "effects": [
+                {
+                  "give": "stim"
+                }
+              ]
+            },
+            {
+              "id": "charm",
+              "label": "Lucky charm",
+              "description": "A cracked chip that hums. +1 Luck while carried.",
+              "effects": [
+                {
+                  "give": "charm"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "inventory": {
+      "capacity": 2,
+      "pickup": "choose"
+    },
+    "combat": {
+      "luck": {
+        "stat": "luck"
+      }
+    },
+    "undo": 3
+  },
+  "items": {
+    "shiv": {
+      "name": "Rune shiv",
+      "description": "A blade etched with an unlocking sigil."
+    },
+    "stim": {
+      "name": "Stim pack",
+      "description": "Restores 4 Stamina. Free to use in a fight.",
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story",
+          "combat"
+        ],
+        "combatCost": "free"
+      }
+    },
+    "charm": {
+      "name": "Lucky charm",
+      "description": "A cracked chip that hums. +1 Luck while carried.",
+      "bonus": {
+        "luck": 1
+      }
+    },
+    "data-shard": {
+      "name": "Data shard",
+      "description": "Glows with someone's access codes."
+    },
+    "rune-blade": {
+      "name": "Rune blade",
+      "description": "Humming plasma edge. +2 Skill while carried.",
+      "bonus": {
+        "skill": 2
+      }
+    }
+  },
+  "journal": {
+    "rota": {
+      "title": "Guard rota",
+      "text": "Scrawled on the shard's sleeve: the core lock takes this shard. Never trust the drones."
+    },
+    "core": {
+      "title": "The vault core",
+      "text": "A lock of living runes. A shard opens it; luck might too."
+    }
+  },
+  "achievements": {
+    "vault-breaker": {
+      "title": "Vault breaker",
+      "description": "Escaped the Rune Vault."
+    },
+    "customer": {
+      "title": "Valued customer",
+      "description": "Bought a stim from a vending golem mid-heist.",
+      "hidden": true
+    }
+  },
+  "start": "cell",
+  "nodes": {
+    "cell": {
+      "text": [
+        "You come to in a holding cell of the Rune Vault, {name}. Neon sigils crawl across the walls and the door hums with a warding hex.",
+        {
+          "if": {
+            "visits": "cell",
+            "gte": 2
+          },
+          "text": "The cell is as bare as you left it. The hex on the door still hums."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Search under the bunk",
+          "to": "bunk",
+          "once": true
+        },
+        {
+          "text": "Pry the hex loose with your rune shiv",
+          "to": "corridor",
+          "if": {
+            "has": "shiv"
+          }
+        },
+        {
+          "text": "Force the door (2d6 + Skill, 16 or more)",
+          "check": {
+            "roll": "2d6",
+            "add": "skill",
+            "op": "gte",
+            "vs": 16,
+            "pass": "corridor",
+            "fail": "cell-hurt"
+          }
+        }
+      ]
+    },
+    "bunk": {
+      "text": "Taped under the bunk: a data shard, and a scrawled guard rota on its sleeve.",
+      "once": true,
+      "effects": [
+        {
+          "give": "data-shard"
+        },
+        {
+          "journal": "rota"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Go back",
+          "to": "cell"
+        }
+      ]
+    },
+    "cell-hurt": {
+      "text": "The hex bites back. Sparks run up your arms.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Go back",
+          "to": "cell"
+        }
+      ]
+    },
+    "corridor": {
+      "text": [
+        "A corridor of chrome and candle smoke. A vending golem flickers to the left; a maintenance shaft gapes to the right; the vault core pulses ahead.",
+        {
+          "if": {
+            "flag": "alarm"
+          },
+          "text": "Red light now sweeps the corridor. The alarm is up."
+        },
+        "You count {credits} credits on your wrist display."
+      ],
+      "choices": [
+        {
+          "text": "Visit the vending golem",
+          "to": "vendor"
+        },
+        {
+          "text": "Climb down the maintenance shaft (roll 1d6)",
+          "once": true,
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 1,
+                "to": "shaft-fall"
+              },
+              {
+                "upTo": 4,
+                "to": "shaft-credits",
+                "effects": [
+                  {
+                    "stat": "credits",
+                    "add": 5
+                  }
+                ]
+              },
+              {
+                "upTo": 6,
+                "to": "shaft-blade"
+              }
+            ]
+          }
+        },
+        {
+          "text": "Head for the vault core",
+          "to": "guards"
+        }
+      ]
+    },
+    "vendor": {
+      "text": "The golem's face screen blinks: STIM PACK // 6 CREDITS. A tinny jingle loops.",
+      "choices": [
+        {
+          "text": "Buy a stim pack (6 credits)",
+          "to": "corridor",
+          "if": {
+            "stat": "credits",
+            "gte": 6
+          },
+          "effects": [
+            {
+              "stat": "credits",
+              "add": -6
+            },
+            {
+              "give": "stim"
+            },
+            {
+              "achieve": "customer"
+            }
+          ]
+        },
+        {
+          "text": "Go back",
+          "to": "corridor"
+        }
+      ]
+    },
+    "shaft-fall": {
+      "text": "A rung snaps. The fall is long and the floor is not kind. Your escape ends here.",
+      "ending": "death"
+    },
+    "shaft-credits": {
+      "text": "Among the cables, a dead courier's credit chip. Five credits richer.",
+      "choices": [
+        {
+          "text": "Climb back up",
+          "to": "corridor"
+        }
+      ]
+    },
+    "shaft-blade": {
+      "text": "Wedged in a vent: a rune blade, still humming.",
+      "effects": [
+        {
+          "give": "rune-blade"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Climb back up",
+          "to": "corridor"
+        }
+      ]
+    },
+    "guards": {
+      "text": "Two guardians block the core: a brass Sentinel and a darting Hex Drone. They attack together.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Vault Sentinel",
+            "attack": 7,
+            "health": 6,
+            "armor": 1
+          },
+          {
+            "name": "Hex Drone",
+            "attack": 6,
+            "health": 4
+          }
+        ],
+        "simultaneous": true,
+        "win": "core",
+        "flee": "fled"
+      }
+    },
+    "fled": {
+      "text": "You dive back into the corridor. Somewhere, an alarm starts to wail.",
+      "effects": [
+        {
+          "set": "alarm"
+        },
+        {
+          "stat": "stamina",
+          "add": -1
+        }
+      ],
+      "choices": [
+        {
+          "text": "Catch your breath",
+          "to": "corridor"
+        }
+      ]
+    },
+    "core": {
+      "text": "The vault core: a lock of living runes, turning slowly. Beyond it, the exit.",
+      "effects": [
+        {
+          "journal": "core"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Slot the data shard into the lock",
+          "to": "vault-open",
+          "if": {
+            "has": "data-shard"
+          },
+          "effects": [
+            {
+              "take": "data-shard"
+            }
+          ]
+        },
+        {
+          "text": "Trust your luck and touch the runes (Test your Luck)",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "luck",
+            "effects": [
+              {
+                "stat": "luck",
+                "add": -1
+              }
+            ],
+            "pass": "vault-open",
+            "fail": "core-shock"
+          }
+        }
+      ]
+    },
+    "core-shock": {
+      "text": "The runes flare and throw you across the floor.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -4
+        }
+      ],
+      "choices": [
+        {
+          "text": "Get up",
+          "to": "core"
+        }
+      ]
+    },
+    "vault-open": {
+      "text": "The runes part like a curtain. Night air, rain and neon. You are free, {name}.",
+      "effects": [
+        {
+          "achieve": "vault-breaker"
+        }
+      ],
+      "ending": "victory"
+    }
+  }
+}

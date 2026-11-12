@@ -1,0 +1,112 @@
+{
+  "schema": 4,
+  "id": "the-innkeeper",
+  "lang": "pt",
+  "title": "O Estalajadeiro",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "inn",
+  "nodes": {
+    "inn": {
+      "text": [
+        "A estalagem Chaleira de Cobre, quente e barulhenta.",
+        {
+          "if": {
+            "visits": "inn",
+            "eq": 1
+          },
+          "text": "O estalajadeiro olha você de cima a baixo: um estranho."
+        },
+        {
+          "if": {
+            "visits": "inn",
+            "gte": 2
+          },
+          "text": "\"De volta?\", diz o estalajadeiro."
+        },
+        {
+          "if": {
+            "flag": "paid"
+          },
+          "text": "\"Seu quarto está pronto, amigo.\""
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "asked"
+              },
+              {
+                "not": {
+                  "flag": "paid"
+                }
+              }
+            ]
+          },
+          "text": "\"Já falei: quartos são para quem paga.\""
+        }
+      ],
+      "choices": [
+        {
+          "text": "Pedir um quarto",
+          "to": "inn",
+          "effects": [
+            {
+              "set": "asked"
+            }
+          ]
+        },
+        {
+          "text": "Pagar por um quarto",
+          "to": "inn",
+          "if": {
+            "not": {
+              "flag": "paid"
+            }
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "set": "paid"
+            },
+            {
+              "clear": "asked"
+            }
+          ]
+        },
+        {
+          "text": "Subir para o quarto",
+          "to": "room",
+          "if": {
+            "any": [
+              {
+                "flag": "paid"
+              },
+              {
+                "visits": "inn",
+                "gte": 4
+              }
+            ]
+          },
+          "lockedText": "Pague antes, ou vença o estalajadeiro pelo cansaço."
+        }
+      ]
+    },
+    "room": {
+      "text": "Um quarto pequeno com uma cama grande. Você dorme como pedra.",
+      "ending": "victory"
+    }
+  }
+}

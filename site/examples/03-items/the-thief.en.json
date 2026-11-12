@@ -1,0 +1,58 @@
+{
+  "schema": 3,
+  "id": "the-thief",
+  "lang": "en",
+  "title": "The Thief",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "inventory": {
+      "capacity": 1
+    }
+  },
+  "items": {
+    "coin": {
+      "name": "Lucky coin"
+    },
+    "gem": {
+      "name": "Gem"
+    }
+  },
+  "start": "market",
+  "nodes": {
+    "market": {
+      "text": "You win a lucky coin at a dice table, and the dealer throws in a gem. Your tiny pocket holds only one thing.",
+      "effects": [
+        {
+          "give": "coin"
+        },
+        {
+          "give": "gem"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Push into the crowd",
+          "to": "crowd"
+        }
+      ]
+    },
+    "crowd": {
+      "text": "Someone bumps into you. When you check your pocket, it is empty.",
+      "effects": [
+        {
+          "takeAll": true
+        }
+      ],
+      "choices": [
+        {
+          "text": "Laugh it off",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "Easy come, easy go.",
+      "ending": "victory"
+    }
+  }
+}

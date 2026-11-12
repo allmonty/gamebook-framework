@@ -1,0 +1,58 @@
+{
+  "schema": 4,
+  "id": "gold-counter",
+  "lang": "en",
+  "title": "The Wishing Well",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "gold": {
+        "label": "Gold",
+        "roll": "1d6"
+      }
+    }
+  },
+  "start": "well",
+  "nodes": {
+    "well": {
+      "text": [
+        "A wishing well glows in the square. You have {gold} gold and {luck} Luck (at most {luck.max}).",
+        {
+          "if": {
+            "stat": "gold",
+            "lte": 2
+          },
+          "text": "Your purse is almost empty."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Throw in a coin ({gold} left)",
+          "to": "well",
+          "if": {
+            "stat": "gold",
+            "gte": 1
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -1
+            },
+            {
+              "stat": "luck",
+              "add": 1
+            }
+          ]
+        },
+        {
+          "text": "Walk on",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "You walk on, a little luckier, maybe.",
+      "ending": "victory"
+    }
+  }
+}

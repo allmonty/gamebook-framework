@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "id": "hello-world",
+  "lang": "pt",
+  "title": "Olá, Cidade Neon",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "gate",
+  "nodes": {
+    "gate": {
+      "text": "A chuva chia no portão da cidade neon. Uma runa acima dele pisca: BEM-VINDO, VIAJANTE.",
+      "choices": [
+        {
+          "text": "Atravessar o portão",
+          "to": "city"
+        }
+      ]
+    },
+    "city": {
+      "text": "Luzes, barulho e mil histórias. A sua começa aqui.",
+      "ending": "victory"
+    }
+  }
+}

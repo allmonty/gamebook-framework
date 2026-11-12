@@ -1,0 +1,84 @@
+{
+  "schema": 5,
+  "id": "ghost-market",
+  "lang": "pt",
+  "title": "O Mercado Fantasma",
+  "rules": {
+    "health": "nerve",
+    "stats": {
+      "nerve": {
+        "label": "Coragem",
+        "roll": "2d6+6",
+        "max": true
+      },
+      "wits": {
+        "label": "Astúcia",
+        "roll": "1d6"
+      },
+      "gold": {
+        "label": "Ouro",
+        "roll": "1d6",
+        "limit": 10
+      }
+    }
+  },
+  "start": "gate",
+  "nodes": {
+    "gate": {
+      "text": "O mercado fantasma abre à meia-noite. Um guarda espectral estende uma mão transparente.",
+      "choices": [
+        {
+          "text": "Pagar o pedágio (3 de ouro)",
+          "to": "inside",
+          "if": {
+            "stat": "gold",
+            "gte": 3
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -3
+            }
+          ]
+        },
+        {
+          "text": "Atravessar o guarda",
+          "to": "inside",
+          "effects": [
+            {
+              "stat": "nerve",
+              "add": -4
+            }
+          ]
+        }
+      ]
+    },
+    "inside": {
+      "text": "Barracas de sussurros e memórias engarrafadas. Uma cartomante oferece ler sua sorte, em troca de tudo que você tem.",
+      "choices": [
+        {
+          "text": "Pagar tudo a ela",
+          "to": "end",
+          "effects": [
+            {
+              "stat": "gold",
+              "set": 0
+            },
+            {
+              "stat": "wits",
+              "add": 2
+            }
+          ]
+        },
+        {
+          "text": "Continuar andando",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "O dia nasce e o mercado se desfaz.",
+      "ending": "victory"
+    }
+  }
+}

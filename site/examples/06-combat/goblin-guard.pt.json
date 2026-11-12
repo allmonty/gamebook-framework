@@ -1,0 +1,88 @@
+{
+  "schema": 2,
+  "id": "goblin-guard",
+  "lang": "pt",
+  "title": "O Guarda Goblin",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "tonic": {
+      "name": "Tônico",
+      "description": "Recupera 4 de Energia. Custa uma rodada numa luta.",
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story",
+          "combat"
+        ]
+      }
+    }
+  },
+  "start": "door",
+  "nodes": {
+    "door": {
+      "text": "Um goblin com um capacete de cromo rachado guarda a porta. Você confere o bolso: um tônico.",
+      "effects": [
+        {
+          "give": "tonic"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Sacar a lâmina",
+          "to": "fight"
+        }
+      ]
+    },
+    "fight": {
+      "text": "O goblin rosna e avança. A cada rodada, os dois rolam 2d6 + ataque; o menor total perde 2 de Energia.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Guarda goblin",
+            "attack": 6,
+            "health": 5
+          }
+        ],
+        "win": "won",
+        "flee": "fled"
+      }
+    },
+    "fled": {
+      "text": "Você corre. A lâmina do goblin raspa você na fuga (-2 de Energia). Ele continua na porta.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar e lutar",
+          "to": "fight"
+        }
+      ]
+    },
+    "won": {
+      "text": "O goblin cai. A porta é sua.",
+      "ending": "victory"
+    }
+  }
+}

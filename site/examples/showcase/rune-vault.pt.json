@@ -1,0 +1,420 @@
+{
+  "schema": 7,
+  "id": "rune-vault",
+  "lang": "pt",
+  "title": "Fuga do Cofre Rúnico",
+  "author": "Gamebook Framework",
+  "description": "Um ciber-mago acorda num cofre corporativo onde feitiços rodam em neon. Saia de lá.",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      },
+      "credits": {
+        "label": "Créditos",
+        "roll": "1d6+2",
+        "limit": 20
+      }
+    },
+    "creation": {
+      "name": true,
+      "picks": [
+        {
+          "id": "kit",
+          "title": "Escolha o que você contrabandeou",
+          "count": 1,
+          "options": [
+            {
+              "id": "shiv",
+              "label": "Estilete rúnico",
+              "description": "Uma lâmina gravada com um sigilo de abertura.",
+              "effects": [
+                {
+                  "give": "shiv"
+                }
+              ]
+            },
+            {
+              "id": "stim",
+              "label": "Estimulante",
+              "description": "Recupera 4 de Energia. Grátis numa luta.",
+              "effects": [
+                {
+                  "give": "stim"
+                }
+              ]
+            },
+            {
+              "id": "charm",
+              "label": "Amuleto da sorte",
+              "description": "Um chip rachado que zumbe. +1 de Sorte enquanto carregado.",
+              "effects": [
+                {
+                  "give": "charm"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "inventory": {
+      "capacity": 2,
+      "pickup": "choose"
+    },
+    "combat": {
+      "luck": {
+        "stat": "luck"
+      }
+    },
+    "undo": 3
+  },
+  "items": {
+    "shiv": {
+      "name": "Estilete rúnico",
+      "description": "Uma lâmina gravada com um sigilo de abertura."
+    },
+    "stim": {
+      "name": "Estimulante",
+      "description": "Recupera 4 de Energia. Grátis numa luta.",
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story",
+          "combat"
+        ],
+        "combatCost": "free"
+      }
+    },
+    "charm": {
+      "name": "Amuleto da sorte",
+      "description": "Um chip rachado que zumbe. +1 de Sorte enquanto carregado.",
+      "bonus": {
+        "luck": 1
+      }
+    },
+    "data-shard": {
+      "name": "Fragmento de dados",
+      "description": "Brilha com os códigos de acesso de alguém."
+    },
+    "rune-blade": {
+      "name": "Lâmina rúnica",
+      "description": "Fio de plasma zumbindo. +2 de Habilidade enquanto carregada.",
+      "bonus": {
+        "skill": 2
+      }
+    }
+  },
+  "journal": {
+    "rota": {
+      "title": "Escala da guarda",
+      "text": "Rabiscado na capa do fragmento: a fechadura do núcleo aceita este fragmento. Nunca confie nos drones."
+    },
+    "core": {
+      "title": "O núcleo do cofre",
+      "text": "Uma fechadura de runas vivas. Um fragmento a abre; a sorte talvez também."
+    }
+  },
+  "achievements": {
+    "vault-breaker": {
+      "title": "Quebra-cofres",
+      "description": "Fugiu do Cofre Rúnico."
+    },
+    "customer": {
+      "title": "Cliente fiel",
+      "description": "Comprou um estimulante de um golem vendedor no meio do assalto.",
+      "hidden": true
+    }
+  },
+  "start": "cell",
+  "nodes": {
+    "cell": {
+      "text": [
+        "Você desperta numa cela do Cofre Rúnico, {name}. Sigilos de neon rastejam pelas paredes e a porta zumbe com um feitiço de proteção.",
+        {
+          "if": {
+            "visits": "cell",
+            "gte": 2
+          },
+          "text": "A cela está vazia como você deixou. O feitiço da porta ainda zumbe."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Procurar debaixo do beliche",
+          "to": "bunk",
+          "once": true
+        },
+        {
+          "text": "Arrancar o feitiço com seu estilete rúnico",
+          "to": "corridor",
+          "if": {
+            "has": "shiv"
+          }
+        },
+        {
+          "text": "Forçar a porta (2d6 + Habilidade, 16 ou mais)",
+          "check": {
+            "roll": "2d6",
+            "add": "skill",
+            "op": "gte",
+            "vs": 16,
+            "pass": "corridor",
+            "fail": "cell-hurt"
+          }
+        }
+      ]
+    },
+    "bunk": {
+      "text": "Colado sob o beliche: um fragmento de dados, com uma escala da guarda rabiscada na capa.",
+      "once": true,
+      "effects": [
+        {
+          "give": "data-shard"
+        },
+        {
+          "journal": "rota"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar",
+          "to": "cell"
+        }
+      ]
+    },
+    "cell-hurt": {
+      "text": "O feitiço revida. Faíscas sobem pelos seus braços.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar",
+          "to": "cell"
+        }
+      ]
+    },
+    "corridor": {
+      "text": [
+        "Um corredor de cromo e fumaça de vela. Um golem vendedor pisca à esquerda; um poço de manutenção se abre à direita; o núcleo do cofre pulsa à frente.",
+        {
+          "if": {
+            "flag": "alarm"
+          },
+          "text": "Uma luz vermelha varre o corredor. O alarme disparou."
+        },
+        "Você conta {credits} créditos no visor do pulso."
+      ],
+      "choices": [
+        {
+          "text": "Ir até o golem vendedor",
+          "to": "vendor"
+        },
+        {
+          "text": "Descer pelo poço de manutenção (role 1d6)",
+          "once": true,
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 1,
+                "to": "shaft-fall"
+              },
+              {
+                "upTo": 4,
+                "to": "shaft-credits",
+                "effects": [
+                  {
+                    "stat": "credits",
+                    "add": 5
+                  }
+                ]
+              },
+              {
+                "upTo": 6,
+                "to": "shaft-blade"
+              }
+            ]
+          }
+        },
+        {
+          "text": "Seguir para o núcleo do cofre",
+          "to": "guards"
+        }
+      ]
+    },
+    "vendor": {
+      "text": "A tela do rosto do golem pisca: ESTIMULANTE // 6 CRÉDITOS. Um jingle metálico se repete.",
+      "choices": [
+        {
+          "text": "Comprar um estimulante (6 créditos)",
+          "to": "corridor",
+          "if": {
+            "stat": "credits",
+            "gte": 6
+          },
+          "effects": [
+            {
+              "stat": "credits",
+              "add": -6
+            },
+            {
+              "give": "stim"
+            },
+            {
+              "achieve": "customer"
+            }
+          ]
+        },
+        {
+          "text": "Voltar",
+          "to": "corridor"
+        }
+      ]
+    },
+    "shaft-fall": {
+      "text": "Um degrau se parte. A queda é longa e o chão não perdoa. Sua fuga termina aqui.",
+      "ending": "death"
+    },
+    "shaft-credits": {
+      "text": "Entre os cabos, o chip de crédito de um mensageiro morto. Cinco créditos a mais.",
+      "choices": [
+        {
+          "text": "Subir de volta",
+          "to": "corridor"
+        }
+      ]
+    },
+    "shaft-blade": {
+      "text": "Presa numa grade: uma lâmina rúnica, ainda zumbindo.",
+      "effects": [
+        {
+          "give": "rune-blade"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Subir de volta",
+          "to": "corridor"
+        }
+      ]
+    },
+    "guards": {
+      "text": "Dois guardiões bloqueiam o núcleo: um Sentinela de latão e um Drone Rúnico veloz. Eles atacam juntos.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Sentinela do Cofre",
+            "attack": 7,
+            "health": 6,
+            "armor": 1
+          },
+          {
+            "name": "Drone Rúnico",
+            "attack": 6,
+            "health": 4
+          }
+        ],
+        "simultaneous": true,
+        "win": "core",
+        "flee": "fled"
+      }
+    },
+    "fled": {
+      "text": "Você se joga de volta no corredor. Em algum lugar, um alarme começa a uivar.",
+      "effects": [
+        {
+          "set": "alarm"
+        },
+        {
+          "stat": "stamina",
+          "add": -1
+        }
+      ],
+      "choices": [
+        {
+          "text": "Recuperar o fôlego",
+          "to": "corridor"
+        }
+      ]
+    },
+    "core": {
+      "text": "O núcleo do cofre: uma fechadura de runas vivas, girando devagar. Além dela, a saída.",
+      "effects": [
+        {
+          "journal": "core"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Encaixar o fragmento de dados na fechadura",
+          "to": "vault-open",
+          "if": {
+            "has": "data-shard"
+          },
+          "effects": [
+            {
+              "take": "data-shard"
+            }
+          ]
+        },
+        {
+          "text": "Confiar na sorte e tocar as runas (Teste sua Sorte)",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "luck",
+            "effects": [
+              {
+                "stat": "luck",
+                "add": -1
+              }
+            ],
+            "pass": "vault-open",
+            "fail": "core-shock"
+          }
+        }
+      ]
+    },
+    "core-shock": {
+      "text": "As runas explodem em luz e jogam você no chão.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -4
+        }
+      ],
+      "choices": [
+        {
+          "text": "Levantar",
+          "to": "core"
+        }
+      ]
+    },
+    "vault-open": {
+      "text": "As runas se abrem como uma cortina. Ar da noite, chuva e neon. Você está livre, {name}.",
+      "effects": [
+        {
+          "achieve": "vault-breaker"
+        }
+      ],
+      "ending": "victory"
+    }
+  }
+}

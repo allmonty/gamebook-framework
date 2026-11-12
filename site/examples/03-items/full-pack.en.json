@@ -1,0 +1,89 @@
+{
+  "schema": 3,
+  "id": "full-pack",
+  "lang": "en",
+  "title": "The Full Pack",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "inventory": {
+      "capacity": 2,
+      "pickup": "choose"
+    }
+  },
+  "items": {
+    "rope": {
+      "name": "Rope"
+    },
+    "lamp": {
+      "name": "Lamp"
+    },
+    "crowbar": {
+      "name": "Crowbar"
+    },
+    "satchel": {
+      "name": "Satchel",
+      "description": "Adds 2 slots to your pack. Takes none itself.",
+      "capacity": 2
+    }
+  },
+  "start": "stall",
+  "nodes": {
+    "stall": {
+      "text": "A scrap stall. The owner is asleep. A coil of rope and a lamp lie within reach.",
+      "effects": [
+        {
+          "give": "rope"
+        },
+        {
+          "give": "lamp"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Move on",
+          "to": "crates"
+        }
+      ]
+    },
+    "crates": {
+      "text": "Crates of junk. A crowbar sticks out of one, and an empty satchel hangs on a nail.",
+      "effects": [
+        {
+          "give": "crowbar"
+        },
+        {
+          "give": "satchel"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Move on",
+          "to": "hatch"
+        }
+      ]
+    },
+    "hatch": {
+      "text": "A rusted hatch, the only way out.",
+      "choices": [
+        {
+          "text": "Lever it open with the crowbar",
+          "to": "out",
+          "if": {
+            "has": "crowbar"
+          }
+        },
+        {
+          "text": "Climb down the side with the rope",
+          "to": "out",
+          "if": {
+            "has": "rope"
+          }
+        }
+      ]
+    },
+    "out": {
+      "text": "You are out of the market.",
+      "ending": "victory"
+    }
+  }
+}

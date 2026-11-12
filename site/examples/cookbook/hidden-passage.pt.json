@@ -1,0 +1,70 @@
+{
+  "schema": 4,
+  "id": "hidden-passage",
+  "lang": "pt",
+  "title": "A Passagem Secreta",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "start": "library",
+  "nodes": {
+    "library": {
+      "text": [
+        "Uma biblioteca empoeirada, estantes até o teto.",
+        {
+          "if": {
+            "visits": "library",
+            "gte": 2
+          },
+          "text": "Uma estante parece um pouco desalinhada das outras."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Olhar em volta de novo",
+          "to": "library"
+        },
+        {
+          "text": "Empurrar a estante torta",
+          "to": "secret",
+          "if": {
+            "any": [
+              {
+                "stat": "skill",
+                "gte": 11
+              },
+              {
+                "visits": "library",
+                "gte": 3
+              }
+            ]
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Sair pela porta",
+          "to": "out"
+        }
+      ]
+    },
+    "secret": {
+      "text": "A estante gira para dentro. Uma escada secreta desce em espiral.",
+      "ending": "victory"
+    },
+    "out": {
+      "text": "Você sai por onde veio.",
+      "ending": "victory"
+    }
+  }
+}

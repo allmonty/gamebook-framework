@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "id": "d20-hero",
+  "lang": "en",
+  "title": "A d20 Hero",
+  "rules": {
+    "preset": "d20-lite"
+  },
+  "start": "bridge",
+  "nodes": {
+    "bridge": {
+      "text": "A rope bridge over a canyon of humming cables. Half the planks are missing.",
+      "choices": [
+        {
+          "text": "Dance across the gaps (Agility 3+)",
+          "to": "across",
+          "if": {
+            "stat": "agility",
+            "gte": 3
+          }
+        },
+        {
+          "text": "Haul yourself along the ropes (Might 3+)",
+          "to": "across",
+          "if": {
+            "stat": "might",
+            "gte": 3
+          }
+        },
+        {
+          "text": "Just run, and hope",
+          "to": "across",
+          "effects": [
+            {
+              "stat": "hp",
+              "add": -3
+            }
+          ]
+        }
+      ]
+    },
+    "across": {
+      "text": "You reach the other side.",
+      "ending": "victory"
+    }
+  }
+}

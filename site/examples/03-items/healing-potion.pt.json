@@ -1,0 +1,62 @@
+{
+  "schema": 2,
+  "id": "healing-potion",
+  "lang": "pt",
+  "title": "A Poção de Cura",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "potion": {
+      "name": "Poção de cura",
+      "description": "Recupera 4 de Energia, nunca acima da Energia inicial.",
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    }
+  },
+  "start": "alley",
+  "nodes": {
+    "alley": {
+      "text": "Um drone acerta você no beco: você perde 6 de Energia. Nos destroços, um frasco de poção azul brilhante.\n\nAbra a mochila e use a poção antes de seguir.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -6
+        },
+        {
+          "give": "potion"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Mancar para casa",
+          "to": "home"
+        }
+      ]
+    },
+    "home": {
+      "text": "Em casa, machucado mas vivo.",
+      "ending": "victory"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schema": 4,
+  "id": "search-once",
+  "lang": "en",
+  "title": "Search Once",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "gold": {
+        "label": "Gold",
+        "roll": "0"
+      }
+    }
+  },
+  "start": "room",
+  "nodes": {
+    "room": {
+      "text": "A looted cabin on an airship. A chest in the corner, a bunk, the door out.",
+      "choices": [
+        {
+          "text": "Open the chest",
+          "to": "chest"
+        },
+        {
+          "text": "Nap on the bunk (once only)",
+          "to": "room",
+          "once": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 2
+            }
+          ]
+        },
+        {
+          "text": "Leave the cabin",
+          "to": "out"
+        }
+      ]
+    },
+    "chest": {
+      "text": "Inside: 5 gold coins. You pocket them. (Open it again: it pays only the first time.)",
+      "once": true,
+      "effects": [
+        {
+          "stat": "gold",
+          "add": 5
+        }
+      ],
+      "choices": [
+        {
+          "text": "Close the chest",
+          "to": "room"
+        }
+      ]
+    },
+    "out": {
+      "text": "You leave the cabin.",
+      "ending": "victory"
+    }
+  }
+}

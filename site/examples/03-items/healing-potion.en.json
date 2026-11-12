@@ -1,0 +1,51 @@
+{
+  "schema": 2,
+  "id": "healing-potion",
+  "lang": "en",
+  "title": "The Healing Potion",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "items": {
+    "potion": {
+      "name": "Healing potion",
+      "description": "Restores 4 Stamina, never above your starting Stamina.",
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    }
+  },
+  "start": "alley",
+  "nodes": {
+    "alley": {
+      "text": "A drone clips you in the alley: you lose 6 Stamina. In its wreck, a vial of glowing blue potion.\n\nOpen your pack and use the potion before you go on.",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -6
+        },
+        {
+          "give": "potion"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Limp home",
+          "to": "home"
+        }
+      ]
+    },
+    "home": {
+      "text": "Home, bruised but alive.",
+      "ending": "victory"
+    }
+  }
+}
