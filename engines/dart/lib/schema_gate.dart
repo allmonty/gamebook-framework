@@ -16,6 +16,7 @@ import 'story.dart';
     (5, _schema5),
     (6, (s) => usesShowTitles ? 'showTitles' : _schema6(s)),
     (7, _schema7),
+    (8, _schema8),
   ];
   for (final (version, find) in gates) {
     if (version <= story.schema) continue;
@@ -111,6 +112,17 @@ String? _schema6(Story story) {
 String? _schema7(Story story) {
   if (story.achievements.isNotEmpty) return 'achievements';
   return _firstEffect(story, (e) => e is Achieve);
+}
+
+String? _schema8(Story story) {
+  if (story.coverAlt != null) return 'coverAlt';
+  for (final MapEntry(:key, :value) in story.items.entries) {
+    if (value.imageAlt != null) return 'items.$key.imageAlt';
+  }
+  for (final MapEntry(:key, :value) in story.nodes.entries) {
+    if (value.imageAlt != null) return 'nodes.$key.imageAlt';
+  }
+  return null;
 }
 
 /// The path of the first effect anywhere in the story that passes [test].

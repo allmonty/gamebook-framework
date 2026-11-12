@@ -11,6 +11,7 @@ A story says which version it needs in its `schema` field. Each version only add
 | 5 | Stat limits and quantities, item bonuses, character creation choices, combat extensions (several enemies, armor, luck in fights), the results-table combat mode and duels, undo, the journal, page audio | B4-B7, B9, B11 |
 | 6 | Authoring fields: node `title`, `note`, `chapter` and `draft`; story `chapters` and `showTitles` | B13 |
 | 7 | Achievements: story `achievements` and the `achieve` effect | B15 |
+| 8 | Descriptions of pictures: node and item `imageAlt`, story `coverAlt` | B3, B5, B6 |
 
 Not versioned with `schema`: game packages (`.gamebook`, B14), which can hold a story of any version, and the validator warnings with their codes (B16), which change no story.
 

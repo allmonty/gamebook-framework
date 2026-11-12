@@ -40,7 +40,7 @@ This section is for authors — no technical background needed. It explains ever
 
 ### 📖 Pages and choices
 
-Every gamebook is a **collection of pages** (called *nodes*) connected by **choices**. Each page has text, an optional illustration, and a list of buttons the player can tap to move forward.
+Every gamebook is a **collection of pages** (called *nodes*) connected by **choices**. Each page has text, an optional illustration (with a short description for players who cannot see it), and a list of buttons the player can tap to move forward.
 
 - Write as many pages as you like, in any order.
 - Each choice leads to another page.
@@ -53,7 +53,7 @@ Every gamebook is a **collection of pages** (called *nodes*) connected by **choi
 
 ### 🎒 Inventory and items
 
-- Define any number of **items** (keys, potions, weapons, tools…). Each has a name, an optional description and an optional image.
+- Define any number of **items** (keys, potions, weapons, tools…). Each has a name, an optional description and an optional image, which can be described for players who cannot see it.
 - Items are **unique**: the player either holds one or they don't — no stacking.
 - Choices and pages can **give** items to the player or **take** them away.
 - A choice can require the player to **hold a specific item** before it's available ("Unlock the door" stays locked until the rusty key is in the bag).
@@ -215,7 +215,7 @@ Finished stories can be **packaged** into a single `.gamebook` file (a zip) that
 | [AGENTS.md](AGENTS.md) | how AI assistants (and people) work in this repo |
 
 ## Status
-Schema versions 1 to 7 are specified. The Dart engine, which runs the gamebook app for iOS and Android (not public yet), implements all of them, and reads and writes `.gamebook` packages (B14).
+Schema versions 1 to 8 are specified. The Dart engine, which runs the gamebook app for iOS and Android (not public yet), implements all of them, and reads and writes `.gamebook` packages (B14).
 
 ## License
 The spec text is [CC BY 4.0](LICENSE-CC-BY-4.0); code, the JSON Schema and the conformance cases are [MIT](LICENSE-MIT). Details: [LICENSE](LICENSE).

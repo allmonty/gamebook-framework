@@ -85,7 +85,7 @@ Play cases cover every rule of Part B:
 
 Invalid cases cover the schema gate of every version, unknown references, impossible combat rules and the common load errors. Lint cases cover every warning code of B16, translations included.
 
-Not covered: game packages (B14), which need binary fixtures; and what is only presentation, so not compared (the default text of a locked choice, `lockedText`, `showTitles`).
+Not covered: game packages (B14), which need binary fixtures; and what is only presentation, so not compared (the default text of a locked choice, `lockedText`, `showTitles`, `imageAlt` and `coverAlt`).
 
 ## Adding a case
 One case, one idea. Work out the expected result **from the spec**, not from an engine, then run it on the Dart engine; if they disagree, find out which is wrong before committing. Name the file after what it shows.

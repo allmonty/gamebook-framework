@@ -1,0 +1,28 @@
+{
+  "description": "Image alt text needs schema 8.",
+  "spec": [
+    "B2",
+    "B6"
+  ],
+  "story": {
+    "schema": 7,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "image": "images/a.webp",
+        "imageAlt": "A dark cellar.",
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.imageAlt"
+  }
+}
