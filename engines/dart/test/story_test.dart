@@ -399,6 +399,25 @@ void main() {
       );
     });
 
+    test('a cap needs a stack, and at least 1', () {
+      expect(
+        failure((j) {
+          j['schema'] = 8;
+          key(j)['max'] = 3;
+        }),
+        'items.rusty-key.max: only applies to a countable item ("stack")',
+      );
+      expect(
+        failure((j) {
+          j['schema'] = 8;
+          key(j)
+            ..['stack'] = 2
+            ..['max'] = 0;
+        }),
+        'items.rusty-key.max: must be at least 1',
+      );
+    });
+
     test('a container cannot be counted', () {
       expect(
         failure((j) {
@@ -426,6 +445,10 @@ void main() {
     for (final (field, mutate)
         in <(String, void Function(Map<String, Object?>))>[
           ('items.rusty-key.stack', (j) => key(j)['stack'] = 3),
+          (
+            'nodes.cellar.text',
+            (j) => node(j, 'cellar')['text'] = 'Keys: {rusty-key.count}.',
+          ),
           (
             'nodes.cellar.choices[0].effects[0]',
             (j) => choice(j, 'cellar', 0)['effects'] = [

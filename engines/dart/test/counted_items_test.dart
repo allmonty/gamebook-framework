@@ -36,6 +36,7 @@ Story pack({
       },
     },
     'arrow': {'name': 'Arrow', 'stack': 1},
+    'herb': {'name': 'Herb', 'stack': 3, 'max': 4},
     'sword': {'name': 'Sword'},
     'bag': {'name': 'Bag', 'capacity': 1},
     'ring': {
@@ -47,7 +48,7 @@ Story pack({
   'start': 'a',
   'nodes': {
     'a': {
-      'text': 'A',
+      'text': 'Herbs: {herb.count}.',
       // The choices come back here; the start applies only the first time.
       'once': true,
       'effects': start,
@@ -282,6 +283,49 @@ void main() {
     final overflow = lost.whereType<ItemOverflow>().single;
     expect((overflow.item, overflow.count), ('meal', 3));
     expect(lost.whereType<ItemCountChanged>(), isEmpty);
+  });
+
+  group('a cap (max)', () {
+    test('a give stops at the cap, and the rest is refused', () {
+      final (engine, events) = begin(pack(start: [give('herb', 6)]));
+      expect(engine.state.count('herb'), 4);
+      expect(events.whereType<ItemRefused>().single.count, 2);
+    });
+
+    test('an offer is taken up to the cap, with no swap asked', () {
+      final (engine, _) = begin(
+        pack(pickup: 'choose', start: [give('herb', 6)]),
+      );
+      expect(engine.offerNeedsRoom, isFalse);
+
+      final events = engine.resolveOffer(take: true);
+
+      expect(engine.state.count('herb'), 4);
+      expect(events.whereType<ItemRefused>().single.count, 2);
+    });
+
+    test('at the cap a give is refused at once, not offered', () {
+      final (engine, _) = begin(
+        pack(pickup: 'choose', start: [give('herb', 4)], then: [give('herb')]),
+      );
+      engine.resolveOffer(take: true);
+      expect(engine.state.count('herb'), 4);
+
+      final events = engine.choose(0);
+
+      expect(engine.offer, isNull);
+      expect(events.whereType<ItemRefused>().single.item, 'herb');
+    });
+
+    test('a creation pick stops at the cap too', () {
+      final (engine, _) = begin(pack(), picks: const [GiveItem('herb', 9)]);
+      expect(engine.state.count('herb'), 4);
+    });
+  });
+
+  test('{item.count} in text shows how many are held', () {
+    final (engine, _) = begin(pack(start: [give('herb', 2)]));
+    expect(engine.paragraphs.single, 'Herbs: 2.');
   });
 
   test('a creation pick gives its count directly', () {

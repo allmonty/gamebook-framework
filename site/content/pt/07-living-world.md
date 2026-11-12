@@ -51,6 +51,8 @@ Escreva o id de um atributo entre chaves e o leitor vê o valor atual (schema 4)
 examples/07-living-world/gold-counter
 ```
 
+`{meal.count}` (schema 8) é quantos do item `meal` o leitor carrega: as provisões do capítulo 3 diminuem com ele.
+
 Para mostrar chaves de verdade, escreva duas: `{{` e `}}`.
 
 ## O diário e as conquistas

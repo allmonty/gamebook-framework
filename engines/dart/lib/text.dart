@@ -1,8 +1,8 @@
 import 'json_reader.dart';
 
-final _name = RegExp(r'^[A-Za-z0-9_-]+(\.max)?$');
+final _name = RegExp(r'^[A-Za-z0-9_-]+(\.max|\.count)?$');
 
-/// A `{stat}` or `{stat.max}` placeholder.
+/// A `{stat}`, `{stat.max}` or (schema 8) `{item.count}` placeholder.
 class _Placeholder {
   const _Placeholder(this.name);
   final String name;
@@ -38,7 +38,8 @@ List<Object> _tokens(String source, String path) {
       if (!_name.hasMatch(name)) {
         throw StoryFormatException(
           path,
-          'bad placeholder "{$name}" (use {stat} or {stat.max}; write {{ for a brace)',
+          'bad placeholder "{$name}" (use {stat}, {stat.max} or {item.count}; '
+          'write {{ for a brace)',
         );
       }
       flush();
@@ -64,7 +65,15 @@ void checkTemplate(String source, String path) => _tokens(source, path);
 /// The stat ids [source] refers to, in order, without ".max".
 List<String> placeholderStats(String source) => [
   for (final t in _tokens(source, ''))
-    if (t is _Placeholder) t.name.replaceFirst(RegExp(r'\.max$'), ''),
+    if (t is _Placeholder && !t.name.endsWith('.count'))
+      t.name.replaceFirst(RegExp(r'\.max$'), ''),
+];
+
+/// The item ids [source] counts with `{item.count}` (schema 8), in order.
+List<String> placeholderItems(String source) => [
+  for (final t in _tokens(source, ''))
+    if (t is _Placeholder && t.name.endsWith('.count'))
+      t.name.substring(0, t.name.length - '.count'.length),
 ];
 
 /// [source] with each placeholder replaced by `lookup(name)`; a placeholder

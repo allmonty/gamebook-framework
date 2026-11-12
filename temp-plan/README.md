@@ -45,8 +45,8 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 10 | [Counted items](steps/10-counted-items.md) | feature | done | 248705e, 6c11b7d |
 | 10a | [A lower limit per stat](steps/10a-stat-min.md) | feature | done | b0f3f90 |
 | 10b | [A bonus that depends on a condition](steps/10b-conditional-bonus.md) | feature | done | f2d6096 |
-| 10c | [A flee that costs a round](steps/10c-flee-costs-round.md) | feature | done | |
-| 10d | [Item counts in text, and a cap on a counted item](steps/10d-item-counts-in-text.md) | feature | todo | |
+| 10c | [A flee that costs a round](steps/10c-flee-costs-round.md) | feature | done | 3858d96 |
+| 10d | [Item counts in text, and a cap on a counted item](steps/10d-item-counts-in-text.md) | feature | done | |
 | 10e | [Rules on every page](steps/10e-every-page-rules.md) | feature | todo | |
 | 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | todo | |
 | 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | todo | |

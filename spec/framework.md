@@ -80,7 +80,7 @@ The next section shows this same story in the file format.
 
 # Part B. Technical reference
 
-Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6), a neutral ending (`"ending": "defeat"`, B6), fight events (`wounded`, `rounds`, B11), counted items (item `stack`, and `count` on `give`, `take` and `has`; B4, B5, B7, B9), a floor per stat (`min`, B4), rule bonuses (`rules.bonuses`, B5) and a flee that costs a round (`fleeCost`, B11). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
+Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6), a neutral ending (`"ending": "defeat"`, B6), fight events (`wounded`, `rounds`, B11), counted items (item `stack`, and `count` on `give`, `take` and `has`; B4, B5, B7, B9), a floor per stat (`min`, B4), rule bonuses (`rules.bonuses`, B5), a flee that costs a round (`fleeCost`, B11), and item counts in text with a cap per item (`{item.count}`, item `max`; B5, B6). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
 
 ## B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
@@ -98,7 +98,7 @@ Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Versio
 | Field | Type | Req | Notes |
 |---|---|---|---|
 | `$schema` | string | no | path to `story.schema.json`, an editor hint the engine ignores |
-| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) the `defeat` ending (B6), a fight's `wounded` and `rounds` (B11), an item's `stack` or a `count` (B5), a stat's `min` (B4), `rules.bonuses` (B5), and a fight's `fleeCost` (B11) |
+| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) the `defeat` ending (B6), a fight's `wounded` and `rounds` (B11), an item's `stack` or a `count` (B5), a stat's `min` (B4), `rules.bonuses` (B5), a fight's `fleeCost` (B11), and an item's `max` or `{item.count}` in text (B5, B6) |
 | `journal` | object | no | map `entryId -> { title, text }` (schema 5, B6) |
 | `achievements` | object | no | map `achievementId -> { title, description, hidden }` (schema 7, B15) |
 | `chapters` | object | no | map `chapterId -> { title }`, in reading order (schema 6, B13) |
@@ -232,10 +232,10 @@ Without an `inventory` block the pack is unlimited and every `give` just adds th
   An offer for an item that is already carried or already offered is ignored (for a countable item, see below). A container never needs room. Offers still pending when the game ends are discarded. Because the player may decline, a story should never make an offered item the only way to win; give a worse alternative route.
 
 **Countable items (schema 8).** A `give` of a countable item (B5) adds `count` units:
-- **`auto`**: as many units as fit are added, first into the room left in its part-filled slot, then into free slots; the rest are refused, and the player is told how many were left behind.
-- **`choose`**: if the whole count fits in the room left in its part-filled slot, it is added directly, without an offer. Otherwise the give is **one offer for the whole count**, even if some are already carried; a further give while it is on offer adds to that offer. Taking it adds as many units as fit and leaves the rest (the player is told); with a full pack the player may first leave one carried item behind, all of it, to free room.
+- **`auto`**: as many units as fit are added, first into the room left in its part-filled slot, then into free slots, and never past the item's `max`; the rest are refused, and the player is told how many were left behind.
+- **`choose`**: if the whole count fits in the room left in its part-filled slot, it is added directly, without an offer. Otherwise the give is **one offer for the whole count**, even if some are already carried; a further give while it is on offer adds to that offer. Taking it adds as many units as fit and leaves the rest (the player is told); with a full pack the player may first leave one carried item behind, all of it, to free room. A give of an item already at its `max` is refused at once, without an offer, and an offer stopped only by the `max` asks for no swap: freeing room would not help.
 
-A `give` with a count during character creation adds every unit directly; then the usual overflow rule applies.
+A `give` with a count during character creation adds every unit directly, up to the item's `max`; then the usual overflow rule applies.
 
 ## B5. Items
 ```json
@@ -251,6 +251,7 @@ An item is **unique** unless it has a `stack`: the pack holds it or not, and giv
   "use": { "effects": [ { "stat": "stamina", "add": 4 } ], "when": ["story"] } }
 ```
 - `stack` is how many fit in **one pack slot**, not how many can be held: 5 Meals fill one slot, 6 fill two (a stack of 5 and a single one). With `"stack": 1` every unit fills its own slot. A countable item fills `ceil(count / stack)` slots; without `rules.inventory.capacity` the pack, and so the count, is unlimited (B4).
+- `max` (schema 8, only with `stack`): the most the player can hold, say 12 arrows in a quiver. A give never goes past it: what does not fit is refused, as when the pack is full (B4).
 - `give`, `take` and `has` take a `count` (B7, B9). A `count` above 1 for an item without `stack` is an error.
 - Using a countable item spends one; it leaves the pack when the last one is spent. Its `bonus` applies once, while at least one is held. `takeAll` removes every unit.
 - A container cannot have a `stack`.
@@ -333,7 +334,7 @@ A story may define a `journal`: `"journal": { "clue-1": { "title": "A stranger's
   { "if": { "stat": "gold", "lte": 4 }, "text": "You count your last {gold} crowns." }
 ]
 ```
-In page text and in choice `text`, `{id}` is replaced with the **current value** of the stat `id`, and `{id.max}` with its ceiling (the stat's value if it has none). Write `{{` and `}}` for literal braces. A placeholder that is not a stat of the story is a validator error, and shows as written if it ever reaches a player. The text of a page is computed each time the page is shown, so it follows the current state.
+In page text and in choice `text`, `{id}` is replaced with the **current value** of the stat `id`, and `{id.max}` with its ceiling (the stat's value if it has none). `{item.count}` (schema 8) is replaced with how many of the item `item` are held (0 if none; 1 for a unique item held); the `.count` suffix keeps it apart from a stat with the same id. Write `{{` and `}}` for literal braces. A placeholder that is not a stat (or, with `.count`, an item) of the story is a validator error, and shows as written if it ever reaches a player. The text of a page is computed each time the page is shown, so it follows the current state.
 
 ## B7. Conditions
 A condition is an object with exactly one kind:

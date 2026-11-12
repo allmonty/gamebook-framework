@@ -210,7 +210,10 @@ class GameEngine {
               effect.item,
               _stack(effect.item) == null
                   ? 1
-                  : _state.count(effect.item) + effect.amount,
+                  : min(
+                      _state.count(effect.item) + effect.amount,
+                      story.items[effect.item]?.max ?? _unlimited,
+                    ),
             )
           : applyEffect(effect, _state);
     }
@@ -279,6 +282,10 @@ class GameEngine {
     return renderTemplate(text, (name) {
       if (name == 'name') {
         return (rules.creation?.name ?? false) ? _state.name : null;
+      }
+      if (name.endsWith('.count')) {
+        final item = name.substring(0, name.length - '.count'.length);
+        return story.items.containsKey(item) ? '${_state.count(item)}' : null;
       }
       final isMax = name.endsWith('.max');
       final stat = isMax ? name.substring(0, name.length - 4) : name;
@@ -361,12 +368,21 @@ class GameEngine {
 
   /// How many more of [item] fit in the pack now: the room left in its
   /// part-filled slot, then the free slots.
-  int _room(String item) {
+  int _packRoom(String item) {
     if (isContainer(item) || capacity == null) return _unlimited;
     final free = max(0, capacity! - slotsUsed);
     final stack = _stack(item);
     return stack == null ? min(free, 1) : _slotRoom(item) + free * stack;
   }
+
+  /// How many more of [item] its cap allows (schema 8: an item's `max`).
+  int _capLeft(String item) {
+    final cap = story.items[item]?.max;
+    return cap == null ? _unlimited : max(0, cap - _state.count(item));
+  }
+
+  /// How many more of [item] can be added now.
+  int _room(String item) => min(_packRoom(item), _capLeft(item));
 
   static const _unlimited = 1 << 30;
 
@@ -379,6 +395,13 @@ class GameEngine {
 
   /// How many of [offer] are offered at once (schema 8: a countable item).
   int get offerCount => offer == null ? 0 : _state.offered(offer!);
+
+  /// Whether taking [offer] needs a carried item left behind: the pack is
+  /// full, and the item's cap would still let some in.
+  bool get offerNeedsRoom {
+    final item = offer;
+    return item != null && _packRoom(item) == 0 && _capLeft(item) > 0;
+  }
 
   /// More items waiting behind [offer].
   int get moreOffers => offer == null ? 0 : _state.offers.length - 1;
@@ -615,7 +638,7 @@ class GameEngine {
   /// item to leave behind in [replacing]), or leave it where it is.
   List<GameEvent> resolveOffer({required bool take, String? replacing}) {
     final item = offer ?? (throw StateError('there is no offer to resolve'));
-    final swap = take && !canHold(item);
+    final swap = take && offerNeedsRoom;
     if (swap &&
         (replacing == null ||
             !_state.inventory.contains(replacing) ||
@@ -665,9 +688,12 @@ class GameEngine {
     }
     if (!countable && _state.inventory.contains(item)) return;
     if (rules.inventory.pickup == PickupMode.choose) {
-      // What fits without a new slot is added; anything else is offered.
-      if (countable && count <= _slotRoom(item)) {
+      // What fits without a new slot is added; past the cap nothing can be;
+      // anything else is offered.
+      if (countable && count <= min(_slotRoom(item), _capLeft(item))) {
         _state = withCount(_state, item, _state.count(item) + count);
+      } else if (countable && _capLeft(item) == 0) {
+        events.add(ItemRefused(item, count));
       } else {
         _offer(item, countable ? count : 1);
       }
@@ -813,7 +839,8 @@ bool stateFits(GameState state, Story story, Rules rules) {
         (e) =>
             e.value >= 1 &&
             where.contains(e.key) &&
-            story.items[e.key]?.stack != null,
+            story.items[e.key]?.stack != null &&
+            e.value <= (story.items[e.key]!.max ?? e.value),
       );
   if (!counted(state.counts, state.inventory) ||
       !counted(state.offerCounts, state.offers)) {

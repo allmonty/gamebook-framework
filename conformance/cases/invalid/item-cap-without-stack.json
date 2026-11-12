@@ -1,0 +1,37 @@
+{
+  "description": "An item's max only applies to a countable item.",
+  "spec": [
+    "B5"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "items": {
+      "herb": {
+        "name": "Herb",
+        "max": 4
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Herbs: {herb.count}.",
+        "effects": [],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "error": {
+    "path": "items.herb.max"
+  }
+}

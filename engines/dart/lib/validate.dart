@@ -311,6 +311,9 @@ class _Validator {
       if (stat == 'name' && (story.rules.creation?.name ?? false)) continue;
       _stat(where, stat);
     }
+    for (final item in placeholderItems(text)) {
+      _item(where, item);
+    }
   }
 
   void _choice(String at, Choice choice) {

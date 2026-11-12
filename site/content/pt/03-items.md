@@ -97,6 +97,8 @@ examples/03-items/provisions
 - `{ "has": "meal", "count": 2 }` precisa de pelo menos duas: a escolha do barqueiro fica trancada, "Precisa: 2 × Refeição", se você comeu demais.
 - Usar uma gasta uma. A mochila mostra quantas restam, e o item some com a última.
 - `stack` é quantas cabem em **um espaço** de uma mochila limitada: 5 refeições ocupam um espaço, a 6ª começa outro. Com `"stack": 1` cada uma ocupa seu próprio espaço. Sem `capacity` a mochila, e a quantidade, não têm limite.
+- `"max": 6` limita a quantidade: as três refeições da fazenda não cabem todas, e o registro diz quantas ficaram para trás.
+- `{meal.count}` no texto mostra quantas restam, como na página da noite (o capítulo 7 fala mais de números no texto).
 
 A página da noite é um clássico: "Comer uma refeição" precisa de uma e a gasta; "Ficar com fome" só aparece quando você não tem nenhuma, e custa Energia. Sem `stack` um item continua único, como antes, e um `count` acima de 1 é um erro.
 
@@ -114,5 +116,6 @@ A página da noite é um clássico: "Comer uma refeição" precisa de uma e a ga
 | `"capacity": 2` | um item | um recipiente |
 | `"stack": 5` | um item | contável: qualquer quantidade, 5 por espaço (schema 8) |
 | `"count": 2` | um `give`, `take` ou `has` | quantos (schema 8) |
+| `"max": 6` | um item contável | o máximo que o leitor pode carregar (schema 8) |
 
 A seguir: os atributos do herói e como rolá-los.

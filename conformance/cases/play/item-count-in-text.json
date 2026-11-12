@@ -1,0 +1,52 @@
+{
+  "description": "{item.count} in text is how many of the item are held.",
+  "spec": [
+    "B6"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "items": {
+      "herb": {
+        "name": "Herb",
+        "stack": 3,
+        "max": 4
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Herbs: {herb.count}. Again: {herb.count}.",
+        "effects": [
+          {
+            "give": "herb",
+            "count": 2
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "paragraphs": [
+      "Herbs: 2. Again: 2."
+    ]
+  }
+}

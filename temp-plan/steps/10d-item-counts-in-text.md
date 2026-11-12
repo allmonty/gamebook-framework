@@ -19,4 +19,8 @@ Spec B6 (placeholders), B5 (the cap), B4 (pickup with a cap), changelog row 8, J
 On the site the example's text shows the meals left as they are eaten, and the hunter cannot sell past the cap, in both languages; checks green.
 
 ## Handoff notes
-(fill in)
+- One commit, on the shared branch `steps-10a-10d`; the last step of that pull request.
+- **Syntax settled without the owner:** `{meal.count}`. The `.count` suffix keeps it apart from a stat with the same id (stats only have `.max`), which was the open point. `text.dart` accepts the suffix and has `placeholderItems`; `placeholderStats` leaves `.count` out. The engine renders the count (0 if none). The validator reports an unknown item at the text's path. The gate reports the text's path, and only from schema 4 on: before that, braces are plain text.
+- **The cap:** item `max`, which needs a `stack` (parse error otherwise). The engine splits room in two: `_packRoom` (slots) and `_capLeft` (the cap), with `_room` the smaller of the two. A new getter, `offerNeedsRoom`, says when an offer asks for a swap: only when the pack is full and the cap still lets some in. `resolveOffer`, the site's offer view and the simulator use it instead of `!canHold`, so an offer stopped by the cap asks for no swap. In `choose` mode a give at the cap is refused at once, without an offer. Creation picks stop at the cap; `stateFits` rejects a count above it.
+- Example: `provisions` (chapter 3) got `"max": 6`, a farm where three more meals do not all fit, and `{meal.count}` on the night page. A site test plays the farm in both languages. Tutorial: two bullets and a table row in chapter 3, one paragraph in chapter 7 "Numbers in text".
+- Cases: `item-count-in-text`, `-none`, `item-cap-give`, `item-cap-offer`, and four invalid cases (gate, cap without stack, placeholder gate, unknown item).

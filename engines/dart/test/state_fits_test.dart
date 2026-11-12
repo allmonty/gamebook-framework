@@ -96,6 +96,12 @@ void main() {
           (j..['schema'] = 8)['items']! as Map<String, Object?>
             ..['rusty-key'] = {'name': 'Key', 'stack': 3},
     ),
+    'a count is above the item\'s cap': (
+      saved.copyWith(counts: {'rusty-key': 5}),
+      (j) =>
+          (j..['schema'] = 8)['items']! as Map<String, Object?>
+            ..['rusty-key'] = {'name': 'Key', 'stack': 3, 'max': 4},
+    ),
     'the pack holds more than it has room for': (
       saved.copyWith(counts: {'rusty-key': 7}),
       (j) {

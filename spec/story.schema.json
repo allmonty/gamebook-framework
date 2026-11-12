@@ -465,6 +465,11 @@
           "type": "integer",
           "minimum": 1
         },
+        "max": {
+          "description": "Schema 8. The most of a countable item the player can hold",
+          "type": "integer",
+          "minimum": 1
+        },
         "bonus": {
           "description": "Schema 5. Added to these stats while the item is carried",
           "type": "object",
@@ -479,6 +484,9 @@
       "dependentRequired": {
         "imageAlt": [
           "image"
+        ],
+        "max": [
+          "stack"
         ]
       },
       "not": {
@@ -981,7 +989,7 @@
       "additionalProperties": false,
       "properties": {
         "text": {
-          "description": "A string, or (schema 4) a list of parts. In schema 4, {stat} and {stat.max} are replaced by values; {{ and }} are literal braces.",
+          "description": "A string, or (schema 4) a list of parts. In schema 4, {stat} and {stat.max} are replaced by values (and from schema 8 {item.count} by how many of the item are held); {{ and }} are literal braces.",
           "oneOf": [
             {
               "type": "string"
