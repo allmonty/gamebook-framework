@@ -52,8 +52,8 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 10g | [One schema version](steps/10g-one-schema.md) | format | done | 8dc37b0 |
 | 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | done (in 10g) | |
 | 12 | [Presets as data](steps/12-presets-as-data.md) | docs + test | done | 99520cd |
-| 13 | [Starter games](steps/13-starters.md) | docs + test | done | |
-| 14 | [A front door for people and AIs](steps/14-front-door.md) | docs + site | todo | |
+| 13 | [Starter games](steps/13-starters.md) | docs + test | done | 2647a2a |
+| 14 | [A front door for people and AIs](steps/14-front-door.md) | docs + site | done | |
 | 15 | [A versions page on the site](steps/15-site-versions.md) | docs + site | todo | |
 
 Steps 01 to 06 and 11 are independent of each other; step 11 is tiny and may be done first. Steps 08 to 10f need step 07 (it opens schema 8) and are easier after step 06. Steps 12 to 15 come last so they describe schema 8; 14 links what 12 and 13 add, and 15 is the last of all.
@@ -126,11 +126,10 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 ## Where things stand (2026-11-12, end of a session)
 - Steps 01 to 10f are done and merged into `main`.
 - Step 10g merged the eight schema versions into version 1 (and did step 11).
-- **Next:** step 14, then 15, one branch and pull request each.
+- **Next:** step 15, the last one.
 - After 10f: steps 11 to 15, back to one branch and pull request per step.
 
 ## Waiting on the owner (outward-facing, never do these unasked)
-- Enable GitHub Pages (Settings > Pages > Source: "GitHub Actions"; the workflow is already there); step 14's addresses work only once it is on.
 - Tag a release once the plan is done, so stories and engines can cite a fixed version (version 1 of the format).
 - Decide whether to publish the Dart engine on pub.dev (`publish_to: none` today) and to submit the schema to SchemaStore for editor autocompletion.
 

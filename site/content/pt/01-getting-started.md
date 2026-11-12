@@ -71,7 +71,7 @@ Quando a história crescer, escreva num arquivo:
 2. Crie uma pasta para o jogo e salve a história nela como `story.pt.json` (`story.en.json` para inglês, e assim por diante).
 3. Adicione esta linha logo depois da `{` inicial para ganhar sugestões e verificação de cada campo enquanto digita:
    ```json
-   "$schema": "https://raw.githubusercontent.com/allmonty/gamebook-framework/main/spec/story.schema.json",
+   "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
    ```
 4. Para jogar, abra o [playground](../play.html), toque em **Abrir arquivo** e escolha sua história.
 

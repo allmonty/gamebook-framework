@@ -71,7 +71,7 @@ Lembre de traduzir os nomes dos atributos em `rules.stats` quando usar um preset
 
 - **Um pacote `.gamebook`** é um zip da pasta do jogo: os arquivos da história e as pastas `images/` e `audio/` que eles usam. Crie um com `dart run gamebook_engine:pack_game caminho/do/meu-jogo`; jogadores que aceitam pacotes importam esse único arquivo.
 - **Vindo do Twine**: `dart run gamebook_engine:import_twine story.twee pasta-de-saida` converte uma história do Twine (`.twee` ou `.html` publicado) e relata o que não conseguiu converter.
-- **Com um assistente de IA**: `spec/llm-kit.md` é um arquivo que ensina o formato a um chatbot. Entregue-o ao assistente junto com o seu pedido; depois rode o validador com `--llm` e cole a resposta de volta até a história ficar limpa.
+- **Com um assistente de IA**: [o kit para LLMs](../../llm-kit.md) (`spec/llm-kit.md` no repositório) é um arquivo que ensina o formato a um chatbot. Entregue-o ao assistente junto com o seu pedido; depois rode o validador com `--llm` e cole a resposta de volta até a história ficar limpa.
 - **Em qualquer plataforma**: o formato é dado puro, então motores podem existir em qualquer linguagem. A [suíte de conformidade](https://github.com/allmonty/gamebook-framework/tree/main/conformance) tem casos de teste que garantem que todo motor joga cada história do mesmo jeito.
 
 ## Para onde ir agora

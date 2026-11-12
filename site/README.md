@@ -32,6 +32,7 @@ Headless Chrome cannot go below 500px wide, so check phone layouts in a real bro
 | `content/{en,pt}/` | tutorial chapters in Markdown |
 | `examples/` | example stories, one file per language |
 | `css/site.css`, `assets/` | copied as they are |
+| `../llms.txt`, `../spec/llm-kit.md`, `../spec/story.schema.json`, `../spec/presets/*.json` | published from the repo at the site root (`llms.txt`, `llm-kit.md`, `schema/story.schema.json`, `presets/`), so stories and AI tools have stable addresses; the schema's `$id` and every `"$schema"` use them |
 
 Strings whose key starts with `player.` are also sent to the browser (a JSON script `#gb-strings` in the layout) for the player's own text.
 
@@ -59,7 +60,7 @@ What you need to know before adding a feature to the player (collected from the 
 - **Examples** stay one folder deep (`examples/<chapter>/<name>.<lang>.json`): the schema check in CI globs that depth. Every one must be free of errors **and warnings**, so a chapter that teaches a mistake has the reader add it.
 - **Portuguese examples** override the preset's stat labels (`rules.stats.<id>.label`): preset labels are English.
 - **Checking examples by hand**: `validate_story` scans folders only for `story.<lang>.json`, so pass the files: `dart run gamebook_engine:validate_story ../../site/examples/*/*.json --strict` (from `engines/dart`).
-- The site uses relative links only, so it works under the project path on GitHub Pages. `.github/workflows/pages.yml` deploys `build/` on a push to `main`, once the owner sets Settings > Pages > Source to "GitHub Actions".
+- The site uses relative links only, so it works under the project path on GitHub Pages. `.github/workflows/pages.yml` deploys `build/` on a push to `main`, (Pages is on: Settings > Pages > Source "GitHub Actions").
 
 ## Known shortcuts
 None blocks anything.

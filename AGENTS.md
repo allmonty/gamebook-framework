@@ -11,7 +11,7 @@ The aim: the best gamebook format and engine, in a repository people and AIs can
 | You want to... | Read |
 |---|---|
 | Know what to do next | `temp-plan/README.md` (status table), then its first step not done |
-| Write or change a **story** for someone (not this repo) | `spec/llm-kit.md`, then check with `validate_story --llm` until clean |
+| Write or change a **story** for someone (not this repo) | `spec/llm-kit.md` and a starter from `starters/` to copy, then check with `validate_story --llm` until clean |
 | Understand the story format | `spec/framework.md` (the spec; Part A plain words, Part B exact) |
 | Know what other engines do and why this one exists | `spec/comparison.md` |
 | Change the spec, conformance cases or an engine | `CONTRIBUTING.md`, `engines/README.md`, `conformance/README.md` |

@@ -71,7 +71,7 @@ Remember to translate stat labels in `rules.stats` when you use a preset (chapte
 
 - **A `.gamebook` package** is a zip of the game folder: the story files and the `images/` and `audio/` they use. Make one with `dart run gamebook_engine:pack_game path/to/my-game`; players that support packages import that single file.
 - **From Twine**: `dart run gamebook_engine:import_twine story.twee out-folder` converts a Twine story (`.twee` or published `.html`) and reports what it could not convert.
-- **With an AI assistant**: `spec/llm-kit.md` is one file that teaches a chatbot the format. Give it to the assistant with your request; then run the validator with `--llm` and paste its answer back until the story is clean.
+- **With an AI assistant**: [the LLM kit](../../llm-kit.md) (`spec/llm-kit.md` in the repository) is one file that teaches a chatbot the format. Give it to the assistant with your request; then run the validator with `--llm` and paste its answer back until the story is clean.
 - **On any platform**: the format is plain data, so engines can exist in any language. The [conformance suite](https://github.com/allmonty/gamebook-framework/tree/main/conformance) holds test cases that make sure every engine plays every story the same way.
 
 ## Where to go next

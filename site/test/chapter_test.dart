@@ -19,12 +19,13 @@ void main() {
     final chapter = renderChapter(
       'x',
       '# X\n\nSee [next](02-pages.md) and [part](03-items.md#keys) '
-          'and [spec](https://example.com/a.md).',
+          'and [spec](https://example.com/a.md) and [kit](../../llm-kit.md).',
       (_) => null,
     );
     expect(chapter.html, contains('href="02-pages.html"'));
     expect(chapter.html, contains('href="03-items.html#keys"'));
     expect(chapter.html, contains('href="https://example.com/a.md"'));
+    expect(chapter.html, contains('href="../../llm-kit.md"'));
   });
 
   test('a chapter needs a title', () {

@@ -21,6 +21,24 @@ An open format for **gamebooks**: stories you play by reading a page, choosing w
 }
 ```
 
+## Start here
+Three jobs, three doors:
+
+1. **Write a game.** Copy a folder from [starters/](starters/README.md), learn the format with the [writer's tutorial](https://allmonty.github.io/gamebook-framework/en/tutorial/index.html), and check your story as you go. To write with a chatbot, give it [spec/llm-kit.md](spec/llm-kit.md) along with your request.
+   ```
+   cd engines/dart && dart run gamebook_engine:validate_story ../../starters/fighting-fantasy --strict
+   ```
+2. **Put games in your app.** Use the Dart engine: add it as a dependency and play a story in five lines ([engines/dart/README.md](engines/dart/README.md)).
+   ```yaml
+   gamebook_engine: { git: { url: https://github.com/allmonty/gamebook-framework.git, path: engines/dart } }
+   ```
+3. **Write an engine in another language.** Implement Part B of [the spec](spec/framework.md), build the presets in from [spec/presets/](spec/presets/), and pass the [conformance suite](conformance/README.md): [engines/README.md](engines/README.md) walks through it.
+   ```
+   ls conformance/cases/play conformance/cases/invalid conformance/cases/lint
+   ```
+
+AI tools: [llms.txt](llms.txt) lists everything above with one line each.
+
 ## Play it, learn it
 The website plays stories in your browser with the reference engine, and every example can be edited and replayed on the spot (English and Portuguese):
 - **[Home](https://allmonty.github.io/gamebook-framework/)**: a complete showcase gamebook, the features and the comparison.

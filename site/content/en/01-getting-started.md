@@ -67,7 +67,7 @@ When your story outgrows a page, write it in a file:
 2. Make a folder for your game and save the story in it as `story.en.json` (`story.pt.json` for Portuguese, and so on).
 3. Add this line right after the opening `{` to get suggestions and checks for every field while you type:
    ```json
-   "$schema": "https://raw.githubusercontent.com/allmonty/gamebook-framework/main/spec/story.schema.json",
+   "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
    ```
 4. To play it, open the [playground](../play.html), press **Open file** and pick your story.
 
