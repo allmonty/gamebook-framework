@@ -19,10 +19,17 @@ class Dice {
         'invalid dice notation "$source" (needs at least 1 die with 2 faces)',
       );
     }
+    if (count > 100 || faces > 1000) {
+      throw FormatException(
+        'invalid dice notation "$source" (at most 100 dice of 1000 faces)',
+      );
+    }
     return Dice._(count, faces, int.parse(match.group(3) ?? '0'));
   }
 
-  static final _pattern = RegExp(r'^(?:(\d+)d(\d+)([+-]\d+)?|\d+)$');
+  static final _pattern = RegExp(
+    r'^(?:(\d{1,3})d(\d{1,4})([+-]\d{1,6})?|\d{1,6})$',
+  );
 
   /// Number of dice; 0 for a fixed number.
   final int count;
