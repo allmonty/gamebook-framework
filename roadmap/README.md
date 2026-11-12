@@ -26,7 +26,16 @@ Status values: `todo`, `in progress`, `done`, `blocked`.
 | 17 | [Tutorial 8: Check and publish](steps/17-tutorial-08.md) | done | f85fef9 |
 | 18 | [Cookbook](steps/18-cookbook.md) | done | 6f925d4 |
 | 19 | [Deploy to GitHub Pages](steps/19-pages-deploy.md) | done | 883c06f |
-| 20 | [Link the site from the README](steps/20-readme-links.md) | done | |
+| 20 | [Link the site from the README](steps/20-readme-links.md) | done | a414e54 |
 
 ## What is left
-Everything from step 01. Decisions waiting for the owner: none yet. Known shortcuts: none yet.
+All planned steps are done. Before the site is public:
+- **Owner**: push the `site` branch, open a pull request (the new `site` CI job has only run locally), merge, then set Settings > Pages > Source to "GitHub Actions".
+- **Owner**: delete the local `temp-theme/` folder when the Stitch export is no longer needed (it is git-ignored; its design decisions are in `site/README.md`).
+
+Known shortcuts and ideas, none blocking:
+- No audio or image files ship with examples, so the player's audio and image support is untested in the browser (the CLI validator requires media files to exist). If wanted: ship media under `examples/<chapter>/`, copy them in the build and resolve paths against the example folder.
+- The player marks checks in amber but does not show the roll and target before the tap (spec B10 "should"); chapter texts write it into the choice instead.
+- Validator messages are the engine's English wording, also on Portuguese pages.
+- Plan items dropped on purpose: side-by-side play/edit on desktop (tabs everywhere instead), a light theme, editor syntax highlighting.
+- On phones the header nav wraps under the brand.
