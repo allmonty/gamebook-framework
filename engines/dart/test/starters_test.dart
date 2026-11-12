@@ -25,6 +25,7 @@ void main() {
       'blank',
       'custom-rules',
       'fighting-fantasy',
+      'percentile-mystery',
       'results-table',
     ]);
   });

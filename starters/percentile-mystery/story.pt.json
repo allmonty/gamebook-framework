@@ -1,0 +1,312 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "clockmakers-will",
+  "lang": "pt",
+  "title": "O Testamento do Relojoeiro",
+  "author": "Você",
+  "description": "Um mistério percentual sem lutas: role abaixo das suas perícias, junte pistas no diário e depois aponte o falsário.",
+  "rules": {
+    "health": "composure",
+    "rerolls": 1,
+    "stats": {
+      "insight": {
+        "label": "Perspicácia",
+        "roll": "5d10+25"
+      },
+      "charm": {
+        "label": "Carisma",
+        "roll": "5d10+25"
+      },
+      "composure": {
+        "label": "Compostura",
+        "roll": "1d10+10",
+        "max": true
+      }
+    }
+  },
+  "journal": {
+    "ledger": {
+      "title": "O livro-caixa",
+      "text": "O livro-caixa da oficina foi escrito o ano inteiro em tinta marrom. O testamento, datado da primavera passada, está em azul."
+    },
+    "ink": {
+      "title": "Tinta azul",
+      "text": "A sobrinha diz que só uma pessoa na casa compra tinta azul: o aprendiz, para os desenhos dele."
+    },
+    "key": {
+      "title": "A chave da escrivaninha",
+      "text": "O aprendiz admite que guardava uma chave da escrivaninha do mestre, onde ficava o testamento."
+    }
+  },
+  "start": "hall",
+  "nodes": {
+    "hall": {
+      "title": "A leitura do testamento",
+      "text": [
+        "O velho Brant, o relojoeiro, morreu, e o testamento deixa a oficina para o aprendiz em vez da sobrinha. A advogada franze a testa para a assinatura. \"Uma hora\", ela diz a você. \"Depois eu registro como está.\"\n\nPerspicácia {insight}, Carisma {charm}, Compostura {composure}.",
+        {
+          "if": {
+            "visits": "hall",
+            "gte": 3
+          },
+          "text": "Os relógios da parede, quarenta deles, continuam batendo."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Revistar o escritório",
+          "to": "study"
+        },
+        {
+          "text": "Falar com a sobrinha",
+          "to": "niece"
+        },
+        {
+          "text": "Interrogar o aprendiz",
+          "to": "apprentice"
+        },
+        {
+          "text": "Apontar o falsário",
+          "to": "accuse"
+        }
+      ]
+    },
+    "study": {
+      "title": "O escritório",
+      "text": "Uma escrivaninha, um lampião, um ano de papelada. O livro-caixa está aberto debaixo de uma lupa.",
+      "choices": [
+        {
+          "text": "Estudar o livro-caixa (1d100, sua Perspicácia ou menos)",
+          "once": true,
+          "check": {
+            "roll": "1d100",
+            "op": "lte",
+            "vs": "insight",
+            "pass": "ledger",
+            "fail": "study-miss"
+          }
+        },
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "ledger": {
+      "title": "Tinta marrom, tinta azul",
+      "text": "Página após página de tinta marrom, na letra miúda de Brant. Você põe o testamento ao lado. O testamento é azul.",
+      "once": true,
+      "effects": [
+        {
+          "journal": "ledger"
+        },
+        {
+          "set": "clue-ledger"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "study-miss": {
+      "title": "Colunas de números",
+      "text": "Molas, escapamentos, uma dívida com um fundidor de latão. Se há algo aqui, você não vê, e os relógios estão contando (-3 de Compostura).",
+      "effects": [
+        {
+          "stat": "composure",
+          "add": -3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "niece": {
+      "title": "A sobrinha",
+      "text": "Mara Brant está na janela, de braços cruzados. Ela decidiu não gostar de você.",
+      "choices": [
+        {
+          "text": "Conquistar a confiança dela (1d100, seu Carisma ou menos)",
+          "once": true,
+          "check": {
+            "roll": "1d100",
+            "op": "lte",
+            "vs": "charm",
+            "pass": "niece-talks",
+            "fail": "niece-cold"
+          }
+        },
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "niece-talks": {
+      "title": "O que Mara sabe",
+      "text": "\"Ele desenhava o dia inteiro\", ela diz por fim. \"Engrenagens, rostos, qualquer coisa. Tinta azul nos punhos, tinta azul na mesa boa do meu tio. Ninguém mais nesta casa usa.\"",
+      "once": true,
+      "effects": [
+        {
+          "journal": "ink"
+        },
+        {
+          "set": "clue-ink"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "niece-cold": {
+      "title": "Uma porta fechada",
+      "text": "\"Quem contratou você foi a advogada\", ela diz, \"e quem paga a advogada é o espólio.\" Ela se vira de novo para a janela (-3 de Compostura).",
+      "effects": [
+        {
+          "stat": "composure",
+          "add": -3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "apprentice": {
+      "title": "O aprendiz",
+      "text": [
+        "Tobin está sentado entre os relógios pela metade, girando uma chave de fenda sem parar.",
+        {
+          "if": {
+            "flag": "clue-ink"
+          },
+          "text": "Há tinta azul nos punhos da camisa dele."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Mostrar a ele as duas tintas",
+          "to": "key",
+          "if": {
+            "flag": "clue-ledger"
+          },
+          "once": true,
+          "lockedText": "Você não tem nada para mostrar a ele."
+        },
+        {
+          "text": "Apertá-lo sobre a tinta azul (1d100, seu Carisma ou menos)",
+          "once": true,
+          "check": {
+            "roll": "1d100",
+            "op": "lte",
+            "vs": "charm",
+            "pass": "key",
+            "fail": "silent"
+          },
+          "if": {
+            "flag": "clue-ink"
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "silent": {
+      "title": "Silêncio",
+      "text": "Tobin larga a chave de fenda, pega de novo e não diz absolutamente nada (-3 de Compostura).",
+      "effects": [
+        {
+          "stat": "composure",
+          "add": -3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "key": {
+      "title": "A chave da escrivaninha",
+      "text": "Ele fica calado por um bom tempo. \"Eu tinha uma chave da escrivaninha\", diz. \"Ele me deu. É só o que eu vou dizer.\"",
+      "once": true,
+      "effects": [
+        {
+          "journal": "key"
+        },
+        {
+          "set": "clue-key"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "accuse": {
+      "title": "A acusação",
+      "text": "A advogada tampa a caneta. \"E então?\"",
+      "choices": [
+        {
+          "text": "O aprendiz, e aqui está a prova",
+          "to": "solved",
+          "if": {
+            "flag": "clue-key"
+          },
+          "lockedText": "Você precisa de mais que um palpite."
+        },
+        {
+          "text": "O aprendiz, tenho certeza",
+          "to": "unproven",
+          "if": {
+            "not": {
+              "flag": "clue-key"
+            }
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "A sobrinha",
+          "to": "wrong"
+        },
+        {
+          "text": "Ainda não",
+          "to": "hall"
+        }
+      ]
+    },
+    "solved": {
+      "title": "Registrado e selado",
+      "text": "Tinta azul e uma chave. A advogada rasga o testamento ao meio. O mais antigo, em marrom, deixa a oficina para Mara, e um jogo de penas de desenho para Tobin.",
+      "ending": "victory"
+    },
+    "unproven": {
+      "title": "Sem provas",
+      "text": "\"Certeza\", repete a advogada, e registra o testamento como está. Tobin não olha para você na saída.",
+      "ending": "defeat"
+    },
+    "wrong": {
+      "title": "O nome errado",
+      "text": "Mara ri uma vez, sem nenhum prazer, e leva você até a porta pessoalmente. Atrás de você, quarenta relógios batem a hora.",
+      "ending": "defeat"
+    }
+  }
+}

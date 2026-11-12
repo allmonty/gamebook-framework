@@ -8,6 +8,7 @@ Complete game folders to copy and make your own, each in English and Portuguese.
 | [fighting-fantasy/](fighting-fantasy/) | *The Salt Mine*: the classic shape. A fight, a Luck test, Provisions you eat from your pack (a counted item), a door that needs a key, and all three endings: victory, death and defeat. |
 | [custom-rules/](custom-rules/) | *The Archive at Night*: **no preset**. The story defines its own stats (Nerve and Wits), which one is health, and how fights work, then uses them in a check and a fight. Rules are data. |
 | [results-table/](results-table/) | *The Ash Road*: fights read off a **results table** (`"mode": "table"`) instead of dice against dice. The hero picks two arts at the start, carries a pack of eight with a satchel that adds room, eats counted meals, heals on every page without a fight, fights worse unarmed, and can flee at the cost of a round. |
+| [percentile-mystery/](percentile-mystery/) | *The Clockmaker's Will*: **no combat at all**. Skills are rolled from 30 to 75 and tested with `1d100`, your skill or less. Clues go into the **journal**, flags open what people will say, text changes with what you know, and the story ends in one victory or two defeats, never a death. |
 
 Copy a folder, rename it (for example `games/my-story/`), change the `id` in every language to the same new slug, and write.
 
