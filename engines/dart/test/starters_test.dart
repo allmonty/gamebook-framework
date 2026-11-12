@@ -20,11 +20,12 @@ void main() {
       if (d is Directory) d.path,
   ]..sort();
 
-  test('the three starters are there', () {
+  test('the starters are there', () {
     expect(folders.map((f) => f.split('/').last), [
       'blank',
       'custom-rules',
       'fighting-fantasy',
+      'results-table',
     ]);
   });
 

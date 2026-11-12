@@ -1,0 +1,519 @@
+{
+  "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
+  "schema": 1,
+  "id": "ash-road",
+  "lang": "pt",
+  "title": "A Estrada das Cinzas",
+  "author": "Você",
+  "description": "Uma aventura com tabela de resultados: artes escolhidas no começo, mochila de oito espaços, refeições e lutas lidas numa tabela.",
+  "rules": {
+    "health": "endurance",
+    "rerolls": 1,
+    "stats": {
+      "prowess": {
+        "label": "Destreza",
+        "roll": "1d10+9"
+      },
+      "endurance": {
+        "label": "Resistência",
+        "roll": "1d10+19",
+        "max": true
+      },
+      "gold": {
+        "label": "Ouro",
+        "roll": "1d10",
+        "limit": 50
+      }
+    },
+    "combat": {
+      "mode": "table",
+      "attackStat": "prowess",
+      "roll": "1d10-1",
+      "table": [
+        {
+          "upTo": -3,
+          "results": [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ]
+        },
+        {
+          "upTo": 3,
+          "results": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ]
+        },
+        {
+          "results": [
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              9,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              99,
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    "inventory": {
+      "capacity": 8
+    },
+    "creation": {
+      "picks": [
+        {
+          "id": "arts",
+          "title": "Escolha duas artes",
+          "count": 2,
+          "options": [
+            {
+              "id": "healing",
+              "label": "Cura",
+              "description": "+1 de Resistência em toda página sem luta.",
+              "effects": [
+                {
+                  "set": "art-mending"
+                }
+              ]
+            },
+            {
+              "id": "tracking",
+              "label": "Rastreio",
+              "description": "Você lê rastros que os outros nem veem.",
+              "effects": [
+                {
+                  "set": "art-tracking"
+                }
+              ]
+            },
+            {
+              "id": "bladework",
+              "label": "Esgrima",
+              "description": "+2 de Destreza enquanto carregar a espada.",
+              "effects": [
+                {
+                  "set": "art-blade"
+                }
+              ]
+            },
+            {
+              "id": "foraging",
+              "label": "Coleta",
+              "description": "Você nunca precisa de uma refeição.",
+              "effects": [
+                {
+                  "set": "art-forage"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "bonuses": [
+      {
+        "if": {
+          "not": {
+            "any": [
+              {
+                "has": "sword"
+              },
+              {
+                "has": "staff"
+              }
+            ]
+          }
+        },
+        "bonus": {
+          "prowess": -4
+        }
+      },
+      {
+        "if": {
+          "all": [
+            {
+              "flag": "art-blade"
+            },
+            {
+              "has": "sword"
+            }
+          ]
+        },
+        "bonus": {
+          "prowess": 2
+        }
+      }
+    ],
+    "everyPage": [
+      {
+        "calm": true,
+        "if": {
+          "flag": "art-mending"
+        },
+        "effects": [
+          {
+            "stat": "endurance",
+            "add": 1
+          }
+        ]
+      }
+    ]
+  },
+  "items": {
+    "sword": {
+      "name": "Espada de viagem",
+      "description": "Simples, afiada, sua."
+    },
+    "staff": {
+      "name": "Cajado de freixo",
+      "description": "Tirado de uma árvore morta. Melhor que mãos vazias."
+    },
+    "meal": {
+      "name": "Refeição",
+      "description": "Pão duro e peixe defumado.",
+      "stack": 2,
+      "max": 4
+    },
+    "satchel": {
+      "name": "Bolsa do mensageiro",
+      "description": "Cabem mais duas coisas.",
+      "capacity": 2
+    }
+  },
+  "start": "camp",
+  "nodes": {
+    "camp": {
+      "title": "O último acampamento",
+      "text": "Flocos cinzentos caem sobre a fogueira fria. A torre de sinal no fim da Estrada das Cinzas está apagada há nove noites, e mandaram você acendê-la.\n\nVocê tem sua espada, {meal.count} refeições e {gold} de ouro. Destreza {prowess}, Resistência {endurance}.",
+      "effects": [
+        {
+          "give": "sword"
+        },
+        {
+          "give": "meal",
+          "count": 2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Pegar a trilha da serra",
+          "to": "ridge"
+        },
+        {
+          "text": "Seguir o rio",
+          "to": "river"
+        },
+        {
+          "text": "Ler o rastro do mensageiro (Rastreio)",
+          "to": "trail",
+          "if": {
+            "flag": "art-tracking"
+          },
+          "hideIfLocked": true
+        }
+      ]
+    },
+    "trail": {
+      "title": "O rastro do mensageiro",
+      "text": "Pegadas de botas, de uma semana atrás, saem da estrada e param numa árvore oca. Lá dentro há uma bolsa pendurada, e nela seis moedas de ouro que ninguém vai voltar para buscar.",
+      "once": true,
+      "effects": [
+        {
+          "give": "satchel"
+        },
+        {
+          "stat": "gold",
+          "add": 6
+        }
+      ],
+      "choices": [
+        {
+          "text": "Descer até o rio",
+          "to": "river"
+        }
+      ]
+    },
+    "ridge": {
+      "title": "A serra",
+      "text": "A trilha se estreita numa beirada de pedras soltas acima do vale.",
+      "choices": [
+        {
+          "text": "Atravessar as pedras soltas (role 1d6)",
+          "table": {
+            "roll": "1d6",
+            "outcomes": [
+              {
+                "upTo": 2,
+                "to": "fall"
+              },
+              {
+                "upTo": 6,
+                "to": "dusk"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "fall": {
+      "title": "A queda",
+      "text": "A beirada some debaixo dos seus pés. Você para contra um freixo morto, machucado (-3 de Resistência), e quebra um galho para se apoiar: um cajado, mais ou menos.",
+      "once": true,
+      "effects": [
+        {
+          "stat": "endurance",
+          "add": -3
+        },
+        {
+          "give": "staff"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir mancando",
+          "to": "dusk"
+        }
+      ]
+    },
+    "river": {
+      "title": "O vau",
+      "text": "O rio corre preto de cinza. Um barqueiro observa de uma balsa e mostra três dedos. Você tem {gold} de ouro.",
+      "choices": [
+        {
+          "text": "Pagar 3 de ouro",
+          "to": "dusk",
+          "if": {
+            "stat": "gold",
+            "gte": 3
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -3
+            }
+          ],
+          "lockedText": "Você não tem como pagar."
+        },
+        {
+          "text": "Atravessar a pé",
+          "to": "wade"
+        }
+      ]
+    },
+    "wade": {
+      "title": "A correnteza",
+      "text": "No meio da travessia a correnteza leva suas pernas e depois sua espada. Você rasteja para a outra margem de mãos vazias. (Desarmado, você luta com -4 de Destreza.)",
+      "effects": [
+        {
+          "take": "sword"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir andando",
+          "to": "dusk"
+        }
+      ]
+    },
+    "dusk": {
+      "title": "Anoitecer",
+      "text": [
+        "A noite chega cedo debaixo da nuvem de cinza, e você andou o dia todo. É preciso comer.",
+        {
+          "if": {
+            "flag": "art-forage"
+          },
+          "text": "Por outro lado, as valas daqui estão cheias de raízes que você conhece."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Comer uma refeição",
+          "to": "gate",
+          "if": {
+            "has": "meal"
+          },
+          "effects": [
+            {
+              "take": "meal"
+            }
+          ]
+        },
+        {
+          "text": "Cavar raízes (Coleta)",
+          "to": "gate",
+          "if": {
+            "flag": "art-forage"
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Ficar com fome (-3 de Resistência)",
+          "to": "gate",
+          "effects": [
+            {
+              "stat": "endurance",
+              "add": -3
+            }
+          ]
+        }
+      ]
+    },
+    "gate": {
+      "title": "O portão da torre",
+      "text": "A torre se ergue negra contra o céu. Algo grande e cinzento está deitado diante do portão, respirando.",
+      "choices": [
+        {
+          "text": "Enfrentar o lobo das cinzas",
+          "to": "wolf"
+        },
+        {
+          "text": "Passar escondido no escuro (1d10, 7 ou mais)",
+          "check": {
+            "roll": "1d10",
+            "op": "gte",
+            "vs": 7,
+            "pass": "tower",
+            "fail": "wolf"
+          }
+        }
+      ]
+    },
+    "wolf": {
+      "title": "O lobo das cinzas",
+      "text": "Ele se levanta, sacudindo brasas do pelo.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Lobo das cinzas",
+            "attack": 15,
+            "health": 16
+          }
+        ],
+        "win": "tower",
+        "flee": "fled",
+        "fleeCost": "round"
+      }
+    },
+    "fled": {
+      "title": "O caminho de volta",
+      "text": "Você corre até a torre virar um risco no horizonte. Ela continua apagada. Outra pessoa vai ter que tentar.",
+      "ending": "defeat"
+    },
+    "tower": {
+      "title": "A torre de sinal",
+      "text": "Você sobe o último degrau e leva uma chama à grande lâmpada. Lá longe no vale, uma a uma, as outras torres respondem.",
+      "ending": "victory"
+    }
+  }
+}
