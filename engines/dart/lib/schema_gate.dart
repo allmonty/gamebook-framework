@@ -118,15 +118,41 @@ String? _schema8(Story story) {
   if (story.coverAlt != null) return 'coverAlt';
   for (final MapEntry(:key, :value) in story.items.entries) {
     if (value.imageAlt != null) return 'items.$key.imageAlt';
+    if (value.stack != null) return 'items.$key.stack';
   }
   for (final MapEntry(:key, :value) in story.nodes.entries) {
     if (value.imageAlt != null) return 'nodes.$key.imageAlt';
     if (value.ending == Ending.defeat) return 'nodes.$key.ending';
     if (value.combat?.wounded != null) return 'nodes.$key.combat.wounded';
     if (value.combat?.rounds != null) return 'nodes.$key.combat.rounds';
+    for (var i = 0; i < value.parts.length; i++) {
+      if (_countsItems(value.parts[i].condition)) {
+        return value.textIsList
+            ? 'nodes.$key.text[$i].if'
+            : 'nodes.$key.text.if';
+      }
+    }
+    for (var i = 0; i < value.choices.length; i++) {
+      if (_countsItems(value.choices[i].condition)) {
+        return 'nodes.$key.choices[$i].if';
+      }
+    }
   }
-  return null;
+  return _firstEffect(
+    story,
+    (e) => e is GiveItem && e.count != null || e is TakeItem && e.count != null,
+  );
 }
+
+/// Whether [condition] asks for a number of an item (schema 8).
+bool _countsItems(Condition? condition) => switch (condition) {
+  null => false,
+  HasItem(:final count) => count != null,
+  All(:final conditions) ||
+  Any(:final conditions) => conditions.any(_countsItems),
+  Not(:final condition) => _countsItems(condition),
+  _ => false,
+};
 
 /// The path of the first effect anywhere in the story that passes [test].
 String? _firstEffect(Story story, bool Function(Effect) test) {

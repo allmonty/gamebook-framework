@@ -56,7 +56,8 @@ class StoryEdge {
 
 /// One-line summary of a condition, for edge labels.
 String describeCondition(Condition condition) => switch (condition) {
-  HasItem(:final item) => 'has $item',
+  HasItem(:final item, :final count) =>
+    count == null ? 'has $item' : 'has $count $item',
   FlagSet(:final flag) => 'flag $flag',
   Visited(:final node) => 'visited $node',
   VisitCount(:final node, :final op, :final value) =>

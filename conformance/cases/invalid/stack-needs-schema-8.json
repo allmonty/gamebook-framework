@@ -1,0 +1,62 @@
+{
+  "description": "A countable item needs schema 8.",
+  "spec": [
+    "B2",
+    "B5"
+  ],
+  "story": {
+    "schema": 7,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "once": true,
+        "effects": [],
+        "choices": [
+          {
+            "text": "Then",
+            "to": "a",
+            "effects": []
+          }
+        ]
+      }
+    },
+    "items": {
+      "meal": {
+        "name": "Meal",
+        "stack": 5,
+        "use": {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 4
+            }
+          ],
+          "when": [
+            "story"
+          ]
+        }
+      },
+      "arrow": {
+        "name": "Arrow",
+        "stack": 1
+      },
+      "sword": {
+        "name": "Sword"
+      },
+      "bag": {
+        "name": "Bag",
+        "capacity": 1
+      }
+    }
+  },
+  "error": {
+    "path": "items.meal.stack"
+  }
+}

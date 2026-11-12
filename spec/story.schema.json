@@ -430,6 +430,11 @@
           "type": "integer",
           "minimum": 1
         },
+        "stack": {
+          "description": "Schema 8. How many fit in one pack slot; makes the item countable",
+          "type": "integer",
+          "minimum": 1
+        },
         "bonus": {
           "description": "Schema 5. Added to these stats while the item is carried",
           "type": "object",
@@ -445,6 +450,13 @@
         "imageAlt": [
           "image"
         ]
+      },
+      "not": {
+        "description": "A container cannot be counted",
+        "required": [
+          "capacity",
+          "stack"
+        ]
       }
     },
     "condition": {
@@ -459,6 +471,11 @@
           "properties": {
             "has": {
               "$ref": "#/$defs/id"
+            },
+            "count": {
+              "description": "Schema 8. How many of a countable item (one with a stack)",
+              "type": "integer",
+              "minimum": 1
             }
           }
         },
@@ -618,6 +635,11 @@
           "properties": {
             "give": {
               "$ref": "#/$defs/id"
+            },
+            "count": {
+              "description": "Schema 8. How many of a countable item (one with a stack)",
+              "type": "integer",
+              "minimum": 1
             }
           }
         },
@@ -630,6 +652,11 @@
           "properties": {
             "take": {
               "$ref": "#/$defs/id"
+            },
+            "count": {
+              "description": "Schema 8. How many of a countable item (one with a stack)",
+              "type": "integer",
+              "minimum": 1
             }
           }
         },

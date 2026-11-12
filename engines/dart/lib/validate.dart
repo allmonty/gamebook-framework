@@ -354,10 +354,19 @@ class _Validator {
     }
   }
 
+  /// More than one of an item needs the item to be countable (schema 8).
+  void _count(String at, String item, int amount) {
+    final known = story.items[item];
+    if (amount > 1 && known != null && known.stack == null) {
+      error(at, 'only an item with "stack" can be counted; "$item" has none');
+    }
+  }
+
   void _condition(String at, Condition condition) {
     switch (condition) {
-      case HasItem(:final item):
+      case HasItem(:final item, :final amount):
         _item(at, item);
+        _count(at, item, amount);
         itemsRequired.putIfAbsent(item, () => at);
       case FlagSet(:final flag):
         flagsRead.putIfAbsent(flag, () => at);
@@ -379,11 +388,13 @@ class _Validator {
     for (var i = 0; i < effects.length; i++) {
       final here = '$at[$i]';
       switch (effects[i]) {
-        case GiveItem(:final item):
+        case GiveItem(:final item, :final amount):
           _item(here, item);
+          _count('$here.count', item, amount);
           itemsGiven.add(item);
-        case TakeItem(:final item):
+        case TakeItem(:final item, :final amount):
           _item(here, item);
+          _count('$here.count', item, amount);
           itemsTaken.putIfAbsent(item, () => here);
         case StatChange(:final stat, :final amount):
           _stat(here, stat);

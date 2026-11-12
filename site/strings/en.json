@@ -43,6 +43,7 @@
   "player.log.gained": "+ {item}",
   "player.log.lost": "− {item}",
   "player.log.refused": "No room for {item}",
+  "player.log.count": "{item}: {from} → {to}",
   "player.log.used": "Used {item}",
   "player.log.stat": "{stat} {delta} ({from} → {to})",
   "player.log.journal": "Journal: {title}",

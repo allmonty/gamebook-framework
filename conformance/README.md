@@ -48,6 +48,7 @@ An action may also have `"rejected": true`: the engine must refuse it (it is not
 | `ending` | `"victory"`, `"defeat"`, `"death"` or `null` (still playing) |
 | `stats` | for each stat listed, its current value **with item bonuses** (B5) |
 | `inventory` | the items carried, sorted by id |
+| `counts` | for each item listed, how many are held (0 if none; 1 for a unique item held) (schema 8) |
 | `flags` | the flags set, sorted |
 | `visits` | for each node listed, how many times it was entered (0 if never) |
 | `journal` | unlocked entry ids, in unlock order |
@@ -79,7 +80,7 @@ Play cases cover every rule of Part B:
 - **Pages and choices:** locks, hidden and once-only choices, once nodes, visits, checks and their effects, random tables, conditional text and placeholders, the hero's name, death at 0 health (and that it is final), the defeat ending, undo (after death too), a page with no open choice, draft pages, titles.
 - **Conditions:** `has`, `flag`, `visited`, `visits`, stat comparisons (`gte`, `lte`, `eq`, quantities), `all`, `any` and `not`, empty ones included.
 - **Stats and creation:** the rolls of both presets in B8 order, rerolls, ceilings and limits, quantities in effects, creation picks.
-- **Items:** usable items, bonuses, pack capacity with `auto` and `choose`, offers (in order, left, ignored, swapped, discarded at the end), containers (room, and what is lost when one goes), `takeAll`.
+- **Items:** usable items, bonuses, pack capacity with `auto` and `choose`, offers (in order, left, ignored, swapped, discarded at the end), containers (room, and what is lost when one goes), `takeAll`; counted items (slots per stack, give, take and `has` with a count, use, `auto` and `choose` pickup with what fits, lost room, `takeAll`).
 - **Combat:** `opposed`, `vs-defense` and `table` rounds, duels, fights against several at once, armor, luck in fights (lucky, unlucky, when it is not offered, kills, the group total, after armor), fleeing, items in a fight, the wounded and round-limit exits and their order.
 - **The rest:** the journal, page audio, achievements.
 

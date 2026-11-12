@@ -1,0 +1,106 @@
+{
+  "description": "Taking an offer adds as many units as fit and leaves the rest; with a full pack the player may first leave a carried item behind.",
+  "spec": [
+    "B4",
+    "B5"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "inventory": {
+        "capacity": 1,
+        "pickup": "choose"
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "once": true,
+        "effects": [
+          {
+            "give": "sword"
+          }
+        ],
+        "choices": [
+          {
+            "text": "Then",
+            "to": "a",
+            "effects": [
+              {
+                "give": "meal",
+                "count": 7
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "items": {
+      "meal": {
+        "name": "Meal",
+        "stack": 5,
+        "use": {
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": 4
+            }
+          ],
+          "when": [
+            "story"
+          ]
+        }
+      },
+      "arrow": {
+        "name": "Arrow",
+        "stack": 1
+      },
+      "sword": {
+        "name": "Sword"
+      },
+      "bag": {
+        "name": "Bag",
+        "capacity": 1
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": {
+      "value": 6,
+      "max": 24
+    },
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "offer": {
+        "take": true
+      }
+    },
+    {
+      "choose": 0
+    },
+    {
+      "offer": {
+        "take": true,
+        "replacing": "sword"
+      }
+    }
+  ],
+  "expect": {
+    "offers": [],
+    "inventory": [
+      "meal"
+    ],
+    "counts": {
+      "meal": 5
+    }
+  }
+}

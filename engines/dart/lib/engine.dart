@@ -85,22 +85,36 @@ class OfferDeclined extends GameEvent {
   final String item;
 }
 
-/// An item could not be picked up because the pack is full
-/// (`pickup: "auto"` with a capacity).
+/// [count] of an item could not be picked up because the pack is full
+/// (`pickup: "auto"` with a capacity, or what did not fit of an offer).
 class ItemRefused extends GameEvent {
-  const ItemRefused(this.item);
+  const ItemRefused(this.item, [this.count = 1]);
   final String item;
+  final int count;
 }
 
-/// An item was lost because the pack shrank (a container was taken away).
+/// [count] of an item were lost because the pack shrank (a container was
+/// taken away).
 class ItemOverflow extends GameEvent {
-  const ItemOverflow(this.item);
+  const ItemOverflow(this.item, [this.count = 1]);
   final String item;
+  final int count;
 }
 
+/// The pack has an item it did not have: [count] of it.
 class ItemGained extends GameEvent {
-  const ItemGained(this.item);
+  const ItemGained(this.item, [this.count = 1]);
   final String item;
+  final int count;
+}
+
+/// How many of a countable item the pack holds changed, and some are left
+/// (schema 8).
+class ItemCountChanged extends GameEvent {
+  const ItemCountChanged(this.item, this.from, this.to);
+  final String item;
+  final int from;
+  final int to;
 }
 
 class ItemLost extends GameEvent {
@@ -191,7 +205,13 @@ class GameEngine {
       if (_dead) break;
       if (effect is Achieve) events.add(AchievementEarned(effect.achievement));
       _state = effect is GiveItem
-          ? _state.copyWith(inventory: {..._state.inventory, effect.item})
+          ? withCount(
+              _state,
+              effect.item,
+              _stack(effect.item) == null
+                  ? 1
+                  : _state.count(effect.item) + effect.amount,
+            )
           : applyEffect(effect, _state);
     }
     _enforceCapacity(events);
@@ -307,16 +327,49 @@ class GameEngine {
     );
   }
 
-  /// Slots in use: every carried item except containers.
-  int get slotsUsed => _state.inventory.where((i) => !isContainer(i)).length;
+  /// Slots in use: one per carried item, and for a countable item one per
+  /// `stack` (schema 8); containers use none.
+  int get slotsUsed => _state.inventory.fold(
+    0,
+    (sum, item) => sum + _slots(item, _state.count(item)),
+  );
 
-  /// Whether [item] can be added to the pack right now (a container always
-  /// can: it uses no slot).
-  bool canHold(String item) =>
-      isContainer(item) || capacity == null || slotsUsed < capacity!;
+  int? _stack(String item) => story.items[item]?.stack;
+
+  /// The slots [count] of [item] fill.
+  int _slots(String item, int count) {
+    if (isContainer(item)) return 0;
+    final stack = _stack(item);
+    return stack == null ? 1 : (count + stack - 1) ~/ stack;
+  }
+
+  /// Room left in the part-filled slot of a countable [item] (0 if none).
+  int _slotRoom(String item) {
+    final stack = _stack(item);
+    final rest = stack == null ? 0 : _state.count(item) % stack;
+    return rest == 0 ? 0 : stack! - rest;
+  }
+
+  /// How many more of [item] fit in the pack now: the room left in its
+  /// part-filled slot, then the free slots.
+  int _room(String item) {
+    if (isContainer(item) || capacity == null) return _unlimited;
+    final free = max(0, capacity! - slotsUsed);
+    final stack = _stack(item);
+    return stack == null ? min(free, 1) : _slotRoom(item) + free * stack;
+  }
+
+  static const _unlimited = 1 << 30;
+
+  /// Whether one more of [item] can be added to the pack right now (a
+  /// container always can: it uses no slot).
+  bool canHold(String item) => _room(item) > 0;
 
   /// The item the player is deciding about, if any (`pickup: "choose"`).
   String? get offer => _state.offers.firstOrNull;
+
+  /// How many of [offer] are offered at once (schema 8: a countable item).
+  int get offerCount => offer == null ? 0 : _state.offered(offer!);
 
   /// More items waiting behind [offer].
   int get moreOffers => offer == null ? 0 : _state.offers.length - 1;
@@ -486,7 +539,8 @@ class GameEngine {
     final fightNode = combat;
     final events = _run((events) {
       events.add(ItemUsed(item));
-      _state = _state.copyWith(inventory: {..._state.inventory}..remove(item));
+      // A countable item spends one; the last one leaves the pack.
+      _state = withCount(_state, item, _state.count(item) - 1);
       _applyEffects(use.effects, events);
       if (fightNode != null &&
           use.combatCost == CombatCost.round &&
@@ -549,14 +603,18 @@ class GameEngine {
       throw StateError('the pack is full: choose a carried item to leave');
     }
     return _run((events) {
-      var inventory = _state.inventory;
-      if (swap) inventory = {...inventory}..remove(replacing);
-      if (take) inventory = {...inventory, item};
+      final count = _state.offered(item);
       _state = _state.copyWith(
-        inventory: inventory,
         offers: _state.offers.skip(1).toList(),
+        offerCounts: {..._state.offerCounts}..remove(item),
       );
-      if (!take) events.add(OfferDeclined(item));
+      // Leaving a carried item behind leaves all of it.
+      if (swap) _state = withCount(_state, replacing!, 0);
+      if (take) {
+        _add(item, count, events);
+      } else {
+        events.add(OfferDeclined(item));
+      }
       _enforceCapacity(events);
     });
   }
@@ -567,7 +625,7 @@ class GameEngine {
     for (final effect in effects) {
       if (_dead) break;
       if (effect is GiveItem) {
-        _give(effect.item, events);
+        _give(effect.item, effect.amount, events);
       } else if (effect is Achieve) {
         events.add(AchievementEarned(effect.achievement));
       } else {
@@ -577,24 +635,64 @@ class GameEngine {
     }
   }
 
-  void _give(String item, List<GameEvent> events) {
-    if (_state.inventory.contains(item) || _state.offers.contains(item)) return;
-    if (rules.inventory.pickup == PickupMode.choose) {
-      _state = _state.copyWith(offers: [..._state.offers, item]);
-    } else if (canHold(item)) {
-      _state = _state.copyWith(inventory: {..._state.inventory, item});
-    } else {
-      events.add(ItemRefused(item));
+  /// Gives [count] of [item] by the story's pickup rule (B4).
+  void _give(String item, int count, List<GameEvent> events) {
+    final countable = _stack(item) != null;
+    if (_state.offers.contains(item)) {
+      // A further give while it is on offer adds to the offer.
+      if (countable) _offer(item, _state.offered(item) + count);
+      return;
     }
+    if (!countable && _state.inventory.contains(item)) return;
+    if (rules.inventory.pickup == PickupMode.choose) {
+      // What fits without a new slot is added; anything else is offered.
+      if (countable && count <= _slotRoom(item)) {
+        _state = withCount(_state, item, _state.count(item) + count);
+      } else {
+        _offer(item, countable ? count : 1);
+      }
+      return;
+    }
+    _add(item, countable ? count : 1, events);
+  }
+
+  /// Adds as many of [count] as fit; the player is told how many were left.
+  void _add(String item, int count, List<GameEvent> events) {
+    final added = min(count, _room(item));
+    if (added > 0) {
+      _state = withCount(
+        _state,
+        item,
+        _stack(item) == null ? 1 : _state.count(item) + added,
+      );
+    }
+    if (count > added) events.add(ItemRefused(item, count - added));
+  }
+
+  void _offer(String item, int count) {
+    final counts = {..._state.offerCounts}..remove(item);
+    if (count != 1) counts[item] = count;
+    _state = _state.copyWith(
+      offers: _state.offers.contains(item)
+          ? _state.offers
+          : [..._state.offers, item],
+      offerCounts: counts,
+    );
   }
 
   /// After a container left the pack, drops the most recently picked up items
-  /// that no longer fit.
+  /// that no longer fit; of a countable item, only the units that do not fit.
   void _enforceCapacity(List<GameEvent> events) {
     while (capacity != null && slotsUsed > capacity!) {
       final lost = _state.inventory.lastWhere((i) => !isContainer(i));
-      _state = _state.copyWith(inventory: {..._state.inventory}..remove(lost));
-      events.add(ItemOverflow(lost));
+      final had = _state.count(lost);
+      final others = slotsUsed - _slots(lost, had);
+      final stack = _stack(lost);
+      final kept = stack == null
+          ? 0
+          : min(had, max(0, capacity! - others) * stack);
+      _state = withCount(_state, lost, kept);
+      events.add(ItemOverflow(lost, had - kept));
     }
   }
 
@@ -605,7 +703,7 @@ class GameEngine {
     action(events);
     // Offers do not outlive the game (B4).
     if (ending != null && _state.offers.isNotEmpty) {
-      _state = _state.copyWith(offers: const []);
+      _state = _state.copyWith(offers: const [], offerCounts: const {});
     }
     final overflowed = {
       for (final e in events)
@@ -614,7 +712,11 @@ class GameEngine {
     events.addAll(
       _changes(before, _state).where(
         // Overflow already says why the item went.
-        (e) => !(e is ItemLost && overflowed.contains(e.item)),
+        (e) => switch (e) {
+          ItemLost(:final item) ||
+          ItemCountChanged(:final item) => !overflowed.contains(item),
+          _ => true,
+        },
       ),
     );
     if (ending case final ending?) events.add(Ended(ending));
@@ -646,9 +748,12 @@ class GameEngine {
 
   static List<GameEvent> _changes(GameState before, GameState after) => [
     for (final item in after.inventory.difference(before.inventory))
-      ItemGained(item),
+      ItemGained(item, after.count(item)),
     for (final item in before.inventory.difference(after.inventory))
       ItemLost(item),
+    for (final item in after.inventory.intersection(before.inventory))
+      if (before.count(item) != after.count(item))
+        ItemCountChanged(item, before.count(item), after.count(item)),
     for (final MapEntry(:key, :value) in after.stats.entries)
       if (before.stats[key]?.value != value.value)
         StatChanged(key, before.stats[key]?.value ?? 0, value.value),
@@ -678,6 +783,31 @@ bool stateFits(GameState state, Story story, Rules rules) {
     return false;
   }
   if (!state.inventory.every(item) || !state.offers.every(item)) return false;
+  // Counts only for countable items held or offered, and at least 1 each.
+  bool counted(Map<String, int> counts, Iterable<String> where) =>
+      counts.entries.every(
+        (e) =>
+            e.value >= 1 &&
+            where.contains(e.key) &&
+            story.items[e.key]?.stack != null,
+      );
+  if (!counted(state.counts, state.inventory) ||
+      !counted(state.offerCounts, state.offers)) {
+    return false;
+  }
+  if (rules.inventory.capacity case final base?) {
+    var room = base;
+    var used = 0;
+    for (final id in state.inventory) {
+      final it = story.items[id]!;
+      room += it.capacity ?? 0;
+      final stack = it.stack;
+      if (it.capacity == null) {
+        used += stack == null ? 1 : (state.count(id) + stack - 1) ~/ stack;
+      }
+    }
+    if (used > room) return false;
+  }
   if (!state.visited.every(node) ||
       !state.visits.keys.every(node) ||
       !state.visits.values.every((n) => n >= 1)) {

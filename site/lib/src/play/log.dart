@@ -82,6 +82,13 @@ List<LogLine>? _line(
     ItemRefused(item: final id) => [
       LogLine('refused', {'item': item(id)}, Tone.bad),
     ],
+    ItemCountChanged(item: final id, :final from, :final to) => [
+      LogLine('count', {
+        'item': item(id),
+        'from': from,
+        'to': to,
+      }, to > from ? Tone.good : Tone.bad),
+    ],
     ItemUsed(item: final id) => [
       LogLine('used', {'item': item(id)}),
     ],

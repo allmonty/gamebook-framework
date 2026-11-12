@@ -18,6 +18,12 @@ void main() {
     expect(session.view.pack.items, isEmpty);
   });
 
+  test('using one of several logs the count going down', () {
+    final session = _start('stack-use-spends-one')..useItem('meal');
+    final line = session.view.log.singleWhere((l) => l.key == 'count');
+    expect(line.args, {'item': 'Meal', 'from': 2, 'to': 1});
+  });
+
   test('an offer hides the choices until it is settled', () {
     final session = _start('offer-swap');
     final offer = session.view.offer!;

@@ -112,6 +112,8 @@ class GameState {
     this.visited = const {},
     this.combat,
     this.offers = const [],
+    this.counts = const {},
+    this.offerCounts = const {},
     this.taken = const {},
     this.visits = const {},
     this.statBonus = const {},
@@ -145,6 +147,9 @@ class GameState {
       offers: json['offers'] == null
           ? const []
           : _strings(json['offers']).toList(),
+      // Saves from before counted items (schema 8) hold one of each.
+      counts: _ints(json['counts']),
+      offerCounts: _ints(json['offerCounts']),
       taken: json['taken'] == null ? const {} : _strings(json['taken']),
       visits: _visits(json['visits'], _strings(json['visited'])),
       name: json['name'] is String ? json['name']! as String : null,
@@ -163,6 +168,14 @@ class GameState {
       return json.cast<String, int>();
     }
     throw const FormatException('state: bad visits');
+  }
+
+  static Map<String, int> _ints(Object? json) {
+    if (json == null) return const {};
+    if (json is Map<String, Object?> && json.values.every((v) => v is int)) {
+      return json.cast<String, int>();
+    }
+    throw const FormatException('state: expected a map of counts');
   }
 
   static Set<String> _strings(Object? json) {
@@ -184,6 +197,20 @@ class GameState {
   /// Items found that the player has not yet taken or left, in the order
   /// they were found (`pickup: "choose"`).
   final List<String> offers;
+
+  /// How many of a countable item (schema 8) are held, for every one held
+  /// more than once; any other item held counts 1. See [count].
+  final Map<String, int> counts;
+
+  /// The same for the offers: how many are offered at once.
+  final Map<String, int> offerCounts;
+
+  /// How many of [item] the pack holds (0 if none).
+  int count(String item) => inventory.contains(item) ? counts[item] ?? 1 : 0;
+
+  /// How many of [item] are on offer (0 if it is not).
+  int offered(String item) =>
+      offers.contains(item) ? offerCounts[item] ?? 1 : 0;
 
   /// `<node>#<index>` of every once-only choice already taken.
   final Set<String> taken;
@@ -221,6 +248,8 @@ class GameState {
     Set<String>? flags,
     Set<String>? visited,
     List<String>? offers,
+    Map<String, int>? counts,
+    Map<String, int>? offerCounts,
     Set<String>? taken,
     Map<String, int>? visits,
     Map<String, int>? statBonus,
@@ -238,6 +267,8 @@ class GameState {
     visited: visited ?? this.visited,
     combat: endCombat ? null : combat ?? this.combat,
     offers: offers ?? this.offers,
+    counts: counts ?? this.counts,
+    offerCounts: offerCounts ?? this.offerCounts,
     taken: taken ?? this.taken,
     visits: visits ?? this.visits,
     statBonus: statBonus ?? this.statBonus,
@@ -262,6 +293,8 @@ class GameState {
     'visited': visited.toList(),
     'combat': combat?.toJson(),
     'offers': offers,
+    'counts': counts,
+    'offerCounts': offerCounts,
     'taken': taken.toList(),
     'visits': visits,
     'name': name,

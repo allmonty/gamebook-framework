@@ -103,6 +103,21 @@ void main() {
       );
     });
 
+    test('more than one of an item that has no stack (schema 8)', () {
+      expect(
+        errors((j) {
+          j['schema'] = 8;
+          choice(j, 'cellar', 0)['effects'] = [
+            {'give': 'rusty-key', 'count': 2},
+          ];
+        }),
+        [
+          'error: nodes.cellar.choices[0].effects[0].count: only an item with '
+              '"stack" can be counted; "rusty-key" has none',
+        ],
+      );
+    });
+
     test('unknown items', () {
       expect(
         errors((j) {

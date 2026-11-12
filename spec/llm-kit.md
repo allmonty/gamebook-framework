@@ -29,7 +29,7 @@ You write gamebooks in the **Gamebook Framework** story format, defined in the r
 
 ## Part B. Technical reference
 
-Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6) a neutral ending (`"ending": "defeat"`, B6) and fight events (`wounded`, `rounds`, B11). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
+Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6), a neutral ending (`"ending": "defeat"`, B6), fight events (`wounded`, `rounds`, B11) and counted items (item `stack`, and `count` on `give`, `take` and `has`; B4, B5, B7, B9). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
 
 ### B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
@@ -47,7 +47,7 @@ Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Versio
 | Field | Type | Req | Notes |
 |---|---|---|---|
 | `$schema` | string | no | path to `story.schema.json`, an editor hint the engine ignores |
-| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) and the `defeat` ending (B6), and a fight's `wounded` and `rounds` (B11) |
+| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) the `defeat` ending (B6), a fight's `wounded` and `rounds` (B11), and an item's `stack` or a `count` (B5) |
 | `journal` | object | no | map `entryId -> { title, text }` (schema 5, B6) |
 | `achievements` | object | no | map `achievementId -> { title, description, hidden }` (schema 7, B15) |
 | `chapters` | object | no | map `chapterId -> { title }`, in reading order (schema 6, B13) |
@@ -167,7 +167,7 @@ Without an `inventory` block the pack is unlimited and every `give` just adds th
 
 | Field | Notes |
 |---|---|
-| `capacity` | optional integer ≥ 1: how many items can be carried. Absent means unlimited. Items with a `capacity` of their own (containers, B5) do not count. |
+| `capacity` | optional integer ≥ 1: how many **slots** the pack has. A unique item fills one slot; a countable item (schema 8, B5) fills one slot per `stack` units. Absent means unlimited. Items with a `capacity` of their own (containers, B5) do not count. |
 | `pickup` | `"auto"` (default) or `"choose"`; see below. |
 
 `pickup` decides what a `give` effect (on a node, a choice, a check or an item's `use`) does:
@@ -176,13 +176,32 @@ Without an `inventory` block the pack is unlimited and every `give` just adds th
   - **take it**: if there is room, it is added. If the pack is full, the player must also pick one carried item (not a container) to **leave behind**: a swap.
   - **leave it**: nothing changes and the story goes on.
 
-  An offer for an item that is already carried or already offered is ignored. A container never needs room. Offers still pending when the game ends are discarded. Because the player may decline, a story should never make an offered item the only way to win; give a worse alternative route.
+  An offer for an item that is already carried or already offered is ignored (for a countable item, see below). A container never needs room. Offers still pending when the game ends are discarded. Because the player may decline, a story should never make an offered item the only way to win; give a worse alternative route.
+
+**Countable items (schema 8).** A `give` of a countable item (B5) adds `count` units:
+- **`auto`**: as many units as fit are added, first into the room left in its part-filled slot, then into free slots; the rest are refused, and the player is told how many were left behind.
+- **`choose`**: if the whole count fits in the room left in its part-filled slot, it is added directly, without an offer. Otherwise the give is **one offer for the whole count**, even if some are already carried; a further give while it is on offer adds to that offer. Taking it adds as many units as fit and leaves the rest (the player is told); with a full pack the player may first leave one carried item behind, all of it, to free room.
+
+A `give` with a count during character creation adds every unit directly; then the usual overflow rule applies.
 
 ### B5. Items
 ```json
 "items": { "rusty-key": { "name": "Rusty key", "description": "Opens something old.", "image": "images/key.webp" } }
 ```
-Items are **unique**: the inventory is a set. Giving an item you hold changes nothing. `name` is required; `description` and `image` optional. `imageAlt` (schema 8) says what the image shows, as for a page (B6).
+`name` is required; `description` and `image` optional.
+
+An item is **unique** unless it has a `stack`: the pack holds it or not, and giving an item you hold changes nothing.
+
+**Countable items (schema 8).** `"stack": 5` (integer ≥ 1) makes the item countable: the player can hold several, any number of them.
+```json
+"meal": { "name": "Meal", "stack": 5,
+  "use": { "effects": [ { "stat": "stamina", "add": 4 } ], "when": ["story"] } }
+```
+- `stack` is how many fit in **one pack slot**, not how many can be held: 5 Meals fill one slot, 6 fill two (a stack of 5 and a single one). With `"stack": 1` every unit fills its own slot. A countable item fills `ceil(count / stack)` slots; without `rules.inventory.capacity` the pack, and so the count, is unlimited (B4).
+- `give`, `take` and `has` take a `count` (B7, B9). A `count` above 1 for an item without `stack` is an error.
+- Using a countable item spends one; it leaves the pack when the last one is spent. Its `bonus` applies once, while at least one is held. `takeAll` removes every unit.
+- A container cannot have a `stack`.
+- `stack` and every `count` are structure, so translations must agree on them (the Dart validator does not compare them yet). `imageAlt` (schema 8) says what the image shows, as for a page (B6).
 
 #### Usable items (schema 2)
 ```json
@@ -197,7 +216,7 @@ Items are **unique**: the inventory is a set. Giving an item you hold changes no
 ```
 | Field | Notes |
 |---|---|
-| `effects` | required list of effects (B9) applied when the item is used. The item is **removed from the inventory** automatically; do not write `take`. |
+| `effects` | required list of effects (B9) applied when the item is used. The item is **removed from the inventory** automatically (one of a countable item); do not write `take`. |
 | `when` | required, non-empty list of `"story"` (on a page with choices) and/or `"combat"` (during a fight). |
 | `combatCost` | `"round"` (default) or `"free"`. Only allowed when `when` includes `"combat"`. |
 
@@ -215,7 +234,7 @@ While the item is in the pack, each stat in `bonus` is higher (or lower, with a 
 ```json
 "backpack": { "name": "Backpack", "capacity": 3 }
 ```
-`capacity` (integer ≥ 1) makes the item a **container**: while carried it adds that many slots to the pack, and it does not use a slot itself. It only matters when the story has `rules.inventory.capacity`. If a container leaves the pack (a `take`, a thief) and the remaining items no longer fit, the items picked up **most recently** that do not fit are lost, and the player is told ("You had no room and lost: Rope").
+`capacity` (integer ≥ 1) makes the item a **container**: while carried it adds that many slots to the pack, and it does not use a slot itself. It only matters when the story has `rules.inventory.capacity`. If a container leaves the pack (a `take`, a thief) and the remaining items no longer fit, the items picked up **most recently** that do not fit are lost, and the player is told ("You had no room and lost: Rope"). Of a countable item, units are lost only until what is left fits.
 
 ### B6. Nodes
 ```json
@@ -261,7 +280,7 @@ In page text and in choice `text`, `{id}` is replaced with the **current value**
 A condition is an object with exactly one kind:
 | Kind | Meaning |
 |---|---|
-| `{ "has": "itemId" }` | the player holds the item |
+| `{ "has": "itemId" }` | the player holds the item. With `"count": 2` (schema 8, a countable item): at least 2 of it |
 | `{ "stat": "skill", "gte": 8 }` | stat compared with a number. One of `gte`, `lte`, `eq`. Uses the **current** value, bonuses included. In schema 5 the right side may be a quantity (B4): `{ "stat": "gold", "gte": { "stat": "price", "times": 2 } }`. |
 | `{ "flag": "name" }` | the flag is set |
 | `{ "visited": "nodeId" }` | the node was entered before |
@@ -292,14 +311,14 @@ Fight events (`wounded`, `rounds`; B11, schema 8) roll nothing: they only decide
 An effect is an object with exactly one kind:
 | Kind | Meaning |
 |---|---|
-| `{ "give": "itemId" }` | add the item to the inventory |
-| `{ "take": "itemId" }` | remove it (no-op if absent; the validator warns if it can never be held) |
+| `{ "give": "itemId" }` | add the item to the inventory. With `"count": 3` (schema 8, a countable item): add 3 (B4 says what happens when they do not all fit) |
+| `{ "take": "itemId" }` | remove it (no-op if absent; the validator warns if it can never be held). With `"count": 2` (schema 8): remove 2 of a countable item, stopping at 0; at 0 it leaves the pack |
 | `{ "stat": "stamina", "add": -2 }` | add (or subtract) an integer; result clamped to `[0, max or limit]` |
 | `{ "stat": "gold", "set": 0 }` | set the stat (schema 5), clamped the same way. `add` and `set` take a quantity (B4): `{ "stat": "gold", "add": { "stat": "price", "times": -1 } }` pays a price held in another stat. Exactly one of `add` or `set`. |
 | `{ "journal": "entryId" }` | unlock a journal entry (schema 5, B6) |
 | `{ "set": "flag" }` | set a flag |
 | `{ "clear": "flag" }` | clear it |
-| `{ "takeAll": true }` | remove every item from the pack (schema 3): a theft or a flood. Pending offers are unaffected. |
+| `{ "takeAll": true }` | remove every item from the pack (schema 3), every unit of a countable one: a theft or a flood. Pending offers are unaffected. |
 | `{ "achieve": "achievementId" }` | the player earns an achievement (schema 7, B15); it changes nothing in the game |
 
 `give` follows the story's inventory rules (B4): added at once, refused when the pack is full (`pickup: "auto"`), or turned into an offer (`pickup: "choose"`).
@@ -470,7 +489,7 @@ A game travels outside the app as one file: a **zip** of the game folder (B1) wi
 - Limits, checked before anything is unpacked: at most 100 MB unpacked, 2,000 files, media files only of the types the app plays (`.webp`, `.png`, `.jpg`, `.jpeg`, `.ogg`, `.mp3`, `.wav`, `.m4a`). Anything else rejects the whole file with a message saying why.
 - A package whose story `id` matches a bundled game is refused (bundled games cannot be replaced); one matching an imported game is an **update** of it.
 
-**Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
+**Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists, the pack still fits (a count is kept only for a countable item, and the slots used fit the capacity), and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
 
 ### B15. Achievements (schema 7)
 ```json
