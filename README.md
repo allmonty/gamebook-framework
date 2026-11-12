@@ -56,6 +56,8 @@ Ink and Twine are great for branching text, but have no stats, inventory or comb
 
 This section is for authors — no technical background needed. It explains everything the framework lets you put in your gamebook.
 
+Some points below say what a full player app does with a story: saving the game, sound settings, importing packages. The spec defines that behaviour, and the app that does all of it is not public yet. The player on the website is for learning: it keeps no saves, it cannot import a `.gamebook`, and achievements last until you reload the page.
+
 ### 📖 Pages and choices
 
 Every gamebook is a **collection of pages** (called *nodes*) connected by **choices**. Each page has text, an optional illustration (with a short description for players who cannot see it), and a list of buttons the player can tap to move forward.
