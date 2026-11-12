@@ -13,4 +13,5 @@ same
 same
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- `content/{en,pt}/cookbook.md` (sorts after the numbered chapters, so it is last in the contents) with five recipes in `examples/cookbook/`: `locked-chest` (key or check, once-only reward), `wandering-merchant` (buy/sell, `{gold}`), `hidden-passage` (`hideIfLocked` with `any` of a stat or visits), `poison-trap` (flag-driven twin choices with `hideIfLocked` for damage over time, an antidote that clears the flag), `boss-fight` (two phases, simultaneous with armor, a mercy choice, flee to death).
+- Each recipe links the chapters that explain its pieces.

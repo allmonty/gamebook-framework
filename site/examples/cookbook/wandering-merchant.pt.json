@@ -1,0 +1,81 @@
+{
+  "schema": 4,
+  "id": "wandering-merchant",
+  "lang": "pt",
+  "title": "O Mercador Errante",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      },
+      "gold": {
+        "label": "Ouro",
+        "roll": "2d6"
+      }
+    }
+  },
+  "items": {
+    "lantern": {
+      "name": "Lanterna"
+    }
+  },
+  "start": "road",
+  "nodes": {
+    "road": {
+      "text": [
+        "A carroça de um mercador range ao passar. \"Lanternas! Cinco de ouro!\"",
+        "Sua bolsa tem {gold} de ouro."
+      ],
+      "choices": [
+        {
+          "text": "Comprar uma lanterna (5 de ouro)",
+          "to": "road",
+          "if": {
+            "stat": "gold",
+            "gte": 5
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -5
+            },
+            {
+              "give": "lantern"
+            }
+          ]
+        },
+        {
+          "text": "Vender a lanterna de volta (3 de ouro)",
+          "to": "road",
+          "if": {
+            "has": "lantern"
+          },
+          "effects": [
+            {
+              "take": "lantern"
+            },
+            {
+              "stat": "gold",
+              "add": 3
+            }
+          ]
+        },
+        {
+          "text": "Dar tchau",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "A carroça some chacoalhando na noite.",
+      "ending": "victory"
+    }
+  }
+}

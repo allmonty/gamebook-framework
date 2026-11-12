@@ -1,0 +1,98 @@
+{
+  "schema": 4,
+  "id": "locked-chest",
+  "lang": "pt",
+  "title": "O Baú Trancado",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      },
+      "gold": {
+        "label": "Ouro",
+        "roll": "0"
+      }
+    }
+  },
+  "items": {
+    "key": {
+      "name": "Chave de latão"
+    }
+  },
+  "start": "room",
+  "nodes": {
+    "room": {
+      "text": "Um baú de ferro. Uma pequena chave de latão pende de um gancho ao lado.",
+      "effects": [
+        {
+          "give": "key"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Abrir com a chave de latão",
+          "to": "open",
+          "if": {
+            "has": "key"
+          },
+          "effects": [
+            {
+              "take": "key"
+            }
+          ]
+        },
+        {
+          "text": "Forçar a fechadura (2d6 + Habilidade, 17 ou mais)",
+          "check": {
+            "roll": "2d6",
+            "add": "skill",
+            "op": "gte",
+            "vs": 17,
+            "pass": "open",
+            "fail": "jammed"
+          }
+        },
+        {
+          "text": "Deixar para lá",
+          "to": "out"
+        }
+      ]
+    },
+    "jammed": {
+      "text": "A gazua quebra. A fechadura resiste.",
+      "choices": [
+        {
+          "text": "Afastar-se",
+          "to": "room"
+        }
+      ]
+    },
+    "open": {
+      "text": "A tampa range e abre: 10 de ouro.",
+      "once": true,
+      "effects": [
+        {
+          "stat": "gold",
+          "add": 10
+        }
+      ],
+      "choices": [
+        {
+          "text": "Sair mais rico",
+          "to": "out"
+        }
+      ]
+    },
+    "out": {
+      "text": "Você deixa a sala.",
+      "ending": "victory"
+    }
+  }
+}

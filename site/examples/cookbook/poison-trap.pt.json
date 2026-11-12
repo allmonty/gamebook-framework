@@ -1,0 +1,170 @@
+{
+  "schema": 4,
+  "id": "poison-trap",
+  "lang": "pt",
+  "title": "A Armadilha de Veneno",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "antidote": {
+      "name": "Antídoto",
+      "description": "Cura venenos.",
+      "use": {
+        "effects": [
+          {
+            "clear": "poisoned"
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    }
+  },
+  "start": "hall",
+  "nodes": {
+    "hall": {
+      "text": "Agulhas brilham nas paredes de um corredor estreito.",
+      "choices": [
+        {
+          "text": "Passar entre as agulhas (2d6 + Habilidade, 15 ou mais)",
+          "check": {
+            "roll": "2d6",
+            "add": "skill",
+            "op": "gte",
+            "vs": 15,
+            "pass": "tunnel",
+            "fail": "stung"
+          }
+        }
+      ]
+    },
+    "stung": {
+      "text": "Uma agulha pica seu braço. Veneno! No chão há um frasco de antídoto.",
+      "effects": [
+        {
+          "set": "poisoned"
+        },
+        {
+          "give": "antidote"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir",
+          "to": "tunnel",
+          "if": {
+            "not": {
+              "flag": "poisoned"
+            }
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Seguir, com o veneno queimando (-2 de Energia)",
+          "to": "tunnel",
+          "if": {
+            "flag": "poisoned"
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -2
+            }
+          ]
+        }
+      ]
+    },
+    "tunnel": {
+      "text": [
+        "Um túnel úmido.",
+        {
+          "if": {
+            "flag": "poisoned"
+          },
+          "text": "O veneno queima nas suas veias."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir",
+          "to": "cave",
+          "if": {
+            "not": {
+              "flag": "poisoned"
+            }
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Seguir, com o veneno queimando (-2 de Energia)",
+          "to": "cave",
+          "if": {
+            "flag": "poisoned"
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -2
+            }
+          ]
+        }
+      ]
+    },
+    "cave": {
+      "text": [
+        "Uma caverna se abre à frente, e a luz do dia.",
+        {
+          "if": {
+            "flag": "poisoned"
+          },
+          "text": "O veneno queima nas suas veias."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir",
+          "to": "out",
+          "if": {
+            "not": {
+              "flag": "poisoned"
+            }
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Seguir, com o veneno queimando (-2 de Energia)",
+          "to": "out",
+          "if": {
+            "flag": "poisoned"
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -2
+            }
+          ]
+        }
+      ]
+    },
+    "out": {
+      "text": "Você sai para o sol.",
+      "ending": "victory"
+    }
+  }
+}

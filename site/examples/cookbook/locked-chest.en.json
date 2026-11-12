@@ -1,0 +1,89 @@
+{
+  "schema": 4,
+  "id": "locked-chest",
+  "lang": "en",
+  "title": "The Locked Chest",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "gold": {
+        "label": "Gold",
+        "roll": "0"
+      }
+    }
+  },
+  "items": {
+    "key": {
+      "name": "Brass key"
+    }
+  },
+  "start": "room",
+  "nodes": {
+    "room": {
+      "text": "An iron chest. A small brass key hangs on a hook nearby.",
+      "effects": [
+        {
+          "give": "key"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Unlock it with the brass key",
+          "to": "open",
+          "if": {
+            "has": "key"
+          },
+          "effects": [
+            {
+              "take": "key"
+            }
+          ]
+        },
+        {
+          "text": "Pick the lock (2d6 + Skill, 17 or more)",
+          "check": {
+            "roll": "2d6",
+            "add": "skill",
+            "op": "gte",
+            "vs": 17,
+            "pass": "open",
+            "fail": "jammed"
+          }
+        },
+        {
+          "text": "Leave it",
+          "to": "out"
+        }
+      ]
+    },
+    "jammed": {
+      "text": "The pick snaps. The lock holds.",
+      "choices": [
+        {
+          "text": "Step back",
+          "to": "room"
+        }
+      ]
+    },
+    "open": {
+      "text": "The lid creaks open: 10 gold.",
+      "once": true,
+      "effects": [
+        {
+          "stat": "gold",
+          "add": 10
+        }
+      ],
+      "choices": [
+        {
+          "text": "Walk away richer",
+          "to": "out"
+        }
+      ]
+    },
+    "out": {
+      "text": "You leave the room.",
+      "ending": "victory"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema": 4,
+  "id": "hidden-passage",
+  "lang": "en",
+  "title": "The Hidden Passage",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "library",
+  "nodes": {
+    "library": {
+      "text": [
+        "A dusty library, shelves to the ceiling.",
+        {
+          "if": {
+            "visits": "library",
+            "gte": 2
+          },
+          "text": "One shelf looks slightly out of line with the others."
+        }
+      ],
+      "choices": [
+        {
+          "text": "Look around again",
+          "to": "library"
+        },
+        {
+          "text": "Push the crooked shelf",
+          "to": "secret",
+          "if": {
+            "any": [
+              {
+                "stat": "skill",
+                "gte": 11
+              },
+              {
+                "visits": "library",
+                "gte": 3
+              }
+            ]
+          },
+          "hideIfLocked": true
+        },
+        {
+          "text": "Leave by the door",
+          "to": "out"
+        }
+      ]
+    },
+    "secret": {
+      "text": "The shelf swings inward. A secret stair winds down.",
+      "ending": "victory"
+    },
+    "out": {
+      "text": "You leave the way you came.",
+      "ending": "victory"
+    }
+  }
+}

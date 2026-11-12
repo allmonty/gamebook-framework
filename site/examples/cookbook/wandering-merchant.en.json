@@ -1,0 +1,72 @@
+{
+  "schema": 4,
+  "id": "wandering-merchant",
+  "lang": "en",
+  "title": "The Wandering Merchant",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "gold": {
+        "label": "Gold",
+        "roll": "2d6"
+      }
+    }
+  },
+  "items": {
+    "lantern": {
+      "name": "Lantern"
+    }
+  },
+  "start": "road",
+  "nodes": {
+    "road": {
+      "text": [
+        "A merchant's cart creaks by. \"Lanterns! Five gold!\"",
+        "Your purse holds {gold} gold."
+      ],
+      "choices": [
+        {
+          "text": "Buy a lantern (5 gold)",
+          "to": "road",
+          "if": {
+            "stat": "gold",
+            "gte": 5
+          },
+          "effects": [
+            {
+              "stat": "gold",
+              "add": -5
+            },
+            {
+              "give": "lantern"
+            }
+          ]
+        },
+        {
+          "text": "Sell your lantern back (3 gold)",
+          "to": "road",
+          "if": {
+            "has": "lantern"
+          },
+          "effects": [
+            {
+              "take": "lantern"
+            },
+            {
+              "stat": "gold",
+              "add": 3
+            }
+          ]
+        },
+        {
+          "text": "Wave goodbye",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "The cart rattles off into the night.",
+      "ending": "victory"
+    }
+  }
+}
