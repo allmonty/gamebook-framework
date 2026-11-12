@@ -22,6 +22,7 @@ class PageView {
     this.journal = const [],
     this.achievements = const [],
     this.audio = const AudioCue(),
+    this.hasAudio = false,
     this.canUndo = false,
     this.combat,
     this.offer,
@@ -55,6 +56,10 @@ class PageView {
   /// Achievements earned this visit, in story order.
   final List<String> achievements;
   final AudioCue audio;
+
+  /// Whether any page of the story has music or a sound, so the player
+  /// needs a way to silence it.
+  final bool hasAudio;
   final bool canUndo;
 
   /// The fight under way on this page, if any.

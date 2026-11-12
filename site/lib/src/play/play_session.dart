@@ -148,6 +148,9 @@ class PlaySession {
           if (e is SoundPlayed) e.file,
       ],
     ),
+    hasAudio: story.nodes.values.any(
+      (n) => n.sound != null || (n.music != null && n.music != stopMusic),
+    ),
     canUndo: _engine.canUndo,
     combat: _combat(),
     ending: _engine.ending,

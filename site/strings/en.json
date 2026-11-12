@@ -62,6 +62,7 @@
   "player.flee": "Flee",
   "player.fleeRound": "Flee (costs a round)",
   "player.journal": "Journal // {count}",
+  "player.mute": "Mute",
   "player.undo": "Undo",
   "player.restartNow": "Restart",
   "player.create": "Create your hero",

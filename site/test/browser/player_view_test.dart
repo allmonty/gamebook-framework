@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:gamebook_engine/story.dart';
 import 'package:gamebook_site/src/play/play_session.dart';
+import 'package:gamebook_site/src/ui/audio.dart';
 import 'package:gamebook_site/src/ui/dom.dart';
 import 'package:gamebook_site/src/ui/player_view.dart';
 import 'package:gamebook_site/src/ui/wording.dart';
@@ -123,6 +124,54 @@ void main() {
       host.querySelector('.gb-page img')!.getAttribute('alt'),
       'An iron gate in the fog.',
     );
+    host.remove();
+  });
+
+  test('a story with audio has a mute button; one without has none', () {
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(_story, random: Random(1)),
+      const Messages({'player.mute': 'Mute'}),
+    );
+    expect(host.querySelector('[aria-pressed]'), isNull);
+
+    final audio = AudioOutput();
+    PlayerView(
+      host,
+      PlaySession.start(
+        Story.fromJson({
+          'schema': 1,
+          'id': 't',
+          'lang': 'en',
+          'title': 'Loud',
+          'rules': {'preset': 'fighting-fantasy'},
+          'start': 'a',
+          'nodes': {
+            'a': {
+              'text': 'A.',
+              'music': 'audio/a.ogg',
+              'choices': [
+                {'text': 'On', 'to': 'b'},
+              ],
+            },
+            'b': {'text': 'B.', 'ending': 'victory'},
+          },
+        }),
+        random: Random(1),
+      ),
+      const Messages({'player.mute': 'Mute'}),
+      audio: audio,
+    );
+    HTMLElement mute() => host.querySelector('[aria-pressed]')! as HTMLElement;
+    expect(mute().textContent, 'Mute');
+    expect(mute().getAttribute('aria-pressed'), 'false');
+
+    mute().click();
+
+    expect(audio.muted, isTrue);
+    expect(mute().getAttribute('aria-pressed'), 'true');
     host.remove();
   });
 }

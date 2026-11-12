@@ -19,6 +19,14 @@ class AudioOutput {
   /// The music file now playing, if any.
   String? get playing => _playing;
 
+  /// Silenced by the player; the music keeps its place and sounds are skipped.
+  bool get muted => _muted;
+  bool _muted = false;
+  set muted(bool value) {
+    _muted = value;
+    _music?.muted = value;
+  }
+
   void play(AudioCue cue) {
     if (cue.music != _playing) {
       _music?.pause();
@@ -27,10 +35,12 @@ class AudioOutput {
       if (cue.music case final file?) {
         _music = HTMLAudioElement()
           ..src = '$base$file'
-          ..loop = true;
+          ..loop = true
+          ..muted = _muted;
         _start(_music!);
       }
     }
+    if (_muted) return;
     for (final file in cue.sounds) {
       _start(HTMLAudioElement()..src = '$base$file');
     }

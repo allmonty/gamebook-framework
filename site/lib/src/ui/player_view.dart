@@ -95,6 +95,19 @@ class PlayerView {
     'div',
     cls: 'gb-controls',
     children: [
+      if (view.hasAudio)
+        onClick(
+          el(
+            'button',
+            cls: 'btn btn-ghost',
+            text: m('player.mute'),
+            attrs: {'aria-pressed': '${_audio.muted}'},
+          ),
+          () {
+            _audio.muted = !_audio.muted;
+            render();
+          },
+        ),
       if (view.canUndo)
         onClick(
           el('button', cls: 'btn btn-ghost', text: m('player.undo')),
