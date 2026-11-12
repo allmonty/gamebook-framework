@@ -1,0 +1,151 @@
+{
+  "schema": 8,
+  "id": "marsh-fever",
+  "lang": "en",
+  "title": "Marsh Fever",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "hex": {
+        "label": "Hex",
+        "roll": "0"
+      }
+    },
+    "everyPage": [
+      {
+        "if": {
+          "flag": "fever"
+        },
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": -1
+          }
+        ]
+      },
+      {
+        "if": {
+          "stat": "hex",
+          "gte": 1
+        },
+        "effects": [
+          {
+            "stat": "hex",
+            "add": -1
+          }
+        ]
+      }
+    ],
+    "bonuses": [
+      {
+        "if": {
+          "stat": "hex",
+          "gte": 1
+        },
+        "bonus": {
+          "skill": -2
+        }
+      }
+    ]
+  },
+  "start": "edge",
+  "nodes": {
+    "edge": {
+      "text": "The causeway runs out at the edge of the marsh. From here on it is reeds, black water and stepping stones.",
+      "choices": [
+        {
+          "text": "Wade in",
+          "to": "reeds"
+        }
+      ]
+    },
+    "reeds": {
+      "text": "Clouds of midges rise from the reeds. By the time you are through them your skin burns and your head swims: marsh fever. It will drain you a little with every step until someone treats it.",
+      "effects": [
+        {
+          "set": "fever"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Follow the smoke to a hut",
+          "to": "hut"
+        },
+        {
+          "text": "Keep to the stepping stones",
+          "to": "stones"
+        }
+      ]
+    },
+    "hut": {
+      "text": "A hedge witch opens the door, takes one look at your muddy boots and spits a word at you. Your arms go heavy: a hex, -2 Skill while it lasts. \"It'll wear off in three steps,\" she says, and shuts the door.",
+      "effects": [
+        {
+          "stat": "hex",
+          "set": 3
+        }
+      ],
+      "choices": [
+        {
+          "text": "Back to the stones",
+          "to": "stones"
+        }
+      ]
+    },
+    "stones": {
+      "text": "The stones lead deeper in. Hex {hex}, Skill {skill}.",
+      "choices": [
+        {
+          "text": "Go on",
+          "to": "heron"
+        }
+      ]
+    },
+    "heron": {
+      "text": "A grey heron watches you pass. Hex {hex}, Skill {skill}.",
+      "choices": [
+        {
+          "text": "Go on",
+          "to": "healer"
+        }
+      ]
+    },
+    "healer": {
+      "text": "On a dry hummock an old man is boiling willow bark. He hands you a cup without a word. The fever breaks.",
+      "effects": [
+        {
+          "clear": "fever"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Thank him and go on",
+          "to": "ditch"
+        }
+      ]
+    },
+    "ditch": {
+      "text": "A deep ditch cuts across the last stretch. You will have to jump it: roll two dice, and you need your Skill ({skill}) or less.",
+      "choices": [
+        {
+          "text": "Jump",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "skill",
+            "pass": "out",
+            "fail": "mud"
+          }
+        }
+      ]
+    },
+    "mud": {
+      "text": "You land short and the mud takes you to the waist. It takes an hour to drag yourself out, and the light is going. You turn back.",
+      "ending": "defeat"
+    },
+    "out": {
+      "text": "You land on firm ground. Ahead, the marsh gives way to fields and a road.",
+      "ending": "victory"
+    }
+  }
+}
