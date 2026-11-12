@@ -29,6 +29,10 @@ String lockedReason(ChoiceItem choice, Messages m) {
 
 String requirementText(Requirement r, Messages m) {
   final what = switch (r.kind) {
+    RequirementKind.item when r.target != null => m('player.items', {
+      'count': r.target!,
+      'item': r.name,
+    }),
     RequirementKind.item || RequirementKind.flag => r.name,
     RequirementKind.visited => m('player.visited', {'name': r.name}),
     RequirementKind.visits => m('player.visits', {

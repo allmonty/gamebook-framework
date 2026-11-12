@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:gamebook_site/src/play/play_session.dart';
+import 'package:gamebook_site/src/play/views.dart';
 import 'package:test/test.dart';
 
 import 'support/stories.dart';
@@ -22,6 +23,52 @@ void main() {
     final session = _start('stack-use-spends-one')..useItem('meal');
     final line = session.view.log.singleWhere((l) => l.key == 'count');
     expect(line.args, {'item': 'Meal', 'from': 2, 'to': 1});
+  });
+
+  test('the pack shows how many of a countable item it holds', () {
+    final session = _start('stack-use-spends-one');
+    expect(session.view.pack.items.single.count, 2);
+  });
+
+  test('an offer of a countable item is for the whole count', () {
+    final session = _start('stack-offer-whole-count');
+    expect(session.view.offer!.item.count, 7);
+  });
+
+  test('a choice that needs several of an item says how many', () {
+    final session = _start('stack-has-count');
+    final need = session.view.choices.first.needs.single;
+    expect(
+      (need.kind, need.name, need.target),
+      (RequirementKind.item, 'Meal', 2),
+    );
+  });
+
+  test('gaining several at once is one line with the count', () {
+    final session = _start('stack-partly-refused');
+    expect([
+      for (final l in session.view.log) (l.key, l.args['count']),
+    ], containsAll([('gainedMany', 5), ('refusedMany', 2)]));
+  });
+
+  test('the provisions example eats its meals down to none', () {
+    for (final lang in ['en', 'pt']) {
+      final session = PlaySession.start(
+        storyFile('examples/03-items/provisions.$lang.json'),
+        random: Random(1),
+      );
+      for (final left in [4, 3, 2, 1]) {
+        session.useItem('meal');
+        expect(session.view.pack.items.single.count, left, reason: lang);
+      }
+      expect(session.view.choices, hasLength(1));
+      session
+        ..choose(0)
+        ..useItem('meal');
+      expect(session.view.pack.items, isEmpty, reason: lang);
+      // Two meals for the ferry: now locked.
+      expect(session.view.choices.first.locked, isTrue, reason: lang);
+    }
   });
 
   test('an offer hides the choices until it is settled', () {

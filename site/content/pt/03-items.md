@@ -80,6 +80,26 @@ examples/03-items/the-thief
 
 Leia o registro acima da página: a gema é recusada por falta de espaço e, depois, a moeda some.
 
+## Coisas que vêm em quantidade
+
+Cinco refeições, uma aljava de flechas, três ervas de cura: dê ao item um `stack` e o leitor pode carregar vários (schema 8).
+
+```gamebook
+examples/03-items/provisions
+```
+
+```json
+"meal": { "name": "Refeição", "stack": 5,
+  "use": { "effects": [ { "stat": "stamina", "add": 4 } ], "when": ["story"] } }
+```
+
+- `{ "give": "meal", "count": 5 }` dá cinco; `{ "take": "meal", "count": 2 }` tira duas (nunca abaixo de 0).
+- `{ "has": "meal", "count": 2 }` precisa de pelo menos duas: a escolha do barqueiro fica trancada, "Precisa: 2 × Refeição", se você comeu demais.
+- Usar uma gasta uma. A mochila mostra quantas restam, e o item some com a última.
+- `stack` é quantas cabem em **um espaço** de uma mochila limitada: 5 refeições ocupam um espaço, a 6ª começa outro. Com `"stack": 1` cada uma ocupa seu próprio espaço. Sem `capacity` a mochila, e a quantidade, não têm limite.
+
+A página da noite é um clássico: "Comer uma refeição" precisa de uma e a gasta; "Ficar com fome" só aparece quando você não tem nenhuma, e custa Energia. Sem `stack` um item continua único, como antes, e um `count` acima de 1 é um erro.
+
 ## O que você aprendeu
 
 | Escreva | Onde | Significado |
@@ -92,5 +112,7 @@ Leia o registro acima da página: a gema é recusada por falta de espaço e, dep
 | `"bonus": { "skill": 3 }` | um item | bônus enquanto carregado (schema 5) |
 | `"inventory": { "capacity": 2, "pickup": "choose" }` | `rules` | mochila limitada, ofertas (schema 3) |
 | `"capacity": 2` | um item | um recipiente |
+| `"stack": 5` | um item | contável: qualquer quantidade, 5 por espaço (schema 8) |
+| `"count": 2` | um `give`, `take` ou `has` | quantos (schema 8) |
 
 A seguir: os atributos do herói e como rolá-los.

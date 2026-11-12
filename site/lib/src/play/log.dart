@@ -73,14 +73,17 @@ List<LogLine>? _line(
         'target': result.target,
       }, result.lucky ? Tone.good : Tone.bad),
     ],
-    ItemGained(item: final id) => [
-      LogLine('gained', {'item': item(id)}, Tone.good),
+    ItemGained(item: final id, :final count) => [
+      _counted('gained', item(id), count, Tone.good),
     ],
-    ItemLost(item: final id) || ItemOverflow(item: final id) => [
+    ItemLost(item: final id) => [
       LogLine('lost', {'item': item(id)}, Tone.bad),
     ],
-    ItemRefused(item: final id) => [
-      LogLine('refused', {'item': item(id)}, Tone.bad),
+    ItemOverflow(item: final id, :final count) => [
+      _counted('lost', item(id), count, Tone.bad),
+    ],
+    ItemRefused(item: final id, :final count) => [
+      _counted('refused', item(id), count, Tone.bad),
     ],
     ItemCountChanged(item: final id, :final from, :final to) => [
       LogLine('count', {
@@ -118,6 +121,11 @@ List<LogLine>? _line(
     OfferDeclined() => null,
   };
 }
+
+/// A line about [count] of an item: `<key>Many` when more than one.
+LogLine _counted(String key, String item, int count, Tone tone) => count > 1
+    ? LogLine('${key}Many', {'item': item, 'count': count}, tone)
+    : LogLine(key, {'item': item}, tone);
 
 LogLine _round(String enemy, DiceRoll roll, int total, int dealt, int taken) =>
     LogLine('round', {

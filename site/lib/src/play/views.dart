@@ -159,6 +159,7 @@ class PackItem {
     this.bonus = const [],
     this.usable = false,
     this.room,
+    this.count = 1,
   });
 
   /// Pass to [PlaySession.useItem] or as the item to leave behind.
@@ -174,6 +175,10 @@ class PackItem {
 
   /// Extra slots it gives: set only for a container.
   final int? room;
+
+  /// How many are held, or offered (schema 8: more than 1 only for a
+  /// countable item).
+  final int count;
 }
 
 /// An item waiting for the player's decision (`pickup: "choose"`).

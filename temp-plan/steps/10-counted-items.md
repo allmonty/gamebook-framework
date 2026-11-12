@@ -54,4 +54,15 @@ B5 (replace "Items are unique: the inventory is a set" with the two kinds), B4 "
 On the site the provisions example shows the count going down as meals are eaten and the item leaving the pack at 0, in both languages; every case passes; checks green. Then delete `temp-plan/` if the owner agrees (ask).
 
 ## Handoff notes
-(fill in)
+- Two commits: `248705e` adds the spec, engine, cases and the site's log line for a count change (the site's log covers every engine event, so it would not compile without it); the second takes counts to the rest of the site and the tutorial and marks the step done.
+- **The state differs from the design above.** `counts` holds the count of an item held more than once (an item held once has no entry, so `count()` is `counts[item] ?? 1` when held); offers have their own `offerCounts`. The step's "an item is never both held and offered" is false for countable items: with `pickup: "choose"`, a give that needs a new slot is offered even when some are already carried. Both maps are in the save; a save without them holds one of each.
+- `GiveItem`, `TakeItem` and `HasItem` keep `count` as written (null when absent), with `amount` defaulting to 1. The gate needs this: a `"count": 1` in a schema 7 story must be rejected, since a schema 7 engine does not know the key.
+- `applyEffect` stays free of the story: its `take` and `takeAll` handle counts, but its `give` only adds the item. Every give in the engine goes through `_give` (or creation), which knows the stack and the pack.
+- Engine pieces: `_slots`, `_slotRoom`, `_room`, `_give`, `_add`, `_offer`; `offerCount`; events `ItemCountChanged` (new) and a `count` on `ItemGained`, `ItemRefused`, `ItemOverflow`. A count change caused by overflow is not reported twice. Leaving a carried item behind for an offer leaves all of it.
+- Parsing also rejects a container with a `stack` ("a container cannot be counted"); spec B5 says so and the JSON Schema has the `not`.
+- **Translations:** `compareTranslations` compares ids, not effects, so `stack` and `count` are not compared. Spec B5 says so.
+- Conformance: expect key `counts` (in the runner and the README table); 11 play cases and 2 invalid cases, as listed above.
+- Site: one string `player.items` ("{count} × {item}") for the pack, an offer and a locked choice ("Needs: 2 × Meal"); log keys `gainedMany`, `lostMany`, `refusedMany` and `count` ("Meal: 5 → 4"). VM tests, and a browser test (9 browser tests now).
+- Tutorial: "Things that come in numbers" / "Coisas que vêm em quantidade" in chapter 3, with `examples/03-items/provisions` (five meals, a ferryman who wants two, a night where you eat one or go hungry, the Lone Wolf pattern), and two rows in the chapter's table. **Not done:** the optional cookbook recipe with arrows.
+- The step's "delete `temp-plan/`" is out of date: steps 11 to 15 and the owner's checkpoint come next.
+- Done on the branch `step-10-counted-items` from `main`.

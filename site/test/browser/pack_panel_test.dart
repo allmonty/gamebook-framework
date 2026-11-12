@@ -5,7 +5,9 @@ import 'dart:math';
 
 import 'package:gamebook_engine/story.dart';
 import 'package:gamebook_site/src/play/play_session.dart';
+import 'package:gamebook_site/src/play/views.dart';
 import 'package:gamebook_site/src/ui/dom.dart';
+import 'package:gamebook_site/src/ui/pack_panel.dart';
 import 'package:gamebook_site/src/ui/player_view.dart';
 import 'package:gamebook_site/src/ui/wording.dart';
 import 'package:test/test.dart';
@@ -62,6 +64,18 @@ void main() {
     _button(host, '.gb-pack button', 'Use').click();
     expect(host.querySelector('.gb-pack li'), isNull);
     host.remove();
+  });
+
+  test('a countable item shows how many', () {
+    final panel = PackPanel(
+      const PackView(
+        items: [PackItem(id: 'meal', name: 'Meal', count: 3)],
+        used: 1,
+      ),
+      const Messages({'player.items': '{count} × {item}'}),
+      onUse: (_) {},
+    );
+    expect(panel.element.querySelector('strong')!.textContent, '3 × Meal');
   });
 }
 

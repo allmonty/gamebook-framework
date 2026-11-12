@@ -100,7 +100,12 @@ class OfferPanel {
 HTMLElement itemCard(PackItem item, Messages m) => el(
   'div',
   children: [
-    el('strong', text: item.name),
+    el(
+      'strong',
+      text: item.count > 1
+          ? m('player.items', {'count': item.count, 'item': item.name})
+          : item.name,
+    ),
     for (final (label, amount) in item.bonus)
       el(
         'span',

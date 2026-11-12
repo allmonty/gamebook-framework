@@ -80,6 +80,26 @@ examples/03-items/the-thief
 
 Read the log above the page: the gem is refused for lack of room, and later the coin is lost.
 
+## Things that come in numbers
+
+Five meals, a quiver of arrows, three healing herbs: give the item a `stack` and the reader can carry several (schema 8).
+
+```gamebook
+examples/03-items/provisions
+```
+
+```json
+"meal": { "name": "Meal", "stack": 5,
+  "use": { "effects": [ { "stat": "stamina", "add": 4 } ], "when": ["story"] } }
+```
+
+- `{ "give": "meal", "count": 5 }` gives five; `{ "take": "meal", "count": 2 }` takes two (never below 0).
+- `{ "has": "meal", "count": 2 }` needs at least two: the ferryman's choice stays locked, "Needs: 2 × Meal", once you have eaten too much.
+- Using one spends one. The pack shows how many are left, and the item is gone with the last one.
+- `stack` is how many fit in **one slot** of a limited pack: 5 meals fill one slot, the 6th starts a second. With `"stack": 1` every one fills its own slot. Without a `capacity` the pack, and the count, have no limit.
+
+The night page is a classic: "Eat a meal" needs one and takes it; "Go hungry" shows only when you have none, and costs Stamina. Without a `stack` an item stays one of a kind, as before, and a `count` above 1 is an error.
+
 ## What you learned
 
 | Write | Where | Meaning |
@@ -92,5 +112,7 @@ Read the log above the page: the gem is refused for lack of room, and later the 
 | `"bonus": { "skill": 3 }` | an item | stat bonus while carried (schema 5) |
 | `"inventory": { "capacity": 2, "pickup": "choose" }` | `rules` | limited pack, offers (schema 3) |
 | `"capacity": 2` | an item | a container |
+| `"stack": 5` | an item | countable: any number, 5 to a slot (schema 8) |
+| `"count": 2` | a `give`, `take` or `has` | how many (schema 8) |
 
 Next: the hero's stats, and how to roll them.

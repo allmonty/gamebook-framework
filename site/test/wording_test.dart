@@ -7,6 +7,7 @@ const m = Messages({
   'player.not': 'no {what}',
   'player.locked': 'Locked',
   'player.visits': '{name} visits {op} {target}',
+  'player.items': '{count} × {item}',
 });
 
 void main() {
@@ -22,6 +23,11 @@ void main() {
       ],
     );
     expect(lockedReason(choice, m), 'Needs: Rusty key, Gold ≥ 5, no cursed');
+  });
+
+  test('an item needed several times names how many', () {
+    const r = Requirement(RequirementKind.item, 'Meal', target: 2);
+    expect(requirementText(r, m), '2 × Meal');
   });
 
   test("the author's locked text wins; nothing to name says Locked", () {
