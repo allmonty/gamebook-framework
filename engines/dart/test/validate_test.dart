@@ -275,6 +275,37 @@ void main() {
         'error: items.rusty-key.image: image file not found: images/key.webp',
       ]);
     });
+
+    test(
+      'a path outside the game folder is an error, with or without files',
+      () {
+        for (final path in [
+          'https://example.com/images/a.png',
+          '//example.com/images/a.png',
+          '/images/a.png',
+          'images/../../a.png',
+          r'images\a.png',
+          'a.png',
+          'images/a.exe',
+          'images/a.png?x=1',
+        ]) {
+          expect(errors((j) => node(j, 'cellar')['image'] = path), [
+            'error: nodes.cellar.image: not a media file under images/ or '
+                'audio/ of the game folder: $path',
+          ], reason: path);
+        }
+        expect(
+          errors((j) {
+            node(j, 'cellar')['music'] = 'http://example.com/a.ogg';
+            node(j, 'cellar')['sound'] = 'audio/sub/door.wav';
+          }),
+          [
+            'error: nodes.cellar.music: not a media file under images/ or '
+                'audio/ of the game folder: http://example.com/a.ogg',
+          ],
+        );
+      },
+    );
   });
 
   group('stat quantities', () {

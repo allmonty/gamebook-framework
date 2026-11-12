@@ -42,7 +42,8 @@
       "type": "string"
     },
     "cover": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^(images|audio)/[^\\\\]+$"
     },
     "coverAlt": {
       "description": "What the cover shows, for players who cannot see it",
@@ -469,7 +470,8 @@
           "type": "string"
         },
         "image": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^(images|audio)/[^\\\\]+$"
         },
         "imageAlt": {
           "description": "What the image shows, for players who cannot see it",
@@ -1047,7 +1049,8 @@
           ]
         },
         "image": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^(images|audio)/[^\\\\]+$"
         },
         "imageAlt": {
           "description": "What the image shows, for players who cannot see it",
@@ -1082,11 +1085,13 @@
         },
         "music": {
           "description": "A file that loops from this page on, or \"stop\"",
-          "type": "string"
+          "type": "string",
+          "pattern": "^(stop|(images|audio)/[^\\\\]+)$"
         },
         "sound": {
           "description": "A file played once when the page is entered",
-          "type": "string"
+          "type": "string",
+          "pattern": "^(images|audio)/[^\\\\]+$"
         },
         "title": {
           "description": "A short name for the page; players see it only with showTitles",

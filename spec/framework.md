@@ -313,7 +313,7 @@ While its `if` (B7) holds, a rule bonus works exactly like an item bonus: everyw
 | Field | Notes |
 |---|---|
 | `text` | required: a string, or a list of parts. Shown with the image. `\n\n` separates paragraphs. See below. |
-| `image` | optional path. A missing file at runtime shows nothing; the validator flags it. |
+| `image` | optional path (see "Media paths" below). A missing file at runtime shows nothing; the validator flags it. |
 | `imageAlt` | optional, only next to `image`: a short text saying what the picture shows, for players who cannot see it. A player that shows the image gives this text to assistive technology (a screen reader); without it the image is treated as decoration. Must not be empty. It is text, so each translation words it freely. |
 | `effects` | optional list applied on **entering** the node (B9). |
 | `once` | optional bool, default false. If true, `effects` apply only the first time the node is entered. Use for pickups and healing so revisiting cannot be exploited. |
@@ -323,6 +323,9 @@ While its `if` (B7) holds, a rule bonus works exactly like an item bonus: everyw
 | `title`, `note`, `chapter`, `draft` | authoring fields (B13) |
 
 Exactly **one** of `choices` (non-empty), `combat`, `ending` must be present. A page with no way out is a parse error, except a draft page (B13).
+
+### Media paths
+Every picture and sound (`image`, `cover`, `music`, `sound`) is named by a path **inside the game folder** (B1): it starts with `images/` or `audio/`, uses `/` between folders, has no `.` or `..` part, and ends in one of the media types a package may hold (B14). Anything else is an error: a web address, an absolute path, a path that climbs out of the folder. So a story from a stranger can never make a player fetch a file from somewhere else.
 
 ### Audio and the journal
 A node may have `"music": "audio/crypt.ogg"` and/or `"sound": "audio/door.wav"` (paths relative to the game folder, like images). `sound` plays once when the page is entered. `music` starts looping when the page is entered and **keeps playing across pages** until another page sets a `music`, or `"music": "stop"` stops it. The current music is part of the saved game, so a resumed game picks it up again. Players can switch music and sound effects off and set their volume in the settings; with both off or missing files the story reads exactly the same.

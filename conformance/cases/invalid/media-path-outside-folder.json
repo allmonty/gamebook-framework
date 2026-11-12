@@ -1,0 +1,26 @@
+{
+  "description": "A picture is a file under images/ or audio/ of the game folder, never an address.",
+  "spec": [
+    "B6"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "image": "https://example.com/images/a.png",
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.image"
+  }
+}

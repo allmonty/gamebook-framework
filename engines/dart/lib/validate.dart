@@ -1,4 +1,5 @@
 import 'dice.dart';
+import 'package.dart' show belongsInPackage;
 import 'quantity.dart';
 import 'rules.dart';
 import 'story.dart';
@@ -252,13 +253,19 @@ class _Validator {
   }
 
   void _image(String where, String? path) {
-    if (path != null && assetExists != null && !assetExists!(path)) {
-      error(where, 'image file not found: $path');
-    }
+    if (path != null) _file(where, path, 'image');
   }
 
+  /// A picture or a sound is a file of the game's own `images/` or `audio/`
+  /// folder (B6): never an address, which would make a player fetch whatever
+  /// a stranger's story names.
   void _file(String where, String path, String what) {
-    if (assetExists != null && !assetExists!(path)) {
+    if (!path.contains('/') || !belongsInPackage(path)) {
+      error(
+        where,
+        'not a media file under images/ or audio/ of the game folder: $path',
+      );
+    } else if (assetExists != null && !assetExists!(path)) {
       error(where, '$what file not found: $path');
     }
   }
