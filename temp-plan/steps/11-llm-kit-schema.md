@@ -2,6 +2,9 @@
 
 Independent of every other step; tiny. Doing it before step 07 saves a second regeneration.
 
+## Note (2026-11-12)
+Step 10g merges every version into 1, and makes the kit say `"schema": 1`. What is left here is the guard: a test that the kit's version is the newest the engine supports, so it cannot fall behind when version 2 comes.
+
 ## Problem
 `spec/llm-kit.md` is the file people give a chatbot to write stories. Its instruction 2 says: Use `"schema": 6`. A story valid in an older version is valid in 6. The format is at 7 (achievements), so a chatbot following the kit cannot use them, and the number will be wrong again at 8. The text is hard-coded in `engines/dart/bin/llm_kit.dart` (line 19). `engines/dart/lib/twine.dart` (line 99) also writes `'schema': 6`, which is correct for what the importer emits: leave it.
 

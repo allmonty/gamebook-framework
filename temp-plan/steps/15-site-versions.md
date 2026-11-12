@@ -2,6 +2,9 @@
 
 Last step, after 07 to 10 so it covers schema 8, and after 14 so `llms.txt` exists.
 
+## Owner's decision (2026-11-12, after step 10g)
+There is one version now. The page lists **version 1 and its features**, and **explains versioning**: what `"schema"` is for, that versions only add, that an engine rejects a version it does not know, and how a later version will appear here. Where the rest of this step assumes several versions, follow this instead.
+
 ## Problem
 An author has to write `"schema": N` in every story and needs to know which number a feature needs. Today that is only in `spec/CHANGELOG.md`: a terse table for engine writers, in English, on GitHub. The site never shows it, the Portuguese reader has nothing, and no page says "this is new".
 
