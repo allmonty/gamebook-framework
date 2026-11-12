@@ -269,7 +269,7 @@ A condition is an object with exactly one kind:
 | `{ "not": c }` | negation |
 
 ### B8. Dice notation
-`NdM` with optional `+K` or `-K`, or a plain integer. No spaces. `N` is the number of dice (at least 1), `M` the number of faces (at least 2).
+`NdM` with optional `+K` or `-K`, or a plain integer. No spaces. `N` is the number of dice (at least 1, at most 100), `M` the number of faces (at least 2, at most 1000). `K` and a plain integer have at most 6 digits. Anything larger is invalid notation, so a story from a stranger cannot make an engine roll forever.
 Examples: `1d6`, `2d6+6`, `1d20`, `2d6-1`, `3` (fixed).
 Rolls keep the individual dice (the UI shows them) and the total (dice sum plus modifier).
 Engines take their randomness from outside (a seedable source), so tests and tools can fix the dice.

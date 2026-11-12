@@ -32,7 +32,7 @@ The survey found no other project with a written spec, a conformance suite, rule
 
 | # | Step | Kind | Status | Commit |
 |---|---|---|---|---|
-| 01 | [Limit dice size](steps/01-dice-limits.md) | fix | todo | |
+| 01 | [Limit dice size](steps/01-dice-limits.md) | fix | done | |
 | 02 | [Health at 0 is final](steps/02-death-is-final.md) | fix | todo | |
 | 03 | [A bonus never takes a stat below 0](steps/03-bonus-floor.md) | fix | todo | |
 | 04 | [A save with impossible numbers does not fit](steps/04-save-fits.md) | fix | todo | |

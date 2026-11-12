@@ -19,4 +19,6 @@ At most **100** dice, at most **1000** faces, and a modifier or a plain integer 
 `101d6`, `1d1001` and `4000000000d6` are rejected at their JSON path; `100d1000+999999` still parses; checks green.
 
 ## Handoff notes
-(fill in)
+- `schema-8` was merged into `main` (PR #3) before this step landed, so this step went on its own branch, `step-01-dice-limits`, from `main`, with its own pull request.
+- The regex bounds digits (3 for N, 4 for M, 6 for K or the integer); `Dice.parse` then rejects `N > 100` and `M > 1000`. The JSON Schema can only bound digits, so it accepts `101d6` and `1d1001`; the engine rejects them. `4000000000d6` and a 7-digit modifier fail both.
+- Engine tests: 578 (575 + 2 dice tests + the new case). Schema check: 146 stories, 0 not matching.

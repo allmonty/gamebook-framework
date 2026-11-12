@@ -23,6 +23,12 @@ void main() {
       expect(fixed.roll(Random(1)).total, 3);
     });
 
+    test('accepts the largest dice within the limits', () {
+      final dice = Dice.parse('100d1000+999999');
+      expect(dice.max, 100 * 1000 + 999999);
+      expect(Dice.parse('999999').modifier, 999999);
+    });
+
     test('toString round trips the notation', () {
       for (final source in ['1d6', '2d6+6', '2d6-1', '3', '0']) {
         expect(Dice.parse(source).toString(), source);
@@ -43,6 +49,18 @@ void main() {
         '0d6',
         '1d0',
         '1d1',
+      ]) {
+        expect(() => Dice.parse(bad), throwsFormatException, reason: bad);
+      }
+    });
+
+    test('rejects dice too large to roll (B8 limits)', () {
+      for (final bad in [
+        '101d6',
+        '1d1001',
+        '4000000000d6',
+        '1d6+1000000',
+        '1000000',
       ]) {
         expect(() => Dice.parse(bad), throwsFormatException, reason: bad);
       }
