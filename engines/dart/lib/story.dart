@@ -162,6 +162,7 @@ class Item {
     this.imageAlt,
     this.use,
     this.capacity,
+    this.stack,
     this.bonus = const {},
   });
 
@@ -172,6 +173,13 @@ class Item {
     if (capacity != null && capacity < 1) {
       throw obj.error('capacity', 'must be at least 1');
     }
+    final stack = obj.optInt('stack');
+    if (stack != null && stack < 1) {
+      throw obj.error('stack', 'must be at least 1');
+    }
+    if (stack != null && capacity != null) {
+      throw obj.error('stack', 'a container cannot be counted');
+    }
     final image = obj.optString('image');
     final item = Item(
       name: obj.string('name'),
@@ -180,6 +188,7 @@ class Item {
       imageAlt: _altText(obj, 'imageAlt', image),
       use: use == null ? null : ItemUse.fromJson(use),
       capacity: capacity,
+      stack: stack,
       bonus: obj.idMap('bonus', (id, json, path) {
         if (json is! int) {
           throw StoryFormatException(path, 'expected an integer');
@@ -203,6 +212,10 @@ class Item {
 
   /// Extra pack slots while carried (a container, schema 3); it uses no slot.
   final int? capacity;
+
+  /// How many fit in one pack slot (schema 8). Null: the item is unique, and
+  /// the pack holds one at most; otherwise it holds any number.
+  final int? stack;
 
   /// Changes to stats while the item is in the pack (schema 5), by stat id.
   final Map<String, int> bonus;

@@ -356,6 +356,100 @@ void main() {
     }
   });
 
+  group('counted items (schema 8)', () {
+    Map<String, Object?> key(Map<String, Object?> j) =>
+        (j['items']! as Map<String, Object?>)['rusty-key']!
+            as Map<String, Object?>;
+
+    test('stack and counts are read', () {
+      final json = validJson()..['schema'] = 8;
+      key(json)['stack'] = 3;
+      choice(json, 'cellar', 0)['effects'] = [
+        {'give': 'rusty-key', 'count': 2},
+        {'take': 'rusty-key'},
+      ];
+      choice(json, 'door', 0)['if'] = {'has': 'rusty-key', 'count': 2};
+      final story = Story.fromJson(json);
+
+      expect(story.items['rusty-key']!.stack, 3);
+      final effects = story.nodes['cellar']!.choices[0].effects;
+      expect((effects[0] as GiveItem).count, 2);
+      expect((effects[1] as TakeItem).count, isNull);
+      expect((effects[1] as TakeItem).amount, 1);
+      final has = story.nodes['door']!.choices[0].condition! as HasItem;
+      expect(has.amount, 2);
+    });
+
+    test('stack and count must be at least 1', () {
+      expect(
+        failure((j) {
+          j['schema'] = 8;
+          key(j)['stack'] = 0;
+        }),
+        'items.rusty-key.stack: must be at least 1',
+      );
+      expect(
+        failure((j) {
+          j['schema'] = 8;
+          choice(j, 'cellar', 0)['effects'] = [
+            {'give': 'rusty-key', 'count': 0},
+          ];
+        }),
+        'nodes.cellar.choices[0].effects[0].count: must be at least 1',
+      );
+    });
+
+    test('a container cannot be counted', () {
+      expect(
+        failure((j) {
+          j['schema'] = 8;
+          key(j)
+            ..['capacity'] = 1
+            ..['stack'] = 2;
+        }),
+        'items.rusty-key.stack: a container cannot be counted',
+      );
+    });
+
+    test('count belongs to give, take and has only', () {
+      expect(
+        failure((j) {
+          j['schema'] = 8;
+          choice(j, 'cellar', 0)['effects'] = [
+            {'set': 'x', 'count': 2},
+          ];
+        }),
+        'nodes.cellar.choices[0].effects[0].count: unknown key',
+      );
+    });
+
+    for (final (field, mutate)
+        in <(String, void Function(Map<String, Object?>))>[
+          ('items.rusty-key.stack', (j) => key(j)['stack'] = 3),
+          (
+            'nodes.cellar.choices[0].effects[0]',
+            (j) => choice(j, 'cellar', 0)['effects'] = [
+              {'give': 'rusty-key', 'count': 1},
+            ],
+          ),
+          (
+            'nodes.door.choices[0].if',
+            (j) =>
+                choice(j, 'door', 0)['if'] = {'has': 'rusty-key', 'count': 1},
+          ),
+        ]) {
+      test('$field needs schema 8', () {
+        expect(
+          failure((j) {
+            j['schema'] = 7;
+            mutate(j);
+          }),
+          '$field: needs "schema": 8',
+        );
+      });
+    }
+  });
+
   group('draft pages (schema 6)', () {
     test('a draft may have no text and no way out', () {
       final json = validJson()..['schema'] = 6;

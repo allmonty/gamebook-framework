@@ -167,10 +167,11 @@ class PlaySession {
   );
 
   Requirement _requirement(Unmet unmet) => switch (unmet.condition) {
-    HasItem(:final item) => Requirement(
+    HasItem(:final item, :final amount) => Requirement(
       RequirementKind.item,
       story.items[item]?.name ?? item,
       negated: unmet.negated,
+      target: amount > 1 ? amount : null,
     ),
     FlagSet(:final flag) => Requirement(
       RequirementKind.flag,
@@ -211,9 +212,10 @@ class PlaySession {
     );
   }
 
-  PackItem _item(String id) {
+  PackItem _item(String id, {int? count}) {
     final item = story.items[id];
     return PackItem(
+      count: count ?? _engine.state.count(id),
       id: id,
       name: item?.name ?? id,
       description: item?.description,
@@ -230,7 +232,7 @@ class PlaySession {
     final id = _engine.offer;
     if (id == null) return null;
     return OfferView(
-      item: _item(id),
+      item: _item(id, count: _engine.offerCount),
       swapFrom: _engine.canHold(id)
           ? const []
           : [

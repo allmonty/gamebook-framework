@@ -1,0 +1,124 @@
+{
+  "schema": 8,
+  "id": "provisions",
+  "lang": "en",
+  "title": "Provisions",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "items": {
+    "meal": {
+      "name": "Meal",
+      "description": "Bread, cheese and dried fruit. Restores 4 Stamina.",
+      "stack": 5,
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    }
+  },
+  "start": "camp",
+  "nodes": {
+    "camp": {
+      "text": "You set out at first light with five meals in your pack. The climb out of the valley already cost you (-6 Stamina). Open your pack and eat whenever you like.",
+      "effects": [
+        {
+          "give": "meal",
+          "count": 5
+        },
+        {
+          "stat": "stamina",
+          "add": -6
+        }
+      ],
+      "choices": [
+        {
+          "text": "Walk down to the river",
+          "to": "ferry"
+        }
+      ]
+    },
+    "ferry": {
+      "text": "A ferryman waits by the river. He will take you across for two meals: he has not eaten in days.",
+      "choices": [
+        {
+          "text": "Pay him two meals",
+          "to": "night",
+          "if": {
+            "has": "meal",
+            "count": 2
+          },
+          "effects": [
+            {
+              "take": "meal",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "text": "Walk the long way round, by the bridge",
+          "to": "long-way"
+        }
+      ]
+    },
+    "long-way": {
+      "text": "The bridge is a day's walk upstream, and the wind cuts through your coat (-2 Stamina).",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Go on",
+          "to": "night"
+        }
+      ]
+    },
+    "night": {
+      "text": "Night falls on the far bank. Before you sleep, you must eat.",
+      "choices": [
+        {
+          "text": "Eat a meal",
+          "to": "dawn",
+          "if": {
+            "has": "meal"
+          },
+          "effects": [
+            {
+              "take": "meal"
+            }
+          ]
+        },
+        {
+          "text": "Go hungry (-3 Stamina)",
+          "to": "dawn",
+          "if": {
+            "not": {
+              "has": "meal"
+            }
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -3
+            }
+          ]
+        }
+      ]
+    },
+    "dawn": {
+      "text": "At dawn the towers of the city rise out of the mist. You made it.",
+      "ending": "victory"
+    }
+  }
+}

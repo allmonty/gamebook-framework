@@ -1,0 +1,135 @@
+{
+  "schema": 8,
+  "id": "provisions",
+  "lang": "pt",
+  "title": "Provisões",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "meal": {
+      "name": "Refeição",
+      "description": "Pão, queijo e frutas secas. Recupera 4 de Energia.",
+      "stack": 5,
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    }
+  },
+  "start": "camp",
+  "nodes": {
+    "camp": {
+      "text": "Você parte ao amanhecer com cinco refeições na mochila. A subida para sair do vale já custou caro (-6 de Energia). Abra a mochila e coma quando quiser.",
+      "effects": [
+        {
+          "give": "meal",
+          "count": 5
+        },
+        {
+          "stat": "stamina",
+          "add": -6
+        }
+      ],
+      "choices": [
+        {
+          "text": "Descer até o rio",
+          "to": "ferry"
+        }
+      ]
+    },
+    "ferry": {
+      "text": "Um barqueiro espera junto ao rio. Ele leva você para o outro lado por duas refeições: não come há dias.",
+      "choices": [
+        {
+          "text": "Pagar duas refeições",
+          "to": "night",
+          "if": {
+            "has": "meal",
+            "count": 2
+          },
+          "effects": [
+            {
+              "take": "meal",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "text": "Dar a volta pela ponte",
+          "to": "long-way"
+        }
+      ]
+    },
+    "long-way": {
+      "text": "A ponte fica a um dia de caminhada rio acima, e o vento atravessa o casaco (-2 de Energia).",
+      "effects": [
+        {
+          "stat": "stamina",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir",
+          "to": "night"
+        }
+      ]
+    },
+    "night": {
+      "text": "A noite cai na outra margem. Antes de dormir, você precisa comer.",
+      "choices": [
+        {
+          "text": "Comer uma refeição",
+          "to": "dawn",
+          "if": {
+            "has": "meal"
+          },
+          "effects": [
+            {
+              "take": "meal"
+            }
+          ]
+        },
+        {
+          "text": "Ficar com fome (-3 de Energia)",
+          "to": "dawn",
+          "if": {
+            "not": {
+              "has": "meal"
+            }
+          },
+          "hideIfLocked": true,
+          "effects": [
+            {
+              "stat": "stamina",
+              "add": -3
+            }
+          ]
+        }
+      ]
+    },
+    "dawn": {
+      "text": "Ao amanhecer as torres da cidade surgem da névoa. Você conseguiu.",
+      "ending": "victory"
+    }
+  }
+}

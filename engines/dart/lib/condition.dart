@@ -1,3 +1,4 @@
+import 'effect.dart' show itemCount;
 import 'json_reader.dart';
 import 'quantity.dart';
 import 'state.dart';
@@ -30,7 +31,10 @@ sealed class Condition {
     final Condition condition;
     switch (present.single) {
       case 'has':
-        condition = HasItem(checkId(obj.string('has'), obj.childPath('has')));
+        condition = HasItem(
+          checkId(obj.string('has'), obj.childPath('has')),
+          itemCount(obj),
+        );
       case 'flag':
         condition = FlagSet(checkId(obj.string('flag'), obj.childPath('flag')));
       case 'visited':
@@ -89,8 +93,12 @@ sealed class Condition {
 }
 
 class HasItem extends Condition {
-  const HasItem(this.item);
+  const HasItem(this.item, [this.count]);
   final String item;
+
+  /// At least this many (schema 8); null when the file has no `count`.
+  final int? count;
+  int get amount => count ?? 1;
 }
 
 class FlagSet extends Condition {
@@ -137,7 +145,7 @@ class Not extends Condition {
 
 /// Whether [condition] holds in [state].
 bool evaluate(Condition condition, GameState state) => switch (condition) {
-  HasItem(:final item) => state.inventory.contains(item),
+  HasItem(:final item, :final amount) => state.count(item) >= amount,
   FlagSet(:final flag) => state.flags.contains(flag),
   Visited(:final node) => state.visited.contains(node),
   VisitCount(:final node, :final op, :final value) => switch (op) {

@@ -80,6 +80,36 @@ void main() {
       saved.copyWith(stats: {...stats, 'luck': const StatValue(9, 8)}),
       null,
     ),
+    'a count is kept for an item that cannot be counted': (
+      saved.copyWith(counts: {'rusty-key': 2}),
+      null,
+    ),
+    'a count is kept for an item not held': (
+      saved.copyWith(inventory: {}, counts: {'rusty-key': 2}),
+      (j) =>
+          (j..['schema'] = 8)['items']! as Map<String, Object?>
+            ..['rusty-key'] = {'name': 'Key', 'stack': 3},
+    ),
+    'a count is below 1': (
+      saved.copyWith(counts: {'rusty-key': 0}),
+      (j) =>
+          (j..['schema'] = 8)['items']! as Map<String, Object?>
+            ..['rusty-key'] = {'name': 'Key', 'stack': 3},
+    ),
+    'the pack holds more than it has room for': (
+      saved.copyWith(counts: {'rusty-key': 7}),
+      (j) {
+        j['schema'] = 8;
+        j['rules'] = {
+          'preset': 'fighting-fantasy',
+          'inventory': {'capacity': 1},
+        };
+        (j['items']! as Map<String, Object?>)['rusty-key'] = {
+          'name': 'Key',
+          'stack': 3,
+        };
+      },
+    ),
     'a taken choice has a negative index': (
       saved.copyWith(taken: {'door#-2'}),
       null,

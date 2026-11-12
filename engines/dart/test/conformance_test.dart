@@ -119,6 +119,9 @@ void _check(
         for (final id in (value! as Map<String, Object?>).keys) id: s.stat(id),
       },
       'inventory' => _sorted(s.inventory),
+      'counts' => {
+        for (final id in (value! as Map<String, Object?>).keys) id: s.count(id),
+      },
       'flags' => _sorted(s.flags),
       'visits' => {
         for (final id in (value! as Map<String, Object?>).keys)
