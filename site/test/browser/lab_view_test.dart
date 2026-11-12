@@ -163,7 +163,7 @@ void main() {
       for (var i = 0; i < 2; i++)
         host.querySelectorAll('.gb-tab').item(i)! as HTMLElement,
     ];
-    expect(host.querySelector('[role]'), isNull);
+    expect(host.querySelector('[role^=tab]'), isNull);
     expect(play.getAttribute('aria-pressed'), 'true');
     expect((host.querySelector('.gb-edit')! as HTMLElement).hidden, isNotNull);
 

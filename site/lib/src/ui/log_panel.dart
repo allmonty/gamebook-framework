@@ -8,7 +8,6 @@ import 'wording.dart';
 HTMLElement logPanel(List<LogLine> log, Messages m) => el(
   'ul',
   cls: 'gb-log',
-  attrs: {'aria-live': 'polite'},
   children: [
     for (final line in log)
       el('li', cls: 'label ${line.tone.name}', text: logText(line, m)),

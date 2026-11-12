@@ -20,6 +20,7 @@ class PlayerView {
     AudioOutput? audio,
   }) : _audio = audio ?? AudioOutput(mediaBase) {
     host.classList.add('gb-player');
+    setChildren(host, [_status, _body]);
     render();
   }
 
@@ -35,10 +36,19 @@ class PlayerView {
   /// over the music of the one before instead of playing over it.
   final AudioOutput _audio;
 
+  /// What the last action did, for screen readers. It is one element that
+  /// stays in the page while everything else is redrawn: a live region that
+  /// arrives with its text already in it is not announced.
+  late final _status = el('p', cls: 'gb-sr', attrs: {'role': 'status'});
+
+  /// Everything that is redrawn.
+  late final _body = el('div', cls: 'gb-body');
+
   void render() {
     if (session.creation case final draft?) {
       _audio.stop();
-      host.replaceChildren(
+      _status.textContent = '';
+      _body.replaceChildren(
         CreationPanel(
           draft,
           m,
@@ -56,7 +66,7 @@ class PlayerView {
       for (final panel in [pack, journal])
         if (host.querySelector('$panel[open]') != null) panel,
     ];
-    host.replaceChildren(
+    _body.replaceChildren(
       el(
         'div',
         children: [
@@ -98,6 +108,7 @@ class PlayerView {
     for (final panel in open) {
       host.querySelector(panel)?.setAttribute('open', '');
     }
+    _status.textContent = view.log.map((l) => logText(l, m)).join('. ');
     _audio.play(view.audio);
   }
 
@@ -178,7 +189,7 @@ class PlayerView {
   HTMLElement _page(PageView view) => el(
     'article',
     cls: 'gb-page card',
-    attrs: {'tabindex': '-1', 'aria-live': 'polite'},
+    attrs: {'tabindex': '-1'},
     children: [
       if (view.heading != null) el('h3', cls: 'gb-title', text: view.heading),
       if (view.image != null)

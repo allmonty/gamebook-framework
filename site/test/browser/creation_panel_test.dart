@@ -94,4 +94,57 @@ void main() {
     expect(focused.getAttribute('aria-pressed'), 'true');
     host.remove();
   });
+
+  test('a full group marks the options that can no longer be picked', () {
+    final json = {
+      'schema': 1,
+      'id': 't',
+      'lang': 'en',
+      'title': 'Hero',
+      'rules': {
+        'preset': 'fighting-fantasy',
+        'creation': {
+          'picks': [
+            {
+              'id': 'kit',
+              'title': 'Kit',
+              'count': 1,
+              'options': [
+                {'id': 'rope', 'label': 'Rope'},
+                {'id': 'lamp', 'label': 'Lamp'},
+              ],
+            },
+          ],
+        },
+      },
+      'start': 'a',
+      'nodes': {
+        'a': {'text': 'A.', 'ending': 'victory'},
+      },
+    };
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(Story.fromJson(json), random: Random(1)),
+      const Messages({}),
+    );
+    expect(host.querySelector('[aria-disabled]'), isNull);
+    expect(
+      host.querySelector('.gb-index')!.getAttribute('aria-hidden'),
+      'true',
+    );
+
+    (host.querySelector('[data-key="kit.rope"]')! as HTMLElement).click();
+
+    final lamp = host.querySelector('[data-key="kit.lamp"]')!;
+    expect(lamp.getAttribute('aria-disabled'), 'true');
+    expect(
+      host
+          .querySelector('[data-key="kit.rope"]')!
+          .getAttribute('aria-disabled'),
+      isNull,
+    );
+    host.remove();
+  });
 }

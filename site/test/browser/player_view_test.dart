@@ -217,4 +217,51 @@ void main() {
     expect(host.querySelector('.gb-pack[open]'), isNotNull);
     host.remove();
   });
+
+  test('one status element tells screen readers what an action did', () {
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(
+        Story.fromJson({
+          'schema': 1,
+          'id': 't',
+          'lang': 'en',
+          'title': 'Status',
+          'rules': {'preset': 'fighting-fantasy'},
+          'items': {
+            'key': {'name': 'Key'},
+          },
+          'start': 'a',
+          'nodes': {
+            'a': {
+              'text': 'A.',
+              'choices': [
+                {
+                  'text': 'Take it',
+                  'to': 'b',
+                  'effects': [
+                    {'give': 'key'},
+                  ],
+                },
+              ],
+            },
+            'b': {'text': 'B.', 'ending': 'victory'},
+          },
+        }),
+        random: Random(1),
+      ),
+      const Messages({'player.log.gained': 'Got {item}'}),
+    );
+    final status = host.querySelector('[role=status]')!;
+    expect(status.textContent, '');
+    expect(host.querySelector('[aria-live]'), isNull);
+
+    (host.querySelector('.gb-choice')! as HTMLElement).click();
+
+    expect(host.querySelector('[role=status]'), same(status));
+    expect(status.textContent, 'Got Key');
+    host.remove();
+  });
 }

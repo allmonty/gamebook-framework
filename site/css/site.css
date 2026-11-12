@@ -179,7 +179,7 @@ main { display: block; }
 
 /* ---------- Player ---------- */
 .gb-player { display: grid; gap: var(--s4); max-width: 560px; }
-.gb-player > div { display: grid; gap: var(--s4); }
+.gb-body > div { display: grid; gap: var(--s4); }
 
 .gb-hud { display: flex; flex-wrap: wrap; gap: var(--s2); margin: 0; padding: 0; list-style: none; }
 .gb-pill {
@@ -197,6 +197,8 @@ main { display: block; }
 .gb-pill.low strong { color: var(--amber); }
 .gb-bonus { font: 600 11px/1 var(--font-mono); color: var(--teal); }
 
+/* For screen readers only. */
+.gb-sr { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .gb-page { outline: none; }
 .gb-page:focus-visible { box-shadow: var(--glow-soft); }
 .gb-title { color: var(--cyan); text-transform: uppercase; letter-spacing: 0.02em; }
