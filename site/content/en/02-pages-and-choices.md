@@ -30,6 +30,21 @@ A page can show an image above its text:
 
 The path is relative to the story's folder, so `images/hall.webp` sits next to `story.en.json`. `.webp`, `.png` and `.jpg` all work. The command-line validator tells you if the file is missing. (The examples on this site have no pictures, to keep them short.)
 
+### Describe your pictures
+
+Some readers cannot see the picture: they read with a screen reader, or the image did not load. Give them the picture in words with `imageAlt` (schema 8):
+
+```json
+"hall": {
+  "text": "...",
+  "image": "images/hall.webp",
+  "imageAlt": "A long hall lit by one flickering lamp, two doors at the end.",
+  "choices": [ ... ]
+}
+```
+
+Say what the reader would notice, in a sentence; there is no need to start with "A picture of". The player hands this text to the screen reader. Without it, the picture counts as decoration and is skipped. `imageAlt` only goes next to an `image`, and an item's image takes one the same way. Each translation writes its own.
+
 ## Choices that wait
 
 Some choices should only work once the reader has done something. Give the choice an `if` with a **condition**:
@@ -56,6 +71,7 @@ The third choice, the maintenance hatch, has `"hideIfLocked": true`: until its c
 |---|---|---|
 | `text` | page, choice | What the reader sees. `\n\n` starts a paragraph. |
 | `image` | page | A picture above the text. |
+| `imageAlt` | page, item | What the picture shows, for readers who cannot see it (schema 8). |
 | `choices` | page | The buttons. |
 | `to` | choice | The page the choice leads to. |
 | `ending` | page | `"victory"` or `"death"`: the game is over. |

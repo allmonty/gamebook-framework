@@ -32,4 +32,10 @@ A player that shows the image gives this text to assistive technology; without i
 A schema 8 story with `imageAlt` plays and the site passes it to the `<img>`; older engines' rule holds (schema 7 story using it is rejected); checks green.
 
 ## Handoff notes
-(fill in)
+- Two commits: `c6533d9` opens schema 8 and adds the fields (spec, JSON Schema, engine, cases, READMEs, kit); the second takes them to the site and the tutorial and marks the step done.
+- Engine: `_altText` in `story.dart` parses all three fields: optional, `must not be empty`, and `needs an image next to it` without its picture. The gate has `(8, _schema8)` in `schema_gate.dart`, which checks `coverAlt`, then items, then nodes. Steps 08 to 10 add their own checks to `_schema8`.
+- JSON Schema: version 8, the fields with `pattern: \S`, and `dependentRequired` ties each to its picture. It does not gate versions (it never did).
+- The unsupported-schema test in `story_test.dart` now uses 9; `needs-newer-schema.json` uses schema 3 with a newer feature, so it needed no change.
+- Site: `PageView.imageAlt`, filled in `play_session.dart`, used as the `<img>` alt (empty when missing). One VM test and one browser test (6 browser tests now). The site shows no item images and no cover, so only `imageAlt` on pages reaches it.
+- Tutorial: "Describe your pictures" / "Descreva suas imagens" in chapter 2, and a row in its table. No example story, as planned.
+- Done on the branch `step-07-image-alt` from `main`.

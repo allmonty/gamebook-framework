@@ -117,6 +117,30 @@ void main() {
     expect(session.view.heading, isNull);
   });
 
+  test('the page image comes with its description, or none', () {
+    final session = PlaySession.start(
+      storyOf(
+        {
+          'a': {
+            'text': 'A.',
+            'image': 'images/gate.webp',
+            'imageAlt': 'An iron gate in the fog.',
+            'choices': [
+              {'text': 'On', 'to': 'b'},
+            ],
+          },
+          'b': {'text': 'B.', 'image': 'images/b.webp', 'ending': 'victory'},
+        },
+        extra: {'schema': 8},
+      ),
+      random: Random(1),
+    );
+    expect(session.view.imageAlt, 'An iron gate in the fog.');
+    session.choose(0);
+    expect(session.view.image, 'images/b.webp');
+    expect(session.view.imageAlt, isNull);
+  });
+
   test('without showTitles the heading is the story title', () {
     final session = PlaySession.start(
       conformanceStory('locked-choice'),
