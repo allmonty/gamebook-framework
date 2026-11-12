@@ -3,6 +3,7 @@ import 'package:web/web.dart';
 import '../play/play_session.dart';
 import '../play/views.dart';
 import 'dom.dart';
+import 'pack_panel.dart';
 import 'wording.dart';
 
 /// Draws a [PlaySession] into [host] and redraws after every action.
@@ -23,8 +24,21 @@ class PlayerView {
         'div',
         children: [
           _hud(view.stats),
+          PackPanel(
+            view.pack,
+            m,
+            onUse: (id) => _act(() => session.useItem(id)),
+          ).element,
           _page(view),
           if (view.ending != null) _ending(view.ending!),
+          if (view.offer != null)
+            OfferPanel(
+              view.offer!,
+              m,
+              onTake: ({String? replacing}) =>
+                  _act(() => session.takeOffer(replacing: replacing)),
+              onLeave: () => _act(session.leaveOffer),
+            ).element,
           if (view.choices.isNotEmpty) _choices(view.choices),
         ],
       ),

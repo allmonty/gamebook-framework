@@ -8,8 +8,8 @@ Status values: `todo`, `in progress`, `done`, `blocked`.
 |---|---|---|---|
 | 00 | [Project guidance](steps/00-project-guidance.md) | done | 8b94735 |
 | 01 | [Scaffold the site package](steps/01-site-scaffold.md) | done | 441ebed |
-| 02 | [Player: pages, choices, stats, endings](steps/02-player-pages.md) | done | |
-| 03 | [Player: items, use, offers, containers](steps/03-player-items.md) | todo | |
+| 02 | [Player: pages, choices, stats, endings](steps/02-player-pages.md) | done | 40d4b45 |
+| 03 | [Player: items, use, offers, containers](steps/03-player-items.md) | done | |
 | 04 | [Player: dice, combat, journal, undo, achievements](steps/04-player-dice-combat.md) | todo | |
 | 05 | [Player: character creation](steps/05-player-creation.md) | todo | |
 | 06 | [Editor and playground](steps/06-editor-playground.md) | todo | |

@@ -37,13 +37,32 @@ class PlaySession {
   /// Takes the choice at [index] (a [ChoiceItem.index]).
   void choose(int index) => _engine.choose(index);
 
+  /// Uses a carried item (a [PackItem.usable] one).
+  void useItem(String id) => _engine.useItem(id);
+
+  /// Takes the offered item, leaving [replacing] behind when the pack is full.
+  void takeOffer({String? replacing}) =>
+      _engine.resolveOffer(take: true, replacing: replacing);
+
+  /// Leaves the offered item where it is.
+  void leaveOffer() => _engine.resolveOffer(take: false);
+
   PageView get view => PageView(
     storyTitle: story.title,
     title: story.showTitles ? _engine.node.title : null,
     image: _engine.node.image,
     paragraphs: _engine.paragraphs,
-    choices: [for (final c in _engine.choices) _choice(c)],
+    // The engine refuses choices until the offer is settled, so hide them.
+    choices: _engine.offer != null
+        ? const []
+        : [for (final c in _engine.choices) _choice(c)],
     stats: [for (final s in rules.stats) _stat(s)],
+    pack: PackView(
+      items: [for (final id in _engine.state.inventory) _item(id)],
+      used: _engine.slotsUsed,
+      capacity: _engine.capacity,
+    ),
+    offer: _offer(),
     ending: _engine.ending,
   );
 
@@ -102,6 +121,36 @@ class PlaySession {
       value: state.stat(rule.id),
       max: state.stats[rule.id]?.max,
       bonus: state.bonusOf(rule.id),
+    );
+  }
+
+  PackItem _item(String id) {
+    final item = story.items[id];
+    return PackItem(
+      id: id,
+      name: item?.name ?? id,
+      description: item?.description,
+      bonus: [
+        for (final MapEntry(:key, :value) in (item?.bonus ?? {}).entries)
+          (_label(key), value),
+      ],
+      usable: _engine.canUse(id),
+      room: item?.capacity,
+    );
+  }
+
+  OfferView? _offer() {
+    final id = _engine.offer;
+    if (id == null) return null;
+    return OfferView(
+      item: _item(id),
+      swapFrom: _engine.canHold(id)
+          ? const []
+          : [
+              for (final carried in _engine.state.inventory)
+                if (!_engine.isContainer(carried)) _item(carried),
+            ],
+      more: _engine.moreOffers,
     );
   }
 

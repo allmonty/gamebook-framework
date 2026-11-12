@@ -226,3 +226,14 @@ main { display: block; }
 .gb-ending .label { margin: 0; color: var(--teal); font-size: 13px; }
 .gb-ending.death { border-color: var(--crimson); background: var(--crimson-soft); }
 .gb-ending.death .label { color: var(--crimson); }
+
+.gb-pack { border: 1px solid var(--line); border-radius: var(--radius); background: rgba(14, 23, 38, 0.6); }
+.gb-pack summary { cursor: pointer; padding: var(--s3) var(--s4); color: var(--amber); min-height: 44px; display: flex; align-items: center; }
+.gb-pack ul { list-style: none; margin: 0; padding: 0 var(--s4) var(--s3); display: grid; gap: var(--s2); }
+.gb-item { display: flex; justify-content: space-between; align-items: center; gap: var(--s3); padding: var(--s2) 0; border-top: 1px solid var(--line); }
+.gb-item p, .gb-offer div p { margin: var(--s1) 0 0; color: var(--muted); font-size: 14px; }
+.gb-empty { margin: 0; padding: 0 var(--s4) var(--s3); color: var(--muted); font-size: 14px; }
+.gb-item .btn { min-height: 36px; padding: var(--s2) var(--s4); font-size: 12px; }
+.gb-offer { border-color: rgba(255, 179, 0, 0.5); box-shadow: 0 0 16px rgba(255, 179, 0, 0.12); }
+.gb-offer > .label { color: var(--amber); }
+.gb-actions { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s4); }

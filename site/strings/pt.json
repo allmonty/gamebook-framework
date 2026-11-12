@@ -20,5 +20,16 @@
   "player.not": "sem {what}",
   "player.visited": "{name} visitado",
   "player.visits": "{name} visitas {op} {target}",
-  "home.try": "Experimente: a história acima é este arquivo pequeno, jogado ao vivo pelo motor real."
+  "home.try": "Experimente: a história acima é este arquivo pequeno, jogado ao vivo pelo motor real.",
+  "player.pack": "Mochila // {count}",
+  "player.packOf": "Mochila // {used}/{capacity}",
+  "player.empty": "Nada ainda.",
+  "player.use": "Usar",
+  "player.offer": "Encontrado",
+  "player.full": "Sua mochila está cheia. Deixe algo para trás para levar.",
+  "player.take": "Levar",
+  "player.leave": "Deixar",
+  "player.swap": "Deixar {name}",
+  "player.moreOffers": "+{count} encontrados",
+  "player.room": "+{count} espaços"
 }

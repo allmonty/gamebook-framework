@@ -20,5 +20,16 @@
   "player.not": "no {what}",
   "player.visited": "{name} visited",
   "player.visits": "{name} visits {op} {target}",
-  "home.try": "Try it: the whole story above is this tiny file, played live by the real engine."
+  "home.try": "Try it: the whole story above is this tiny file, played live by the real engine.",
+  "player.pack": "Pack // {count}",
+  "player.packOf": "Pack // {used}/{capacity}",
+  "player.empty": "Nothing yet.",
+  "player.use": "Use",
+  "player.offer": "Found",
+  "player.full": "Your pack is full. Leave something behind to take it.",
+  "player.take": "Take it",
+  "player.leave": "Leave it",
+  "player.swap": "Leave {name}",
+  "player.moreOffers": "+{count} more found",
+  "player.room": "+{count} slots"
 }

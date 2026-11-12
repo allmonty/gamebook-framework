@@ -13,6 +13,8 @@ class PageView {
     required this.paragraphs,
     required this.choices,
     required this.stats,
+    required this.pack,
+    this.offer,
     this.title,
     this.image,
     this.ending,
@@ -26,6 +28,10 @@ class PageView {
   final List<String> paragraphs;
   final List<ChoiceItem> choices;
   final List<StatPill> stats;
+  final PackView pack;
+
+  /// An item found that the player must take or leave before going on.
+  final OfferView? offer;
 
   /// Set when the game is over.
   final Ending? ending;
@@ -99,4 +105,58 @@ class StatPill {
 
   /// At or under a quarter of its ceiling: shown as a warning.
   bool get low => max != null && max! > 0 && value * 4 <= max!;
+}
+
+/// What the player carries.
+class PackView {
+  const PackView({required this.items, required this.used, this.capacity});
+
+  final List<PackItem> items;
+
+  /// Slots in use (containers use none) and how many there are; null
+  /// [capacity] is an unlimited pack.
+  final int used;
+  final int? capacity;
+
+  bool get full => capacity != null && used >= capacity!;
+}
+
+class PackItem {
+  const PackItem({
+    required this.id,
+    required this.name,
+    this.description,
+    this.bonus = const [],
+    this.usable = false,
+    this.room,
+  });
+
+  /// Pass to [PlaySession.useItem] or as the item to leave behind.
+  final String id;
+  final String name;
+  final String? description;
+
+  /// Stat changes while carried, as (stat label, amount).
+  final List<(String, int)> bonus;
+
+  /// Whether it can be used here and now.
+  final bool usable;
+
+  /// Extra slots it gives: set only for a container.
+  final int? room;
+}
+
+/// An item waiting for the player's decision (`pickup: "choose"`).
+class OfferView {
+  const OfferView({required this.item, required this.swapFrom, this.more = 0});
+
+  final PackItem item;
+
+  /// Items the player may leave behind to make room; empty when it fits.
+  final List<PackItem> swapFrom;
+
+  /// More offers waiting after this one.
+  final int more;
+
+  bool get needsSwap => swapFrom.isNotEmpty;
 }
