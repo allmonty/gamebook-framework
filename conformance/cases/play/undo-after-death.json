@@ -1,0 +1,68 @@
+{
+  "description": "Undo is allowed after the game ended: going back from a death returns to the page before, alive, and the game runs again.",
+  "spec": [
+    "B4"
+  ],
+  "story": {
+    "schema": 5,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "undo": 1
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Jump",
+            "to": "b",
+            "effects": [
+              {
+                "stat": "stamina",
+                "add": -20
+              }
+            ]
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "choices": [
+          {
+            "text": "Back",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    },
+    {
+      "undo": {}
+    }
+  ],
+  "expect": {
+    "node": "a",
+    "ending": null,
+    "stats": {
+      "stamina": 12
+    },
+    "visits": {
+      "a": 1,
+      "b": 0
+    }
+  }
+}
