@@ -22,6 +22,7 @@ class PageView {
     this.journal = const [],
     this.achievements = const [],
     this.audio = const AudioCue(),
+    this.hasAudio = false,
     this.canUndo = false,
     this.combat,
     this.offer,
@@ -55,6 +56,10 @@ class PageView {
   /// Achievements earned this visit, in story order.
   final List<String> achievements;
   final AudioCue audio;
+
+  /// Whether any page of the story has music or a sound, so the player
+  /// needs a way to silence it.
+  final bool hasAudio;
   final bool canUndo;
 
   /// The fight under way on this page, if any.
@@ -77,6 +82,7 @@ class ChoiceItem {
     this.locked = false,
     this.lockedText,
     this.needs = const [],
+    this.roll,
   });
 
   /// Pass to [PlaySession.choose].
@@ -87,6 +93,10 @@ class ChoiceItem {
 
   /// The author's own wording for why it is locked; wins over [needs].
   final String? lockedText;
+
+  /// What the choice rolls, for a check or a table: `2d6 + Skill ≥ 16`,
+  /// `1d6`. Shown before the tap (spec B10).
+  final String? roll;
 
   /// What is missing, for the UI to word as "Needs: ...".
   final List<Requirement> needs;

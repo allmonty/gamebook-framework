@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:gamebook_engine/story.dart';
 import 'package:gamebook_site/src/play/play_session.dart';
+import 'package:gamebook_site/src/ui/audio.dart';
 import 'package:gamebook_site/src/ui/dom.dart';
 import 'package:gamebook_site/src/ui/player_view.dart';
 import 'package:gamebook_site/src/ui/wording.dart';
@@ -123,6 +124,202 @@ void main() {
       host.querySelector('.gb-page img')!.getAttribute('alt'),
       'An iron gate in the fog.',
     );
+    host.remove();
+  });
+
+  test('a story with audio has a mute button; one without has none', () {
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(_story, random: Random(1)),
+      const Messages({'player.mute': 'Mute'}),
+    );
+    expect(host.querySelector('[aria-pressed]'), isNull);
+
+    final audio = AudioOutput();
+    PlayerView(
+      host,
+      PlaySession.start(
+        Story.fromJson({
+          'schema': 1,
+          'id': 't',
+          'lang': 'en',
+          'title': 'Loud',
+          'rules': {'preset': 'fighting-fantasy'},
+          'start': 'a',
+          'nodes': {
+            'a': {
+              'text': 'A.',
+              'music': 'audio/a.ogg',
+              'choices': [
+                {'text': 'On', 'to': 'b'},
+              ],
+            },
+            'b': {'text': 'B.', 'ending': 'victory'},
+          },
+        }),
+        random: Random(1),
+      ),
+      const Messages({'player.mute': 'Mute'}),
+      audio: audio,
+    );
+    HTMLElement mute() => host.querySelector('[aria-pressed]')! as HTMLElement;
+    expect(mute().textContent, 'Mute');
+    expect(mute().getAttribute('aria-pressed'), 'false');
+
+    mute().click();
+
+    expect(audio.muted, isTrue);
+    expect(mute().getAttribute('aria-pressed'), 'true');
+    host.remove();
+  });
+
+  test('the pack stays open across actions', () {
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(
+        Story.fromJson({
+          'schema': 1,
+          'id': 't',
+          'lang': 'en',
+          'title': 'Pack',
+          'rules': {'preset': 'fighting-fantasy'},
+          'items': {
+            'key': {'name': 'Key'},
+          },
+          'start': 'a',
+          'nodes': {
+            'a': {
+              'text': 'A.',
+              'effects': [
+                {'give': 'key'},
+              ],
+              'choices': [
+                {'text': 'On', 'to': 'b'},
+              ],
+            },
+            'b': {'text': 'B.', 'ending': 'victory'},
+          },
+        }),
+        random: Random(1),
+      ),
+      const Messages({}),
+    );
+    expect(host.querySelector('.gb-pack[open]'), isNull);
+    host.querySelector('.gb-pack')!.setAttribute('open', '');
+
+    (host.querySelector('.gb-choice')! as HTMLElement).click();
+
+    expect(host.querySelector('.gb-page p')!.textContent, 'B.');
+    expect(host.querySelector('.gb-pack[open]'), isNotNull);
+    host.remove();
+  });
+
+  test('one status element tells screen readers what an action did', () {
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(
+        Story.fromJson({
+          'schema': 1,
+          'id': 't',
+          'lang': 'en',
+          'title': 'Status',
+          'rules': {'preset': 'fighting-fantasy'},
+          'items': {
+            'key': {'name': 'Key'},
+          },
+          'start': 'a',
+          'nodes': {
+            'a': {
+              'text': 'A.',
+              'choices': [
+                {
+                  'text': 'Take it',
+                  'to': 'b',
+                  'effects': [
+                    {'give': 'key'},
+                  ],
+                },
+              ],
+            },
+            'b': {'text': 'B.', 'ending': 'victory'},
+          },
+        }),
+        random: Random(1),
+      ),
+      const Messages({'player.log.gained': 'Got {item}'}),
+    );
+    final status = host.querySelector('[role=status]')!;
+    expect(status.textContent, '');
+    expect(host.querySelector('[aria-live]'), isNull);
+
+    (host.querySelector('.gb-choice')! as HTMLElement).click();
+
+    expect(host.querySelector('[role=status]'), same(status));
+    expect(status.textContent, 'Got Key');
+    host.remove();
+  });
+
+  test('restart asks once, and another action takes the question back', () {
+    final host = el('div');
+    document.body!.append(host);
+    final session = PlaySession.start(
+      Story.fromJson({
+        'schema': 1,
+        'id': 't',
+        'lang': 'en',
+        'title': 'Loop',
+        'rules': {'preset': 'fighting-fantasy'},
+        'start': 'a',
+        'nodes': {
+          'a': {
+            'text': 'A.',
+            'choices': [
+              {'text': 'On', 'to': 'b'},
+            ],
+          },
+          'b': {
+            'text': 'B.',
+            'choices': [
+              {'text': 'On', 'to': 'b'},
+              {'text': 'End', 'to': 'c'},
+            ],
+          },
+          'c': {'text': 'C.', 'ending': 'victory'},
+        },
+      }),
+      random: Random(1),
+    );
+    PlayerView(
+      host,
+      session,
+      const Messages({
+        'player.restartNow': 'Restart',
+        'player.restartConfirm': 'Really restart?',
+      }),
+    );
+    HTMLElement restart() =>
+        host.querySelector('[data-key="restart"]')! as HTMLElement;
+    String page() => host.querySelector('.gb-page p')!.textContent!;
+    (host.querySelector('.gb-choice')! as HTMLElement).click();
+    expect(page(), 'B.');
+
+    restart().click();
+    expect(page(), 'B.', reason: 'the first press only asks');
+    expect(restart().textContent, 'Really restart?');
+
+    (host.querySelector('.gb-choice')! as HTMLElement).click();
+    expect(restart().textContent, 'Restart');
+
+    restart().click();
+    restart().click();
+    expect(page(), 'A.');
+    expect(restart().textContent, 'Restart');
     host.remove();
   });
 }

@@ -28,6 +28,19 @@ void main() {
     expect(line.tone, Tone.good);
   });
 
+  test('a check that adds nothing has a line without "+ 0"', () {
+    final session = _start('check-effects-after-roll', [4, 4])..choose(0);
+    expect(session.view.log.first.key, 'check.pass.plain');
+  });
+
+  test('a round nobody won is neither good nor bad news', () {
+    // You 1+1+9, the goblin 2+2+7.
+    final session = _start('opposed-win', [1, 1, 2, 2])
+      ..choose(0)
+      ..fight();
+    expect(session.view.log.single.tone, Tone.neutral);
+  });
+
   test('an outcome table logs its roll and its effects', () {
     final session = _start('random-table', [4])..choose(0);
     expect(_keys(session), ['table', 'stat']);
@@ -44,17 +57,20 @@ void main() {
     expect(combat.pickTarget, isFalse);
 
     session.fight();
-    expect(_keys(session), ['round']);
+    expect(_keys(session), ['round.vs']);
+    // You 6+6+9, the goblin 1+1+7: the line shows both totals.
+    expect(session.view.log.single.args, containsPair('total', 21));
+    expect(session.view.log.single.args, containsPair('enemyTotal', 9));
     expect(session.view.combat!.enemies.single.health, 2);
     session.fight();
     expect(session.view.combat, isNull);
     expect(session.view.ending, Ending.victory);
-    expect(_keys(session), ['round', 'gained']);
+    expect(_keys(session), ['round.vs', 'gained']);
   });
 
   test('a wound can end the fight: the round is logged, its page follows', () {
     final session = _start('fight-wounded', [1, 1, 6, 6])..fight();
-    expect(_keys(session).first, 'round');
+    expect(_keys(session).first, 'round.vs');
     expect(session.view.combat, isNull);
     expect(session.view.paragraphs, ['Stung']);
     expect(session.view.choices.single.text, 'On');
@@ -64,7 +80,7 @@ void main() {
     final session = _start('fight-rounds', [3, 3, 4, 4, 3, 3, 4, 4])
       ..fight()
       ..fight();
-    expect(_keys(session), ['round']);
+    expect(_keys(session), ['round.vs']);
     expect(session.view.combat, isNull);
     expect(session.view.paragraphs, ['Gone']);
   });

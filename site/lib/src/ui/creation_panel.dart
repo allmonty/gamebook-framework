@@ -55,6 +55,7 @@ class CreationPanel {
               'button',
               cls: 'btn btn-ghost',
               text: m('player.reroll', {'count': view.rerollsLeft}),
+              attrs: {'data-key': 'reroll'},
             ),
             () {
               draft.reroll();
@@ -71,7 +72,11 @@ class CreationPanel {
   HTMLElement _name(CreationView view, HTMLElement begin) {
     final input = el(
       'input',
-      attrs: {'type': 'text', 'autocomplete': 'off', 'maxlength': '40'},
+      attrs: {
+        'type': 'text',
+        'autocomplete': 'off',
+        'maxlength': '${HeroDraft.maxNameLength}',
+      },
     ) as HTMLInputElement..value = view.name;
     input.addEventListener(
       'input',
@@ -90,39 +95,59 @@ class CreationPanel {
     );
   }
 
-  HTMLElement _group(PickGroupView group) => el(
-    'fieldset',
-    cls: 'gb-picks',
-    children: [
-      el(
-        'legend',
-        cls: 'label',
-        text: m('player.pick', {
-          'title': group.title,
-          'picked': group.picked,
-          'count': group.count,
-        }),
-      ),
-      for (final option in group.options)
-        onClick(
-          el(
-            'button',
-            cls: 'gb-choice${option.picked ? ' picked' : ''}',
-            attrs: {'aria-pressed': '${option.picked}'},
-            children: [
-              el('span', cls: 'gb-index', text: option.picked ? '[x]' : '[ ]'),
-              el('span', cls: 'gb-text', text: option.label),
-              if (option.description != null)
-                el('span', cls: 'gb-needs', text: option.description),
-            ],
-          ),
-          () {
-            draft.toggle(group.id, option.id);
-            onChange();
-          },
+  HTMLElement _group(PickGroupView group) {
+    // A full group takes no more picks: say so instead of ignoring the click.
+    final full = group.picked >= group.count;
+    return el(
+      'fieldset',
+      cls: 'gb-picks',
+      children: [
+        el(
+          'legend',
+          cls: 'label',
+          text: m('player.pick', {
+            'title': group.title,
+            'picked': group.picked,
+            'count': group.count,
+          }),
         ),
-    ],
-  );
+        for (final option in group.options)
+          onClick(
+            el(
+              'button',
+              cls:
+                  'gb-choice${option.picked
+                      ? ' picked'
+                      : full
+                      ? ' locked'
+                      : ''}',
+              attrs: {
+                if (full && !option.picked) 'aria-disabled': 'true',
+                'aria-pressed': '${option.picked}',
+                // Ids have no quotes or spaces, so this is safe in a selector.
+                'data-key': '${group.id}.${option.id}',
+              },
+              children: [
+                // aria-pressed already says it.
+                el(
+                  'span',
+                  cls: 'gb-index',
+                  text: option.picked ? '[x]' : '[ ]',
+                  attrs: {'aria-hidden': 'true'},
+                ),
+                el('span', cls: 'gb-text', text: option.label),
+                if (option.description != null)
+                  el('span', cls: 'gb-needs', text: option.description),
+              ],
+            ),
+            () {
+              draft.toggle(group.id, option.id);
+              onChange();
+            },
+          ),
+      ],
+    );
+  }
 
   static void _enable(HTMLElement button, bool enabled) =>
       (button as HTMLButtonElement).disabled = !enabled;

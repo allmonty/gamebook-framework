@@ -31,7 +31,7 @@ Every story has the same few fields at the top:
 
 | Field | What it is |
 |---|---|
-| `schema` | Which version of the format the story uses. Start with `1`; later chapters say when a feature needs a higher number. |
+| `schema` | Which version of the format the story uses. Write `1`: it is the only version so far ([format versions](../versions.html)). |
 | `id` | A short name for the story, in lowercase letters, digits and dashes: `hello-world`. |
 | `lang` | The language of this file: `en`, `pt`... |
 | `title` | The title readers see. |
@@ -42,7 +42,7 @@ Every story has the same few fields at the top:
 A page (a *node*) has `text`, and then exactly one way forward:
 
 - `choices`: a list of buttons, each with the `text` to show and the page it goes `to`;
-- an `ending`: `"victory"` or `"death"`;
+- an `ending`: `"victory"`, `"defeat"` or `"death"`;
 - or a fight (chapter 6).
 
 ### Exercise
@@ -70,5 +70,7 @@ When your story outgrows a page, write it in a file:
    "$schema": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
    ```
 4. To play it, open the [playground](../play.html), press **Open file** and pick your story.
+
+The playground reads only the story file. Pictures and sounds from your folder do not load there; `validate_story` (chapter 8) checks that those files exist.
 
 Next you will give the reader real decisions: several choices, dead ends, and more than one way to finish.

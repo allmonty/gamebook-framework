@@ -1,0 +1,31 @@
+{
+  "description": "Every integer is between -1,000,000 and 1,000,000.",
+  "spec": [
+    "B2"
+  ],
+  "story": {
+    "schema": 1,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 1000001
+          }
+        ],
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.effects[0].add"
+  }
+}

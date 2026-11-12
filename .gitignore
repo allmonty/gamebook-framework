@@ -1,5 +1,7 @@
 .dart_tool/
 pubspec.lock
+# The site is an application: its lockfile is what makes a deploy repeatable.
+!site/pubspec.lock
 build/
 .venv/
 .DS_Store

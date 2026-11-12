@@ -23,7 +23,7 @@ Itens são únicos: o leitor tem a chave enferrujada ou não tem. Dar duas vezes
 
 ## Itens que o leitor usa
 
-Um item com `use` ganha um botão **Usar** na mochila. Usar aplica os efeitos dele e o gasta. Isso pede `"schema": 2` ou mais.
+Um item com `use` ganha um botão **Usar** na mochila. Usar aplica os efeitos dele e o gasta.
 
 ```gamebook
 examples/03-items/healing-potion

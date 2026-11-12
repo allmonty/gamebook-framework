@@ -75,4 +75,76 @@ void main() {
     expect(host.querySelector('.gb-pack summary'), isNotNull);
     host.remove();
   });
+
+  test('picking an option keeps keyboard focus on it', () {
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(_story, random: Random(1)),
+      const Messages({}),
+    );
+    final option = host.querySelector('.gb-picks .gb-choice')! as HTMLElement
+      ..focus();
+    option.click();
+
+    final focused = document.activeElement!;
+    expect(focused, isNot(same(option)), reason: 'the panel was redrawn');
+    expect(focused.getAttribute('data-key'), 'kit.rope');
+    expect(focused.getAttribute('aria-pressed'), 'true');
+    host.remove();
+  });
+
+  test('a full group marks the options that can no longer be picked', () {
+    final json = {
+      'schema': 1,
+      'id': 't',
+      'lang': 'en',
+      'title': 'Hero',
+      'rules': {
+        'preset': 'fighting-fantasy',
+        'creation': {
+          'picks': [
+            {
+              'id': 'kit',
+              'title': 'Kit',
+              'count': 1,
+              'options': [
+                {'id': 'rope', 'label': 'Rope'},
+                {'id': 'lamp', 'label': 'Lamp'},
+              ],
+            },
+          ],
+        },
+      },
+      'start': 'a',
+      'nodes': {
+        'a': {'text': 'A.', 'ending': 'victory'},
+      },
+    };
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(Story.fromJson(json), random: Random(1)),
+      const Messages({}),
+    );
+    expect(host.querySelector('[aria-disabled]'), isNull);
+    expect(
+      host.querySelector('.gb-index')!.getAttribute('aria-hidden'),
+      'true',
+    );
+
+    (host.querySelector('[data-key="kit.rope"]')! as HTMLElement).click();
+
+    final lamp = host.querySelector('[data-key="kit.lamp"]')!;
+    expect(lamp.getAttribute('aria-disabled'), 'true');
+    expect(
+      host
+          .querySelector('[data-key="kit.rope"]')!
+          .getAttribute('aria-disabled'),
+      isNull,
+    );
+    host.remove();
+  });
 }

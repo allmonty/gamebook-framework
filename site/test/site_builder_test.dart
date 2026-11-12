@@ -76,6 +76,60 @@ void main() {
     }
   });
 
+  test('a page names its address, its other language and where it is', () {
+    SiteBuilder(source: Directory.current, output: output).build();
+    String page(String path) => File('${output.path}/$path').readAsStringSync();
+    const site = SiteBuilder.url;
+
+    final chapter = page('pt/tutorial/05-dice.html');
+    expect(
+      chapter,
+      contains('<link rel="canonical" href="${site}pt/tutorial/05-dice.html">'),
+    );
+    expect(
+      chapter,
+      contains(
+        '<link rel="alternate" hreflang="en" '
+        'href="${site}en/tutorial/05-dice.html">',
+      ),
+    );
+    expect(chapter, contains('<meta property="og:title" content="Dados '));
+    expect(chapter, contains('lang="en" aria-label="English (EN)"'));
+    // Inside the tutorial, not on the playground.
+    expect(chapter, contains('tutorial/index.html" aria-current="true">'));
+    expect(chapter, contains('play.html">'));
+
+    expect(
+      page('en/tutorial/index.html'),
+      contains('tutorial/index.html" aria-current="page">'),
+    );
+    expect(page('en/play.html'), contains('play.html" aria-current="page">'));
+    expect(
+      page('en/index.html'),
+      isNot(contains('<a href="../en/play.html" aria')),
+    );
+  });
+
+  test('a string placed in an HTML attribute cannot break out of it', () {
+    final inAttribute = RegExp(r'="[^"]*\{\{([\w.-]+)\}\}');
+    final keys = {
+      for (final file in Directory('templates').listSync().whereType<File>())
+        for (final m in inAttribute.allMatches(file.readAsStringSync())) m[1]!,
+    };
+    expect(keys, contains('page.description'));
+    final builder = SiteBuilder(source: Directory.current, output: output);
+    for (final lang in SiteBuilder.languages) {
+      final strings = builder.loadStrings(lang);
+      for (final key in keys) {
+        expect(
+          strings[key] ?? '',
+          isNot(matches(RegExp('["<&]'))),
+          reason: '$lang $key',
+        );
+      }
+    }
+  });
+
   test('every language has the same string keys', () {
     final builder = SiteBuilder(source: Directory.current, output: output);
     final keys = {

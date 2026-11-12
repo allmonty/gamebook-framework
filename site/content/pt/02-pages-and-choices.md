@@ -91,7 +91,7 @@ examples/02-pages-and-choices/the-pedlar
 | `imageAlt` | página, item | O que a imagem mostra, para leitores que não conseguem vê-la. |
 | `choices` | página | Os botões. |
 | `to` | escolha | A página para onde a escolha leva. |
-| `ending` | página | `"victory"` ou `"death"`: o jogo acabou. |
+| `ending` | página | `"victory"`, `"death"` ou `"defeat"` (capítulo 7): o jogo acabou. |
 | `if` | escolha | Uma condição; enquanto for falsa, a escolha fica trancada. |
 | `lockedText` | escolha | Suas palavras para explicar por que está trancada. |
 | `hideIfLocked` | escolha | Esconde a escolha enquanto estiver trancada. |

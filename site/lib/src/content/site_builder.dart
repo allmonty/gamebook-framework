@@ -17,6 +17,10 @@ class SiteBuilder {
 
   static const languages = ['en', 'pt'];
 
+  /// Where the site is published: for the links that must be whole
+  /// addresses (canonical, the other language, what a shared link shows).
+  static const url = 'https://allmonty.github.io/gamebook-framework/';
+
   void build() {
     if (output.existsSync()) output.deleteSync(recursive: true);
     output.createSync(recursive: true);
@@ -150,8 +154,14 @@ class SiteBuilder {
       'root': '../' * depth,
       'path': path,
       'otherLang': lang == 'en' ? 'pt' : 'en',
+      'site.url': url,
+      // Which part of the site this page is in, for the header's links.
+      'nav.tutorial.current': _current(path, 'tutorial/'),
+      'nav.play.current': _current(path, 'play.html'),
       ...extra,
     };
+    // A chapter's title comes from its Markdown: made safe for an attribute.
+    values['page.title.attr'] = _attribute.convert(values['page.title']!);
     final page = fillTemplate(_read('templates/layout.html'), {
       ...values,
       'content': fillTemplate(embedExamples(body, exampleLookup(lang)), values),
@@ -172,6 +182,16 @@ class SiteBuilder {
   }).replaceAll('</', r'<\/');
 
   static const _html = HtmlEscape();
+  static const _attribute = HtmlEscape(HtmlEscapeMode.attribute);
+
+  /// ` aria-current="..."` for the header link to [section]: `page` on that
+  /// very page, `true` on a page inside it, nothing elsewhere.
+  static String _current(String path, String section) =>
+      path == section || path == '${section}index.html'
+      ? ' aria-current="page"'
+      : path.startsWith(section)
+      ? ' aria-current="true"'
+      : '';
 
   String _read(String path) => File('${source.path}/$path').readAsStringSync();
 

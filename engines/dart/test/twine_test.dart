@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:gamebook_engine/story.dart';
+import 'package:gamebook_engine/text.dart';
 import 'package:gamebook_engine/twine.dart';
 import 'package:test/test.dart';
 
@@ -12,6 +13,25 @@ Map<String, Object?> node(TwineImport r, String id) =>
     (r.story['nodes']! as Map<String, Object?>)[id]! as Map<String, Object?>;
 
 void main() {
+  test('braces in Twine text stay literal, and the id has no underscore', () {
+    final r = importTwine(
+      ':: StoryTitle\nMy_Story\n\n'
+      ':: Start\nA jar. <<set \$x to {a: 1}>>\n[[Open {it}->End]]\n\n'
+      ':: End [victory]\nDone.\n',
+    );
+    final story = Story.fromJson(r.story);
+
+    expect(story.id, 'my-story');
+    expect(
+      renderTemplate(story.nodes['Start']!.text, (_) => null),
+      contains('{a: 1}'),
+    );
+    expect(
+      renderTemplate(story.nodes['Start']!.choices.single.text, (_) => null),
+      'Open {it}',
+    );
+  });
+
   test('Twee passages become pages, links choices, the rest is reported', () {
     final r = importTwine(twee, lang: 'pt');
     final story = Story.fromJson(r.story);

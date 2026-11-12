@@ -21,6 +21,9 @@ class HeroDraft {
   String name = '';
   final Map<String, Set<String>> _picked = {};
 
+  /// The longest name the hero may have (spec B4).
+  static const maxNameLength = CreationSpec.maxNameLength;
+
   bool get asksName => rules.creation?.name ?? false;
   List<PickGroup> get _groups => rules.creation?.picks ?? const [];
 
@@ -40,7 +43,7 @@ class HeroDraft {
 
   /// Every group has exactly its count, and the hero is named if asked.
   bool get ready =>
-      (!asksName || name.trim().isNotEmpty) &&
+      (!asksName || CreationSpec.nameFits(name)) &&
       _groups.every((g) => (_picked[g.id]?.length ?? 0) == g.count);
 
   /// The effects of the picks, group by group and option by option in file

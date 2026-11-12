@@ -1,0 +1,184 @@
+{
+  "description": "A translation may change words and pictures, and rename a preset's stat. Anything else that differs is reported once for the part it is in: a rule written only in one file (even at its default), a stat's roll, an item's bonus, what a choice needs.",
+  "spec": [
+    "B16"
+  ],
+  "warnings": [
+    {
+      "code": "translation-structure",
+      "path": "rules"
+    },
+    {
+      "code": "translation-structure",
+      "path": "rules.stats.luck"
+    },
+    {
+      "code": "translation-structure",
+      "path": "items.sword"
+    },
+    {
+      "code": "translation-structure",
+      "path": "nodes.b"
+    }
+  ],
+  "stories": {
+    "en": {
+      "schema": 1,
+      "id": "case",
+      "lang": "en",
+      "title": "Case",
+      "rules": {
+        "preset": "fighting-fantasy"
+      },
+      "items": {
+        "key": {
+          "name": "Key"
+        },
+        "sword": {
+          "name": "Sword",
+          "bonus": {
+            "skill": 1
+          }
+        }
+      },
+      "start": "a",
+      "nodes": {
+        "a": {
+          "text": [
+            "A hall.",
+            {
+              "if": {
+                "has": "key"
+              },
+              "text": "The key is warm."
+            }
+          ],
+          "image": "images/hall.png",
+          "imageAlt": "A hall.",
+          "effects": [
+            {
+              "give": "key"
+            },
+            {
+              "give": "sword"
+            }
+          ],
+          "choices": [
+            {
+              "text": "On",
+              "to": "b"
+            },
+            {
+              "text": "Wait",
+              "to": "a",
+              "lockedText": "Not yet",
+              "if": {
+                "has": "sword"
+              }
+            }
+          ]
+        },
+        "b": {
+          "text": "A door.",
+          "choices": [
+            {
+              "text": "Open",
+              "to": "won",
+              "if": {
+                "has": "key"
+              }
+            }
+          ]
+        },
+        "won": {
+          "text": "Won",
+          "ending": "victory"
+        }
+      }
+    },
+    "pt": {
+      "schema": 1,
+      "id": "case",
+      "lang": "pt",
+      "title": "Caso",
+      "rules": {
+        "preset": "fighting-fantasy",
+        "rerolls": 0,
+        "stats": {
+          "skill": {
+            "label": "Habilidade"
+          },
+          "luck": {
+            "label": "Sorte",
+            "roll": "2d6"
+          }
+        }
+      },
+      "items": {
+        "key": {
+          "name": "Chave"
+        },
+        "sword": {
+          "name": "Espada",
+          "bonus": {
+            "skill": 2
+          }
+        }
+      },
+      "start": "a",
+      "nodes": {
+        "a": {
+          "text": [
+            "Um salão.",
+            {
+              "if": {
+                "has": "key"
+              },
+              "text": "A chave está morna."
+            }
+          ],
+          "image": "images/salao.png",
+          "imageAlt": "Um salão.",
+          "effects": [
+            {
+              "give": "key"
+            },
+            {
+              "give": "sword"
+            }
+          ],
+          "choices": [
+            {
+              "text": "Seguir",
+              "to": "b"
+            },
+            {
+              "text": "Esperar",
+              "to": "a",
+              "lockedText": "Ainda não",
+              "if": {
+                "has": "sword"
+              }
+            }
+          ]
+        },
+        "b": {
+          "text": "Uma porta.",
+          "choices": [
+            {
+              "text": "Abrir",
+              "to": "won",
+              "if": {
+                "has": "sword"
+              }
+            }
+          ]
+        },
+        "won": {
+          "text": "Venceu",
+          "ending": "victory"
+        }
+      }
+    }
+  }
+}

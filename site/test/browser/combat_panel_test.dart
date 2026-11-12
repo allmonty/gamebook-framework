@@ -47,7 +47,7 @@ void main() {
       ),
       const Messages({'player.fight': 'Attack', 'player.flee': 'Flee'}),
     );
-    expect(host.querySelector('.gb-enemy strong')!.textContent, 'Rat');
+    expect(host.querySelector('.gb-enemy strong')!.textContent, '▶ Rat');
     expect(host.querySelectorAll('.gb-combat button').length, 2);
 
     (host.querySelector('.gb-combat .btn')! as HTMLElement).click();

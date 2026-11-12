@@ -94,4 +94,84 @@ void main() {
       host.remove();
     },
   );
+
+  test('Tab indents; Escape then Tab leaves the editor', () {
+    final host = el('div');
+    document.body!.append(host);
+    LabView(host, EditSession(_source, Random(1)), const Messages({}));
+    final area = host.querySelector('textarea')! as HTMLTextAreaElement
+      ..value = ''
+      ..setSelectionRange(0, 0);
+    KeyboardEvent press(String key) {
+      final event = KeyboardEvent(
+        'keydown',
+        KeyboardEventInit(key: key, cancelable: true),
+      );
+      area.dispatchEvent(event);
+      return event;
+    }
+
+    expect(press('Tab').defaultPrevented, isTrue);
+    expect(area.value, '  ');
+
+    press('Escape');
+    expect(press('Tab').defaultPrevented, isFalse);
+    expect(area.value, '  ');
+    // Only the Tab right after Escape leaves.
+    expect(press('Tab').defaultPrevented, isTrue);
+    expect(
+      host.querySelector('#${area.getAttribute('aria-describedby')}'),
+      isNotNull,
+    );
+    host.remove();
+  });
+
+  test('an edit takes over the music instead of playing over it', () async {
+    final source = _source.replaceFirst(
+      '"text": "Start."',
+      '"text": "Start.", "music": "audio/a.ogg"',
+    );
+    final host = el('div');
+    document.body!.append(host);
+    final lab = LabView(
+      host,
+      EditSession(source, Random(1)),
+      const Messages({}),
+      pause: Duration.zero,
+    );
+    expect(lab.audio.playing, 'audio/a.ogg');
+
+    Future<void> type(String text) async {
+      (host.querySelector('textarea')! as HTMLTextAreaElement).value = text;
+      host.querySelector('textarea')!.dispatchEvent(Event('input'));
+      await Future<void>.delayed(Duration.zero);
+    }
+
+    await type(source.replaceFirst('audio/a.ogg', 'audio/b.ogg'));
+    expect(lab.audio.playing, 'audio/b.ogg');
+
+    await type('{');
+    expect(lab.audio.playing, isNull);
+    host.remove();
+  });
+
+  test('Play and Edit are toggle buttons that show one pane', () {
+    final host = el('div');
+    document.body!.append(host);
+    LabView(host, EditSession(_source, Random(1)), const Messages({}));
+    final [play, edit] = [
+      for (var i = 0; i < 2; i++)
+        host.querySelectorAll('.gb-tab').item(i)! as HTMLElement,
+    ];
+    expect(host.querySelector('[role^=tab]'), isNull);
+    expect(play.getAttribute('aria-pressed'), 'true');
+    expect((host.querySelector('.gb-edit')! as HTMLElement).hidden, isNotNull);
+
+    edit.click();
+
+    expect(play.getAttribute('aria-pressed'), 'false');
+    expect(edit.getAttribute('aria-pressed'), 'true');
+    expect(host.querySelector('.gb-edit:not([hidden])'), isNotNull);
+    host.remove();
+  });
 }

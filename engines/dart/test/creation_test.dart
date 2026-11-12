@@ -123,7 +123,7 @@ void main() {
   group('starting a game', () {
     GameEngine start(
       Story story, {
-      String? name,
+      String? name = 'Wren',
       List<Effect> effects = const [],
     }) => GameEngine.newGame(
       story: story,
@@ -133,6 +133,14 @@ void main() {
       name: name,
       creationEffects: effects,
     ).$1;
+
+    test('a story that asks for a name refuses one that does not fit', () {
+      final story = Story.fromJson(storyJson(rules: creation()));
+      expect(() => start(story, name: null), throwsArgumentError);
+      expect(() => start(story, name: '   '), throwsArgumentError);
+      expect(() => start(story, name: 'A' * 25), throwsArgumentError);
+      expect(start(story, name: 'A' * 24).state.name, 'A' * 24);
+    });
 
     test(
       'picked gives go straight to the pack, even when items are offered',

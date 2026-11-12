@@ -234,4 +234,84 @@ void main() {
     );
     expect(session.view.heading, 'The Rusty Door');
   });
+
+  test('undo brings back the music of the page before', () {
+    final session = PlaySession.start(
+      storyOf(
+        {
+          'quiet': {
+            'text': 'Silence.',
+            'choices': [
+              {'text': 'In', 'to': 'crypt'},
+            ],
+          },
+          'crypt': {
+            'text': 'An organ plays.',
+            'music': 'audio/crypt.ogg',
+            'ending': 'victory',
+          },
+        },
+        extra: {
+          'rules': {'preset': 'fighting-fantasy', 'undo': 1},
+        },
+      ),
+      random: Random(1),
+    )..choose(0);
+    expect(session.view.audio.music, 'audio/crypt.ogg');
+
+    session.undo();
+
+    expect(session.view.audio.music, isNull);
+  });
+
+  test('a dice choice says what it rolls before it is taken', () {
+    final session = PlaySession.start(
+      storyOf({
+        'gap': {
+          'text': 'A gap.',
+          'choices': [
+            {'text': 'Walk round', 'to': 'end'},
+            {
+              'text': 'Leap',
+              'check': {
+                'roll': '2d6',
+                'add': 'skill',
+                'op': 'gte',
+                'vs': 16,
+                'pass': 'end',
+                'fail': 'end',
+              },
+            },
+            {
+              'text': 'Trust to luck',
+              'check': {
+                'roll': '2d6',
+                'op': 'lte',
+                'vs': 'luck',
+                'pass': 'end',
+                'fail': 'end',
+              },
+            },
+            {
+              'text': 'Search',
+              'table': {
+                'roll': '1d6',
+                'outcomes': [
+                  {'upTo': 6, 'to': 'end'},
+                ],
+              },
+            },
+          ],
+        },
+        'end': {'text': 'Done.', 'ending': 'victory'},
+      }),
+      random: Random(1),
+    );
+    expect(session.view.choices.map((c) => c.roll), [
+      null,
+      '2d6 + Skill ≥ 16',
+      '2d6 ≤ Luck',
+      '1d6',
+    ]);
+  });
 }

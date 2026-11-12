@@ -5,6 +5,14 @@ The plan that built version 1 of the format is finished (its steps are in the gi
 ## Owner's to-do
 Outward-facing, so only the owner does these. Tick them off here as they are done.
 
+- [ ] **Merge the audit's fixes** (branch `audit-fixes`; the audit and what was done are in `docs/audit-2026-11-12.md`).
+  - Open one pull request from `audit-fixes` into `main` and let CI run.
+  - Before merging, five minutes on the built site with the keyboard only, and with a screen reader if one is at hand: every button shows where focus is, Esc then Tab leaves the story editor, a fight's rolls are spoken, the header does not cover the page on a phone. These were checked by tests and screenshots only.
+  - Tag version 1 (next item) only after this: the branch adds limits to the format (condition depth, media paths, the size of integers, a living hero).
+- [ ] **Check what Twine's editor does with a broken link**, then fix the comparison.
+  - In Twine, link to a passage that does not exist and look at the story map. If it marks the link, the home page's "Checked before players see it" for Twine is "Partly", not "No": change `home.compare.twine3` in `site/strings/en.json` ("Partly: the editor marks broken links") and `pt.json` ("Em parte: o editor marca links quebrados"), and the Twine row of section 4 in `spec/comparison.md`.
+- [ ] **Read Harlowe's license** in a browser (its repository refuses automated requests): <https://foss.heptapod.net/games/harlowe>. Write it in the Twine entry and the table of `spec/comparison.md`, and take it off section 7 ("Not verified").
+- [ ] **Check the Fighting Fantasy rules in a book.** Every rule in `spec/comparison.md` section 3 comes from fan restatements. With a book in hand (the rules section at the front; *City of Thieves* for luck in a fight), confirm the stats, the combat round, Testing your Luck, escaping and Provisions, cite the book, and take the line off section 7.
 - [ ] **Tag a release of version 1**, so stories, engines and articles can cite a fixed version.
   - Pick a name: the format version and the engine version differ (`format-v1` for the format, the pubspec `version` for the engine), or one tag such as `v1.0.0` for both.
   - `git tag -a <name> -m "Gamebook Framework, format version 1"` on `main`, `git push origin <name>`, then a GitHub release with short notes: what version 1 holds (link `spec/CHANGELOG.md` and the site's versions page), the starters, the kit.

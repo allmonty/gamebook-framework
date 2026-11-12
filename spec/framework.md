@@ -85,7 +85,7 @@ Schema version: **1**, with everything in this document. B2 says how later versi
 ## B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
 - `<lang>` is a short language code. The file's `lang` field must equal it.
-- Translations of one game share the same `id`. They must also share **identical node ids, item ids, stat ids, flag names, and, for each node, the same number of choices in the same order (and the same number of text parts)**. The validator checks this. Only human-readable strings differ.
+- Translations of one game share the same `id`. They must also share **identical node ids, item ids, stat ids, flag names, and, for each node, the same number of choices in the same order (and the same number of text parts)**. The validator checks this, and warns when anything else but text differs (B16, `translation-structure`). Only human-readable strings differ.
 - The app groups files by `id` and offers the languages that exist. App UI language is independent of story language.
 - JSON only, UTF-8. No comments.
 
@@ -93,6 +93,7 @@ Schema version: **1**, with everything in this document. B2 says how later versi
 - Unknown keys are **errors** (typo protection). Error messages name the JSON path, e.g. `nodes.door.choices[1].to`.
 - `schema` is an integer: the version of the format the story is written for. There is one version so far, **1**. An engine accepts only versions it supports and rejects any other, so a story never half-works.
 - Versions only add. When a new field or kind is added, it comes with a new version: a story that uses it must say that version, and an engine rejects a story that uses something newer than its `schema` (with `needs "schema": N` at the JSON path of the first such thing). A story written for one version stays valid in every later one once its `schema` says so. Old stories keep working; an old engine rejects what it does not know instead of misreading it.
+- Every integer a story writes is between **-1,000,000 and 1,000,000**; one outside is an error at its path. That is far more than a gamebook needs, and every engine, in any language, computes with such numbers exactly.
 - Saved games are not part of the format: each engine stores and versions its own, and must never fail on a save it does not understand (it reads as "no save").
 
 ## B3. Top level
@@ -140,7 +141,7 @@ Each stat: `{ "label": string, "roll": dice, "max": bool }`.
 - `max: true`: the creation roll is also the ceiling. Effects can never raise the stat above it (healing stops at full health).
 - `hidden: true`: the stat is kept off the stats bar, say a counter the reader need not see. It is a stat in every other way: effects, conditions and `{stat}` placeholders all see it.
 - Every stat is clamped at 0 from below, unless it has a `min`.
-- `min`: an integer, which may be negative, that the stat is clamped at instead: `{ "label": "Might", "roll": "1d4", "min": -3 }` can go down to -3, a signed modifier as in tabletop games. A creation roll below it is raised to it; with a `limit` it must be below the limit. The `health` stat cannot have a `min` (it is always 0).
+- `min`: an integer, which may be negative, that the stat is clamped at instead: `{ "label": "Might", "roll": "1d4", "min": -3 }` can go down to -3, a signed modifier as in tabletop games. A creation roll below it is raised to it; with a `limit` it must be below the limit. The `health` stat cannot have a `min` (it is always 0), and its `roll` must give at least 1 whatever the dice show (`"0"` or `"1d6-1"` is an error): a hero does not start dead.
 - `health` names the stat that means "alive". When it reaches 0 the game ends with a **death** ending, wherever that happens. Health at 0 is final: from then on no effect applies, so nothing later in the same action (or the game) can bring the hero back (B9, B10).
 
 ### Stat limits and quantities
@@ -259,7 +260,7 @@ An item is **unique** unless it has a `stack`: the pack holds it or not, and giv
 - `give`, `take` and `has` take a `count` (B7, B9). A `count` above 1 for an item without `stack` is an error.
 - Using a countable item spends one; it leaves the pack when the last one is spent. Its `bonus` applies once, while at least one is held. `takeAll` removes every unit.
 - A container cannot have a `stack`.
-- `stack` and every `count` are structure, so translations must agree on them (the Dart validator does not compare them yet). `imageAlt` says what the image shows, as for a page (B6).
+- `stack` and every `count` are structure, so translations must agree on them (B16, `translation-structure`). `imageAlt` says what the image shows, as for a page (B6).
 
 ### Usable items
 ```json
@@ -313,7 +314,7 @@ While its `if` (B7) holds, a rule bonus works exactly like an item bonus: everyw
 | Field | Notes |
 |---|---|
 | `text` | required: a string, or a list of parts. Shown with the image. `\n\n` separates paragraphs. See below. |
-| `image` | optional path. A missing file at runtime shows nothing; the validator flags it. |
+| `image` | optional path (see "Media paths" below). A missing file at runtime shows nothing; the validator flags it. |
 | `imageAlt` | optional, only next to `image`: a short text saying what the picture shows, for players who cannot see it. A player that shows the image gives this text to assistive technology (a screen reader); without it the image is treated as decoration. Must not be empty. It is text, so each translation words it freely. |
 | `effects` | optional list applied on **entering** the node (B9). |
 | `once` | optional bool, default false. If true, `effects` apply only the first time the node is entered. Use for pickups and healing so revisiting cannot be exploited. |
@@ -323,6 +324,9 @@ While its `if` (B7) holds, a rule bonus works exactly like an item bonus: everyw
 | `title`, `note`, `chapter`, `draft` | authoring fields (B13) |
 
 Exactly **one** of `choices` (non-empty), `combat`, `ending` must be present. A page with no way out is a parse error, except a draft page (B13).
+
+### Media paths
+Every picture and sound (`image`, `cover`, `music`, `sound`) is named by a path **inside the game folder** (B1): it starts with `images/` or `audio/`, uses `/` between folders, has no `.` or `..` part, and ends in one of the media types a package may hold (B14). Anything else is an error: a web address, an absolute path, a path that climbs out of the folder. So a story from a stranger can never make a player fetch a file from somewhere else.
 
 ### Audio and the journal
 A node may have `"music": "audio/crypt.ogg"` and/or `"sound": "audio/door.wav"` (paths relative to the game folder, like images). `sound` plays once when the page is entered. `music` starts looping when the page is entered and **keeps playing across pages** until another page sets a `music`, or `"music": "stop"` stops it. The current music is part of the saved game, so a resumed game picks it up again. Players can switch music and sound effects off and set their volume in the settings; with both off or missing files the story reads exactly the same.
@@ -352,6 +356,8 @@ A condition is an object with exactly one kind:
 | `{ "all": [c, ...] }` | all true (empty = true) |
 | `{ "any": [c, ...] }` | at least one true (empty = false) |
 | `{ "not": c }` | negation |
+
+Conditions nest at most **32** deep: a condition written directly (a choice's `if`) is level 1, and each `all`, `any` or `not` puts what it holds one level deeper. A condition at level 33 is an error, so a story from a stranger cannot exhaust an engine.
 
 ## B8. Dice notation
 `NdM` with optional `+K` or `-K`, or a plain integer. No spaces. `N` is the number of dice (at least 1, at most 100), `M` the number of faces (at least 2, at most 1000). `K` and a plain integer have at most 6 digits. Anything larger is invalid notation, so a story from a stranger cannot make an engine roll forever.
@@ -559,7 +565,7 @@ A game travels outside the app as one file: a **zip** of the game folder (B1) wi
 - Limits, checked before anything is unpacked: at most 100 MB unpacked, 2,000 files, media files only of the types the app plays (`.webp`, `.png`, `.jpg`, `.jpeg`, `.ogg`, `.mp3`, `.wav`, `.m4a`). Anything else rejects the whole file with a message saying why.
 - A package whose story `id` matches a bundled game is refused (bundled games cannot be replaced); one matching an imported game is an **update** of it.
 
-**Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists, the pack still fits (a count is kept only for a countable item, and the slots used fit the capacity), every stat is within its `min` and ceiling, the pages to return to still exist and are at most 16,, and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
+**Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists, the pack still fits (a count is kept only for a countable item, and the slots used fit the capacity), every stat is within its `min` and ceiling, the pages to return to still exist and are at most 16, and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
 
 ## B15. Achievements
 ```json
@@ -603,5 +609,13 @@ An item or flag required, taken or checked in several places is reported once, a
 | `translation-text-parts` | `nodes.<id>` | the node's text has a different number of parts (B6) |
 | `translation-choices` | `nodes.<id>` | the node has a different number of choices |
 | `translation-chapter` | `nodes.<id>` | the node is in a different chapter |
+| `translation-structure` | `start`, `rules`, `rules.stats.<id>`, `items.<id>`, `achievements.<id>` or `nodes.<id>` | that part of the two files differs in something that is not text (see below) |
+
+**What is text.** A translation changes words, and may use other pictures and sounds; everything else decides how the game plays and must be the same: where a choice leads, what it needs and does, a fight's enemies, the numbers of the rules. For `translation-structure` the two files are compared as JSON with the text fields left out: `text`, `title`, `label`, `name`, `description`, `note`, `lockedText`, `imageAlt`, `coverAlt`, `image`, `cover`, `music` and `sound`, wherever their value is a string (so `"name": true` in `rules.creation` is compared), and each string in a list of text parts (an object part keeps its `if`). The order of keys does not matter; a field written in one file and left out of the other is a difference, even at its default. One warning is reported for each part that differs:
+- `start`;
+- `rules`, without its `stats`;
+- `rules.stats.<id>`, for each stat both stories have (a stat one file leaves to the preset is compared as `{}`, so renaming it with a `label` is no difference);
+- `items.<id>` and `achievements.<id>`, for each id both files have;
+- `nodes.<id>`, for each node both files have, unless it is already reported by `translation-text-parts`, `translation-choices` or `translation-chapter`.
 
 Warnings are not versioned with `schema`: a new warning can be added at any time. It changes no story, only what tools say about it.

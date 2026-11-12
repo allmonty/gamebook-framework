@@ -275,6 +275,37 @@ void main() {
         'error: items.rusty-key.image: image file not found: images/key.webp',
       ]);
     });
+
+    test(
+      'a path outside the game folder is an error, with or without files',
+      () {
+        for (final path in [
+          'https://example.com/images/a.png',
+          '//example.com/images/a.png',
+          '/images/a.png',
+          'images/../../a.png',
+          r'images\a.png',
+          'a.png',
+          'images/a.exe',
+          'images/a.png?x=1',
+        ]) {
+          expect(errors((j) => node(j, 'cellar')['image'] = path), [
+            'error: nodes.cellar.image: not a media file under images/ or '
+                'audio/ of the game folder: $path',
+          ], reason: path);
+        }
+        expect(
+          errors((j) {
+            node(j, 'cellar')['music'] = 'http://example.com/a.ogg';
+            node(j, 'cellar')['sound'] = 'audio/sub/door.wav';
+          }),
+          [
+            'error: nodes.cellar.music: not a media file under images/ or '
+                'audio/ of the game folder: http://example.com/a.ogg',
+          ],
+        );
+      },
+    );
   });
 
   group('stat quantities', () {
@@ -700,6 +731,54 @@ void main() {
         unorderedEquals([
           'warning: rules.stats.gold: stat "gold" exists in pt but not in en',
           'warning: flags.looked: flag "looked" exists in pt but not in en',
+          'warning: nodes.shelves: differs between en and pt in more than '
+              'its text',
+        ]),
+      );
+    });
+
+    test('reports what differs beyond the text, and only that', () {
+      // Words, pictures and sounds may differ; a stat only renamed is fine.
+      expect(
+        diff((j) {
+          j['title'] = 'A Porta';
+          j['rules'] = {
+            'preset': 'fighting-fantasy',
+            'stats': {
+              'skill': {'label': 'Habilidade'},
+            },
+          };
+          (j['items']! as Map<String, Object?>)['rusty-key'] = {
+            'name': 'Chave',
+          };
+          node(j, 'cellar')
+            ..['text'] = 'Um porão.'
+            ..['music'] = 'audio/pt.ogg';
+          choice(j, 'door', 0)['text'] = 'Destrancar';
+        }),
+        isEmpty,
+      );
+      expect(
+        diff((j) {
+          j['rules'] = {'preset': 'fighting-fantasy', 'rerolls': 5};
+          (j['items']! as Map<String, Object?>)['rusty-key'] = {
+            'name': 'Key',
+            'bonus': {'skill': 1},
+          };
+          choice(j, 'door', 0)['to'] = 'cellar';
+          final stats = (j['rules']! as Map<String, Object?>)['stats'] = {
+            'luck': {'roll': '2d6'},
+          };
+          expect(stats, isNotEmpty);
+        }),
+        unorderedEquals([
+          for (final at in [
+            'rules',
+            'rules.stats.luck',
+            'items.rusty-key',
+            'nodes.door',
+          ])
+            'warning: $at: differs between en and pt in more than its text',
         ]),
       );
     });

@@ -32,13 +32,19 @@ List<LogLine>? _line(
   String item(String id) => story.items[id]?.name ?? id;
   return switch (event) {
     CheckRolled(:final result) => [
-      LogLine(result.passed ? 'check.pass' : 'check.fail', {
-        'dice': dice(result.roll),
-        'added': result.added,
-        'total': result.total,
-        'op': result.op == CheckOp.gte ? '≥' : '≤',
-        'target': result.target,
-      }, result.passed ? Tone.good : Tone.bad),
+      LogLine(
+        // With nothing added, the line has no "+ 0".
+        '${result.passed ? 'check.pass' : 'check.fail'}'
+        '${result.added == 0 ? '.plain' : ''}',
+        {
+          'dice': dice(result.roll),
+          'added': result.added,
+          'total': result.total,
+          'op': result.op == CheckOp.gte ? '≥' : '≤',
+          'target': result.target,
+        },
+        result.passed ? Tone.good : Tone.bad,
+      ),
     ],
     TableRolled(:final roll) => [
       LogLine('table', {'dice': dice(roll), 'total': roll.total}),
@@ -50,6 +56,7 @@ List<LogLine>? _line(
         result.playerTotal,
         result.damageToEnemy,
         result.damageToPlayer,
+        result.enemyTotal,
       ),
     ],
     CombatGroupRound(:final result) => [
@@ -127,14 +134,31 @@ LogLine _counted(String key, String item, int count, Tone tone) => count > 1
     ? LogLine('${key}Many', {'item': item, 'count': count}, tone)
     : LogLine(key, {'item': item}, tone);
 
-LogLine _round(String enemy, DiceRoll roll, int total, int dealt, int taken) =>
-    LogLine('round', {
-      'enemy': enemy,
-      'dice': dice(roll),
-      'total': total,
-      'dealt': dealt,
-      'taken': taken,
-    }, taken > dealt ? Tone.bad : Tone.good);
+/// A round. With [enemyTotal] (the enemy rolled too) the line shows it, so
+/// the reader sees why the blow landed.
+LogLine _round(
+  String enemy,
+  DiceRoll roll,
+  int total,
+  int dealt,
+  int taken, [
+  int? enemyTotal,
+]) => LogLine(
+  enemyTotal == null ? 'round' : 'round.vs',
+  {
+    'enemy': enemy,
+    'dice': dice(roll),
+    'total': total,
+    'enemyTotal': ?enemyTotal,
+    'dealt': dealt,
+    'taken': taken,
+  },
+  taken > dealt
+      ? Tone.bad
+      : dealt > taken
+      ? Tone.good
+      : Tone.neutral,
+);
 
 /// The faces rolled, e.g. `4+3`, with the modifier if any (`4+3+2`).
 String dice(DiceRoll roll) => [

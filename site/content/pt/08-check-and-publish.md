@@ -17,6 +17,7 @@ Todo exemplo deste tutorial roda o mesmo validador das ferramentas de linha de c
 | `taken-never-given` / `usable-never-given` | um item é tirado ou usável, mas nunca entregue |
 | `flag-never-set` / `flag-never-checked` | um marcador é testado mas nunca ligado, ou ligado mas nunca testado |
 | `journal-never-unlocked` / `never-earned` | uma entrada de diário ou conquista que nada desbloqueia |
+| `return-without-call` | uma página tem um `return`, mas dá para chegar nela sem ter página para onde voltar |
 | `capacity-without-pack` | um recipiente numa história cuja mochila não tem limite |
 | `draft` | uma página ainda marcada como rascunho |
 
@@ -63,13 +64,13 @@ dart run gamebook_engine:simulate_story caminho/do/story.pt.json --games 2000
 
 ## Traduções
 
-Cada idioma é um arquivo próprio, lado a lado: `story.en.json`, `story.pt.json`. Eles compartilham o mesmo `id` e precisam ter os mesmos ids de páginas, itens, atributos, marcadores e capítulos, o mesmo número de escolhas em cada página, na mesma ordem, e o mesmo número de partes de texto. Só as palavras mudam. O validador compara cada tradução com o primeiro idioma e avisa qualquer diferença (`translation-missing`, `translation-choices`...). Todo exemplo deste site existe em inglês e português, conferido assim.
+Cada idioma é um arquivo próprio, lado a lado: `story.en.json`, `story.pt.json`. Eles compartilham o mesmo `id` e precisam ter os mesmos ids de páginas, itens, atributos, marcadores e capítulos, o mesmo número de escolhas em cada página, na mesma ordem, e o mesmo número de partes de texto. Só as palavras mudam. O validador compara cada tradução com o primeiro idioma e avisa qualquer outra diferença: um id que falta (`translation-missing`), outro número de escolhas (`translation-choices`) ou qualquer coisa que não seja texto, como para onde uma escolha leva ou o que um item faz (`translation-structure`). O jeito fácil de não errar é traduzir uma cópia do primeiro arquivo. Todo exemplo deste site existe em inglês e português, conferido assim.
 
 Lembre de traduzir os nomes dos atributos em `rules.stats` quando usar um preset (capítulo 4).
 
 ## Compartilhando seu jogo
 
-- **Um pacote `.gamebook`** é um zip da pasta do jogo: os arquivos da história e as pastas `images/` e `audio/` que eles usam. Crie um com `dart run gamebook_engine:pack_game caminho/do/meu-jogo`; jogadores que aceitam pacotes importam esse único arquivo.
+- **Um pacote `.gamebook`** é um zip da pasta do jogo: os arquivos da história e as pastas `images/` e `audio/` que eles usam. Crie um com `dart run gamebook_engine:pack_game caminho/do/meu-jogo`; aplicativos que aceitam pacotes importam esse único arquivo.
 - **Vindo do Twine**: `dart run gamebook_engine:import_twine story.twee pasta-de-saida` converte uma história do Twine (`.twee` ou `.html` publicado) e relata o que não conseguiu converter.
 - **Com um assistente de IA**: [o kit para LLMs](../../llm-kit.md) (`spec/llm-kit.md` no repositório) é um arquivo que ensina o formato a um chatbot. Entregue-o ao assistente junto com o seu pedido; depois rode o validador com `--llm` e cole a resposta de volta até a história ficar limpa.
 - **Em qualquer plataforma**: o formato é dado puro, então motores podem existir em qualquer linguagem. A [suíte de conformidade](https://github.com/allmonty/gamebook-framework/tree/main/conformance) tem casos de teste que garantem que todo motor joga cada história do mesmo jeito.

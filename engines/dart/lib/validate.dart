@@ -1,4 +1,5 @@
 import 'dice.dart';
+import 'package.dart' show belongsInPackage;
 import 'quantity.dart';
 import 'rules.dart';
 import 'story.dart';
@@ -59,6 +60,50 @@ List<Issue> compareTranslations(Story reference, Story other) {
     }
   }
 
+  // Everything that is not text must be the same too (B16): where a choice
+  // leads, what it needs and does, the numbers of the rules.
+  void structure(String at, Object? a, Object? b) {
+    if (!_same(_withoutText(a), _withoutText(b))) {
+      issues.add(
+        Issue(
+          Severity.warning,
+          at,
+          'differs between ${reference.lang} and ${other.lang} in more than '
+          'its text',
+          code: 'translation-structure',
+        ),
+      );
+    }
+  }
+
+  final (ra, rb) = (reference.json, other.json);
+  structure('start', ra['start'], rb['start']);
+  structure(
+    'rules',
+    _rest(_at(ra, ['rules']), 'stats'),
+    _rest(_at(rb, ['rules']), 'stats'),
+  );
+  // A stat both stories have, even if only one file writes it (the other
+  // takes it from the preset), and an item or achievement both files have:
+  // an id only one has is reported as missing or extra instead.
+  final shared = {
+    'rules.stats': _statIds(reference).intersection(_statIds(other)),
+    'items': reference.items.keys.toSet().intersection(
+      other.items.keys.toSet(),
+    ),
+    'achievements': reference.achievements.keys.toSet().intersection(
+      other.achievements.keys.toSet(),
+    ),
+  };
+  for (final MapEntry(key: at, value: ids) in shared.entries) {
+    final path = at.split('.');
+    final (a, b) = (_map(_at(ra, path)), _map(_at(rb, path)));
+    const none = <String, Object?>{};
+    for (final id in ids) {
+      structure('$at.$id', a[id] ?? none, b[id] ?? none);
+    }
+  }
+
   diff('node', 'nodes', reference.nodes.keys.toSet(), other.nodes.keys.toSet());
   diff('item', 'items', reference.items.keys.toSet(), other.items.keys.toSet());
   diff('stat', 'rules.stats', _statIds(reference), _statIds(other));
@@ -111,6 +156,13 @@ List<Issue> compareTranslations(Story reference, Story other) {
     }
     final a = reference.nodes[id]!.choices.length;
     final b = other.nodes[id]!.choices.length;
+    if (textA == textB && chapterA == chapterB && a == b) {
+      structure(
+        'nodes.$id',
+        _at(reference.json, ['nodes', id]),
+        _at(other.json, ['nodes', id]),
+      );
+    }
     if (a != b) {
       issues.add(
         Issue(
@@ -124,6 +176,63 @@ List<Issue> compareTranslations(Story reference, Story other) {
   }
   return issues;
 }
+
+/// The fields that hold words or name a picture or a sound: all that may
+/// differ between translations (B16).
+const _textKeys = {
+  'text',
+  'title',
+  'label',
+  'name',
+  'description',
+  'note',
+  'lockedText',
+  'imageAlt',
+  'coverAlt',
+  'image',
+  'cover',
+  'music',
+  'sound',
+};
+
+/// [json] with every text field left out; a string in a list of text parts
+/// becomes null, so the parts keep their places.
+Object? _withoutText(Object? json, {bool inText = false}) => switch (json) {
+  final Map<String, Object?> map => {
+    for (final MapEntry(:key, :value) in map.entries)
+      if (!(_textKeys.contains(key) && value is String))
+        key: _withoutText(value, inText: key == 'text'),
+  },
+  final List<Object?> list => [
+    for (final e in list) inText && e is String ? null : _withoutText(e),
+  ],
+  _ => json,
+};
+
+/// Whether two JSON values are equal, whatever the order of their keys.
+bool _same(Object? a, Object? b) => switch ((a, b)) {
+  (final Map<String, Object?> a, final Map<String, Object?> b) =>
+    a.length == b.length &&
+        a.keys.every((k) => b.containsKey(k) && _same(a[k], b[k])),
+  (final List<Object?> a, final List<Object?> b) =>
+    a.length == b.length &&
+        [for (var i = 0; i < a.length; i++) i].every((i) => _same(a[i], b[i])),
+  _ => a == b,
+};
+
+Object? _at(Object? json, List<String> path) {
+  for (final key in path) {
+    json = json is Map<String, Object?> ? json[key] : null;
+  }
+  return json;
+}
+
+Map<String, Object?> _map(Object? json) =>
+    json is Map<String, Object?> ? json : const {};
+
+/// [json] (an object) without [key].
+Map<String, Object?> _rest(Object? json, String key) =>
+    {..._map(json)}..remove(key);
 
 Set<String> _statIds(Story story) {
   try {
@@ -252,13 +361,19 @@ class _Validator {
   }
 
   void _image(String where, String? path) {
-    if (path != null && assetExists != null && !assetExists!(path)) {
-      error(where, 'image file not found: $path');
-    }
+    if (path != null) _file(where, path, 'image');
   }
 
+  /// A picture or a sound is a file of the game's own `images/` or `audio/`
+  /// folder (B6): never an address, which would make a player fetch whatever
+  /// a stranger's story names.
   void _file(String where, String path, String what) {
-    if (assetExists != null && !assetExists!(path)) {
+    if (!path.contains('/') || !belongsInPackage(path)) {
+      error(
+        where,
+        'not a media file under images/ or audio/ of the game folder: $path',
+      );
+    } else if (assetExists != null && !assetExists!(path)) {
       error(where, '$what file not found: $path');
     }
   }

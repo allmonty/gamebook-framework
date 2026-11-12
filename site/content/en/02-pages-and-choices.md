@@ -91,7 +91,7 @@ examples/02-pages-and-choices/the-pedlar
 | `imageAlt` | page, item | What the picture shows, for readers who cannot see it. |
 | `choices` | page | The buttons. |
 | `to` | choice | The page the choice leads to. |
-| `ending` | page | `"victory"` or `"death"`: the game is over. |
+| `ending` | page | `"victory"`, `"death"` or `"defeat"` (chapter 7): the game is over. |
 | `if` | choice | A condition; while it is false the choice is locked. |
 | `lockedText` | choice | Your words for why it is locked. |
 | `hideIfLocked` | choice | Hide it completely while locked. |

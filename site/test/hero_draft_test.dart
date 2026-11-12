@@ -50,6 +50,11 @@ void main() {
     expect(draft.view.asksName, isTrue);
     expect(() => session.view, throwsStateError);
     expect(session.beginAdventure, throwsStateError);
+    // 1 to 24 characters after trimming (spec B4).
+    draft.name = 'A' * 25;
+    expect(draft.ready, isFalse);
+    draft.name = '  ${'A' * 24}  ';
+    expect(draft.ready, isTrue);
     draft.name = '  Ann ';
     session.beginAdventure();
     expect(session.creation, isNull);

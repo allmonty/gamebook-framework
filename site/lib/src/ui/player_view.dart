@@ -12,8 +12,15 @@ import 'wording.dart';
 
 /// Draws a [PlaySession] into [host] and redraws after every action.
 class PlayerView {
-  PlayerView(this.host, this.session, this.m, {this.mediaBase = ''}) {
+  PlayerView(
+    this.host,
+    this.session,
+    this.m, {
+    this.mediaBase = '',
+    AudioOutput? audio,
+  }) : _audio = audio ?? AudioOutput(mediaBase) {
     host.classList.add('gb-player');
+    setChildren(host, [_status, _body]);
     render();
   }
 
@@ -24,23 +31,46 @@ class PlayerView {
   /// The folder the story's picture and sound paths are relative to, ending
   /// in `/` (empty: the page's own folder).
   final String mediaBase;
-  late final _audio = AudioOutput(mediaBase);
+
+  /// Shared by the views a lab makes one after another, so a new game takes
+  /// over the music of the one before instead of playing over it.
+  final AudioOutput _audio;
+
+  /// What the last action did, for screen readers. It is one element that
+  /// stays in the page while everything else is redrawn: a live region that
+  /// arrives with its text already in it is not announced.
+  late final _status = el('p', cls: 'gb-sr', attrs: {'role': 'status'});
+
+  /// Everything that is redrawn.
+  late final _body = el('div', cls: 'gb-body');
+
+  /// Restart wipes the game, so it asks once: the first press only changes
+  /// the button's words, and any other action takes the question back.
+  bool _confirmRestart = false;
 
   void render() {
     if (session.creation case final draft?) {
       _audio.stop();
-      host.replaceChildren(
+      _status.textContent = '';
+      _body.replaceChildren(
         CreationPanel(
           draft,
           m,
-          onChange: render,
+          onChange: _redrawKeepingFocus,
           onBegin: () => _act(session.beginAdventure),
         ).element,
       );
       return;
     }
     final view = session.view;
-    host.replaceChildren(
+    // A redraw makes new, closed panels: reopen the ones the reader had open.
+    const pack = '.gb-pack:not(.gb-journal)';
+    const journal = '.gb-journal';
+    final open = [
+      for (final panel in [pack, journal])
+        if (host.querySelector('$panel[open]') != null) panel,
+    ];
+    _body.replaceChildren(
       el(
         'div',
         children: [
@@ -79,13 +109,40 @@ class PlayerView {
         ],
       ),
     );
+    for (final panel in open) {
+      host.querySelector(panel)?.setAttribute('open', '');
+    }
+    _status.textContent = view.log.map((l) => logText(l, m)).join('. ');
     _audio.play(view.audio);
+  }
+
+  /// Redraws character creation. The button just pressed is replaced by a
+  /// new one, so focus goes to that one instead of being lost.
+  void _redrawKeepingFocus() {
+    final key = document.activeElement?.getAttribute('data-key');
+    render();
+    if (key != null) {
+      (host.querySelector('[data-key="$key"]') as HTMLElement?)?.focus();
+    }
   }
 
   HTMLElement _controls(PageView view) => el(
     'div',
     cls: 'gb-controls',
     children: [
+      if (view.hasAudio)
+        onClick(
+          el(
+            'button',
+            cls: 'btn btn-ghost',
+            text: m('player.mute'),
+            attrs: {'aria-pressed': '${_audio.muted}'},
+          ),
+          () {
+            _audio.muted = !_audio.muted;
+            render();
+          },
+        ),
       if (view.canUndo)
         onClick(
           el('button', cls: 'btn btn-ghost', text: m('player.undo')),
@@ -93,14 +150,28 @@ class PlayerView {
         ),
       if (view.ending == null)
         onClick(
-          el('button', cls: 'btn btn-ghost', text: m('player.restartNow')),
-          () => _act(session.restart),
+          el(
+            'button',
+            cls: 'btn btn-ghost',
+            text: m(
+              _confirmRestart ? 'player.restartConfirm' : 'player.restartNow',
+            ),
+            attrs: {'data-key': 'restart'},
+          ),
+          () {
+            if (_confirmRestart) return _act(session.restart);
+            _confirmRestart = true;
+            render();
+            (host.querySelector('[data-key="restart"]') as HTMLElement?)
+                ?.focus();
+          },
         ),
     ],
   );
 
   /// Runs a use case, redraws and moves focus to the new page.
   void _act(void Function() action) {
+    _confirmRestart = false;
     action();
     render();
     (host.querySelector('.gb-page') as HTMLElement?)?.focus();
@@ -136,7 +207,7 @@ class PlayerView {
   HTMLElement _page(PageView view) => el(
     'article',
     cls: 'gb-page card',
-    attrs: {'tabindex': '-1', 'aria-live': 'polite'},
+    attrs: {'tabindex': '-1'},
     children: [
       if (view.heading != null) el('h3', cls: 'gb-title', text: view.heading),
       if (view.image != null)
@@ -185,6 +256,12 @@ class PlayerView {
       children: [
         el('span', cls: 'gb-index', text: choiceIndex(position)),
         el('span', cls: 'gb-text', text: c.text),
+        if (c.roll != null)
+          el(
+            'span',
+            cls: 'gb-rolls label',
+            text: m('player.rolls', {'roll': c.roll!}),
+          ),
         if (c.locked)
           el('span', cls: 'gb-needs label', text: lockedReason(c, m)),
       ],

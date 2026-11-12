@@ -23,6 +23,33 @@ GameState state({
 Condition cond(Map<String, Object?> json) => Condition.fromJson(json, '');
 
 void main() {
+  test('conditions nest 32 deep and no deeper', () {
+    Object nested(int levels) {
+      Object c = {'flag': 'x'};
+      for (var i = 1; i < levels; i++) {
+        c = {'not': c};
+      }
+      return c;
+    }
+
+    expect(Condition.fromJson(nested(32), 'if'), isA<Not>());
+    expect(
+      () => Condition.fromJson(nested(33), 'if'),
+      throwsA(
+        isA<StoryFormatException>().having(
+          (e) => e.path,
+          'path',
+          'if${'.not' * 32}',
+        ),
+      ),
+    );
+    // Far past the limit it is still a format error, not a stack overflow.
+    expect(
+      () => Condition.fromJson(nested(100000), 'if'),
+      throwsA(isA<StoryFormatException>()),
+    );
+  });
+
   group('evaluate', () {
     test('has, flag, visited', () {
       final s = state(inventory: {'key'}, flags: {'met'}, visited: {'n1'});

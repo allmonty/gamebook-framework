@@ -48,13 +48,15 @@ The website plays stories in your browser with the reference engine, and every e
 The site's source, and how to build it, is in [site/](site/README.md).
 
 ## Why another format
-Ink and Twine are great for branching text, but have no stats, dice or inventory built in, and Twine's output is a web page rather than data. ChoiceScript has license limits. This format is plain, strict data that any language can parse, statically check (broken links, unreachable pages, items never given) and play the same way everywhere. The full comparison: [spec/comparison.md](spec/comparison.md).
+Ink and Twine are great for branching text, but have no stats, inventory or combat model built in, and Twine's output is a web page rather than data. ChoiceScript has license limits. This format is plain, strict data that any language can parse, statically check (broken links, unreachable pages, items never given) and play the same way everywhere. The full comparison: [spec/comparison.md](spec/comparison.md).
 
 ---
 
 ## What you can do as a game writer
 
 This section is for authors — no technical background needed. It explains everything the framework lets you put in your gamebook.
+
+Some points below say what a full player app does with a story: saving the game, sound settings, importing packages. The spec defines that behaviour, and the app that does all of it is not public yet. The player on the website is for learning: it keeps no saves, it cannot import a `.gamebook`, and achievements last until you reload the page.
 
 ### 📖 Pages and choices
 
@@ -245,3 +247,5 @@ Schema version 1 is specified. The Dart engine, which runs the gamebook app for 
 
 ## License
 The spec text is [CC BY 4.0](LICENSE-CC-BY-4.0); code, the JSON Schema and the conformance cases are [MIT](LICENSE-MIT). Details: [LICENSE](LICENSE).
+
+Fighting Fantasy, Lone Wolf and Dungeons & Dragons are trademarks of their owners. This project is not affiliated with them or endorsed by them; the names only say which published rule styles the format can express.

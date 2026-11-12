@@ -30,7 +30,6 @@ class PlaySession {
   /// Character creation under way; null once the adventure has begun.
   HeroDraft? creation;
   List<GameEvent> _events = const [];
-  String? _music;
 
   /// Earned in any game since this session began; ids in earning order.
   final Set<String> _achievements = {};
@@ -67,7 +66,6 @@ class PlaySession {
       creationEffects: draft.effects,
     );
     _engine = engine;
-    _music = null;
     _record(events);
   }
 
@@ -100,8 +98,6 @@ class PlaySession {
     _events = events;
     for (final event in events) {
       switch (event) {
-        case MusicChanged(:final file):
-          _music = file;
         case AchievementEarned(:final achievement):
           _achievements.add(achievement);
         default:
@@ -145,11 +141,15 @@ class PlaySession {
       for (final id in _achievements) story.achievements[id]?.title ?? id,
     ],
     audio: AudioCue(
-      music: _music,
+      // From the state, not the events: undo brings the old music back.
+      music: _engine.state.music,
       sounds: [
         for (final e in _events)
           if (e is SoundPlayed) e.file,
       ],
+    ),
+    hasAudio: story.nodes.values.any(
+      (n) => n.sound != null || (n.music != null && n.music != stopMusic),
     ),
     canUndo: _engine.canUndo,
     combat: _combat(),
@@ -167,7 +167,23 @@ class PlaySession {
     locked: c.locked,
     lockedText: c.locked ? c.choice.lockedText : null,
     needs: [for (final u in c.unmet) _requirement(u)],
+    roll: c.choice.table?.roll ?? _rollOf(c.choice.check),
   );
+
+  /// A check in a line: the dice, what is added, and what it must reach.
+  String? _rollOf(Check? check) {
+    if (check == null) return null;
+    String side(Operand o) => switch (o) {
+      Const(:final value) => '$value',
+      StatRef(:final stat) => _label(stat),
+    };
+    return [
+      check.roll,
+      if (check.add case final add?) '+ ${side(add)}',
+      check.op == CheckOp.gte ? '≥' : '≤',
+      side(check.vs),
+    ].join(' ');
+  }
 
   Requirement _requirement(Unmet unmet) => switch (unmet.condition) {
     HasItem(:final item, :final amount) => Requirement(
