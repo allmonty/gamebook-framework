@@ -31,7 +31,7 @@ Planned work lives in a plan folder with a `README.md` (why, decisions, status t
 A decision the plan records as the owner's is not reopened. A new idea goes to the owner, not into the step.
 
 ## Changing the format
-The spec is the source of truth and versions only add. A change to what a story can say or how it plays touches all of these in one commit (details in `CONTRIBUTING.md`): `spec/framework.md` Part B, `spec/CHANGELOG.md`, `spec/story.schema.json`, conformance cases worked out **from the spec**, the Dart engine with its tests, a regenerated `spec/llm-kit.md`, and the feature list in `README.md`. A new feature also needs a `schema` bump and a gate that rejects it in older stories. A feature a player can see also reaches the site: player, strings in both languages, a tutorial section with an example.
+The spec is the source of truth and versions only add. A change to what a story can say or how it plays touches all of these in one commit (details in `CONTRIBUTING.md`): `spec/framework.md` Part B, `spec/CHANGELOG.md`, `spec/story.schema.json`, conformance cases worked out **from the spec**, the Dart engine with its tests, a regenerated `spec/llm-kit.md`, and the feature list in `README.md`. A new feature also needs a `schema` bump, a gate that rejects it in older stories, and a section for the new version on the site's versions page (`site/pages/{en,pt}/versions.md`; a test fails without it). A feature a player can see also reaches the site: player, strings in both languages, a tutorial section with an example.
 
 ## Architecture of `site/` (clean architecture, kept pragmatic)
 Dependencies point inward only. A test (`site/test/layers_test.dart`) scans imports and fails on a violation.

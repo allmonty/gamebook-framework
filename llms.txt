@@ -19,7 +19,8 @@
 
 ## The format
 - [Specification](https://github.com/allmonty/gamebook-framework/blob/main/spec/framework.md): Part A in plain words, Part B exact
-- [Format versions](https://github.com/allmonty/gamebook-framework/blob/main/spec/CHANGELOG.md): what each version of `"schema"` holds
+- [Format versions](https://allmonty.github.io/gamebook-framework/en/versions.html): what `"schema": 1` means and what each version lets an author write
+- [Changelog](https://github.com/allmonty/gamebook-framework/blob/main/spec/CHANGELOG.md): the exact record of each version, for engine writers
 - [Fighting Fantasy preset](https://allmonty.github.io/gamebook-framework/presets/fighting-fantasy.json): the rules block `"preset": "fighting-fantasy"` stands for
 - [d20-lite preset](https://allmonty.github.io/gamebook-framework/presets/d20-lite.json): the rules block `"preset": "d20-lite"` stands for
 

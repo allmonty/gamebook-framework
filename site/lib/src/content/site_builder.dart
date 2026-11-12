@@ -37,6 +37,7 @@ class SiteBuilder {
     _writePage(lang, 'index.html', strings, _read('templates/index.html'));
     _writePage(lang, 'play.html', strings, _read('templates/play.html'));
     _buildTutorial(lang, strings);
+    _buildVersions(lang, strings);
   }
 
   /// Every `content/<lang>/*.md` becomes `<lang>/tutorial/<slug>.html`, with
@@ -70,6 +71,21 @@ class SiteBuilder {
         },
       );
     }
+  }
+
+  /// `pages/<lang>/versions.md` becomes `<lang>/versions.html`: what the
+  /// format's versions are and what each holds. It is a page of its own, not
+  /// a tutorial chapter.
+  void _buildVersions(String lang, Map<String, String> strings) {
+    final page = renderChapter(
+      'versions',
+      _read('pages/$lang/versions.md'),
+      exampleLookup(lang),
+    );
+    _writePage(lang, 'versions.html', strings, _read('templates/page.html'), {
+      'page.title': '${page.title} · Gamebook Framework',
+      'page.html': page.html,
+    });
   }
 
   /// The chapters of [lang], in file-name order.

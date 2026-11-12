@@ -1,5 +1,7 @@
 # Format versions
 
+For authors, the site explains versions in plain words, in English and Portuguese: [Format versions](https://allmonty.github.io/gamebook-framework/en/versions.html). This file is the exact record, for engine writers.
+
 A story says which version of the format it is written for in its `schema` field (framework.md B2). Versions only add: a later version brings new fields and kinds, a story valid in one version is valid in every later one once its `schema` says so, and an engine rejects a story that uses something newer than its `schema`. Engines say which versions they support.
 
 | Version | What it has | Spec |
