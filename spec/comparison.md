@@ -74,7 +74,7 @@ Write the graph directly as data: nodes, choices, conditions, effects, checks.
 ## 3. Rules systems
 All of these reduce to: **stats + a dice roll + a comparison**, optionally repeated in rounds. That is what our schema models (`roll`, `add`, `op`, `vs`, `combat.mode`).
 
-### Fighting Fantasy (Puffin / Games Workshop era)
+### Fighting Fantasy (Puffin era)
 - Stats: Skill (combat ability), Stamina (health), Luck (a dwindling stock). Starting values: Skill = 1 die + 6, Stamina = 2 dice + 12, Luck = 1 die + 6 ([example fan adventure](https://fighting-fantasy-fan-engine.sourceforge.io/curseof/curseofblackwoodmanor.pdf); consistent across several fan adventures, e.g. [this one](https://fighting-fantasy-fan-engine.sourceforge.io/Dragon/DRAGON.pdf)).
 - Combat round: each side rolls 2 dice and adds Skill. Higher total wounds the other for 2 Stamina; equal totals mean no damage. Fight until one Stamina reaches 0.
 - Test your Luck: roll 2 dice; success if the total is at most current Luck; Luck then drops by 1 either way. In a fight: lucky after wounding the creature takes 2 more Stamina from it, unlucky gives 1 back; when wounded, lucky restores 1 and unlucky costs 1 more. Found on 2026-11-11 in search results quoting the books' rules (*City of Thieves*); these are the defaults of `rules.combat.luck`.
@@ -128,7 +128,7 @@ Build our own JSON graph format with rules expressed as data, plus presets for F
 
 ## 7. Not verified
 - Harlowe's license (its repository refused our request).
-- "Jumbo Grove": still nothing found.
+- "Jumbo Grove", which an early search result described as a gamebook tool with a JSON-heavy markup: still nothing found, so we do not know that it exists.
 - Lone Wolf's Combat Results Table values.
 - The official Fighting Fantasy rulebook wording: every rule here comes from fan adventures, a fan wiki or blogs that restate it. They agree with each other.
 - The license and file format of GoDungeon.
@@ -159,7 +159,7 @@ Among everything in section 2 (about twenty projects) we found no other project 
 | fighting-fantasy (Python), every printed book | "fight this, then return to the section you came from" | done: `call` and `return` |
 | fantasy-gamebook-engine | an AI narrates while a tool server owns dice and state | open: the engine as a tool server for AI assistants; no format change |
 | gamebookformat, pangamebook, LibroGameCreator | a printable book of numbered, shuffled sections | open: an export tool; needs no format change |
-| Gamebook Engine | a dead-end analyzer | we have it by simulation (`simulate_story`), not statically |
+| Gamebook Engine | a dead-end analyzer | we have it by simulation (`simulate_story`), not statically; the simulated player never uses an item or undoes, so a page whose only way on needs one of those reads as stuck |
 | GoDungeon, Twine | a visual builder | outside this repository (the Builder is a separate app) |
 | d20 games | advantage and disadvantage; dice pools | open: new check kinds |
 

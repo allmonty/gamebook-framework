@@ -29,7 +29,7 @@ engine.choose(engine.choices.first.index);        // returns the events of what 
 | `dice.dart`, `condition.dart`, `effect.dart`, `check.dart`, `combat.dart`, `quantity.dart`, `text.dart` | the parts |
 | `validate.dart` | the validator, also comparing translations |
 | `graph.dart` | the story as Graphviz DOT or Mermaid |
-| `simulate.dart` | plays a story many times at random and reports win and death rates, dead ends, endless loops, endings and pages never reached |
+| `simulate.dart` | plays a story many times at random and reports win and death rates, dead ends, endless loops, endings and pages never reached. Its player never uses an item or undoes |
 | `twine.dart` | converts a Twine story (Twee 3 or a published Twine 2 file) into this format, with a report of what could not be converted |
 | `package.dart` | `.gamebook` packages: read with every B14 check, write (B14) |
 

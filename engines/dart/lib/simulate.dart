@@ -20,7 +20,10 @@ enum Policy {
 /// How one simulated game ended.
 enum Outcome { victory, defeat, death, stuck, endless }
 
-/// What many simulated games of a story did. It finds
+/// What many simulated games of a story did. The simulated player takes
+/// choices, fights, tests luck, flees and answers offers; it never uses an
+/// item and never undoes, so a story that needs a potion drunk reads harder
+/// than it is, and a page whose only way on is undo reads as stuck. It finds
 /// what no static check can: dead ends that depend on state, endings that
 /// are never reached, stories that are much too hard or too easy.
 class SimulationReport {
