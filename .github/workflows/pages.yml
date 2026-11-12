@@ -28,7 +28,9 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: 3.13.7
-      - run: dart pub get
+      - run: dart pub get --enforce-lockfile
+      # A broken site is not published.
+      - run: dart test
       - run: dart run tool/build.dart
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
