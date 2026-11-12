@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{page.title}}</title>
 <meta name="description" content="{{page.description}}">
+<link rel="canonical" href="{{site.url}}{{lang}}/{{path}}">
+<link rel="alternate" hreflang="{{lang}}" href="{{site.url}}{{lang}}/{{path}}">
+<link rel="alternate" hreflang="{{otherLang}}" href="{{site.url}}{{otherLang}}/{{path}}">
+<meta property="og:title" content="{{page.title.attr}}">
+<meta property="og:description" content="{{page.description}}">
+<meta property="og:image" content="{{site.url}}assets/logo.jpeg">
 <link rel="icon" href="{{root}}assets/logo.jpeg">
 <link rel="stylesheet" href="{{root}}css/site.css">
 </head>
@@ -16,11 +22,11 @@
     <span class="brand-text"><span class="label">{{brand.kicker}}</span><span class="brand-name">Gamebook Framework</span></span>
   </a>
   <nav class="site-nav" aria-label="{{nav.label}}">
-    <a href="{{root}}{{lang}}/tutorial/index.html">{{nav.tutorial}}</a>
-    <a href="{{root}}{{lang}}/play.html">{{nav.play}}</a>
+    <a href="{{root}}{{lang}}/tutorial/index.html"{{nav.tutorial.current}}>{{nav.tutorial}}</a>
+    <a href="{{root}}{{lang}}/play.html"{{nav.play.current}}>{{nav.play}}</a>
     <a href="https://github.com/allmonty/gamebook-framework">GitHub</a>
     <a class="coffee" href="https://buymeacoffee.com/allmonty" target="_blank" rel="noopener">{{nav.coffee}}</a>
-    <a class="lang-switch label" href="{{root}}{{otherLang}}/{{path}}" hreflang="{{otherLang}}">{{nav.otherLanguage}}</a>
+    <a class="lang-switch label" href="{{root}}{{otherLang}}/{{path}}" hreflang="{{otherLang}}" lang="{{otherLang}}" aria-label="{{nav.otherLanguage.name}}">{{nav.otherLanguage}}</a>
   </nav>
 </header>
 <main id="main">
