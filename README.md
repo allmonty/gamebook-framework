@@ -142,7 +142,7 @@ Pages can be **fight scenes**. The player taps a button to fight round by round.
 
 - Pages can track **how many times** the player has visited them, and show different text or unlock different choices based on that count.
 - **Flags** are simple on/off switches you can set anywhere and check anywhere — useful for "has the player met the innkeeper?" or "has the secret been revealed?".
-- **Multiple endings**: mark any page as a `victory` or `death` ending. The player's health hitting zero always triggers death automatically.
+- **Multiple endings**: mark any page as a `victory`, `defeat` or `death` ending. A defeat is an ending that is neither a win nor a death: captured, lost, gone home. The player's health hitting zero always triggers death automatically.
 - **Undo**: let the player step back up to a set number of pages, with everything restored exactly as it was (stats, items, flags). Dice are rerolled if the same choice is taken again.
 
 ---

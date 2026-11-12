@@ -91,10 +91,21 @@ examples/07-living-world/undo-the-trap
 
 Undo is generous: it even takes back a death. Leave it off for a classic, unforgiving book.
 
+## Endings that are not a death
+
+Caught at the border, lost in the woods, gone home: many adventures end without a win and without a death. Mark such a page `"ending": "defeat"` (schema 8). The reader is told the adventure is over, not that they died.
+
+```gamebook
+examples/07-living-world/captured
+```
+
+Two of its three endings are defeats, and the hero is alive in both. Health at 0 is still a death, whatever the page says.
+
 ### Try it
 
 - In the inn, change `"gte": 4` to `"gte": 2`: the innkeeper gives in sooner.
 - In the well, add a part `{ "if": { "stat": "luck", "gte": 12 }, "text": "You feel very lucky." }`.
 - In the study, make the Cartographer achievement visible by removing `"hidden": true`.
+- At the border, change the cell's `"defeat"` to `"death"` and see what the reader is told.
 
 Next: making sure a long book has no broken links, and sharing it.

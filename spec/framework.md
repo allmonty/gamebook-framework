@@ -11,7 +11,7 @@ Why a new format instead of Ink, Twine or ChoiceScript: [comparison.md](comparis
 # Part A. For everyone
 
 ## What is a gamebook?
-A gamebook is a book you play. You read a short passage, then choose what to do: "If you open the door, go to page 12. If you walk away, go to page 30." Each page leads to other pages, so the book is really a **map of pages joined by choices**. Different choices lead to different adventures and different endings.
+A gamebook is a book you play. You read a short passage, then choose what to do: "If you open the door, go to page 12. If you walk away, go to page 30." Each page leads to other pages, so the book is really a **map of pages joined by choices**. Different choices lead to different adventures and different endings: you win, you die, or the adventure is simply over (captured, lost, gone home).
 
 A gamebook app is the same thing on your phone: a **page** shows a picture and some text, and **buttons** are the choices. Tap one and you land on another page. A picture can come with a short description of what it shows, so a player who cannot see it (with a screen reader, say) still gets it.
 
@@ -80,7 +80,7 @@ The next section shows this same story in the file format.
 
 # Part B. Technical reference
 
-Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
+Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6) and a neutral ending (`"ending": "defeat"`, B6). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
 
 ## B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
@@ -98,7 +98,7 @@ Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Versio
 | Field | Type | Req | Notes |
 |---|---|---|---|
 | `$schema` | string | no | path to `story.schema.json`, an editor hint the engine ignores |
-| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) |
+| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) and the `defeat` ending (B6) |
 | `journal` | object | no | map `entryId -> { title, text }` (schema 5, B6) |
 | `achievements` | object | no | map `achievementId -> { title, description, hidden }` (schema 7, B15) |
 | `chapters` | object | no | map `chapterId -> { title }`, in reading order (schema 6, B13) |
@@ -287,7 +287,7 @@ While the item is in the pack, each stat in `bonus` is higher (or lower, with a 
 | `once` | optional bool, default false. If true, `effects` apply only the first time the node is entered. Use for pickups and healing so revisiting cannot be exploited. |
 | `choices` | list of choices (B10). |
 | `combat` | a fight (B11). |
-| `ending` | `"victory"` or `"death"`. |
+| `ending` | `"victory"`, `"death"` or (schema 8) `"defeat"`: the adventure is over, the hero is alive and has not won (captured, lost, gave up). |
 | `title`, `note`, `chapter`, `draft` | authoring fields (schema 6, B13) |
 
 Exactly **one** of `choices` (non-empty), `combat`, `ending` must be present. A page with no way out is a parse error, except a draft page (B13).
@@ -404,7 +404,7 @@ Locked choices are shown **disabled** with their reason, and can't be chosen.
 3. If there is a `check`: roll it, apply `check.effects`, pick `pass` or `fail` as the target. If there is a `table`: roll it, apply the outcome's `effects` and use its `to`. Otherwise the target is `to`. A `once` choice is marked as taken at this point.
 4. **Enter the target node**: record it as visited and count the visit. Apply its `effects` (skipped if `once` and it was already visited).
 5. If the `health` stat is 0 (after step 2, 3 or 4) the game ends with **death**, whatever the node says. Once health is 0, the steps after it still run but apply no effects: a check or table still rolls and decides the target, and the target is still entered (visited, visit counted, music and sound as usual).
-6. If the node has `ending`, the game ends. If it has `combat`, the fight starts.
+6. If the node has `ending`, the game ends with that ending (`victory`, `defeat` or `death`). If it has `combat`, the fight starts.
 
 **A page with no open choice.** If every choice of a page is spent (`once`), hidden (`hideIfLocked`) or locked, and the page has no `ending` and no `combat`, the player has nothing to tap. The game is **not** ended: the engine offers nothing, and undo (if the story allows it, B4) leads out. This is an author's mistake, but no check of the story alone can always find it, because it depends on what the player did. Tools should look for it by playing: the Dart `simulate_story` tool reports such games as "stuck".
 

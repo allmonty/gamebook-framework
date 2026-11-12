@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:gamebook_engine/story.dart';
 import 'package:gamebook_site/src/content/site_builder.dart';
 import 'package:test/test.dart';
 
@@ -54,5 +55,8 @@ void main() {
         lang: builder.loadStrings(lang).keys.toSet(),
     };
     expect(keys['pt'], keys['en']);
+    for (final ending in Ending.values) {
+      expect(keys['en'], contains('player.ending.${ending.name}'));
+    }
   });
 }

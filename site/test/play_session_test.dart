@@ -89,6 +89,26 @@ void main() {
     expect(session.view.paragraphs, ['Go.']);
   });
 
+  test('a defeat ending ends the game with the hero alive', () {
+    final session = PlaySession.start(
+      storyOf(
+        {
+          'start': {
+            'text': 'Go.',
+            'choices': [
+              {'text': 'Surrender', 'to': 'cell'},
+            ],
+          },
+          'cell': {'text': 'Locked up.', 'ending': 'defeat'},
+        },
+        extra: {'schema': 8},
+      ),
+      random: Random(1),
+    )..choose(0);
+    expect(session.view.ending, Ending.defeat);
+    expect(session.view.choices, isEmpty);
+  });
+
   test('a stat at a quarter of its ceiling is low', () {
     expect(const StatPill(id: 'h', label: 'H', value: 3, max: 12).low, isTrue);
     expect(const StatPill(id: 'h', label: 'H', value: 4, max: 12).low, isFalse);

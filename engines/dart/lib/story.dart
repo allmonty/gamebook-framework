@@ -16,7 +16,8 @@ export 'rules_spec.dart';
 /// The schema versions this engine can read.
 const supportedSchemas = {1, 2, 3, 4, 5, 6, 7, 8};
 
-enum Ending { victory, death }
+/// How an adventure ends: won, over without a win (schema 8), or dead.
+enum Ending { victory, defeat, death }
 
 enum CheckOp { gte, lte }
 
@@ -490,7 +491,7 @@ class Node {
         ? null
         : Ending.values.where((e) => e.name == endingName).firstOrNull;
     if (endingName != null && ending == null) {
-      throw obj.error('ending', 'expected "victory" or "death"');
+      throw obj.error('ending', 'expected "victory", "defeat" or "death"');
     }
     final choices = obj.list('choices', Choice.fromJson, optional: true);
     final draft = obj.optBool('draft');

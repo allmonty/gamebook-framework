@@ -273,6 +273,50 @@ void main() {
     });
   });
 
+  group('a defeat ending (schema 8)', () {
+    Story captured({int hurt = 0}) => Story.fromJson({
+      'schema': 8,
+      'id': 'captured',
+      'lang': 'en',
+      'title': 'Captured',
+      'rules': {'preset': 'fighting-fantasy'},
+      'start': 'a',
+      'nodes': {
+        'a': {
+          'text': 'A',
+          'choices': [
+            {
+              'text': 'Surrender',
+              'to': 'cell',
+              'effects': [
+                {'stat': 'stamina', 'add': -hurt},
+              ],
+            },
+          ],
+        },
+        'cell': {'text': 'Cell', 'ending': 'defeat'},
+      },
+    });
+
+    test('ends the game with the hero alive', () {
+      final (engine, _) = start(captured());
+
+      final events = engine.choose(0);
+
+      expect(engine.ending, Ending.defeat);
+      expect((events.last as Ended).ending, Ending.defeat);
+      expect(engine.state.stat('stamina'), 12);
+    });
+
+    test('health at 0 is still death, whatever the page says', () {
+      final (engine, _) = start(captured(hurt: 20));
+
+      engine.choose(0);
+
+      expect(engine.ending, Ending.death);
+    });
+  });
+
   group('health at 0 is final (B4)', () {
     final story = Story.fromJson(
       jsonDecode('''

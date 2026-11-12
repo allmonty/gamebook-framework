@@ -1,0 +1,50 @@
+{
+  "schema": 8,
+  "id": "captured",
+  "lang": "pt",
+  "title": "A Fronteira",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "post",
+  "nodes": {
+    "post": {
+      "text": "Um posto de guarda bloqueia a única estrada que cruza a fronteira. Seus documentos são falsos, e não muito bons.",
+      "choices": [
+        {
+          "text": "Mostrar os documentos",
+          "to": "cell"
+        },
+        {
+          "text": "Esperar a noite junto ao rio",
+          "to": "river"
+        }
+      ]
+    },
+    "river": {
+      "text": "A noite cai. O rio corre escuro e rápido, e ninguém vigia este lado dele.",
+      "choices": [
+        {
+          "text": "Atravessar a nado",
+          "to": "shore"
+        },
+        {
+          "text": "Esperar na margem por um momento melhor",
+          "to": "dawn"
+        }
+      ]
+    },
+    "cell": {
+      "text": "O guarda lê seus documentos duas vezes e chama o capitão. De manhã você está numa cela: vivo, sem um arranhão, e muito longe do outro lado.",
+      "ending": "defeat"
+    },
+    "dawn": {
+      "text": "O momento melhor nunca chega. Ao amanhecer uma patrulha encontra você tremendo na margem e leva você de volta ao posto.",
+      "ending": "defeat"
+    },
+    "shore": {
+      "text": "Você se arrasta até a outra margem, encharcado e livre. Atrás de você, a lâmpada do posto de guarda é um pontinho laranja.",
+      "ending": "victory"
+    }
+  }
+}

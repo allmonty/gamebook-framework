@@ -227,6 +227,8 @@ main { display: block; }
 .gb-ending .label { margin: 0; color: var(--teal); font-size: 13px; }
 .gb-ending.death { border-color: var(--crimson); background: var(--crimson-soft); }
 .gb-ending.death .label { color: var(--crimson); }
+.gb-ending.defeat { border-color: var(--amber); background: var(--amber-soft); }
+.gb-ending.defeat .label { color: var(--amber); }
 
 .gb-pack { border: 1px solid var(--line); border-radius: var(--radius); background: rgba(14, 23, 38, 0.6); }
 .gb-pack summary { cursor: pointer; padding: var(--s3) var(--s4); color: var(--amber); min-height: 44px; display: flex; align-items: center; }

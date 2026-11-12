@@ -18,7 +18,7 @@ enum Policy {
 }
 
 /// How one simulated game ended.
-enum Outcome { victory, death, stuck, endless }
+enum Outcome { victory, defeat, death, stuck, endless }
 
 /// What many simulated games of a story did. It finds
 /// what no static check can: dead ends that depend on state, endings that
@@ -63,7 +63,8 @@ class SimulationReport {
     final byCount = [...stuck.entries]..sort((a, b) => b.value - a.value);
     return [
       '$games games of "${story.title}": '
-          'victory ${pct(Outcome.victory)}, death ${pct(Outcome.death)}, '
+          'victory ${pct(Outcome.victory)}, defeat ${pct(Outcome.defeat)}, '
+          'death ${pct(Outcome.death)}, '
           'stuck ${pct(Outcome.stuck)}, endless ${pct(Outcome.endless)}; '
           '${averageSteps.toStringAsFixed(1)} steps on average.',
       'Endings reached: ${list([for (final e in endings.entries) '${e.key} ${e.value}'])}.',
@@ -109,7 +110,7 @@ SimulationReport simulate(
     report.outcomes[outcome] = report.outcomes[outcome]! + 1;
     final at = engine.node.id;
     switch (outcome) {
-      case Outcome.victory || Outcome.death:
+      case Outcome.victory || Outcome.defeat || Outcome.death:
         if (engine.node.ending != null) {
           report.endings[at] = (report.endings[at] ?? 0) + 1;
         }
@@ -133,7 +134,11 @@ Outcome _play(
   for (var step = 0; step < maxSteps; step++) {
     report._steps++;
     if (engine.ending case final ending?) {
-      return ending == Ending.victory ? Outcome.victory : Outcome.death;
+      return switch (ending) {
+        Ending.victory => Outcome.victory,
+        Ending.defeat => Outcome.defeat,
+        Ending.death => Outcome.death,
+      };
     }
     if (engine.offer case final item?) {
       if (policy == Policy.decline) {

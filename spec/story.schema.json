@@ -934,6 +934,7 @@
         "ending": {
           "enum": [
             "victory",
+            "defeat",
             "death"
           ]
         },

@@ -1,0 +1,51 @@
+{
+  "description": "A defeat ending ends the game with the hero alive and not winning.",
+  "spec": [
+    "B6",
+    "B10"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A",
+        "choices": [
+          {
+            "text": "Give up",
+            "to": "b"
+          }
+        ]
+      },
+      "b": {
+        "text": "B",
+        "ending": "defeat"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "choose": 0
+    }
+  ],
+  "expect": {
+    "node": "b",
+    "ending": "defeat",
+    "stats": {
+      "stamina": 12
+    },
+    "choices": []
+  }
+}

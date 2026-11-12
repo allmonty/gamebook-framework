@@ -37,6 +37,34 @@ void main() {
     expect(run(), run());
   });
 
+  test('games that reach a defeat ending count as defeats', () {
+    final report = simulate(
+      story(
+        {
+          'a': {
+            'text': 'A',
+            'choices': [
+              {'text': 'Give up', 'to': 'b'},
+            ],
+          },
+          'b': {'text': 'B', 'ending': 'defeat'},
+        },
+        extra: {'schema': 8},
+      ),
+      games: 10,
+      random: Random(1),
+    );
+    expect(report.rate(Outcome.defeat), 1);
+    expect(report.endings, {'b': 10});
+    expect(
+      '$report',
+      startsWith(
+        '10 games of "S": victory 0.0%, defeat 100.0%, death 0.0%, '
+        'stuck 0.0%, endless 0.0%;',
+      ),
+    );
+  });
+
   test('a page whose only choice never opens is a dead end', () {
     final report = simulate(
       story(
