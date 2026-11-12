@@ -125,4 +125,33 @@ void main() {
     );
     host.remove();
   });
+
+  test('an edit takes over the music instead of playing over it', () async {
+    final source = _source.replaceFirst(
+      '"text": "Start."',
+      '"text": "Start.", "music": "audio/a.ogg"',
+    );
+    final host = el('div');
+    document.body!.append(host);
+    final lab = LabView(
+      host,
+      EditSession(source, Random(1)),
+      const Messages({}),
+      pause: Duration.zero,
+    );
+    expect(lab.audio.playing, 'audio/a.ogg');
+
+    Future<void> type(String text) async {
+      (host.querySelector('textarea')! as HTMLTextAreaElement).value = text;
+      host.querySelector('textarea')!.dispatchEvent(Event('input'));
+      await Future<void>.delayed(Duration.zero);
+    }
+
+    await type(source.replaceFirst('audio/a.ogg', 'audio/b.ogg'));
+    expect(lab.audio.playing, 'audio/b.ogg');
+
+    await type('{');
+    expect(lab.audio.playing, isNull);
+    host.remove();
+  });
 }

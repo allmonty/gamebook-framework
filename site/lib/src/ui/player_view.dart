@@ -12,7 +12,13 @@ import 'wording.dart';
 
 /// Draws a [PlaySession] into [host] and redraws after every action.
 class PlayerView {
-  PlayerView(this.host, this.session, this.m, {this.mediaBase = ''}) {
+  PlayerView(
+    this.host,
+    this.session,
+    this.m, {
+    this.mediaBase = '',
+    AudioOutput? audio,
+  }) : _audio = audio ?? AudioOutput(mediaBase) {
     host.classList.add('gb-player');
     render();
   }
@@ -24,7 +30,10 @@ class PlayerView {
   /// The folder the story's picture and sound paths are relative to, ending
   /// in `/` (empty: the page's own folder).
   final String mediaBase;
-  late final _audio = AudioOutput(mediaBase);
+
+  /// Shared by the views a lab makes one after another, so a new game takes
+  /// over the music of the one before instead of playing over it.
+  final AudioOutput _audio;
 
   void render() {
     if (session.creation case final draft?) {

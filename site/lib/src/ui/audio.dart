@@ -16,6 +16,9 @@ class AudioOutput {
   HTMLAudioElement? _music;
   String? _playing;
 
+  /// The music file now playing, if any.
+  String? get playing => _playing;
+
   void play(AudioCue cue) {
     if (cue.music != _playing) {
       _music?.pause();

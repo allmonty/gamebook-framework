@@ -4,6 +4,7 @@ import 'dart:js_interop';
 import 'package:web/web.dart';
 
 import '../play/edit_session.dart';
+import 'audio.dart';
 import 'dom.dart';
 import 'player_view.dart';
 import 'wording.dart';
@@ -39,6 +40,10 @@ class LabView {
 
   /// How long typing must stop before the text is checked again.
   final Duration pause;
+
+  /// One for every game played here: an edit starts a new game, and the old
+  /// one's music must not play on under it.
+  late final audio = AudioOutput(mediaBase);
 
   Timer? _debounce;
   late final _playTab = _tab(m('player.tab.play'), () => _show(play: true));
@@ -170,13 +175,14 @@ class LabView {
     ]);
     final game = edit.play;
     if (game == null) {
+      audio.stop();
       _playPane.replaceChildren(
         el('p', cls: 'gb-cannot card', text: m('player.cannotPlay')),
       );
     } else {
       final host = el('div');
       _playPane.replaceChildren(host);
-      PlayerView(host, game, m, mediaBase: mediaBase);
+      PlayerView(host, game, m, mediaBase: mediaBase, audio: audio);
     }
   }
 
