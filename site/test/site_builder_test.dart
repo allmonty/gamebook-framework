@@ -8,12 +8,15 @@ void main() {
   setUp(() => output = Directory.systemTemp.createTempSync('site_build'));
   tearDown(() => output.deleteSync(recursive: true));
 
-  test('builds the home page in every language from the real sources', () {
+  test('builds every page in every language from the real sources', () {
     SiteBuilder(source: Directory.current, output: output).build();
     for (final lang in SiteBuilder.languages) {
-      final page = File('${output.path}/$lang/index.html').readAsStringSync();
-      expect(page, contains('<html lang="$lang">'));
-      expect(page, isNot(contains('{{')));
+      for (final name in ['index.html', 'play.html']) {
+        final page = File('${output.path}/$lang/$name').readAsStringSync();
+        expect(page, contains('<html lang="$lang">'), reason: name);
+        expect(page, isNot(contains('{{')), reason: name);
+        expect(page, contains('class="gb-embed"'), reason: name);
+      }
     }
     expect(File('${output.path}/index.html').existsSync(), isTrue);
     expect(File('${output.path}/css/site.css').existsSync(), isTrue);
