@@ -174,6 +174,8 @@ class GameEngine {
   }
 
   /// Starts a new game with freshly rolled [stats] and enters the first node.
+  /// Throws [ArgumentError] if the story asks for a name (B4) and [name] is
+  /// not one a hero may have.
   static (GameEngine, List<GameEvent>) newGame({
     required Story story,
     required Rules rules,
@@ -182,6 +184,14 @@ class GameEngine {
     String? name,
     List<Effect> creationEffects = const [],
   }) {
+    if ((rules.creation?.name ?? false) && !CreationSpec.nameFits(name ?? '')) {
+      throw ArgumentError.value(
+        name,
+        'name',
+        'the story asks for a name of 1 to '
+            '${CreationSpec.maxNameLength} characters',
+      );
+    }
     final engine = GameEngine(
       story: story,
       rules: rules,

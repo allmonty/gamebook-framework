@@ -71,7 +71,11 @@ class CreationPanel {
   HTMLElement _name(CreationView view, HTMLElement begin) {
     final input = el(
       'input',
-      attrs: {'type': 'text', 'autocomplete': 'off', 'maxlength': '40'},
+      attrs: {
+        'type': 'text',
+        'autocomplete': 'off',
+        'maxlength': '${HeroDraft.maxNameLength}',
+      },
     ) as HTMLInputElement..value = view.name;
     input.addEventListener(
       'input',

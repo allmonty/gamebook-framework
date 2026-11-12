@@ -158,6 +158,16 @@ class CreationSpec {
     return spec;
   }
 
+  /// The longest name a hero may have, after trimming (B4).
+  static const maxNameLength = 24;
+
+  /// Whether [name] is one a hero may have: 1 to [maxNameLength] characters
+  /// after trimming.
+  static bool nameFits(String name) {
+    final trimmed = name.trim();
+    return trimmed.isNotEmpty && trimmed.length <= maxNameLength;
+  }
+
   /// Whether the player names the hero (`{name}` in text).
   final bool name;
   final List<PickGroup> picks;
