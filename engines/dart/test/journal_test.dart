@@ -9,7 +9,7 @@ import 'support/scripted_random.dart';
 
 Map<String, Object?> storyJson({
   Map<String, Object?>? journal,
-  int schema = 5,
+  int schema = 1,
   String lang = 'en',
   List<Object?> effects = const [
     {'journal': 'note'},
@@ -99,14 +99,6 @@ void main() {
           ),
         ),
         startsWith('journal: invalid id'),
-      );
-    });
-
-    test('needs schema 5, in the journal or in an effect', () {
-      expect(error(storyJson(schema: 4)), 'journal: needs "schema": 5');
-      expect(
-        error({...storyJson(schema: 4), 'journal': null}..remove('journal')),
-        'nodes.a.effects[0]: needs "schema": 5',
       );
     });
   });

@@ -16,7 +16,7 @@ Story pack({
   List<Map<String, Object?>> then = const [],
   Map<String, Object?>? needs,
 }) => Story.fromJson({
-  'schema': 8,
+  'schema': 1,
   'id': 'pack',
   'lang': 'en',
   'title': 'Pack',

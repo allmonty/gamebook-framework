@@ -87,25 +87,25 @@ void main() {
     'a count is kept for an item not held': (
       saved.copyWith(inventory: {}, counts: {'rusty-key': 2}),
       (j) =>
-          (j..['schema'] = 8)['items']! as Map<String, Object?>
+          (j..['schema'] = 1)['items']! as Map<String, Object?>
             ..['rusty-key'] = {'name': 'Key', 'stack': 3},
     ),
     'a count is below 1': (
       saved.copyWith(counts: {'rusty-key': 0}),
       (j) =>
-          (j..['schema'] = 8)['items']! as Map<String, Object?>
+          (j..['schema'] = 1)['items']! as Map<String, Object?>
             ..['rusty-key'] = {'name': 'Key', 'stack': 3},
     ),
     'a count is above the item\'s cap': (
       saved.copyWith(counts: {'rusty-key': 5}),
       (j) =>
-          (j..['schema'] = 8)['items']! as Map<String, Object?>
+          (j..['schema'] = 1)['items']! as Map<String, Object?>
             ..['rusty-key'] = {'name': 'Key', 'stack': 3, 'max': 4},
     ),
     'the pack holds more than it has room for': (
       saved.copyWith(counts: {'rusty-key': 7}),
       (j) {
-        j['schema'] = 8;
+        j['schema'] = 1;
         j['rules'] = {
           'preset': 'fighting-fantasy',
           'inventory': {'capacity': 1},

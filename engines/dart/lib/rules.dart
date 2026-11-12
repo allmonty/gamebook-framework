@@ -23,13 +23,13 @@ class StatRules {
   /// Whether the rolled value is also the ceiling.
   final bool max;
 
-  /// A fixed ceiling instead (schema 5); never together with [max].
+  /// A fixed ceiling instead; never together with [max].
   final int? limit;
 
-  /// The floor (schema 8), 0 unless the story says otherwise.
+  /// The floor, 0 unless the story says otherwise.
   final int min;
 
-  /// Kept off the stats bar (schema 8): a counter the reader need not see.
+  /// Kept off the stats bar: a counter the reader need not see.
   final bool hidden;
 }
 
@@ -73,7 +73,7 @@ class CombatRules {
   final String? defenseStat;
   final int? defenseBase;
 
-  /// Testing your Luck in a fight; null when the story has none (schema 5).
+  /// Testing your Luck in a fight; null when the story has none.
   final LuckRules? luck;
 
   /// The results by combat ratio: always in [CombatMode.table], where
@@ -166,7 +166,7 @@ class Rules {
   /// The name and the pick groups of character creation, if any.
   final CreationSpec? creation;
 
-  /// How many pages the player can go back; 0 means none (schema 5).
+  /// How many pages the player can go back; 0 means none.
   final int undo;
 
   /// A fresh roll of every stat (character creation). Stats with a ceiling

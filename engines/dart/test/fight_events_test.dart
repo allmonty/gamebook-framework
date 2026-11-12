@@ -10,7 +10,7 @@ import 'support/scripted_random.dart';
 /// Opposed rounds roll 2d6 for the hero, then 2d6 for the scorpion; the loser
 /// takes 2.
 Story scorpion({bool wounded = true, int after = 2}) => Story.fromJson({
-  'schema': 8,
+  'schema': 1,
   'id': 'scorpion',
   'lang': 'en',
   'title': 'Scorpion',
@@ -190,7 +190,7 @@ void main() {
       expect(saved.combat!.round, 1);
     });
 
-    test('a save from before schema 8 has played no rounds', () {
+    test('an older save has played no rounds', () {
       final json = const GameState(
         node: 'pit',
         stats: {},

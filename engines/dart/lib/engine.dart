@@ -52,7 +52,7 @@ class SoundPlayed extends GameEvent {
   final String file;
 }
 
-/// An achievement was earned (schema 7); the app keeps it for the player.
+/// An achievement was earned; the app keeps it for the player.
 class AchievementEarned extends GameEvent {
   const AchievementEarned(this.achievement);
   final String achievement;
@@ -109,7 +109,7 @@ class ItemGained extends GameEvent {
 }
 
 /// How many of a countable item the pack holds changed, and some are left
-/// (schema 8).
+///.
 class ItemCountChanged extends GameEvent {
   const ItemCountChanged(this.item, this.from, this.to);
   final String item;
@@ -275,10 +275,9 @@ class GameEngine {
   ];
 
   /// `{stat}` and `{stat.max}` become the current value or ceiling of the
-  /// stat (schema 4 only; older stories keep braces as they are). A name that
-  /// is not a stat is left as written.
+  /// stat, and `{item.count}` how many of the item are held. A name that is
+  /// not a stat or an item is left as written.
   String _render(String text) {
-    if (story.schema < 4) return text;
     return renderTemplate(text, (name) {
       if (name == 'name') {
         return (rules.creation?.name ?? false) ? _state.name : null;
@@ -320,7 +319,7 @@ class GameEngine {
       unmet: choice.condition == null
           ? const []
           : explain(choice.condition!, _state),
-      // A return with nowhere to go back to is locked (schema 8).
+      // A return with nowhere to go back to is locked.
       locked:
           (choice.condition != null && !evaluate(choice.condition!, _state)) ||
           (choice.returns && _state.returnTo.isEmpty),
@@ -349,7 +348,7 @@ class GameEngine {
   }
 
   /// Slots in use: one per carried item, and for a countable item one per
-  /// `stack` (schema 8); containers use none.
+  /// `stack`; containers use none.
   int get slotsUsed => _state.inventory.fold(
     0,
     (sum, item) => sum + _slots(item, _state.count(item)),
@@ -380,7 +379,7 @@ class GameEngine {
     return stack == null ? min(free, 1) : _slotRoom(item) + free * stack;
   }
 
-  /// How many more of [item] its cap allows (schema 8: an item's `max`).
+  /// How many more of [item] its cap allows (an item's `max`).
   int _capLeft(String item) {
     final cap = story.items[item]?.max;
     return cap == null ? _unlimited : max(0, cap - _state.count(item));
@@ -398,7 +397,7 @@ class GameEngine {
   /// The item the player is deciding about, if any (`pickup: "choose"`).
   String? get offer => _state.offers.firstOrNull;
 
-  /// How many of [offer] are offered at once (schema 8: a countable item).
+  /// How many of [offer] are offered at once (a countable item).
   int get offerCount => offer == null ? 0 : _state.offered(offer!);
 
   /// Whether taking [offer] needs a carried item left behind: the pack is
@@ -429,7 +428,7 @@ class GameEngine {
         _state = _state.copyWith(taken: {..._state.taken, '${node.id}#$index'});
       }
       _applyEffects(choice.effects, events);
-      // A call remembers this page for a later return (schema 8).
+      // A call remembers this page for a later return.
       final from = node.id;
       var target = choice.returns ? _popReturn() : choice.to;
       if (choice.check case final check?) {
@@ -460,7 +459,7 @@ class GameEngine {
     if (_history.length > rules.undo) _history.removeAt(0);
   }
 
-  /// Whether the player can go back a page (`rules.undo`, schema 5).
+  /// Whether the player can go back a page (`rules.undo`).
   bool get canUndo => _history.isNotEmpty;
 
   /// Goes back to the state before the last choice. Dice are not remembered:
@@ -515,7 +514,7 @@ class GameEngine {
   int get _health => _state.stats[rules.health]!.value;
 
   /// What ends a fight after a round, in this order (B11): death (the game
-  /// ends by itself), the win, then the fight events of schema 8: a wound,
+  /// ends by itself), the win, then the fight events: a wound,
   /// then too many rounds.
   void _afterRound(
     Combat fightNode,
@@ -601,7 +600,7 @@ class GameEngine {
     if (fightNode == null || !canFlee) throw StateError('cannot flee');
     _requireNoOffer();
     return _run((events) {
-      // Running costs the round (schema 8): the enemies strike first. It is
+      // Running costs the round: the enemies strike first. It is
       // no wound for `wounded`, nor a round for `rounds`: the player left.
       if (fightNode.fleeCost == CombatCost.round) _strikes(fightNode, events);
       if (ending != null) return;
@@ -816,7 +815,7 @@ class GameEngine {
       visits: {..._state.visits, id: _state.visitsTo(id) + 1},
     );
     // Every-page rules come first, so a counter a page sets starts with the
-    // next page (B10, schema 8).
+    // next page (B10).
     for (final rule in story.rules.everyPage) {
       if (rule.calm && next.combat != null) continue;
       if (rule.condition case final c? when !evaluate(c, _state)) continue;

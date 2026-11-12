@@ -11,7 +11,7 @@ Map<String, Object?> json({
   String preset = 'fighting-fantasy',
   Map<String, Object?> combat = const {'fleeCost': 'round'},
   List<Map<String, Object?>>? enemies,
-  int schema = 8,
+  int schema = 1,
 }) => {
   'schema': schema,
   'id': 'flee',
@@ -174,13 +174,6 @@ void main() {
       expect(
         failure(json(combat: const {'fleeCost': 'slow'})),
         'nodes.a.combat.fleeCost: expected "round" or "free"',
-      );
-    });
-
-    test('it needs schema 8', () {
-      expect(
-        failure(json(schema: 7)),
-        'nodes.a.combat.fleeCost: needs "schema": 8',
       );
     });
   });

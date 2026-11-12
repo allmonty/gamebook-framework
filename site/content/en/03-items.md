@@ -44,7 +44,7 @@ Stamina never goes above where it started: the potion cannot overheal.
 
 ## Items that make you better
 
-With `bonus` an item changes a stat while it is carried (schema 5). Drop it and the bonus goes with it.
+With `bonus` an item changes a stat while it is carried. Drop it and the bonus goes with it.
 
 ```gamebook
 examples/03-items/rune-blade
@@ -54,7 +54,7 @@ The gate wants `{ "stat": "skill", "gte": 12 }`: Skill 12 or more (`gte` means "
 
 ## A pack with limited room
 
-Without rules, the pack holds everything. To make room matter, add `inventory` to `rules` (schema 3):
+Without rules, the pack holds everything. To make room matter, add `inventory` to `rules`:
 
 ```json
 "rules": { "preset": "fighting-fantasy", "inventory": { "capacity": 2, "pickup": "choose" } }
@@ -82,7 +82,7 @@ Read the log above the page: the gem is refused for lack of room, and later the 
 
 ## Things that come in numbers
 
-Five meals, a quiver of arrows, three healing herbs: give the item a `stack` and the reader can carry several (schema 8).
+Five meals, a quiver of arrows, three healing herbs: give the item a `stack` and the reader can carry several.
 
 ```gamebook
 examples/03-items/provisions
@@ -108,14 +108,14 @@ The night page is a classic: "Eat a meal" needs one and takes it; "Go hungry" sh
 |---|---|---|
 | `"items": { "id": { "name": ... } }` | top of the file | declare an item |
 | `{ "give": "id" }` / `{ "take": "id" }` | `effects` of a page or choice | add / remove it |
-| `{ "takeAll": true }` | `effects` | empty the pack (schema 3) |
+| `{ "takeAll": true }` | `effects` | empty the pack |
 | `{ "has": "id" }` | a choice's `if` | needs the item |
-| `"use": { "effects": [...], "when": [...] }` | an item | usable item (schema 2) |
-| `"bonus": { "skill": 3 }` | an item | stat bonus while carried (schema 5) |
-| `"inventory": { "capacity": 2, "pickup": "choose" }` | `rules` | limited pack, offers (schema 3) |
+| `"use": { "effects": [...], "when": [...] }` | an item | usable item |
+| `"bonus": { "skill": 3 }` | an item | stat bonus while carried |
+| `"inventory": { "capacity": 2, "pickup": "choose" }` | `rules` | limited pack, offers |
 | `"capacity": 2` | an item | a container |
-| `"stack": 5` | an item | countable: any number, 5 to a slot (schema 8) |
-| `"count": 2` | a `give`, `take` or `has` | how many (schema 8) |
-| `"max": 6` | a countable item | the most the reader can hold (schema 8) |
+| `"stack": 5` | an item | countable: any number, 5 to a slot |
+| `"count": 2` | a `give`, `take` or `has` | how many |
+| `"max": 6` | a countable item | the most the reader can hold |
 
 Next: the hero's stats, and how to roll them.

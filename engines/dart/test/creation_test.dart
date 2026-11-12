@@ -41,7 +41,7 @@ const _picks = [
 Map<String, Object?> storyJson({
   Map<String, Object?>? rules,
   String text = 'Hello {name}.',
-  int schema = 5,
+  int schema = 1,
 }) => {
   'schema': schema,
   'id': 'c',
@@ -116,13 +116,6 @@ void main() {
       expect(
         error(storyJson(rules: creation([_picks.single, _picks.single]))),
         'rules.creation.picks[1].id: duplicate group id "kit"',
-      );
-    });
-
-    test('needs schema 5', () {
-      expect(
-        error(storyJson(rules: creation(), schema: 4)),
-        'rules.creation: needs "schema": 5',
       );
     });
   });

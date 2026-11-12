@@ -1,4 +1,4 @@
-# Plan: harden the framework, add schema 8, open the front door
+# Plan: harden the framework, fill the gaps, open the front door
 
 Temporary working plan, written 2026-11-11 after a review of the whole repo and a survey of other gamebook engines (recorded in `../spec/comparison.md`, sections 2, 3 and 8). Delete this folder when every step is done. Read `../AGENTS.md` first; it still rules.
 
@@ -7,7 +7,7 @@ The review found the framework solid (spec, JSON Schema, 112 conformance cases a
 
 - **Five holes**, each confirmed by running the engine (steps 01 to 05).
 - **One structural outlier**: `engines/dart/lib/story.dart`, 929 lines, a third of it the schema-version gate (step 06).
-- **Four gaps against real gamebooks**, chosen by the owner, added together as **schema 8** (steps 07 to 10), joined at the checkpoint by six more (steps 10a to 10f).
+- **Four gaps against real gamebooks**, chosen by the owner, added together as **schema 8** (steps 07 to 10), joined at the checkpoint by six more (steps 10a to 10f). Before release, step 10g merged every schema version into version 1.
 - **The repo is hard to pick up from outside** (steps 11 to 15): the kit for chatbots tells them to write schema 6 while the format is at 7; the presets exist only as Dart code and spec tables; every example lives under `site/`; nothing tells a person or an AI that arrives cold which of three jobs (write a story, build an app, write an engine) starts where; the site never says which schema version a feature needs.
 
 ## The goal
@@ -48,8 +48,9 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 10c | [A flee that costs a round](steps/10c-flee-costs-round.md) | feature | done | 3858d96 |
 | 10d | [Item counts in text, and a cap on a counted item](steps/10d-item-counts-in-text.md) | feature | done | a9a50fb |
 | 10e | [Rules on every page](steps/10e-every-page-rules.md) | feature | done | 4f40b08 |
-| 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | done | |
-| 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | todo | |
+| 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | done | 253ce0c |
+| 10g | [One schema version](steps/10g-one-schema.md) | format | done | |
+| 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | done (in 10g) | |
 | 12 | [Presets as data](steps/12-presets-as-data.md) | docs + test | todo | |
 | 13 | [Starter games](steps/13-starters.md) | docs + test | todo | |
 | 14 | [A front door for people and AIs](steps/14-front-door.md) | docs + site | todo | |
@@ -76,7 +77,8 @@ In the same commit:
 - `spec/llm-kit.md`, regenerated: `(cd engines/dart && dart run gamebook_engine:llm_kit)`; a test fails while it is stale;
 - the feature list in `README.md`.
 
-## What every feature (steps 07 to 10f) also carries
+## What every feature (steps 07 to 10f) also carried
+Since step 10g those features are all version 1, with no gate; a feature after the release needs a new version and a gate again (`CONTRIBUTING.md`). Steps 12 to 15 add no feature.
 - A schema gate: a story below schema 8 that uses the feature is rejected with `needs "schema": 8` at the feature's JSON path, plus an `invalid/<feature>-needs-schema-8.json` case.
 - The site: view model in `site/lib/src/play/`, renderer in `site/lib/src/ui/`, every visitor-facing word in `site/strings/en.json` **and** `pt.json` (never hard-coded in Dart).
 - The tutorial: a section in `site/content/en/<chapter>.md` **and** `site/content/pt/<chapter>.md`, with an example pair `site/examples/<chapter>/<name>.en.json` and `.pt.json`. Copy how the neighbouring sections embed their examples. `site/test/examples_test.dart` requires both languages, no errors, no warnings, and matching structure.
@@ -122,14 +124,14 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 11. **Rules that count fight rounds**, not only pages (the owner, 2026-11-12): "the hex lasts 2 rounds", "poison bites each round". Step 10e runs rules on pages only.
 
 ## Where things stand (2026-11-12, end of a session)
-- Steps 01 to 10d are done and merged into `main` (10a to 10d in pull request #15).
-- Steps 10e and 10f are done on `steps-10e-10f`, waiting for the owner's pull request review.
-- **Next:** step 11, on its own branch from `main` once 10e and 10f are merged.
+- Steps 01 to 10f are done and merged into `main`.
+- Step 10g merged the eight schema versions into version 1 (and did step 11).
+- **Next:** step 12, then 13 to 15, one branch and pull request each.
 - After 10f: steps 11 to 15, back to one branch and pull request per step.
 
 ## Waiting on the owner (outward-facing, never do these unasked)
 - Enable GitHub Pages (Settings > Pages > Source: "GitHub Actions"; the workflow is already there); step 14's addresses work only once it is on.
-- Tag a release when schema 8 is merged, so stories and engines can cite a fixed version.
+- Tag a release once the plan is done, so stories and engines can cite a fixed version (version 1 of the format).
 - Decide whether to publish the Dart engine on pub.dev (`publish_to: none` today) and to submit the schema to SchemaStore for editor autocompletion.
 
 ## Left out on purpose

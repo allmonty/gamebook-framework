@@ -47,7 +47,7 @@ examples/06-combat/d20-skirmish
 examples/06-combat/golem-and-rat
 ```
 
-- `"simultaneous": true` on the fight: every living enemy attacks every round, and the reader **chooses a target** each round (schema 5).
+- `"simultaneous": true` on the fight: every living enemy attacks every round, and the reader **chooses a target** each round.
 - `"armor": 1` on an enemy: your blows deal 1 less to it, never less than 0.
 - `"luck": { "stat": "luck" }` in the rules' `combat` turns on **Testing your Luck in fights**: after a round where someone was hurt, the reader may roll 2d6 against Luck. Lucky, your wound on the enemy grows by 2 or the wound you took shrinks by 1; unlucky, the reverse. Luck drops by 1 either way.
 
@@ -78,7 +78,7 @@ Each pair is `[enemy loses, you lose]`. A row covers every ratio up to its `upTo
 
 ## Fights that end early
 
-Gamebooks love "if the creature wounds you, turn to 55" and "if you have not won after three rounds, turn to 120". Two fields on `combat` say it (schema 8):
+Gamebooks love "if the creature wounds you, turn to 55" and "if you have not won after three rounds, turn to 120". Two fields on `combat` say it:
 
 ```gamebook
 examples/06-combat/poison-sting
@@ -100,7 +100,7 @@ After each round the order is: death, then the win, then a wound, then the round
 
 ### Running costs a round
 
-Lone Wolf runs differently: in the round you turn to flee, only the enemy can hurt you, so running can kill. Add `"fleeCost": "round"` next to `flee` (schema 8):
+Lone Wolf runs differently: in the round you turn to flee, only the enemy can hurt you, so running can kill. Add `"fleeCost": "round"` next to `flee`:
 
 ```gamebook
 examples/06-combat/the-evasion

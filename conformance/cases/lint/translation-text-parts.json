@@ -11,7 +11,7 @@
   ],
   "stories": {
     "en": {
-      "schema": 4,
+      "schema": 1,
       "id": "case",
       "lang": "en",
       "title": "Case",
@@ -39,7 +39,7 @@
       }
     },
     "pt": {
-      "schema": 4,
+      "schema": 1,
       "id": "case",
       "lang": "pt",
       "title": "Case",

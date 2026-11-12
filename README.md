@@ -188,7 +188,7 @@ The framework includes tools to help you catch mistakes before anyone plays:
 
 - **Validator**: checks for broken links (a choice that leads nowhere), unreachable pages, items that are used but never given, stat placeholders that don't exist, and more. Reports exact locations of errors.
 - **Story map**: generates a visual diagram of your story — boxes are pages, arrows are choices. Dashed arrows are locked choices; dice-roll arrows split into success and failure branches.
-- **Draft pages** (schema 6): mark a page as `draft: true` to save an unfinished story at any time. Draft pages are flagged as warnings by the validator and are not shown to players in release builds.
+- **Draft pages**: mark a page as `draft: true` to save an unfinished story at any time. Draft pages are flagged as warnings by the validator and are not shown to players in release builds.
 
 #### Authoring fields (for visual editors)
 - Give pages a short **title** (shown on editor cards and in validator messages; optionally shown to players as a page heading).
@@ -221,7 +221,7 @@ Finished stories can be **packaged** into a single `.gamebook` file (a zip) that
 | [AGENTS.md](AGENTS.md) | how AI assistants (and people) work in this repo |
 
 ## Status
-Schema versions 1 to 8 are specified. The Dart engine, which runs the gamebook app for iOS and Android (not public yet), implements all of them, and reads and writes `.gamebook` packages (B14).
+Schema version 1 is specified. The Dart engine, which runs the gamebook app for iOS and Android (not public yet), implements it, and reads and writes `.gamebook` packages (B14).
 
 ## License
 The spec text is [CC BY 4.0](LICENSE-CC-BY-4.0); code, the JSON Schema and the conformance cases are [MIT](LICENSE-MIT). Details: [LICENSE](LICENSE).

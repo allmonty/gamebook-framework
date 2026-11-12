@@ -12,7 +12,7 @@ import 'package:web/web.dart';
 import '../support/scripted_random.dart';
 
 final _story = Story.fromJson({
-  'schema': 5,
+  'schema': 1,
   'id': 't',
   'lang': 'en',
   'title': 'Fight',

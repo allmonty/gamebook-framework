@@ -99,9 +99,9 @@ void main() {
     expect(Story.fromJson(json).id, 'rusty-door');
   });
 
-  group('authoring fields (schema 6)', () {
+  group('authoring fields', () {
     Map<String, Object?> authored() => validJson()
-      ..['schema'] = 6
+      ..['schema'] = 1
       ..['showTitles'] = true
       ..['chapters'] = {
         'below': {'title': 'Act 1: Below'},
@@ -163,34 +163,11 @@ void main() {
         ),
       );
     });
-
-    for (final (field, mutate)
-        in <(String, void Function(Map<String, Object?>))>[
-          ('showTitles', (j) => j['showTitles'] = false),
-          (
-            'chapters',
-            (j) => j['chapters'] = {
-              'a': {'title': 'A'},
-            },
-          ),
-          ('nodes.door.title', (j) => node(j, 'door')['title'] = 'Door'),
-          ('nodes.door.note', (j) => node(j, 'door')['note'] = 'x'),
-        ]) {
-      test('$field needs schema 6', () {
-        expect(
-          failure((j) {
-            j['schema'] = 5;
-            mutate(j);
-          }),
-          '$field: needs "schema": 6',
-        );
-      });
-    }
   });
 
-  group('image alt text (schema 8)', () {
+  group('image alt text', () {
     Map<String, Object?> pictured() => validJson()
-      ..['schema'] = 8
+      ..['schema'] = 1
       ..['cover'] = 'images/cover.webp'
       ..['coverAlt'] = 'A rusty door in a stone wall.';
     Map<String, Object?> key(Map<String, Object?> json) =>
@@ -242,64 +219,17 @@ void main() {
         'coverAlt: must not be empty',
       );
     });
-
-    for (final (field, mutate)
-        in <(String, void Function(Map<String, Object?>))>[
-          (
-            'coverAlt',
-            (j) {
-              j['cover'] = 'images/cover.webp';
-              j['coverAlt'] = 'x';
-            },
-          ),
-          (
-            'nodes.door.imageAlt',
-            (j) {
-              node(j, 'door')
-                ..['image'] = 'images/door.webp'
-                ..['imageAlt'] = 'x';
-            },
-          ),
-          (
-            'items.rusty-key.imageAlt',
-            (j) {
-              key(j)
-                ..['image'] = 'images/key.webp'
-                ..['imageAlt'] = 'x';
-            },
-          ),
-        ]) {
-      test('$field needs schema 8', () {
-        expect(
-          failure((j) {
-            j['schema'] = 7;
-            mutate(j);
-          }),
-          '$field: needs "schema": 8',
-        );
-      });
-    }
   });
 
-  group('a neutral ending (schema 8)', () {
+  group('a neutral ending', () {
     test('"defeat" ends the story without a victory or a death', () {
-      final json = validJson()..['schema'] = 8;
+      final json = validJson()..['schema'] = 1;
       node(json, 'treasure')['ending'] = 'defeat';
       expect(Story.fromJson(json).nodes['treasure']!.ending, Ending.defeat);
     });
-
-    test('it needs schema 8', () {
-      expect(
-        failure((j) {
-          j['schema'] = 7;
-          node(j, 'treasure')['ending'] = 'defeat';
-        }),
-        'nodes.treasure.ending: needs "schema": 8',
-      );
-    });
   });
 
-  group('fight events (schema 8)', () {
+  group('fight events', () {
     void scorpion(Map<String, Object?> j, Map<String, Object?> events) =>
         node(j, 'treasure')
           ..remove('ending')
@@ -312,7 +242,7 @@ void main() {
           };
 
     test('wounded and rounds are read', () {
-      final json = validJson()..['schema'] = 8;
+      final json = validJson()..['schema'] = 1;
       scorpion(json, {
         'wounded': 'foot',
         'rounds': {'after': 3, 'to': 'door'},
@@ -326,7 +256,7 @@ void main() {
     test('a round limit needs at least one round', () {
       expect(
         failure((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           scorpion(j, {
             'rounds': {'after': 0, 'to': 'door'},
           });
@@ -334,35 +264,15 @@ void main() {
         'nodes.treasure.combat.rounds.after: must be at least 1',
       );
     });
-
-    for (final (field, events) in <(String, Map<String, Object?>)>[
-      ('wounded', {'wounded': 'foot'}),
-      (
-        'rounds',
-        {
-          'rounds': {'after': 3, 'to': 'door'},
-        },
-      ),
-    ]) {
-      test('$field needs schema 8', () {
-        expect(
-          failure((j) {
-            j['schema'] = 7;
-            scorpion(j, events);
-          }),
-          'nodes.treasure.combat.$field: needs "schema": 8',
-        );
-      });
-    }
   });
 
-  group('counted items (schema 8)', () {
+  group('counted items', () {
     Map<String, Object?> key(Map<String, Object?> j) =>
         (j['items']! as Map<String, Object?>)['rusty-key']!
             as Map<String, Object?>;
 
     test('stack and counts are read', () {
-      final json = validJson()..['schema'] = 8;
+      final json = validJson()..['schema'] = 1;
       key(json)['stack'] = 3;
       choice(json, 'cellar', 0)['effects'] = [
         {'give': 'rusty-key', 'count': 2},
@@ -383,14 +293,14 @@ void main() {
     test('stack and count must be at least 1', () {
       expect(
         failure((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           key(j)['stack'] = 0;
         }),
         'items.rusty-key.stack: must be at least 1',
       );
       expect(
         failure((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           choice(j, 'cellar', 0)['effects'] = [
             {'give': 'rusty-key', 'count': 0},
           ];
@@ -402,14 +312,14 @@ void main() {
     test('a cap needs a stack, and at least 1', () {
       expect(
         failure((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           key(j)['max'] = 3;
         }),
         'items.rusty-key.max: only applies to a countable item ("stack")',
       );
       expect(
         failure((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           key(j)
             ..['stack'] = 2
             ..['max'] = 0;
@@ -421,7 +331,7 @@ void main() {
     test('a container cannot be counted', () {
       expect(
         failure((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           key(j)
             ..['capacity'] = 1
             ..['stack'] = 2;
@@ -433,7 +343,7 @@ void main() {
     test('count belongs to give, take and has only', () {
       expect(
         failure((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           choice(j, 'cellar', 0)['effects'] = [
             {'set': 'x', 'count': 2},
           ];
@@ -441,41 +351,11 @@ void main() {
         'nodes.cellar.choices[0].effects[0].count: unknown key',
       );
     });
-
-    for (final (field, mutate)
-        in <(String, void Function(Map<String, Object?>))>[
-          ('items.rusty-key.stack', (j) => key(j)['stack'] = 3),
-          (
-            'nodes.cellar.text',
-            (j) => node(j, 'cellar')['text'] = 'Keys: {rusty-key.count}.',
-          ),
-          (
-            'nodes.cellar.choices[0].effects[0]',
-            (j) => choice(j, 'cellar', 0)['effects'] = [
-              {'give': 'rusty-key', 'count': 1},
-            ],
-          ),
-          (
-            'nodes.door.choices[0].if',
-            (j) =>
-                choice(j, 'door', 0)['if'] = {'has': 'rusty-key', 'count': 1},
-          ),
-        ]) {
-      test('$field needs schema 8', () {
-        expect(
-          failure((j) {
-            j['schema'] = 7;
-            mutate(j);
-          }),
-          '$field: needs "schema": 8',
-        );
-      });
-    }
   });
 
-  group('draft pages (schema 6)', () {
+  group('draft pages', () {
     test('a draft may have no text and no way out', () {
-      final json = validJson()..['schema'] = 6;
+      final json = validJson()..['schema'] = 1;
       (json['nodes']! as Map<String, Object?>)['foot'] = {
         'draft': true,
         'title': 'Hurt foot',
@@ -487,7 +367,7 @@ void main() {
     });
 
     test('a draft keeps what it has, even two ways out', () {
-      final json = validJson()..['schema'] = 6;
+      final json = validJson()..['schema'] = 1;
       node(json, 'door')
         ..['draft'] = true
         ..['ending'] = 'death';
@@ -499,7 +379,7 @@ void main() {
     test('what a draft has must still be valid', () {
       expect(
         failure((j) {
-          j['schema'] = 6;
+          j['schema'] = 1;
           node(j, 'door')
             ..['draft'] = true
             ..['ending'] = 'maybe';
@@ -511,7 +391,7 @@ void main() {
     test('a page that is not a draft still needs a way out', () {
       expect(
         failure((j) {
-          j['schema'] = 6;
+          j['schema'] = 1;
           node(j, 'door')
             ..['draft'] = false
             ..remove('choices');
@@ -519,86 +399,11 @@ void main() {
         startsWith('nodes.door: needs exactly one of'),
       );
     });
-
-    test('draft needs schema 6', () {
-      expect(
-        failure((j) => node(j, 'door')['draft'] = true),
-        'nodes.door.draft: needs "schema": 6',
-      );
-    });
   });
 
-  group('quantities and limits (schema 5)', () {
-    String error(
-      void Function(Map<String, Object?> j) change, {
-      int schema = 4,
-    }) {
-      final json = validJson()..['schema'] = schema;
-      change(json);
-      try {
-        Story.fromJson(json);
-      } on StoryFormatException catch (e) {
-        return e.toString();
-      }
-      fail('expected a StoryFormatException');
-    }
-
-    test('a stat limit, a stat comparison and set need schema 5', () {
-      expect(
-        error(
-          (j) => (j['rules']! as Map<String, Object?>)['stats'] = {
-            'gold': {'roll': '0', 'limit': 50},
-          },
-        ),
-        'rules.stats.gold.limit: needs "schema": 5',
-      );
-      expect(
-        error(
-          (j) => choice(j, 'door', 0)['if'] = {
-            'stat': 'skill',
-            'gte': {'stat': 'luck'},
-          },
-        ),
-        'nodes.door.choices[0].if: needs "schema": 5',
-      );
-      expect(
-        error(
-          (j) => node(j, 'foot')['effects'] = [
-            {'stat': 'stamina', 'set': 0},
-          ],
-        ),
-        'nodes.foot.effects[0]: needs "schema": 5',
-      );
-      expect(
-        error(
-          (j) => choice(j, 'cellar', 0)['effects'] = [
-            {
-              'stat': 'stamina',
-              'add': {'stat': 'luck'},
-            },
-          ],
-        ),
-        'nodes.cellar.choices[0].effects[0]: needs "schema": 5',
-      );
-      expect(
-        error(
-          (j) => node(j, 'cellar')['text'] = [
-            'a',
-            {
-              'if': {
-                'stat': 'skill',
-                'gte': {'stat': 'luck'},
-              },
-              'text': 'b',
-            },
-          ],
-        ),
-        'nodes.cellar.text[1].if: needs "schema": 5',
-      );
-    });
-
-    test('plain numbers and add stay valid before schema 5', () {
-      final json = validJson()..['schema'] = 4;
+  group('quantities and limits', () {
+    test('plain numbers and add are valid', () {
+      final json = validJson()..['schema'] = 1;
       choice(json, 'door', 0)['if'] = {'stat': 'skill', 'gte': 8};
       node(json, 'foot')['effects'] = [
         {'stat': 'stamina', 'add': -2},
@@ -607,8 +412,8 @@ void main() {
       expect(() => Story.fromJson(json), returnsNormally);
     });
 
-    test('they parse in schema 5', () {
-      final json = validJson()..['schema'] = 5;
+    test('they parse', () {
+      final json = validJson()..['schema'] = 1;
       (json['rules']! as Map<String, Object?>)['stats'] = {
         'gold': {'roll': '0', 'limit': 50},
       };
@@ -631,9 +436,9 @@ void main() {
     });
   });
 
-  group('writing features (schema 4)', () {
+  group('writing features', () {
     group('page text', () {
-      Map<String, Object?> v4() => validJson()..['schema'] = 4;
+      Map<String, Object?> v4() => validJson()..['schema'] = 1;
 
       test('a plain string is one part', () {
         final node = Story.fromJson(validJson()).nodes['cellar']!;
@@ -667,24 +472,8 @@ void main() {
         expect(n.text, 'First.\n\nSecond.\n\nThird.');
       });
 
-      test('a list needs schema 4', () {
-        final json = validJson()..['schema'] = 3;
-        node(json, 'cellar')['text'] = ['One.', 'Two.'];
-
-        expect(
-          () => Story.fromJson(json),
-          throwsA(
-            isA<StoryFormatException>().having(
-              (e) => e.toString(),
-              'message',
-              'nodes.cellar.text: needs "schema": 4',
-            ),
-          ),
-        );
-      });
-
       test('text errors name the path', () {
-        String error(Object? text, {int schema = 4}) {
+        String error(Object? text, {int schema = 1}) {
           final json = validJson()..['schema'] = schema;
           node(json, 'cellar')['text'] = text;
           try {
@@ -729,7 +518,7 @@ void main() {
         );
       });
 
-      test('in schema 4 bad placeholders are rejected, with the path', () {
+      test('bad placeholders are rejected, with the path', () {
         String error(void Function(Map<String, Object?> json) change) {
           final json = v4();
           change(json);
@@ -754,20 +543,10 @@ void main() {
           startsWith('nodes.cellar.choices[0].text: bad placeholder'),
         );
       });
-
-      test('before schema 4 braces are just text', () {
-        final json = validJson();
-        node(json, 'cellar')['text'] = 'A {strange} } thing';
-
-        expect(
-          Story.fromJson(json).nodes['cellar']!.text,
-          'A {strange} } thing',
-        );
-      });
     });
 
     test('a choice can be once-only', () {
-      final json = validJson()..['schema'] = 4;
+      final json = validJson()..['schema'] = 1;
       choice(json, 'cellar', 0)['once'] = true;
 
       final story = Story.fromJson(json);
@@ -777,7 +556,7 @@ void main() {
     });
 
     test('parses a visits condition, alone or nested', () {
-      final json = validJson()..['schema'] = 4;
+      final json = validJson()..['schema'] = 1;
       choice(json, 'door', 0)['if'] = {
         'all': [
           {'visits': 'cellar', 'gte': 2},
@@ -795,8 +574,8 @@ void main() {
       expect(((all.conditions[1] as Not).condition as VisitCount).value, 0);
     });
 
-    test('a visits condition needs one comparison and schema 4', () {
-      String error(Map<String, Object?> condition, {int schema = 4}) {
+    test('a visits condition needs one comparison', () {
+      String error(Map<String, Object?> condition, {int schema = 1}) {
         final json = validJson()..['schema'] = schema;
         choice(json, 'door', 0)['if'] = condition;
         try {
@@ -810,16 +589,6 @@ void main() {
       expect(
         error({'visits': 'cellar'}),
         'nodes.door.choices[0].if: a visits condition needs exactly one of gte, lte, eq',
-      );
-      expect(
-        error({'visits': 'cellar', 'gte': 1}, schema: 3),
-        'nodes.door.choices[0].if: needs "schema": 4',
-      );
-      expect(
-        error({
-          'not': {'visits': 'cellar', 'gte': 1},
-        }, schema: 3),
-        'nodes.door.choices[0].if: needs "schema": 4',
       );
     });
 
@@ -850,7 +619,7 @@ void main() {
     }
 
     test('parses a random table', () {
-      final json = validJson()..['schema'] = 4;
+      final json = validJson()..['schema'] = 1;
       tableChoice(json)['table'] = table();
 
       final parsed = Story.fromJson(json).nodes['door']!.choices[0];
@@ -867,25 +636,9 @@ void main() {
       expect(parsed.table!.outcomeFor(99).to, 'treasure');
     });
 
-    test('a table needs schema 4', () {
-      final json = validJson()..['schema'] = 3;
-      tableChoice(json)['table'] = table();
-
-      expect(
-        () => Story.fromJson(json),
-        throwsA(
-          isA<StoryFormatException>().having(
-            (e) => e.toString(),
-            'message',
-            'nodes.door.choices[0].table: needs "schema": 4',
-          ),
-        ),
-      );
-    });
-
     test('table errors name the path', () {
       String error(Map<String, Object?> t, {bool keepTo = false}) {
-        final json = validJson()..['schema'] = 4;
+        final json = validJson()..['schema'] = 1;
         final c = tableChoice(json)..['table'] = t;
         if (keepTo) c['to'] = 'treasure';
         try {
@@ -935,26 +688,10 @@ void main() {
         'nodes.door.choices[0].table.extra: unknown key',
       );
     });
-
-    test('needs schema 4', () {
-      final json = validJson()..['schema'] = 3;
-      choice(json, 'door', 0)['once'] = true;
-
-      expect(
-        () => Story.fromJson(json),
-        throwsA(
-          isA<StoryFormatException>().having(
-            (e) => e.toString(),
-            'message',
-            'nodes.door.choices[0].once: needs "schema": 4',
-          ),
-        ),
-      );
-    });
   });
 
-  group('limited pack (schema 3)', () {
-    Map<String, Object?> v3() => validJson()..['schema'] = 3;
+  group('limited pack', () {
+    Map<String, Object?> v3() => validJson()..['schema'] = 1;
 
     void inventory(Map<String, Object?> json, Map<String, Object?> block) =>
         (json['rules']! as Map<String, Object?>)['inventory'] = block;
@@ -994,64 +731,6 @@ void main() {
       expect(story.items['bag']!.capacity, 4);
       expect(story.items['rusty-key']!.capacity, isNull);
       expect(story.nodes['foot']!.effects.single, isA<TakeAll>());
-    });
-
-    test('every feature needs schema 3', () {
-      String error(void Function(Map<String, Object?> json) change) {
-        final json = validJson()..['schema'] = 2;
-        change(json);
-        try {
-          Story.fromJson(json);
-        } on StoryFormatException catch (e) {
-          return e.toString();
-        }
-        fail('expected a StoryFormatException');
-      }
-
-      expect(
-        error((j) => inventory(j, {'capacity': 3})),
-        'rules.inventory: needs "schema": 3',
-      );
-      expect(
-        error(
-          (j) => (j['items']! as Map<String, Object?>)['bag'] = {
-            'name': 'Bag',
-            'capacity': 2,
-          },
-        ),
-        'items.bag.capacity: needs "schema": 3',
-      );
-      expect(
-        error(
-          (j) => node(j, 'foot')['effects'] = [
-            {'takeAll': true},
-          ],
-        ),
-        'nodes.foot.effects[0]: needs "schema": 3',
-      );
-      expect(
-        error(
-          (j) => choice(j, 'door', 1)['check'] = {
-            'roll': '1d6',
-            'op': 'gte',
-            'vs': 3,
-            'pass': 'treasure',
-            'fail': 'foot',
-            'effects': [
-              {'takeAll': true},
-            ],
-          },
-        ),
-        'nodes.door.choices[1].check.effects[0]: needs "schema": 3',
-      );
-      expect(
-        error(
-          (j) => choice(j, 'cellar', 0)['effects'] = [
-            {'takeAll': true},
-          ],
-        ),
-        'nodes.cellar.choices[0].effects[0]: needs "schema": 3',
-      );
     });
 
     test('errors name the path', () {
@@ -1117,7 +796,7 @@ void main() {
     }
 
     void define(Map<String, Object?> json, Map<String, Object?> use) {
-      json['schema'] = 2;
+      json['schema'] = 1;
       (json['items']! as Map<String, Object?>)['potion'] = potion(use);
     }
 
@@ -1153,26 +832,6 @@ void main() {
 
     test('an item without use stays plain', () {
       expect(Story.fromJson(validJson()).items['rusty-key']!.use, isNull);
-    });
-
-    test('needs schema 2', () {
-      final json = validJson();
-      define(json, {
-        'effects': <Object?>[],
-        'when': ['story'],
-      });
-      json['schema'] = 1;
-
-      expect(
-        () => Story.fromJson(json),
-        throwsA(
-          isA<StoryFormatException>().having(
-            (e) => e.toString(),
-            'message',
-            'items.potion.use: needs "schema": 2',
-          ),
-        ),
-      );
     });
 
     test('errors name the path', () {
@@ -1247,7 +906,7 @@ void main() {
 
   group('errors name the JSON path', () {
     test('unsupported schema', () {
-      expect(failure((j) => j['schema'] = 9), startsWith('schema:'));
+      expect(failure((j) => j['schema'] = 2), startsWith('schema:'));
     });
 
     test('unknown top-level key', () {

@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 import 'support/scripted_random.dart';
 
 /// a (music theme) -> b (same music, a sound) -> c (stop) -> d (ending).
-Map<String, Object?> storyJson({int schema = 5}) => {
+Map<String, Object?> storyJson({int schema = 1}) => {
   'schema': schema,
   'id': 'au',
   'lang': 'en',
@@ -57,25 +57,12 @@ GameEngine start() {
 }
 
 void main() {
-  test('music and sound are read, and need schema 5', () {
+  test('music and sound are read', () {
     final story = Story.fromJson(storyJson());
 
     expect(story.nodes['b']!.music, 'audio/theme.wav');
     expect(story.nodes['b']!.sound, 'audio/door.wav');
     expect(story.nodes['d']!.music, isNull);
-    expect(
-      () => Story.fromJson({
-        ...storyJson(schema: 4),
-        'rules': {'preset': 'fighting-fantasy'},
-      }),
-      throwsA(
-        isA<StoryFormatException>().having(
-          (e) => e.toString(),
-          'message',
-          'nodes.a.music: needs "schema": 5',
-        ),
-      ),
-    );
   });
 
   group('playing', () {

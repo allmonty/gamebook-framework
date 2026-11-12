@@ -87,10 +87,10 @@ void main() {
       );
     });
 
-    test('unknown fight event targets (schema 8)', () {
+    test('unknown fight event targets', () {
       expect(
         errors((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           fight(j);
           ((node(j, 'treasure')['combat']! as Map<String, Object?>)
             ..['wounded'] = 'x'
@@ -103,20 +103,20 @@ void main() {
       );
     });
 
-    test('{x.count} must name an item (schema 8)', () {
+    test('{x.count} must name an item', () {
       expect(
         errors((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           node(j, 'cellar')['text'] = 'Coins: {coin.count}.';
         }),
         ['error: nodes.cellar.text: unknown item "coin"'],
       );
     });
 
-    test('more than one of an item that has no stack (schema 8)', () {
+    test('more than one of an item that has no stack', () {
       expect(
         errors((j) {
-          j['schema'] = 8;
+          j['schema'] = 1;
           choice(j, 'cellar', 0)['effects'] = [
             {'give': 'rusty-key', 'count': 2},
           ];
@@ -168,7 +168,7 @@ void main() {
     test('unknown node in a visits condition', () {
       expect(
         errors((j) {
-          j['schema'] = 4;
+          j['schema'] = 1;
           choice(j, 'door', 0)['if'] = {'visits': 'ghost', 'gte': 1};
         }),
         ['error: nodes.door.choices[0].if: unknown node "ghost"'],
@@ -281,7 +281,7 @@ void main() {
     test('a stat named in a comparison or an effect must exist', () {
       expect(
         errors((j) {
-          j['schema'] = 5;
+          j['schema'] = 1;
           choice(j, 'door', 0)['if'] = {
             'stat': 'skill',
             'gte': {'stat': 'price'},
@@ -308,7 +308,7 @@ void main() {
     test('real stats are fine', () {
       expect(
         issuesOf((j) {
-          j['schema'] = 5;
+          j['schema'] = 1;
           choice(j, 'door', 0)['if'] = {
             'stat': 'skill',
             'gte': {'stat': 'luck', 'times': 2},
@@ -321,7 +321,7 @@ void main() {
 
   group('page text', () {
     void v4(Map<String, Object?> j, Object? text) {
-      j['schema'] = 4;
+      j['schema'] = 1;
       node(j, 'cellar')['text'] = text;
     }
 
@@ -375,18 +375,11 @@ void main() {
         ]),
       );
     });
-
-    test('a story before schema 4 may use braces freely', () {
-      expect(
-        issuesOf((j) => node(j, 'cellar')['text'] = 'A {strange} thing'),
-        isEmpty,
-      );
-    });
   });
 
   group('random tables', () {
     void table(Map<String, Object?> j, List<Map<String, Object?>> outcomes) {
-      j['schema'] = 4;
+      j['schema'] = 1;
       choice(j, 'cellar', 0)
         ..remove('to')
         ..['table'] = {'roll': '1d6', 'outcomes': outcomes};
@@ -430,7 +423,7 @@ void main() {
 
   group('usable items', () {
     void potion(Map<String, Object?> j, List<Object?> effects) {
-      j['schema'] = 2;
+      j['schema'] = 1;
       (j['items']! as Map<String, Object?>)['potion'] = {
         'name': 'Potion',
         'use': {
@@ -486,7 +479,7 @@ void main() {
 
   group('limited pack', () {
     void v3(Map<String, Object?> j, {Map<String, Object?>? inventory}) {
-      j['schema'] = 3;
+      j['schema'] = 1;
       (j['rules']! as Map<String, Object?>)['inventory'] = inventory ?? {};
       (j['items']! as Map<String, Object?>)['bag'] = {
         'name': 'Bag',
@@ -539,7 +532,7 @@ void main() {
 
     test('a page reached only through a fight event is reachable', () {
       final found = warnings((j) {
-        j['schema'] = 8;
+        j['schema'] = 1;
         fight(j);
         (node(j, 'treasure')['combat']! as Map<String, Object?>)
           ..['wounded'] = 'stung'
@@ -596,7 +589,7 @@ void main() {
   test('each draft page is a warning', () {
     expect(
       warnings((j) {
-        j['schema'] = 6;
+        j['schema'] = 1;
         node(j, 'foot')
           ..['draft'] = true
           ..remove('choices');
@@ -625,7 +618,7 @@ void main() {
 
     test('chapters and the chapter of each page must match', () {
       Map<String, Object?> withChapters(Map<String, Object?> j) => j
-        ..['schema'] = 6
+        ..['schema'] = 1
         ..['chapters'] = {
           'one': {'title': 'One'},
           'two': {'title': 'Two'},
@@ -683,7 +676,7 @@ void main() {
     test('reports a different number of text parts', () {
       expect(
         diff((j) {
-          j['schema'] = 4;
+          j['schema'] = 1;
           node(j, 'cellar')['text'] = ['One.', 'Two.'];
         }),
         ['warning: nodes.cellar: has 1 text parts in en but 2 in pt'],

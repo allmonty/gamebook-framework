@@ -45,7 +45,7 @@ examples/04-stats-and-hero/ghost-market
 - `label` is what the reader sees; the id (`nerve`) is what you write in conditions and effects.
 - `roll` is dice notation: `1d6` is one six-sided die, `2d6+6` is two dice plus 6, and a plain number like `"3"` is a fixed start. Chapter 5 covers dice.
 - `"max": true` makes the starting roll a ceiling: healing never goes above it.
-- `limit` is a fixed ceiling instead (schema 5): gold here can never pass 10.
+- `limit` is a fixed ceiling instead: gold here can never pass 10.
 - `health` names the stat that means alive. When it hits 0 the reader dies, wherever that happens.
 - No stat goes below 0, unless you give it a `min` (below).
 
@@ -56,13 +56,13 @@ Stats change through effects on pages, choices and items:
 | Effect | Meaning |
 |---|---|
 | `{ "stat": "nerve", "add": -4 }` | lose 4 Nerve (positive numbers add) |
-| `{ "stat": "gold", "set": 0 }` | set Gold to exactly 0 (schema 5) |
+| `{ "stat": "gold", "set": 0 }` | set Gold to exactly 0 |
 
 And conditions compare them: `{ "stat": "gold", "gte": 3 }` (3 or more), `lte` (or less), `eq` (exactly).
 
 ### Below zero
 
-In tabletop games a stat is often a modifier added to a roll, and a weak or cursed hero has a negative one: "Might -2". Give the stat a `min` and it can go down that far (schema 8):
+In tabletop games a stat is often a modifier added to a roll, and a weak or cursed hero has a negative one: "Might -2". Give the stat a `min` and it can go down that far:
 
 ```gamebook
 examples/04-stats-and-hero/cursed-gauntlet
@@ -76,7 +76,7 @@ The gauntlet's `bonus` of -4 now takes Might below zero, and the door's `1d20 + 
 
 ### Bonuses with a condition
 
-An item's `bonus` (chapter 3) counts while the item is carried. Some bonuses depend on more: a hero with no weapon at all fights at -4 Skill. Write it once in the rules (schema 8):
+An item's `bonus` (chapter 3) counts while the item is carried. Some bonuses depend on more: a hero with no weapon at all fights at -4 Skill. Write it once in the rules:
 
 ```gamebook
 examples/04-stats-and-hero/unarmed
@@ -93,7 +93,7 @@ While the `if` holds, the bonus counts everywhere, like an item's: checks, fight
 
 ## Prices and other stats that point at stats
 
-A **quantity** can stand where a number goes, in `add`, `set` and conditions: `{ "stat": "price" }` means "the current value of Price", and `"times": -1` flips its sign (schema 5). That lets one "Buy it" choice work for every stall:
+A **quantity** can stand where a number goes, in `add`, `set` and conditions: `{ "stat": "price" }` means "the current value of Price", and `"times": -1` flips its sign. That lets one "Buy it" choice work for every stall:
 
 ```gamebook
 examples/04-stats-and-hero/merchant-price
@@ -109,7 +109,7 @@ Each stall sets `price` as you walk up to it. The reader sees Price in their sta
 
 ## Creating the hero
 
-Add `creation` to the rules (schema 5) and the story opens with a character screen:
+Add `creation` to the rules and the story opens with a character screen:
 
 ```gamebook
 examples/04-stats-and-hero/pick-your-kit

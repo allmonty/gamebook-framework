@@ -1,6 +1,6 @@
 # Step 13: Starter games (docs + test)
 
-Do after step 10 so the starters can use schema 8.
+Do after step 10g: the starters use version 1, with everything in it.
 
 ## Problem
 Sixty example stories exist, all under `site/examples/` and named for tutorial chapters. None is laid out as a game folder (spec B1: `games/<slug>/story.<lang>.json`), so none can be handed to `validate_story` or `pack_game` as is. A person or an AI who wants to start a game has nothing to copy.

@@ -32,7 +32,7 @@ Use o exemplo abaixo. Em Editar JSON:
 
 ## Organizando um livro longo
 
-O schema 6 traz campos para autores. Nenhum muda como a história é jogada, exceto `showTitles`:
+Alguns campos são só para autores. Nenhum muda como a história é jogada, exceto `showTitles`:
 
 ```gamebook
 examples/08-check-and-publish/tidy-book

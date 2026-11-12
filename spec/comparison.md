@@ -90,7 +90,7 @@ All of these reduce to: **stats + a dice roll + a comparison**, optionally repea
 - Extras: Disciplines (skills the player picks) and special items grant bonuses or unlock choices.
 - Evading, read on 2026-11-11 in [book 1's combat rules](https://www.projectaon.org/en/xhtml/lw/01fftd/cmbtrulz.htm): only where the text allows it; the round is worked out as usual but only Lone Wolf loses Endurance, then he escapes. Our `flee` has no such round (section 8).
 - Equipment, read on 2026-11-11 in [book 1's rules](https://www.projectaon.org/en/xhtml/lw/01fftd/equipmnt.htm): at most 2 weapons; a Backpack of at most 8 items, Meals included; Special Items carried apart; at most 50 Gold Crowns; told to eat without a Meal, lose 3 Endurance; fighting unarmed, -4 Combat Skill. [Disciplines](https://www.projectaon.org/en/xhtml/lw/01fftd/discplnz.htm): choose 5 of 10; Healing restores 1 Endurance for every section passed without a fight; Weaponskill gives +2 with one kind of weapon; Hunting removes the need for Meals.
-- Maps to our schema: the Combat Results Table is `combat.mode: "table"` and choosing disciplines is `rules.creation.picks` (both schema 5); the gold maximum is a stat `limit`; the backpack is `rules.inventory.capacity`. Not expressible yet: a count of Meals, a separate limit for weapons, a bonus that depends on which item is held, and healing on every page (section 8). We did not copy the table's values.
+- Maps to our schema: the Combat Results Table is `combat.mode: "table"` and choosing disciplines is `rules.creation.picks`; the gold maximum is a stat `limit`; the backpack is `rules.inventory.capacity`; Meals are a counted item (`stack`); a bonus that depends on which weapon is held is a rule bonus; healing on every page is a rule in `rules.everyPage`. Not expressible yet: a separate limit for weapons (section 8). We did not copy the table's values.
 
 ### d20 / D&D 5e
 - Six ability scores; a modifier derived from each; a check is d20 + modifier (+ proficiency) against a Difficulty Class. Typical DCs: 5 very easy, 10 easy, 15 medium, 20 hard, 25 very hard, 30 nearly impossible. Advantage and disadvantage roll two d20 and keep the higher or lower ([SRD mirror](https://dnd-wiki.org/wiki/SRD5:Check); we did not check the official SRD).
@@ -148,20 +148,20 @@ Among everything in section 2 (about twenty projects) we found no other project 
 ### What others have and we lack
 | Seen in | What | For us |
 |---|---|---|
-| Fighting Fantasy, Lone Wolf | items you hold several of (Provisions, Meals, arrows) | planned: counted items |
-| Fighting Fantasy | "if it wounds you, turn to...", "if you win within N rounds" | planned: fight events |
-| every book | endings that are neither victory nor death | planned: a neutral ending |
-| web accessibility practice | a text for each picture | planned: image alt text |
+| Fighting Fantasy, Lone Wolf | items you hold several of (Provisions, Meals, arrows) | done: counted items (`stack`, `count`, a cap) |
+| Fighting Fantasy | "if it wounds you, turn to...", "if you win within N rounds" | done: fight events (`wounded`, `rounds`) |
+| every book | endings that are neither victory nor death | done: a `defeat` ending |
+| web accessibility practice | a text for each picture | done: `imageAlt`, `coverAlt` |
 | Lone Wolf | at most 2 weapons next to an 8-item backpack | open: limits per kind of item |
-| Lone Wolf | +2 with one weapon, -4 unarmed | open: a bonus that depends on a condition |
-| Lone Wolf (Healing) | +1 Endurance on every page without a fight | open: rules that apply on every page |
-| Lone Wolf | evading costs a round in which only the hero can be hurt | open: a `flee` that costs a round |
-| fighting-fantasy (Python), every printed book | "fight this, then return to the section you came from" | open: a page that returns to where the player came from |
+| Lone Wolf | +2 with one weapon, -4 unarmed | done: rule bonuses (`rules.bonuses`) |
+| Lone Wolf (Healing) | +1 Endurance on every page without a fight | done: rules on every page (`rules.everyPage`) |
+| Lone Wolf | evading costs a round in which only the hero can be hurt | done: `fleeCost: "round"` |
+| fighting-fantasy (Python), every printed book | "fight this, then return to the section you came from" | done: `call` and `return` |
 | fantasy-gamebook-engine | an AI narrates while a tool server owns dice and state | open: the engine as a tool server for AI assistants; no format change |
 | gamebookformat, pangamebook, LibroGameCreator | a printable book of numbered, shuffled sections | open: an export tool; needs no format change |
 | Gamebook Engine | a dead-end analyzer | we have it by simulation (`simulate_story`), not statically |
 | GoDungeon, Twine | a visual builder | outside this repository (the Builder is a separate app) |
 | d20 games | advantage and disadvantage; dice pools | open: new check kinds |
 
-"Planned" means schema 8. "Open" items are candidates: each needs an author who wants it and a short story example before it is specified ([../CONTRIBUTING.md](../CONTRIBUTING.md)).
+"Done" items are in version 1 of the format. "Open" items are candidates: each needs an author who wants it and a short story example before it is specified ([../CONTRIBUTING.md](../CONTRIBUTING.md)).
 

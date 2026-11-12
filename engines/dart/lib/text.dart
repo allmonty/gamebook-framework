@@ -2,7 +2,7 @@ import 'json_reader.dart';
 
 final _name = RegExp(r'^[A-Za-z0-9_-]+(\.max|\.count)?$');
 
-/// A `{stat}`, `{stat.max}` or (schema 8) `{item.count}` placeholder.
+/// A `{stat}`, `{stat.max}` or `{item.count}` placeholder.
 class _Placeholder {
   const _Placeholder(this.name);
   final String name;
@@ -69,7 +69,7 @@ List<String> placeholderStats(String source) => [
       t.name.replaceFirst(RegExp(r'\.max$'), ''),
 ];
 
-/// The item ids [source] counts with `{item.count}` (schema 8), in order.
+/// The item ids [source] counts with `{item.count}`, in order.
 List<String> placeholderItems(String source) => [
   for (final t in _tokens(source, ''))
     if (t is _Placeholder && t.name.endsWith('.count'))

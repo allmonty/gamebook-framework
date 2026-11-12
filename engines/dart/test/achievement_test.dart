@@ -19,7 +19,7 @@ Map<String, Object?> node(Map<String, Object?> j, String id) =>
 /// The rusty door with a "found the key" and a hidden "won" achievement.
 Map<String, Object?> achieving() {
   final j = rusty()
-    ..['schema'] = 7
+    ..['schema'] = 1
     ..['achievements'] = {
       'keyed': {'title': 'Keyed', 'description': 'Found the key.'},
       'won': {'title': 'Rich', 'hidden': true},
@@ -37,37 +37,6 @@ void main() {
     expect(story.achievements.keys, ['keyed', 'won']);
     expect(story.achievements['keyed']!.description, 'Found the key.');
     expect(story.achievements['won']!.hidden, isTrue);
-  });
-
-  test('they need schema 7', () {
-    for (final (path, mutate)
-        in <(String, void Function(Map<String, Object?>))>[
-          (
-            'achievements',
-            (j) => j['achievements'] = {
-              'a': {'title': 'A'},
-            },
-          ),
-          (
-            'nodes.cellar.effects[0]',
-            (j) => node(j, 'cellar')['effects'] = [
-              {'achieve': 'a'},
-            ],
-          ),
-        ]) {
-      final j = rusty()..['schema'] = 6;
-      mutate(j);
-      expect(
-        () => Story.fromJson(j),
-        throwsA(
-          isA<StoryFormatException>().having(
-            (e) => '$e',
-            'message',
-            '$path: needs "schema": 7',
-          ),
-        ),
-      );
-    }
   });
 
   test('earning one is an event and changes nothing in the game', () {

@@ -96,7 +96,7 @@ TwineImport importTwine(String source, {String lang = 'en'}) {
     report.add('the start passage "$start" is missing; starting at "$startId"');
   }
   final story = <String, Object?>{
-    'schema': 6,
+    'schema': 1,
     'id': _slug(title).toLowerCase(),
     'lang': lang,
     'title': title,

@@ -13,7 +13,7 @@ Map<String, Object?> json(
   List<Map<String, Object?>> rules, {
   List<Map<String, Object?>> start = const [],
   List<Map<String, Object?>> onB = const [],
-  int schema = 8,
+  int schema = 1,
   bool hidden = true,
 }) => {
   'schema': schema,
@@ -198,30 +198,5 @@ void main() {
       expect(rules.stats.firstWhere((s) => s.id == 'tick').hidden, isTrue);
       expect(rules.stats.firstWhere((s) => s.id == 'skill').hidden, isFalse);
     });
-
-    for (final (path, j) in [
-      (
-        'rules.everyPage',
-        json([
-          {
-            'effects': [add('tick', 1)],
-          },
-        ], schema: 7),
-      ),
-      ('rules.stats.tick.hidden', json(const [], schema: 7)),
-    ]) {
-      test('$path needs schema 8', () {
-        expect(
-          () => Story.fromJson(j),
-          throwsA(
-            isA<StoryFormatException>().having(
-              (e) => '$e',
-              'message',
-              '$path: needs "schema": 8',
-            ),
-          ),
-        );
-      });
-    }
   });
 }

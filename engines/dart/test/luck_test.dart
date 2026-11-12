@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 
 import 'support/scripted_random.dart';
 
-Map<String, Object?> storyJson({Object? luck, int schema = 5}) => {
+Map<String, Object?> storyJson({Object? luck, int schema = 1}) => {
   'schema': schema,
   'id': 'l',
   'lang': 'en',
@@ -109,13 +109,6 @@ void main() {
       expect(
         error(storyJson(luck: {'stat': 'luck', 'extra': 1})),
         startsWith('rules.combat.luck'),
-      );
-    });
-
-    test('needs schema 5', () {
-      expect(
-        error(storyJson(luck: {'stat': 'luck'}, schema: 4)),
-        'rules.combat.luck: needs "schema": 5',
       );
     });
   });

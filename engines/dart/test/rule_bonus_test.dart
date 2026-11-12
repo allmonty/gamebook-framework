@@ -11,7 +11,7 @@ import 'support/scripted_random.dart';
 /// choice takes [take].
 Map<String, Object?> json({
   List<Map<String, Object?>> bonuses = const [],
-  int schema = 8,
+  int schema = 1,
   List<String> give = const [],
   List<String> take = const [],
 }) => {
@@ -124,19 +124,6 @@ void main() {
         'error: rules.bonuses[0].bonus.stamina: '
             'a bonus to the health stat is not allowed',
       ],
-    );
-  });
-
-  test('it needs schema 8', () {
-    expect(
-      () => Story.fromJson(json(bonuses: [unarmed], schema: 7)),
-      throwsA(
-        isA<StoryFormatException>().having(
-          (e) => '$e',
-          'message',
-          'rules.bonuses: needs "schema": 8',
-        ),
-      ),
     );
   });
 }

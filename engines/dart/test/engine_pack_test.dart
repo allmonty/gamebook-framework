@@ -13,7 +13,7 @@ import 'support/scripted_random.dart';
 /// takes everything)
 /// and a den (a fight that also gives a sword). The bag adds 2 slots.
 Story story(Map<String, Object?>? inventory) => Story.fromJson({
-  'schema': 3,
+  'schema': 1,
   'id': 'pack',
   'lang': 'en',
   'title': 'Pack',
