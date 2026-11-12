@@ -108,6 +108,7 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 7. **The engine as a tool server (MCP) for AI assistants**: the assistant narrates and the engine owns dice and state. A tool, no format change; fits the goal of being usable by AIs.
 8. **New check kinds**: advantage and disadvantage, dice pools.
 9. Conditional effects, text emphasis, `{item}` counts in text, a total cap on a countable item.
+10. **A lower limit per stat** (say `"min": -5`), so a stat can be a signed modifier as in tabletop RPGs ("Might -1"). Today every stat, item bonuses included, stays at 0 or above (B4, B5; step 03), so a cursed item at -5 Might held at Might 2 gives 0, and in `1d20 + might` the last 3 points of penalty are lost. The default stays 0, so existing stories play the same. No story needs it yet.
 
 ## Waiting on the owner (outward-facing, never do these unasked)
 - Enable GitHub Pages (Settings > Pages > Source: "GitHub Actions"; the workflow is already there); step 14's addresses work only once it is on.
