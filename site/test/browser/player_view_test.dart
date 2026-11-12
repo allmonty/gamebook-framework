@@ -174,4 +174,47 @@ void main() {
     expect(mute().getAttribute('aria-pressed'), 'true');
     host.remove();
   });
+
+  test('the pack stays open across actions', () {
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(
+        Story.fromJson({
+          'schema': 1,
+          'id': 't',
+          'lang': 'en',
+          'title': 'Pack',
+          'rules': {'preset': 'fighting-fantasy'},
+          'items': {
+            'key': {'name': 'Key'},
+          },
+          'start': 'a',
+          'nodes': {
+            'a': {
+              'text': 'A.',
+              'effects': [
+                {'give': 'key'},
+              ],
+              'choices': [
+                {'text': 'On', 'to': 'b'},
+              ],
+            },
+            'b': {'text': 'B.', 'ending': 'victory'},
+          },
+        }),
+        random: Random(1),
+      ),
+      const Messages({}),
+    );
+    expect(host.querySelector('.gb-pack[open]'), isNull);
+    host.querySelector('.gb-pack')!.setAttribute('open', '');
+
+    (host.querySelector('.gb-choice')! as HTMLElement).click();
+
+    expect(host.querySelector('.gb-page p')!.textContent, 'B.');
+    expect(host.querySelector('.gb-pack[open]'), isNotNull);
+    host.remove();
+  });
 }

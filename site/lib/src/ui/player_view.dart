@@ -49,6 +49,13 @@ class PlayerView {
       return;
     }
     final view = session.view;
+    // A redraw makes new, closed panels: reopen the ones the reader had open.
+    const pack = '.gb-pack:not(.gb-journal)';
+    const journal = '.gb-journal';
+    final open = [
+      for (final panel in [pack, journal])
+        if (host.querySelector('$panel[open]') != null) panel,
+    ];
     host.replaceChildren(
       el(
         'div',
@@ -88,6 +95,9 @@ class PlayerView {
         ],
       ),
     );
+    for (final panel in open) {
+      host.querySelector(panel)?.setAttribute('open', '');
+    }
     _audio.play(view.audio);
   }
 
