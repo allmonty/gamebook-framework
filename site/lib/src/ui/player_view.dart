@@ -134,7 +134,7 @@ class PlayerView {
     cls: 'gb-page card',
     attrs: {'tabindex': '-1', 'aria-live': 'polite'},
     children: [
-      el('h3', cls: 'gb-title', text: view.title ?? view.storyTitle),
+      if (view.heading != null) el('h3', cls: 'gb-title', text: view.heading),
       if (view.image != null) el('img', attrs: {'src': view.image!, 'alt': ''}),
       for (final p in view.paragraphs) el('p', text: p),
     ],

@@ -117,7 +117,7 @@ class PlaySession {
 
   PageView get _view => PageView(
     storyTitle: story.title,
-    title: story.showTitles ? _engine.node.title : null,
+    heading: story.showTitles ? _engine.node.title : story.title,
     image: _engine.node.image,
     paragraphs: _engine.paragraphs,
     // The engine refuses choices during an offer or a fight, so hide them.

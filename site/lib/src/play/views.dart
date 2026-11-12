@@ -25,15 +25,16 @@ class PageView {
     this.canUndo = false,
     this.combat,
     this.offer,
-    this.title,
+    this.heading,
     this.image,
     this.ending,
   });
 
   final String storyTitle;
 
-  /// The page's own title, when the story shows titles.
-  final String? title;
+  /// The heading above the page: the story's title, or with `showTitles` the
+  /// page's own title (none when the page has no title, spec B13).
+  final String? heading;
   final String? image;
   final List<String> paragraphs;
   final List<ChoiceItem> choices;

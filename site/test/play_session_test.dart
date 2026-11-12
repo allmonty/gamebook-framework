@@ -94,4 +94,34 @@ void main() {
     expect(const StatPill(id: 'h', label: 'H', value: 4, max: 12).low, isFalse);
     expect(const StatPill(id: 'g', label: 'G', value: 0).low, isFalse);
   });
+
+  test('with showTitles the heading is the page title, or none', () {
+    final session = PlaySession.start(
+      storyOf(
+        {
+          'a': {
+            'title': 'The gate',
+            'text': 'A.',
+            'choices': [
+              {'text': 'On', 'to': 'b'},
+            ],
+          },
+          'b': {'text': 'B.', 'ending': 'victory'},
+        },
+        extra: {'showTitles': true},
+      ),
+      random: Random(1),
+    );
+    expect(session.view.heading, 'The gate');
+    session.choose(0);
+    expect(session.view.heading, isNull);
+  });
+
+  test('without showTitles the heading is the story title', () {
+    final session = PlaySession.start(
+      conformanceStory('locked-choice'),
+      random: Random(1),
+    );
+    expect(session.view.heading, 'The Rusty Door');
+  });
 }
