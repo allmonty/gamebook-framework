@@ -225,7 +225,9 @@ main { display: block; }
 .gb-index { font: 700 13px/1 var(--font-mono); color: var(--cyan); }
 .gb-choice.check, .gb-choice.table { border-color: rgba(255, 179, 0, 0.5); }
 .gb-choice.check .gb-index, .gb-choice.table .gb-index { color: var(--amber); }
-.gb-choice.locked { cursor: not-allowed; opacity: 0.55; background: var(--surface); }
+/* Dim the choice, not the reason it is locked: that line must be read. */
+.gb-choice.locked { cursor: not-allowed; background: var(--surface); }
+.gb-choice.locked .gb-text, .gb-choice.locked .gb-rolls { opacity: 0.55; }
 .gb-choice.locked .gb-index { color: var(--inert); }
 .gb-rolls { grid-column: 2; color: var(--muted); margin-top: var(--s1); }
 .gb-needs { grid-column: 2; color: var(--amber); margin-top: var(--s1); }
