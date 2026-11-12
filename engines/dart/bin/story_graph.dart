@@ -1,4 +1,5 @@
-// Prints a story as a graph: `dart run tool/story_graph.dart <story.json> [--mermaid]`.
+// Prints a story as a graph:
+// `dart run gamebook_engine:story_graph <story.json> [--mermaid]`.
 // Default output is Graphviz DOT: `... | dot -Tsvg > story.svg`.
 import 'dart:io';
 

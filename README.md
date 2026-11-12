@@ -215,6 +215,7 @@ Finished stories can be **packaged** into a single `.gamebook` file (a zip) that
 | [spec/story.schema.json](spec/story.schema.json) | JSON Schema (shape only) for editors and quick checks |
 | [spec/presets/](spec/presets/) | the two rule presets as data: the exact `rules` block each one stands for |
 | [spec/llm-kit.md](spec/llm-kit.md) | **One file to give a chatbot** so it can write or change a story: instructions, common mistakes and the reference (generated) |
+| [starters/](starters/README.md) | **three game folders to copy**: a blank one, a classic Fighting Fantasy adventure, and one with its own rules |
 | [conformance/](conformance/README.md) | language-neutral test cases with scripted dice: the definition of "plays it right" |
 | [engines/](engines/README.md) | engines; the reference one is [Dart](engines/dart/README.md) (with a validator and graph CLI) |
 | [site/](site/README.md) | the website and the bilingual tutorial, built in Dart on the reference engine |

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://raw.githubusercontent.com/allmonty/gamebook-framework/main/spec/story.schema.json",
+  "schema": 1,
+  "id": "night-archive",
+  "lang": "en",
+  "title": "The Archive at Night",
+  "author": "You",
+  "rules": {
+    "health": "nerve",
+    "rerolls": 1,
+    "stats": {
+      "nerve": {
+        "label": "Nerve",
+        "roll": "2d6+6",
+        "max": true
+      },
+      "wits": {
+        "label": "Wits",
+        "roll": "1d6+2"
+      }
+    },
+    "combat": {
+      "mode": "opposed",
+      "attackRoll": "2d6",
+      "attackStat": "wits",
+      "damage": "2"
+    }
+  },
+  "start": "desk",
+  "nodes": {
+    "desk": {
+      "title": "The night desk",
+      "text": "Your first night as the archive's watchman. At midnight the lights in the map room flicker and go out. Nerve {nerve}, Wits {wits}.",
+      "choices": [
+        {
+          "text": "Take the torch and look",
+          "to": "stairs"
+        },
+        {
+          "text": "Stay at the desk until morning",
+          "to": "morning"
+        }
+      ]
+    },
+    "stairs": {
+      "title": "The stairs",
+      "text": "The map room door is locked with a code. You have heard the curators mutter it. Can you remember?",
+      "choices": [
+        {
+          "text": "Try to remember the code (roll 1d6 + Wits, 7 or more)",
+          "check": {
+            "roll": "1d6",
+            "add": "wits",
+            "op": "gte",
+            "vs": 7,
+            "pass": "maps",
+            "fail": "alarm"
+          }
+        }
+      ]
+    },
+    "alarm": {
+      "title": "The alarm",
+      "text": "The keypad shrieks. Somewhere below, something that is not a curator starts up the stairs. Your nerve frays (-2 Nerve).",
+      "effects": [
+        {
+          "stat": "nerve",
+          "add": -2
+        }
+      ],
+      "choices": [
+        {
+          "text": "Face it",
+          "to": "shade"
+        }
+      ]
+    },
+    "maps": {
+      "title": "The map room",
+      "text": "The door clicks open. A grey shape is rolling up the oldest map in the archive, as if to take it away.",
+      "choices": [
+        {
+          "text": "Stop it",
+          "to": "shade"
+        }
+      ]
+    },
+    "shade": {
+      "title": "The shade",
+      "text": "It turns towards you: a shadow with ink-stained hands. You hold the torch up and keep your head.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Ink shade",
+            "attack": 7,
+            "health": 6
+          }
+        ],
+        "win": "dawn"
+      }
+    },
+    "dawn": {
+      "title": "Dawn",
+      "text": "The shade comes apart like smoke in the torchlight. When the curators arrive, every map is in its drawer.",
+      "ending": "victory"
+    },
+    "morning": {
+      "title": "Morning",
+      "text": "You sit tight until the sun comes up. In the map room, the oldest map is gone. Nobody blames you; nobody offers you a second night, either.",
+      "ending": "defeat"
+    }
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "$schema": "https://raw.githubusercontent.com/allmonty/gamebook-framework/main/spec/story.schema.json",
+  "schema": 1,
+  "id": "salt-mine",
+  "lang": "pt",
+  "title": "A Mina de Sal",
+  "author": "Você",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "provisions": {
+      "name": "Provisões",
+      "description": "Comida para um dia: pão, queijo, uma maçã. Recupera 4 de Energia.",
+      "stack": 10,
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    },
+    "key": {
+      "name": "Chave de ferro"
+    }
+  },
+  "start": "gate",
+  "nodes": {
+    "gate": {
+      "title": "A boca da mina",
+      "text": "A velha mina de sal está fechada há vinte anos. Dizem que o último capataz lacrou o baú do pagamento em algum lugar lá dentro. Sua mochila tem cinco Provisões: coma uma sempre que precisar.",
+      "effects": [
+        {
+          "give": "provisions",
+          "count": 5
+        }
+      ],
+      "choices": [
+        {
+          "text": "Acender a lamparina e entrar",
+          "to": "hall"
+        }
+      ]
+    },
+    "hall": {
+      "title": "O salão comprido",
+      "text": "O túnel se abre num salão comprido de sal branco. Da esquerda vem um arranhar e um guinchar. À direita há uma porta de ferro.",
+      "choices": [
+        {
+          "text": "Seguir o barulho",
+          "to": "rat"
+        },
+        {
+          "text": "Abrir a porta de ferro",
+          "to": "crack",
+          "if": {
+            "has": "key"
+          },
+          "lockedText": "Trancada. Em algum lugar da mina deve haver uma chave."
+        },
+        {
+          "text": "Desistir e voltar para casa",
+          "to": "home"
+        }
+      ]
+    },
+    "rat": {
+      "title": "O ninho",
+      "text": "Um rato do tamanho de um cachorro se vira do ninho e mostra os dentes.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Rato gigante",
+            "attack": 5,
+            "health": 5
+          }
+        ],
+        "win": "nest"
+      }
+    },
+    "nest": {
+      "title": "Entre os ossos",
+      "text": "Entre os ossos e trapos do rato, algo brilha: uma chave de ferro presa num barbante.",
+      "once": true,
+      "effects": [
+        {
+          "give": "key"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Voltar ao salão",
+          "to": "hall"
+        }
+      ]
+    },
+    "crack": {
+      "title": "A fenda",
+      "text": "Atrás da porta de ferro o chão acaba numa fenda larga demais para atravessar com um passo. Do outro lado, um baú. Você vai ter que pular, e confiar na sorte.",
+      "choices": [
+        {
+          "text": "Testar a Sorte e pular (role 2d6, Sorte ou menos)",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "luck",
+            "pass": "treasure",
+            "fail": "fall",
+            "effects": [
+              {
+                "stat": "luck",
+                "add": -1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "fall": {
+      "title": "Na escuridão",
+      "text": "Sua bota escorrega na outra borda. A escuridão leva você, e a mina guarda o seu segredo.",
+      "ending": "death"
+    },
+    "home": {
+      "title": "Em casa",
+      "text": "Você volta para a luz do dia. O baú do pagamento vai esperar alguém mais corajoso.",
+      "ending": "defeat"
+    },
+    "treasure": {
+      "title": "O baú do pagamento",
+      "text": "Você cai do outro lado e força o baú: vinte anos de salário, ainda nos sacos. A mina enfim pagou você.",
+      "ending": "victory"
+    }
+  }
+}

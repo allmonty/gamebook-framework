@@ -1,0 +1,140 @@
+{
+  "$schema": "https://raw.githubusercontent.com/allmonty/gamebook-framework/main/spec/story.schema.json",
+  "schema": 1,
+  "id": "salt-mine",
+  "lang": "en",
+  "title": "The Salt Mine",
+  "author": "You",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "items": {
+    "provisions": {
+      "name": "Provisions",
+      "description": "A day's food: bread, cheese, an apple. Restores 4 Stamina.",
+      "stack": 10,
+      "use": {
+        "effects": [
+          {
+            "stat": "stamina",
+            "add": 4
+          }
+        ],
+        "when": [
+          "story"
+        ]
+      }
+    },
+    "key": {
+      "name": "Iron key"
+    }
+  },
+  "start": "gate",
+  "nodes": {
+    "gate": {
+      "title": "The mine mouth",
+      "text": "The old salt mine has been closed for twenty years. They say the last foreman sealed his pay chest somewhere inside. Your pack holds five Provisions: eat one whenever you need it.",
+      "effects": [
+        {
+          "give": "provisions",
+          "count": 5
+        }
+      ],
+      "choices": [
+        {
+          "text": "Light your lamp and go in",
+          "to": "hall"
+        }
+      ]
+    },
+    "hall": {
+      "title": "The long hall",
+      "text": "The tunnel opens into a long hall of white salt. From the left comes a scratching and squeaking. On the right stands an iron door.",
+      "choices": [
+        {
+          "text": "Follow the scratching",
+          "to": "rat"
+        },
+        {
+          "text": "Open the iron door",
+          "to": "crack",
+          "if": {
+            "has": "key"
+          },
+          "lockedText": "Locked. Somewhere in the mine there must be a key."
+        },
+        {
+          "text": "Give up and go home",
+          "to": "home"
+        }
+      ]
+    },
+    "rat": {
+      "title": "The nest",
+      "text": "A rat the size of a dog turns from its nest and bares its teeth.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Giant rat",
+            "attack": 5,
+            "health": 5
+          }
+        ],
+        "win": "nest"
+      }
+    },
+    "nest": {
+      "title": "Among the bones",
+      "text": "Among the rat's bones and rags, something glints: an iron key on a loop of string.",
+      "once": true,
+      "effects": [
+        {
+          "give": "key"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Back to the hall",
+          "to": "hall"
+        }
+      ]
+    },
+    "crack": {
+      "title": "The crack",
+      "text": "Behind the iron door the floor ends at a crack too wide to step over. On the far side, a chest. You will have to jump, and trust your luck.",
+      "choices": [
+        {
+          "text": "Test your Luck and jump (roll 2d6, Luck or less)",
+          "check": {
+            "roll": "2d6",
+            "op": "lte",
+            "vs": "luck",
+            "pass": "treasure",
+            "fail": "fall",
+            "effects": [
+              {
+                "stat": "luck",
+                "add": -1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "fall": {
+      "title": "Into the dark",
+      "text": "Your boot slips on the far edge. The dark takes you, and the mine keeps its secret.",
+      "ending": "death"
+    },
+    "home": {
+      "title": "Home",
+      "text": "You walk back out into the daylight. The pay chest will wait for someone braver.",
+      "ending": "defeat"
+    },
+    "treasure": {
+      "title": "The pay chest",
+      "text": "You land on the far side and pry the chest open: twenty years of wages, still in their bags. The mine has paid you at last.",
+      "ending": "victory"
+    }
+  }
+}

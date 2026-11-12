@@ -51,8 +51,8 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | done | 253ce0c |
 | 10g | [One schema version](steps/10g-one-schema.md) | format | done | 8dc37b0 |
 | 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | done (in 10g) | |
-| 12 | [Presets as data](steps/12-presets-as-data.md) | docs + test | done | |
-| 13 | [Starter games](steps/13-starters.md) | docs + test | todo | |
+| 12 | [Presets as data](steps/12-presets-as-data.md) | docs + test | done | 99520cd |
+| 13 | [Starter games](steps/13-starters.md) | docs + test | done | |
 | 14 | [A front door for people and AIs](steps/14-front-door.md) | docs + site | todo | |
 | 15 | [A versions page on the site](steps/15-site-versions.md) | docs + site | todo | |
 
@@ -89,7 +89,7 @@ Since step 10g those features are all version 1, with no gate; a feature after t
 (cd engines/dart && dart pub get && dart format --output=none --set-exit-if-changed . && dart analyze --fatal-infos && dart test)
 (cd engines/dart && dart run gamebook_engine:llm_kit --check)
 (cd site && dart pub get && dart format --output=none --set-exit-if-changed . && dart analyze --fatal-infos && dart test && dart test -p chrome test/browser && dart run tool/build.dart)
-.venv/bin/python tools/check_schema.py site/examples/*/*.json
+.venv/bin/python tools/check_schema.py site/examples/*/*.json starters/*/*.json
 ```
 The last one uses the virtual environment at the repo root (`.venv/`, ignored by git) where `jsonschema` 4.23.0 is installed, the version CI uses. On another machine: `python3 -m venv .venv && .venv/bin/pip install jsonschema==4.23.0`.
 
@@ -126,7 +126,7 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 ## Where things stand (2026-11-12, end of a session)
 - Steps 01 to 10f are done and merged into `main`.
 - Step 10g merged the eight schema versions into version 1 (and did step 11).
-- **Next:** step 13, then 14 and 15, one branch and pull request each.
+- **Next:** step 14, then 15, one branch and pull request each.
 - After 10f: steps 11 to 15, back to one branch and pull request per step.
 
 ## Waiting on the owner (outward-facing, never do these unasked)
