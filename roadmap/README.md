@@ -14,8 +14,8 @@ Status values: `todo`, `in progress`, `done`, `blocked`.
 | 05 | [Player: character creation](steps/05-player-creation.md) | done | e75cb57 |
 | 06 | [Editor and playground](steps/06-editor-playground.md) | done | 35c4a82 |
 | 07 | [Showcase story: Escape from the Rune Vault](steps/07-showcase.md) | done | d49a320 |
-| 08 | [Home page](steps/08-home-page.md) | done | |
-| 09 | [CI for the site](steps/09-ci-site.md) | todo | |
+| 08 | [Home page](steps/08-home-page.md) | done | c1c63c6 |
+| 09 | [CI for the site](steps/09-ci-site.md) | done | |
 | 10 | [Tutorial 1: Getting started](steps/10-tutorial-01.md) | todo | |
 | 11 | [Tutorial 2: Pages and choices](steps/11-tutorial-02.md) | todo | |
 | 12 | [Tutorial 3: Items](steps/12-tutorial-03.md) | todo | |
