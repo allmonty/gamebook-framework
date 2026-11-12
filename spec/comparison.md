@@ -90,10 +90,11 @@ All of these reduce to: **stats + a dice roll + a comparison**, optionally repea
 - Extras: Disciplines (skills the player picks) and special items grant bonuses or unlock choices.
 - Evading, read on 2026-11-11 in [book 1's combat rules](https://www.projectaon.org/en/xhtml/lw/01fftd/cmbtrulz.htm): only where the text allows it; the round is worked out as usual but only Lone Wolf loses Endurance, then he escapes. Our `flee` has no such round (section 8).
 - Equipment, read on 2026-11-11 in [book 1's rules](https://www.projectaon.org/en/xhtml/lw/01fftd/equipmnt.htm): at most 2 weapons; a Backpack of at most 8 items, Meals included; Special Items carried apart; at most 50 Gold Crowns; told to eat without a Meal, lose 3 Endurance; fighting unarmed, -4 Combat Skill. [Disciplines](https://www.projectaon.org/en/xhtml/lw/01fftd/discplnz.htm): choose 5 of 10; Healing restores 1 Endurance for every section passed without a fight; Weaponskill gives +2 with one kind of weapon; Hunting removes the need for Meals.
+- The table's shape, seen on 2026-11-12 in [book 1's Combat Results Table](https://www.projectaon.org/en/xhtml/lw/01fftd/crtable.htm) (two pictures): 13 columns of Combat Ratio (-11 or less, then pairs from -10/-9 to 9/10 with 0 alone, then 11 or greater) and 10 rows of the random number (1 to 9, then 0, which is the best). Each cell gives the Endurance the enemy and Lone Wolf lose; "K" means killed outright. That is the shape of our `table`: a row per band of ratio with `upTo` (the last one open), a pair per value of the roll, and a kill written as a loss no enemy can survive.
 - Maps to our schema: the Combat Results Table is `combat.mode: "table"` and choosing disciplines is `rules.creation.picks`; the gold maximum is a stat `limit`; the backpack is `rules.inventory.capacity`; Meals are a counted item (`stack`); a bonus that depends on which weapon is held is a rule bonus; healing on every page is a rule in `rules.everyPage`. Not expressible yet: a separate limit for weapons (section 8). We did not copy the table's values.
 
 ### d20 / D&D 5e
-- Six ability scores; a modifier derived from each; a check is d20 + modifier (+ proficiency) against a Difficulty Class. Typical DCs: 5 very easy, 10 easy, 15 medium, 20 hard, 25 very hard, 30 nearly impossible. Advantage and disadvantage roll two d20 and keep the higher or lower ([SRD mirror](https://dnd-wiki.org/wiki/SRD5:Check); we did not check the official SRD).
+- Six ability scores; a modifier derived from each; a check is d20 + modifier (+ proficiency) against a Difficulty Class. Typical DCs: 5 very easy, 10 easy, 15 medium, 20 hard, 25 very hard, 30 nearly impossible. Advantage and disadvantage roll two d20 and keep the higher or lower (read on 2026-11-12 in the official [SRD 5.1](https://media.dndbeyond.com/compendium-images/srd/5.1/SRD_CC_v5.1.pdf), pages 76 and 77: "Advantage and Disadvantage" and the "Typical Difficulty Classes" table).
 - License, read on 2026-11-11 on the [publisher's SRD page](https://www.dndbeyond.com/srd): SRD 5.1 is under both OGL 1.0a and CC-BY-4.0; SRD 5.2 and later under CC-BY-4.0 only.
 - Maps to our schema: stats with a modifier formula, a check with `roll: 1d20`, `add: <stat>`, `op: gte`, `vs: <DC>`. `vs-defense` combat mode (attack roll vs a defense number, then damage dice). Advantage is not in the format (section 8).
 - d20-lite (our preset) takes this core and drops classes, levels, skills and spells.
@@ -129,11 +130,9 @@ Build our own JSON graph format with rules expressed as data, plus presets for F
 ## 7. Not verified
 - Harlowe's license (its repository refused our request).
 - "Jumbo Grove", which an early search result described as a gamebook tool with a JSON-heavy markup: still nothing found, so we do not know that it exists.
-- Lone Wolf's Combat Results Table values. Project Aon publishes [the table](https://www.projectaon.org/en/xhtml/lw/01fftd/crtable.htm) as two pictures (seen on 2026-11-12), which we did not transcribe.
 - The official Fighting Fantasy rulebook wording: every rule here comes from fan adventures, a fan wiki or blogs that restate it. They agree with each other. The primary source is the rules section at the front of each book (for example *The Warlock of Firetop Mountain*, Jackson and Livingstone, Puffin, 1982); we have not had one in hand.
 - The license and file format of GoDungeon.
 - The licenses of gamebook.js and fantasy-gamebook-engine (none shown), and how active any of the small engines in section 2 is.
-- The official D&D 5e SRD rules text (we used a wiki mirror; the license is now checked). The official text is the [SRD 5.1 PDF](https://media.dndbeyond.com/compendium-images/srd/5.1/SRD_CC_v5.1.pdf), listed on the publisher's SRD page on 2026-11-12; we have not compared the mirror with it.
 - The maintenance state of `flutter_ink`.
 
 ## 8. Where we stand (2026-11-11)
