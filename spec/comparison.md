@@ -15,7 +15,7 @@ Existing tools mostly solve (1). Almost none solve (2) in a reusable way, becaus
 ### Ink (inkle)
 A narrative scripting language. Stories are written in a plain-text markup, compiled to a JSON format, and run by a runtime. There is a pure-Dart runtime, [`ink_dart`](https://pub.dev/packages/ink_dart), and Flutter widgets on top of it, [`flutter_ink`](https://pub.dev/packages/flutter_ink). The compiled format is documented in the [ink JSON runtime format](https://github.com/inkle/ink/blob/b1d54e7444713a84770c2df1dbc6fdc83706d7aa/Documentation/ink_JSON_runtime_format.md).
 - Pros: mature and battle-tested; variables, conditions, visit counts and functions; good writing experience (Inky editor); a Dart runtime exists.
-- Cons: it is a story language, not a rules engine. Dice, stats, inventory UI and combat would be hand-built on top of external functions. Authors must learn its syntax, and an AI or a script cannot easily generate valid graphs without the compiler. The compiler is a separate tool (C#/JS) outside our Dart toolchain. `ink_dart` is a small community package: on 2026-11-11 [pub.dev](https://pub.dev/packages/ink_dart) showed version 0.1.2, MIT, published a month earlier, for ink 1.2, with about 100 downloads.
+- Cons: it is a story language, not a rules engine. It has variables and a built-in `RANDOM()` ([Writing with Ink](https://github.com/inkle/ink/blob/master/Documentation/WritingWithInk.md)), but stats, an inventory and combat are written by hand in each game. Authors must learn its syntax, and an AI or a script cannot easily generate valid graphs without the compiler. The compiler is a separate tool (C#/JS) outside our Dart toolchain. `ink_dart` is a small community package: on 2026-11-11 [pub.dev](https://pub.dev/packages/ink_dart) showed version 0.1.2, MIT, published a month earlier, for ink 1.2, with about 100 downloads.
 - Verdict: great for prose-heavy interactive fiction. Poor fit for "same engine, different rulesets as data".
 
 ### Twine
@@ -27,7 +27,7 @@ A visual editor for hypertext stories, with output "story formats": [Harlowe, Su
 
 ### ChoiceScript (Choice of Games)
 A text-based scripting language for choice-driven games with variables and stats.
-- Pros: designed for stat-driven interactive fiction; established authors and audience.
+- Pros: designed for stat-driven interactive fiction; established authors and audience; random numbers with `*rand`; ships two automatic testers, Quicktest (every option and both sides of every `*if`) and Randomtest (plays the game over and over at random) ([its testing guide](https://www.choiceofgames.com/make-your-own-games/testing-choicescript-games-automatically/), read on 2026-11-12).
 - Cons: not open source. The interpreter is under a free non-commercial license; commercial use needs a license or a contract ([forum discussion](https://forum.choiceofgames.com/t/cog-contract-if-i-want-to-do-self-publish/36657), [another thread](https://forum.choiceofgames.com/t/question-regarding-intellectual-property-and-publishing-with-choicescript/107189)). A forum post quotes a 25% revenue fee and a USD 20,000 first-year minimum; that figure may be outdated, so confirm with the company. Also JavaScript-based, so same WebView problem as Twine.
 - Verdict: ruled out for licensing and runtime reasons.
 
@@ -108,9 +108,9 @@ Roll N dice and count successes. Needs a new check type (`count`); not in the fo
 
 | Option | Dice/stats built in | Runs natively in Flutter | Easy to validate statically | Authoring | License risk | Fit |
 |---|---|---|---|---|---|---|
-| Ink | No (external functions) | Yes (`ink_dart`) | Partly (compiler) | Good (Inky) | Low | Medium |
+| Ink | Not built in (variables and `RANDOM()`; the rest by hand) | Yes (`ink_dart`) | Partly (compiler) | Good (Inky) | Low | Medium |
 | Twine formats | No (macros) | No (WebView) | No | Excellent (visual) | Low for Chapbook and SugarCube; Harlowe not checked | Low |
-| ChoiceScript | Variables only | No (JS) | No | Good | High (commercial) | Low |
+| ChoiceScript | Variables and `*rand`; no inventory or combat | No (JS) | Yes (Quicktest, Randomtest) | Good | High (commercial) | Low |
 | egamebook | Yes, in code | Yes (Dart) | No (stories are code) | Dart programming | Low (BSD-3) | Low |
 | Gamebook Engine (`.gbook`) | Numbers only, no dice | No (Swift, web player) | Partly (its analyzer) | Good (in the app) | Low (MPL-2.0) | Medium |
 | GoDungeon | Dice, stats, items; no combat | No (hosted) | Unknown | Good (visual) | Unknown | Low |

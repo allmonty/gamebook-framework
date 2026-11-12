@@ -48,7 +48,7 @@ The website plays stories in your browser with the reference engine, and every e
 The site's source, and how to build it, is in [site/](site/README.md).
 
 ## Why another format
-Ink and Twine are great for branching text, but have no stats, dice or inventory built in, and Twine's output is a web page rather than data. ChoiceScript has license limits. This format is plain, strict data that any language can parse, statically check (broken links, unreachable pages, items never given) and play the same way everywhere. The full comparison: [spec/comparison.md](spec/comparison.md).
+Ink and Twine are great for branching text, but have no stats, inventory or combat model built in, and Twine's output is a web page rather than data. ChoiceScript has license limits. This format is plain, strict data that any language can parse, statically check (broken links, unreachable pages, items never given) and play the same way everywhere. The full comparison: [spec/comparison.md](spec/comparison.md).
 
 ---
 
