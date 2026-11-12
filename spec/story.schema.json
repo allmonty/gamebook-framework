@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "story.schema.json",
+  "$id": "https://allmonty.github.io/gamebook-framework/schema/story.schema.json",
   "title": "Gamebook story, schema version 1",
   "description": "Shape only. Cross-references (targets, items, stats) are checked by a validator such as the Dart engine's validate_story. Spec: spec/framework.md",
   "type": "object",

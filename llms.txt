@@ -1,0 +1,33 @@
+# Gamebook Framework
+
+> An open JSON format for gamebooks: stories you play by reading a page, choosing what to do, collecting items and rolling dice against your stats. The rules (stats, dice, checks, combat) are data inside the story. The format has a written spec, a JSON Schema, a conformance suite with scripted dice, and a reference engine in Dart with a validator, a simulator and a packager. To write a story with an AI assistant, give it the LLM kit first.
+
+## Write a story
+- [LLM kit](https://allmonty.github.io/gamebook-framework/llm-kit.md): the one file to give a chatbot: instructions, common mistakes and the full reference
+- [Starter games](https://github.com/allmonty/gamebook-framework/tree/main/starters): three game folders to copy (blank, a Fighting Fantasy adventure, one with its own rules)
+- [JSON Schema](https://allmonty.github.io/gamebook-framework/schema/story.schema.json): the shape of a story file, for editors; a story's `"$schema"` points here
+- [Writer's tutorial](https://allmonty.github.io/gamebook-framework/en/tutorial/index.html): eight short chapters and a cookbook, each with stories to play and edit (Portuguese under /pt/)
+  - [Getting started](https://allmonty.github.io/gamebook-framework/en/tutorial/01-getting-started.html)
+  - [Pages and choices](https://allmonty.github.io/gamebook-framework/en/tutorial/02-pages-and-choices.html)
+  - [Items](https://allmonty.github.io/gamebook-framework/en/tutorial/03-items.html)
+  - [Stats and your hero](https://allmonty.github.io/gamebook-framework/en/tutorial/04-stats-and-hero.html)
+  - [Dice](https://allmonty.github.io/gamebook-framework/en/tutorial/05-dice.html)
+  - [Combat](https://allmonty.github.io/gamebook-framework/en/tutorial/06-combat.html)
+  - [A living world](https://allmonty.github.io/gamebook-framework/en/tutorial/07-living-world.html)
+  - [Check and publish](https://allmonty.github.io/gamebook-framework/en/tutorial/08-check-and-publish.html)
+  - [Cookbook](https://allmonty.github.io/gamebook-framework/en/tutorial/cookbook.html)
+
+## The format
+- [Specification](https://github.com/allmonty/gamebook-framework/blob/main/spec/framework.md): Part A in plain words, Part B exact
+- [Format versions](https://github.com/allmonty/gamebook-framework/blob/main/spec/CHANGELOG.md): what each version of `"schema"` holds
+- [Fighting Fantasy preset](https://allmonty.github.io/gamebook-framework/presets/fighting-fantasy.json): the rules block `"preset": "fighting-fantasy"` stands for
+- [d20-lite preset](https://allmonty.github.io/gamebook-framework/presets/d20-lite.json): the rules block `"preset": "d20-lite"` stands for
+
+## Build with it
+- [Dart engine](https://github.com/allmonty/gamebook-framework/blob/main/engines/dart/README.md): the reference engine and its tools (validate, graph, simulate, pack, import from Twine)
+- [Writing an engine](https://github.com/allmonty/gamebook-framework/blob/main/engines/README.md): how to implement the format in another language
+- [Conformance suite](https://github.com/allmonty/gamebook-framework/blob/main/conformance/README.md): language-neutral cases with scripted dice; passing them is what "plays it right" means
+
+## Optional
+- [Comparison with other gamebook engines](https://github.com/allmonty/gamebook-framework/blob/main/spec/comparison.md): what others do, and why this format exists
+- [Contributing](https://github.com/allmonty/gamebook-framework/blob/main/CONTRIBUTING.md): how to change the spec, add a case or an engine

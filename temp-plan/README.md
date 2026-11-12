@@ -53,7 +53,7 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | done (in 10g) | |
 | 12 | [Presets as data](steps/12-presets-as-data.md) | docs + test | done | 99520cd |
 | 13 | [Starter games](steps/13-starters.md) | docs + test | done | |
-| 14 | [A front door for people and AIs](steps/14-front-door.md) | docs + site | todo | |
+| 14 | [A front door for people and AIs](steps/14-front-door.md) | docs + site | in progress | |
 | 15 | [A versions page on the site](steps/15-site-versions.md) | docs + site | todo | |
 
 Steps 01 to 06 and 11 are independent of each other; step 11 is tiny and may be done first. Steps 08 to 10f need step 07 (it opens schema 8) and are easier after step 06. Steps 12 to 15 come last so they describe schema 8; 14 links what 12 and 13 add, and 15 is the last of all.
