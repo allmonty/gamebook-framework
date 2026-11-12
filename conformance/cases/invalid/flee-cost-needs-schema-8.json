@@ -1,0 +1,51 @@
+{
+  "description": "A flee that costs a round needs schema 8.",
+  "spec": [
+    "B2",
+    "B11"
+  ],
+  "story": {
+    "schema": 7,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A troll.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Troll",
+              "attack": 9,
+              "health": 9,
+              "defense": 12
+            }
+          ],
+          "win": "won",
+          "flee": "ran",
+          "fleeCost": "round"
+        }
+      },
+      "ran": {
+        "text": "Ran",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.combat.fleeCost"
+  }
+}

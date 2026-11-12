@@ -1,0 +1,103 @@
+{
+  "schema": 8,
+  "id": "unarmed",
+  "lang": "en",
+  "title": "Unarmed",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "bonuses": [
+      {
+        "if": {
+          "not": {
+            "any": [
+              {
+                "has": "sword"
+              },
+              {
+                "has": "club"
+              }
+            ]
+          }
+        },
+        "bonus": {
+          "skill": -4
+        }
+      }
+    ]
+  },
+  "items": {
+    "sword": {
+      "name": "Sword"
+    },
+    "club": {
+      "name": "Club",
+      "description": "Heavy and crude, but it is a weapon."
+    }
+  },
+  "start": "bridge",
+  "nodes": {
+    "bridge": {
+      "text": "Your sword at your hip, you start across the old rope bridge. Skill {skill}.",
+      "effects": [
+        {
+          "give": "sword"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Keep going",
+          "to": "river"
+        }
+      ]
+    },
+    "river": {
+      "text": "Halfway across, a plank snaps. You grab the rope and save yourself, but your sword spins down into the river. With no weapon you fight at -4 Skill: yours is now {skill}.",
+      "effects": [
+        {
+          "take": "sword"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Search the bank for something to fight with",
+          "to": "bank"
+        },
+        {
+          "text": "Hurry on to the road",
+          "to": "bandit"
+        }
+      ]
+    },
+    "bank": {
+      "text": "Among the reeds lies a heavy club, washed up by some flood. It is no sword, but you are armed again: Skill {skill}.",
+      "effects": [
+        {
+          "give": "club"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Go on to the road",
+          "to": "bandit"
+        }
+      ]
+    },
+    "bandit": {
+      "text": "A bandit steps out onto the road, knife drawn. \"Your purse,\" she says.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Bandit",
+            "attack": 7,
+            "health": 6
+          }
+        ],
+        "win": "won"
+      }
+    },
+    "won": {
+      "text": "The bandit runs into the trees. The road ahead is clear.",
+      "ending": "victory"
+    }
+  }
+}

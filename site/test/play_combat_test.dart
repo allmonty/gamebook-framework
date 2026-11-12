@@ -86,6 +86,21 @@ void main() {
     expect(gone.view.choices.single.text, 'Walk on');
   });
 
+  test('a flee that costs a round says so, and the enemy strikes first', () {
+    for (final lang in ['en', 'pt']) {
+      final session = PlaySession.start(
+        storyFile('examples/06-combat/the-evasion.$lang.json'),
+        random: ScriptedRandom(_stats),
+      )..choose(0);
+      expect(session.view.combat!.fleeCostsRound, isTrue, reason: lang);
+
+      session.flee();
+
+      expect(_keys(session).first, 'strike', reason: lang);
+      expect(session.view.ending, Ending.defeat, reason: lang);
+    }
+  });
+
   test('fleeing leaves the fight', () {
     final session = _start('flee', [1, 1, 6, 6])
       ..choose(0)

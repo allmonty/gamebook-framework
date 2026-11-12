@@ -1,0 +1,38 @@
+{
+  "description": "{item.count} must name an item of the story.",
+  "spec": [
+    "B6"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "items": {
+      "herb": {
+        "name": "Herb",
+        "stack": 3,
+        "max": 4
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Coins: {coin.count}.",
+        "effects": [],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.text"
+  }
+}

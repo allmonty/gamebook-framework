@@ -1,0 +1,45 @@
+{
+  "schema": 8,
+  "id": "the-evasion",
+  "lang": "en",
+  "title": "The Evasion",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "bridge",
+  "nodes": {
+    "bridge": {
+      "text": "A troll lives under the stone bridge, and today it is awake. It climbs up onto the road, twice your height, and blocks the way.",
+      "choices": [
+        {
+          "text": "Stand and fight",
+          "to": "fight"
+        }
+      ]
+    },
+    "fight": {
+      "text": "The troll swings a club the size of a tree. Each blow that lands costs 3 Stamina. You can run back the way you came, but turning your back costs a round: the troll gets a free swing as you go.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Bridge troll",
+            "attack": 10,
+            "health": 12,
+            "damage": "3"
+          }
+        ],
+        "win": "won",
+        "flee": "ran",
+        "fleeCost": "round"
+      }
+    },
+    "ran": {
+      "text": "You run, and you do not stop until the bridge is out of sight. You are alive, but the road on the other side will have to wait.",
+      "ending": "defeat"
+    },
+    "won": {
+      "text": "The troll topples into the river with a splash that soaks the far bank. The bridge is yours.",
+      "ending": "victory"
+    }
+  }
+}

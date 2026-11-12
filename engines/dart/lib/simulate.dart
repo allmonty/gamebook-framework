@@ -140,10 +140,10 @@ Outcome _play(
         Ending.death => Outcome.death,
       };
     }
-    if (engine.offer case final item?) {
+    if (engine.offer != null) {
       if (policy == Policy.decline) {
         engine.resolveOffer(take: false);
-      } else if (engine.canHold(item)) {
+      } else if (!engine.offerNeedsRoom) {
         engine.resolveOffer(take: true);
       } else {
         final carried = [

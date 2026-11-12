@@ -3,6 +3,7 @@
 library;
 
 import 'story.dart';
+import 'text.dart';
 
 /// The lowest version above [Story.schema] the story needs, with the JSON
 /// path of the first thing that needs it; null if its `schema` is enough.
@@ -116,15 +117,34 @@ String? _schema7(Story story) {
 
 String? _schema8(Story story) {
   if (story.coverAlt != null) return 'coverAlt';
+  if (story.rules.bonuses.isNotEmpty) return 'rules.bonuses';
+  for (final MapEntry(:key, :value) in story.rules.stats.entries) {
+    if (value.min != null) return 'rules.stats.$key.min';
+  }
   for (final MapEntry(:key, :value) in story.items.entries) {
     if (value.imageAlt != null) return 'items.$key.imageAlt';
     if (value.stack != null) return 'items.$key.stack';
+    if (value.max != null) return 'items.$key.max';
   }
   for (final MapEntry(:key, :value) in story.nodes.entries) {
     if (value.imageAlt != null) return 'nodes.$key.imageAlt';
     if (value.ending == Ending.defeat) return 'nodes.$key.ending';
+    if (value.combat?.fleeCost != null) return 'nodes.$key.combat.fleeCost';
     if (value.combat?.wounded != null) return 'nodes.$key.combat.wounded';
     if (value.combat?.rounds != null) return 'nodes.$key.combat.rounds';
+    // Before schema 4 braces are plain text, not placeholders (B6).
+    if (story.schema >= 4) {
+      for (var i = 0; i < value.parts.length; i++) {
+        if (placeholderItems(value.parts[i].text).isNotEmpty) {
+          return value.textIsList ? 'nodes.$key.text[$i]' : 'nodes.$key.text';
+        }
+      }
+      for (var i = 0; i < value.choices.length; i++) {
+        if (placeholderItems(value.choices[i].text).isNotEmpty) {
+          return 'nodes.$key.choices[$i].text';
+        }
+      }
+    }
     for (var i = 0; i < value.parts.length; i++) {
       if (_countsItems(value.parts[i].condition)) {
         return value.textIsList

@@ -1,0 +1,63 @@
+{
+  "description": "An offer is taken up to the item's max, without asking for a swap; the rest is left.",
+  "spec": [
+    "B4",
+    "B5"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "inventory": {
+        "pickup": "choose"
+      }
+    },
+    "items": {
+      "herb": {
+        "name": "Herb",
+        "stack": 3,
+        "max": 4
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Herbs: {herb.count}.",
+        "effects": [
+          {
+            "give": "herb",
+            "count": 6
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "offer": {
+        "take": true
+      }
+    }
+  ],
+  "expect": {
+    "counts": {
+      "herb": 4
+    },
+    "offers": []
+  }
+}

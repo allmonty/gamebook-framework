@@ -1,0 +1,49 @@
+{
+  "description": "fleeCost only applies to a fight with a flee page.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A troll.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Troll",
+              "attack": 9,
+              "health": 9,
+              "defense": 12
+            }
+          ],
+          "win": "won",
+          "fleeCost": "round"
+        }
+      },
+      "ran": {
+        "text": "Ran",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.combat.fleeCost"
+  }
+}

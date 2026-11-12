@@ -210,7 +210,10 @@ class GameEngine {
               effect.item,
               _stack(effect.item) == null
                   ? 1
-                  : _state.count(effect.item) + effect.amount,
+                  : min(
+                      _state.count(effect.item) + effect.amount,
+                      story.items[effect.item]?.max ?? _unlimited,
+                    ),
             )
           : applyEffect(effect, _state);
     }
@@ -233,11 +236,20 @@ class GameEngine {
 
   Map<String, int> _bonusOf(GameState s) {
     final bonus = <String, int>{};
-    for (final item in s.inventory) {
-      for (final MapEntry(:key, :value)
-          in (story.items[item]?.bonus ?? const <String, int>{}).entries) {
+    void add(Map<String, int> more) {
+      for (final MapEntry(:key, :value) in more.entries) {
         bonus[key] = (bonus[key] ?? 0) + value;
       }
+    }
+
+    for (final item in s.inventory) {
+      add(story.items[item]?.bonus ?? const {});
+    }
+    // Rule bonuses see the item bonuses only, so none can switch itself on or
+    // off (B5).
+    final withItems = s.withBonus({...bonus});
+    for (final rule in story.rules.bonuses) {
+      if (evaluate(rule.condition, withItems)) add(rule.bonus);
     }
     return bonus;
   }
@@ -270,6 +282,10 @@ class GameEngine {
     return renderTemplate(text, (name) {
       if (name == 'name') {
         return (rules.creation?.name ?? false) ? _state.name : null;
+      }
+      if (name.endsWith('.count')) {
+        final item = name.substring(0, name.length - '.count'.length);
+        return story.items.containsKey(item) ? '${_state.count(item)}' : null;
       }
       final isMax = name.endsWith('.max');
       final stat = isMax ? name.substring(0, name.length - 4) : name;
@@ -352,12 +368,21 @@ class GameEngine {
 
   /// How many more of [item] fit in the pack now: the room left in its
   /// part-filled slot, then the free slots.
-  int _room(String item) {
+  int _packRoom(String item) {
     if (isContainer(item) || capacity == null) return _unlimited;
     final free = max(0, capacity! - slotsUsed);
     final stack = _stack(item);
     return stack == null ? min(free, 1) : _slotRoom(item) + free * stack;
   }
+
+  /// How many more of [item] its cap allows (schema 8: an item's `max`).
+  int _capLeft(String item) {
+    final cap = story.items[item]?.max;
+    return cap == null ? _unlimited : max(0, cap - _state.count(item));
+  }
+
+  /// How many more of [item] can be added now.
+  int _room(String item) => min(_packRoom(item), _capLeft(item));
 
   static const _unlimited = 1 << 30;
 
@@ -370,6 +395,13 @@ class GameEngine {
 
   /// How many of [offer] are offered at once (schema 8: a countable item).
   int get offerCount => offer == null ? 0 : _state.offered(offer!);
+
+  /// Whether taking [offer] needs a carried item left behind: the pack is
+  /// full, and the item's cap would still let some in.
+  bool get offerNeedsRoom {
+    final item = offer;
+    return item != null && _packRoom(item) == 0 && _capLeft(item) > 0;
+  }
 
   /// More items waiting behind [offer].
   int get moreOffers => offer == null ? 0 : _state.offers.length - 1;
@@ -546,25 +578,7 @@ class GameEngine {
           use.combatCost == CombatCost.round &&
           ending == null) {
         final healthBefore = _health;
-        // Against several at once every enemy still standing strikes.
-        final strikers = fightNode.simultaneous
-            ? [
-                for (var i = 0; i < fightNode.enemies.length; i++)
-                  if (_state.combat!.enemyHealth[i] > 0) i,
-              ]
-            : [_state.combat!.enemy];
-        for (final i in strikers) {
-          if (ending != null) break;
-          final strike = enemyStrike(
-            rules: rules,
-            combat: fightNode,
-            state: _state,
-            random: random,
-            enemyIndex: i,
-          );
-          _state = strike.state;
-          events.add(CombatStrike(strike));
-        }
+        _strikes(fightNode, events);
         // It costs the round: it counts as one, and a strike as a wound.
         _afterRound(fightNode, CombatOutcome.ongoing, healthBefore, events);
       }
@@ -575,10 +589,39 @@ class GameEngine {
 
   /// Runs away from the fight, to the page the story names.
   List<GameEvent> flee() {
-    final target = combat?.flee;
+    final fightNode = combat;
+    final target = fightNode?.flee;
     if (target == null) throw StateError('cannot flee');
     _requireNoOffer();
-    return _run((events) => _enter(target, events));
+    return _run((events) {
+      // Running costs the round (schema 8): the enemies strike first. It is
+      // no wound for `wounded`, nor a round for `rounds`: the player left.
+      if (fightNode!.fleeCost == CombatCost.round) _strikes(fightNode, events);
+      if (ending == null) _enter(target, events);
+    });
+  }
+
+  /// The enemies strike while the player does something else (B5): the
+  /// current enemy, or every one still standing in a fight against several.
+  void _strikes(Combat fightNode, List<GameEvent> events) {
+    final strikers = fightNode.simultaneous
+        ? [
+            for (var i = 0; i < fightNode.enemies.length; i++)
+              if (_state.combat!.enemyHealth[i] > 0) i,
+          ]
+        : [_state.combat!.enemy];
+    for (final i in strikers) {
+      if (ending != null) break;
+      final strike = enemyStrike(
+        rules: rules,
+        combat: fightNode,
+        state: _state,
+        random: random,
+        enemyIndex: i,
+      );
+      _state = strike.state;
+      events.add(CombatStrike(strike));
+    }
   }
 
   void _requireNoFightOrEnd() {
@@ -595,7 +638,7 @@ class GameEngine {
   /// item to leave behind in [replacing]), or leave it where it is.
   List<GameEvent> resolveOffer({required bool take, String? replacing}) {
     final item = offer ?? (throw StateError('there is no offer to resolve'));
-    final swap = take && !canHold(item);
+    final swap = take && offerNeedsRoom;
     if (swap &&
         (replacing == null ||
             !_state.inventory.contains(replacing) ||
@@ -645,9 +688,12 @@ class GameEngine {
     }
     if (!countable && _state.inventory.contains(item)) return;
     if (rules.inventory.pickup == PickupMode.choose) {
-      // What fits without a new slot is added; anything else is offered.
-      if (countable && count <= _slotRoom(item)) {
+      // What fits without a new slot is added; past the cap nothing can be;
+      // anything else is offered.
+      if (countable && count <= min(_slotRoom(item), _capLeft(item))) {
         _state = withCount(_state, item, _state.count(item) + count);
+      } else if (countable && _capLeft(item) == 0) {
+        events.add(ItemRefused(item, count));
       } else {
         _offer(item, countable ? count : 1);
       }
@@ -777,10 +823,14 @@ bool stateFits(GameState state, Story story, Rules rules) {
       !stats.containsAll(state.stats.keys)) {
     return false;
   }
-  if (!state.stats.values.every(
-    (s) => s.value >= 0 && (s.max == null || s.value <= s.max!),
-  )) {
-    return false;
+  // Each stat within its floor and ceiling, and the floor the story's.
+  for (final rule in rules.stats) {
+    final s = state.stats[rule.id]!;
+    if (s.min != rule.min ||
+        s.value < s.min ||
+        (s.max != null && s.value > s.max!)) {
+      return false;
+    }
   }
   if (!state.inventory.every(item) || !state.offers.every(item)) return false;
   // Counts only for countable items held or offered, and at least 1 each.
@@ -789,7 +839,8 @@ bool stateFits(GameState state, Story story, Rules rules) {
         (e) =>
             e.value >= 1 &&
             where.contains(e.key) &&
-            story.items[e.key]?.stack != null,
+            story.items[e.key]?.stack != null &&
+            e.value <= (story.items[e.key]!.max ?? e.value),
       );
   if (!counted(state.counts, state.inventory) ||
       !counted(state.offerCounts, state.offers)) {

@@ -103,6 +103,16 @@ void main() {
       );
     });
 
+    test('{x.count} must name an item (schema 8)', () {
+      expect(
+        errors((j) {
+          j['schema'] = 8;
+          node(j, 'cellar')['text'] = 'Coins: {coin.count}.';
+        }),
+        ['error: nodes.cellar.text: unknown item "coin"'],
+      );
+    });
+
     test('more than one of an item that has no stack (schema 8)', () {
       expect(
         errors((j) {

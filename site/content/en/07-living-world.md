@@ -51,6 +51,8 @@ Write a stat id in braces and the reader sees its current value (schema 4): `{go
 examples/07-living-world/gold-counter
 ```
 
+`{meal.count}` (schema 8) is how many of the item `meal` the reader carries: the provisions in chapter 3 count down with it.
+
 To show real braces, write them twice: `{{` and `}}`.
 
 ## The journal and achievements

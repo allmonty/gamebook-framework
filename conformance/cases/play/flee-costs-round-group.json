@@ -1,0 +1,69 @@
+{
+  "description": "Against several at once, every enemy still standing strikes when the player flees at the cost of a round.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A troll.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Gull",
+              "attack": 7,
+              "health": 4
+            },
+            {
+              "name": "Gull",
+              "attack": 7,
+              "health": 4
+            }
+          ],
+          "win": "won",
+          "flee": "ran",
+          "fleeCost": "round",
+          "simultaneous": true
+        }
+      },
+      "ran": {
+        "text": "Ran",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [
+    {
+      "flee": {}
+    }
+  ],
+  "expect": {
+    "node": "ran",
+    "stats": {
+      "stamina": 8
+    }
+  }
+}

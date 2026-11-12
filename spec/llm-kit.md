@@ -29,7 +29,7 @@ You write gamebooks in the **Gamebook Framework** story format, defined in the r
 
 ## Part B. Technical reference
 
-Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6), a neutral ending (`"ending": "defeat"`, B6), fight events (`wounded`, `rounds`, B11) and counted items (item `stack`, and `count` on `give`, `take` and `has`; B4, B5, B7, B9). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
+Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6), a neutral ending (`"ending": "defeat"`, B6), fight events (`wounded`, `rounds`, B11), counted items (item `stack`, and `count` on `give`, `take` and `has`; B4, B5, B7, B9), a floor per stat (`min`, B4), rule bonuses (`rules.bonuses`, B5), a flee that costs a round (`fleeCost`, B11), and item counts in text with a cap per item (`{item.count}`, item `max`; B5, B6). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
 
 ### B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
@@ -47,7 +47,7 @@ Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Versio
 | Field | Type | Req | Notes |
 |---|---|---|---|
 | `$schema` | string | no | path to `story.schema.json`, an editor hint the engine ignores |
-| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) the `defeat` ending (B6), a fight's `wounded` and `rounds` (B11), and an item's `stack` or a `count` (B5) |
+| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) the `defeat` ending (B6), a fight's `wounded` and `rounds` (B11), an item's `stack` or a `count` (B5), a stat's `min` (B4), `rules.bonuses` (B5), a fight's `fleeCost` (B11), and an item's `max` or `{item.count}` in text (B5, B6) |
 | `journal` | object | no | map `entryId -> { title, text }` (schema 5, B6) |
 | `achievements` | object | no | map `achievementId -> { title, description, hidden }` (schema 7, B15) |
 | `chapters` | object | no | map `chapterId -> { title }`, in reading order (schema 6, B13) |
@@ -79,12 +79,14 @@ Ids (items, stats, flags, nodes) match `[A-Za-z0-9_-]+`.
 - `preset` (optional): `fighting-fantasy` or `d20-lite`. Without a preset, `stats`, `health` and (if the story has combat) `combat` must be fully given.
 - Everything else **overrides the preset, field by field**. `stats` merges per stat id; a stat given in full adds a new stat.
 - **Labels are per story**, because story files are single-language. Presets carry English labels; non-English stories override them (`label`).
+- `bonuses` (schema 8): bonuses to stats while a condition holds (B5, "Rule bonuses").
 
 #### Stats
 Each stat: `{ "label": string, "roll": dice, "max": bool }`.
 - `roll`: dice notation (B8) rolled at character creation. A plain integer gives a fixed start (`"0"` for gold).
 - `max: true`: the creation roll is also the ceiling. Effects can never raise the stat above it (healing stops at full health).
-- Every stat is clamped at 0 from below.
+- Every stat is clamped at 0 from below, unless it has a `min`.
+- `min` (schema 8): an integer, which may be negative, that the stat is clamped at instead: `{ "label": "Might", "roll": "1d4", "min": -3 }` can go down to -3, a signed modifier as in tabletop games. A creation roll below it is raised to it; with a `limit` it must be below the limit. The `health` stat cannot have a `min` (it is always 0).
 - `health` names the stat that means "alive". When it reaches 0 the game ends with a **death** ending, wherever that happens. Health at 0 is final: from then on no effect applies, so nothing later in the same action (or the game) can bring the hero back (B9, B10).
 
 #### Stat limits and quantities (schema 5)
@@ -179,10 +181,10 @@ Without an `inventory` block the pack is unlimited and every `give` just adds th
   An offer for an item that is already carried or already offered is ignored (for a countable item, see below). A container never needs room. Offers still pending when the game ends are discarded. Because the player may decline, a story should never make an offered item the only way to win; give a worse alternative route.
 
 **Countable items (schema 8).** A `give` of a countable item (B5) adds `count` units:
-- **`auto`**: as many units as fit are added, first into the room left in its part-filled slot, then into free slots; the rest are refused, and the player is told how many were left behind.
-- **`choose`**: if the whole count fits in the room left in its part-filled slot, it is added directly, without an offer. Otherwise the give is **one offer for the whole count**, even if some are already carried; a further give while it is on offer adds to that offer. Taking it adds as many units as fit and leaves the rest (the player is told); with a full pack the player may first leave one carried item behind, all of it, to free room.
+- **`auto`**: as many units as fit are added, first into the room left in its part-filled slot, then into free slots, and never past the item's `max`; the rest are refused, and the player is told how many were left behind.
+- **`choose`**: if the whole count fits in the room left in its part-filled slot, it is added directly, without an offer. Otherwise the give is **one offer for the whole count**, even if some are already carried; a further give while it is on offer adds to that offer. Taking it adds as many units as fit and leaves the rest (the player is told); with a full pack the player may first leave one carried item behind, all of it, to free room. A give of an item already at its `max` is refused at once, without an offer, and an offer stopped only by the `max` asks for no swap: freeing room would not help.
 
-A `give` with a count during character creation adds every unit directly; then the usual overflow rule applies.
+A `give` with a count during character creation adds every unit directly, up to the item's `max`; then the usual overflow rule applies.
 
 ### B5. Items
 ```json
@@ -198,6 +200,7 @@ An item is **unique** unless it has a `stack`: the pack holds it or not, and giv
   "use": { "effects": [ { "stat": "stamina", "add": 4 } ], "when": ["story"] } }
 ```
 - `stack` is how many fit in **one pack slot**, not how many can be held: 5 Meals fill one slot, 6 fill two (a stack of 5 and a single one). With `"stack": 1` every unit fills its own slot. A countable item fills `ceil(count / stack)` slots; without `rules.inventory.capacity` the pack, and so the count, is unlimited (B4).
+- `max` (schema 8, only with `stack`): the most the player can hold, say 12 arrows in a quiver. A give never goes past it: what does not fit is refused, as when the pack is full (B4).
 - `give`, `take` and `has` take a `count` (B7, B9). A `count` above 1 for an item without `stack` is an error.
 - Using a countable item spends one; it leaves the pack when the last one is spent. Its `bonus` applies once, while at least one is held. `takeAll` removes every unit.
 - A container cannot have a `stack`.
@@ -220,7 +223,7 @@ An item is **unique** unless it has a `stack`: the pack holds it or not, and giv
 | `when` | required, non-empty list of `"story"` (on a page with choices) and/or `"combat"` (during a fight). |
 | `combatCost` | `"round"` (default) or `"free"`. Only allowed when `when` includes `"combat"`. |
 
-An item without `use` cannot be used (a key is only held, and is spent by a choice's `take`). Using an item is possible while the game is running and not ended. Effects follow B9 (stats clamp to `0..max`); if they bring health to 0 the game ends in death (B10 step 5). Using an item changes no node, so `once` and `visited` are untouched.
+An item without `use` cannot be used (a key is only held, and is spent by a choice's `take`). Using an item is possible while the game is running and not ended. Effects follow B9 (stats clamp to `min..max`); if they bring health to 0 the game ends in death (B10 step 5). Using an item changes no node, so `once` and `visited` are untouched.
 
 **In a fight with `combatCost: "round"`** the player forfeits the attack for that round and the current enemy strikes: in `opposed` mode the enemy wins the round automatically and the player loses the enemy's `damage` (no contest is rolled); in `vs-defense` mode the enemy makes its normal attack roll against the player's defense. With `"free"` the enemy does nothing. Either way the player can then attack as usual.
 
@@ -228,7 +231,13 @@ An item without `use` cannot be used (a key is only held, and is spent by a choi
 ```json
 "sword": { "name": "Notched sword", "bonus": { "skill": 1 } }
 ```
-While the item is in the pack, each stat in `bonus` is higher (or lower, with a negative number) by that amount, **everywhere**: checks, combat, conditions and `{stat}` placeholders. Bonuses add to the current value, but the result is never below 0 (B4: stats are clamped at 0), so a Luck of 8 with a bonus of -20 is 0. They never change the stat itself, its `limit` or its `max`, so losing the item takes the bonus away cleanly. A bonus on the `health` stat is not allowed. The stats bar shows the effective value with the bonus ("Skill 10 (+1)").
+While the item is in the pack, each stat in `bonus` is higher (or lower, with a negative number) by that amount, **everywhere**: checks, combat, conditions and `{stat}` placeholders. Bonuses add to the current value, but the result is never below the stat's floor (B4: 0, or its `min`), so a Luck of 8 with a bonus of -20 is 0. They never change the stat itself, its `limit` or its `max`, so losing the item takes the bonus away cleanly. A bonus on the `health` stat is not allowed. The stats bar shows the effective value with the bonus ("Skill 10 (+1)").
+
+**Rule bonuses (schema 8).** `rules.bonuses` is a list of bonuses that apply while a condition holds, whatever the pack holds:
+```json
+"bonuses": [ { "if": { "not": { "any": [ { "has": "sword" }, { "has": "club" } ] } }, "bonus": { "skill": -4 } } ]
+```
+While its `if` (B7) holds, a rule bonus works exactly like an item bonus: everywhere, added to the item bonuses, never changing the stat itself, never on the `health` stat. Its condition sees the stats **with item bonuses but without any rule bonus**, so a rule bonus can never switch itself (or another rule bonus) on or off: "-2 Skill while Skill is 9 or more" applies at Skill 9 and stays.
 
 #### Containers (schema 3)
 ```json
@@ -274,7 +283,7 @@ A story may define a `journal`: `"journal": { "clue-1": { "title": "A stranger's
   { "if": { "stat": "gold", "lte": 4 }, "text": "You count your last {gold} crowns." }
 ]
 ```
-In page text and in choice `text`, `{id}` is replaced with the **current value** of the stat `id`, and `{id.max}` with its ceiling (the stat's value if it has none). Write `{{` and `}}` for literal braces. A placeholder that is not a stat of the story is a validator error, and shows as written if it ever reaches a player. The text of a page is computed each time the page is shown, so it follows the current state.
+In page text and in choice `text`, `{id}` is replaced with the **current value** of the stat `id`, and `{id.max}` with its ceiling (the stat's value if it has none). `{item.count}` (schema 8) is replaced with how many of the item `item` are held (0 if none; 1 for a unique item held); the `.count` suffix keeps it apart from a stat with the same id. Write `{{` and `}}` for literal braces. A placeholder that is not a stat (or, with `.count`, an item) of the story is a validator error, and shows as written if it ever reaches a player. The text of a page is computed each time the page is shown, so it follows the current state.
 
 ### B7. Conditions
 A condition is an object with exactly one kind:
@@ -304,6 +313,7 @@ Engines must roll in this order, so that the same dice give the same game everyw
 - **Round, `table`** (and duels): the table `roll` only.
 - **Several enemies at once**: the player's `attackRoll` once. In `opposed` mode, then for each living enemy in list order: its `attackRoll`, then the damage of the side that won against it (the player deals damage only to the target). In `vs-defense` mode, the player's `damage` on the target if it hits, then for each enemy still living, in list order: its `attackRoll` and, if it hits, its `damage`.
 - **Testing luck in a fight**: the `luck.roll`.
+- **Enemy strikes** (an item that costs the round, B5; a flee that costs a round, B11): for each enemy that strikes, in list order: in `opposed` mode its `damage`; in `vs-defense` mode its `attackRoll` and, if it hits, its `damage`; in `table` mode and duels the table `roll`.
 
 Fight events (`wounded`, `rounds`; B11, schema 8) roll nothing: they only decide where a fight ends.
 
@@ -313,7 +323,7 @@ An effect is an object with exactly one kind:
 |---|---|
 | `{ "give": "itemId" }` | add the item to the inventory. With `"count": 3` (schema 8, a countable item): add 3 (B4 says what happens when they do not all fit) |
 | `{ "take": "itemId" }` | remove it (no-op if absent; the validator warns if it can never be held). With `"count": 2` (schema 8): remove 2 of a countable item, stopping at 0; at 0 it leaves the pack |
-| `{ "stat": "stamina", "add": -2 }` | add (or subtract) an integer; result clamped to `[0, max or limit]` |
+| `{ "stat": "stamina", "add": -2 }` | add (or subtract) an integer; result clamped to `[min, max or limit]` (`min` is 0 unless the stat sets one) |
 | `{ "stat": "gold", "set": 0 }` | set the stat (schema 5), clamped the same way. `add` and `set` take a quantity (B4): `{ "stat": "gold", "add": { "stat": "price", "times": -1 } }` pays a price held in another stat. Exactly one of `add` or `set`. |
 | `{ "journal": "entryId" }` | unlock a journal entry (schema 5, B6) |
 | `{ "set": "flag" }` | set a flag |
@@ -393,6 +403,7 @@ The game starts by entering `start` the same way, after character creation.
 - `enemies`: fought **one at a time, in list order** (unless `simultaneous`, below). Each: `name`, `attack` (number), `health` (number), and for `vs-defense` mode `defense` (number); optional `damage` (dice) overriding the rules default for that enemy; optional `armor` (schema 5): the damage the player deals to this enemy is reduced by `armor`, never below 0.
 - `win`: node entered when the last enemy reaches 0 (the node is entered normally, step 4 above).
 - `flee`: optional node. If present the player may flee after any round (no automatic penalty; put penalties in the flee node's `effects`). If absent, no fleeing.
+- `fleeCost` (schema 8): `"free"` (default) or `"round"`, only with `flee`. With `"round"`, fleeing costs the round, as an item that costs the round does (B5): the current enemy, or every enemy still standing in a fight against several, strikes first. If that brings health to 0 the game ends in **death**; otherwise the flee node is entered. The strike leads to no `wounded` and counts for no `rounds`: the player is leaving.
 - `wounded` (schema 8): optional node. The first time the player loses health in this fight and is still alive, the fight ends and this node is entered.
 - `rounds` (schema 8): optional `{ "after": 3, "to": "it-escapes" }`, `after` an integer of at least 1. When `after` rounds have been played and the fight is not over, it ends and `to` is entered. "Win within 3 rounds" is `after: 3`, with `to` the page for being too slow.
 - Fighting is round by round, driven by the player (a button per round).
@@ -489,7 +500,7 @@ A game travels outside the app as one file: a **zip** of the game folder (B1) wi
 - Limits, checked before anything is unpacked: at most 100 MB unpacked, 2,000 files, media files only of the types the app plays (`.webp`, `.png`, `.jpg`, `.jpeg`, `.ogg`, `.mp3`, `.wav`, `.m4a`). Anything else rejects the whole file with a message saying why.
 - A package whose story `id` matches a bundled game is refused (bundled games cannot be replaced); one matching an imported game is an **update** of it.
 
-**Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists, the pack still fits (a count is kept only for a countable item, and the slots used fit the capacity), and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
+**Updates and saves.** An update replaces the old version. The player's save for that game is kept only if it still fits the new story: every node, item, stat and journal entry it names still exists, the pack still fits (a count is kept only for a countable item, and the slots used fit the capacity), every stat is within its `min` and ceiling,, and the save loads cleanly (flags need no declaration, so they always fit). Otherwise the save is dropped and the player is told the story changed and the adventure starts again. This is the rule every save already follows (a save that does not fit reads as "no save"), plus the message.
 
 ### B15. Achievements (schema 7)
 ```json

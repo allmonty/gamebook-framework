@@ -47,12 +47,18 @@ Map<String, StatValue> _stats(Rules rules, Map<String, Object?> given) => {
       {'value': final int value, 'max': final int? max} => StatValue(
         value,
         max,
+        stat.min,
       ),
       final int value when stat.limit != null => StatValue(
-        min(value, stat.limit!),
+        min(max(value, stat.min), stat.limit!),
         stat.limit,
+        stat.min,
       ),
-      final int value => StatValue(value, stat.max ? value : null),
+      final int value => StatValue(
+        max(value, stat.min),
+        stat.max ? max(value, stat.min) : null,
+        stat.min,
+      ),
       _ => throw ArgumentError('case gives no start value for "${stat.id}"'),
     },
 };

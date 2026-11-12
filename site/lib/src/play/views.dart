@@ -215,6 +215,7 @@ class CombatView {
     required this.enemies,
     this.pickTarget = false,
     this.canFlee = false,
+    this.fleeCostsRound = false,
     this.canTestLuck = false,
   });
 
@@ -223,6 +224,9 @@ class CombatView {
   /// Several enemies at once: the player picks whom to attack.
   final bool pickTarget;
   final bool canFlee;
+
+  /// Fleeing lets the enemies strike first (schema 8): the button says so.
+  final bool fleeCostsRound;
   final bool canTestLuck;
 }
 

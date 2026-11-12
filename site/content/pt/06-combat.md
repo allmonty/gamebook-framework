@@ -98,11 +98,22 @@ examples/06-combat/poison-sting
 
 Depois de cada rodada a ordem é: morte, depois a vitória, depois um ferimento, depois o limite de rodadas. Um item que custa a rodada conta como rodada, e o golpe livre do inimigo como ferimento. Para fugir pagando um preço você não precisa de nada novo: é o `flee` com um efeito na página para onde você foge, como mostra o guarda goblin.
 
+### Fugir custa uma rodada
+
+Em Lobo Solitário a fuga é diferente: na rodada em que você vira para fugir, só o inimigo pode ferir você, então fugir pode matar. Ponha `"fleeCost": "round"` ao lado de `flee` (schema 8):
+
+```gamebook
+examples/06-combat/the-evasion
+```
+
+Aperte Fugir (o botão avisa que custa uma rodada): o troll golpeia uma vez, exatamente como quando você usa um item que custa a rodada, e só então você chega à página da fuga. Se esse golpe levar sua última Energia, você nunca chega lá. O golpe não conta como ferimento para `wounded` nem como rodada para `rounds`.
+
 ### Experimente
 
 - Dê ao goblin `"health": 12` e veja a luta crescer. Tire o `flee` e o botão Fugir some.
 - Dê ao golem `"armor": 2`: agora só golpes de sorte o ferem.
 - Tire o `"duel": true` do Campeão e enfrente-o com dados.
 - Tire o `wounded` do escorpião: a ferroada agora é só um ferimento, e a luta continua.
+- Troque o `fleeCost` do troll por `"free"`: fugir volta a ser seguro.
 
 A seguir: fazer o mundo lembrar do que o leitor fez.

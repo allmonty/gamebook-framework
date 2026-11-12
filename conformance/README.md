@@ -24,7 +24,7 @@ Every case has a `description` (what it shows) and `spec` (the sections it tests
   "expect": { "node": "treasure", "ending": "victory" }
 }
 ```
-**Start.** Start a new game (B10, "The game starts..."). Without `stats`, character creation rolls every stat from the scripted dice (B4, in the order of B8), then rolls them all again `rerolls` times (optional, default 0) and keeps the last roll. With `stats`, the engine uses these start values instead of rolling: `stats` gives every stat of the resolved rules: a number is a start value, turned into the stat as the creation roll would (with `max: true` it is also the ceiling; with a `limit` it is cut to the limit and the limit is the ceiling); an object gives the value and ceiling directly (`max` may be null). `name` is optional (the hero's name, B4). `picks` is optional: for each pick group, the ids of the options the player chose, as in `{ "kit": ["torch", "rope"] }`; their effects apply as the player accepts the character (B4).
+**Start.** Start a new game (B10, "The game starts..."). Without `stats`, character creation rolls every stat from the scripted dice (B4, in the order of B8), then rolls them all again `rerolls` times (optional, default 0) and keeps the last roll. With `stats`, the engine uses these start values instead of rolling: `stats` gives every stat of the resolved rules: a number is a start value, turned into the stat as the creation roll would (with `max: true` it is also the ceiling; with a `limit` it is cut to the limit and the limit is the ceiling; below a `min` it is raised to the min); an object gives the value and ceiling directly (`max` may be null). `name` is optional (the hero's name, B4). `picks` is optional: for each pick group, the ids of the options the player chose, as in `{ "kit": ["torch", "rope"] }`; their effects apply as the player accepts the character (B4).
 
 **Dice.** `dice` are die faces, used one by one whenever the engine rolls a die. A face is always on the die being rolled (1 to M for an `NdM`). After the last action **every face must have been used**: an unused face means the engine rolled less than the spec says.
 
@@ -77,11 +77,11 @@ Load the story (it must have no errors) and validate it. The warnings reported m
 
 ## Coverage
 Play cases cover every rule of Part B:
-- **Pages and choices:** locks, hidden and once-only choices, once nodes, visits, checks and their effects, random tables, conditional text and placeholders, the hero's name, death at 0 health (and that it is final), the defeat ending, undo (after death too), a page with no open choice, draft pages, titles.
+- **Pages and choices:** locks, hidden and once-only choices, once nodes, visits, checks and their effects, random tables, conditional text and placeholders (`{item.count}` too), the hero's name, death at 0 health (and that it is final), the defeat ending, undo (after death too), a page with no open choice, draft pages, titles.
 - **Conditions:** `has`, `flag`, `visited`, `visits`, stat comparisons (`gte`, `lte`, `eq`, quantities), `all`, `any` and `not`, empty ones included.
-- **Stats and creation:** the rolls of both presets in B8 order, rerolls, ceilings and limits, quantities in effects, creation picks.
-- **Items:** usable items, bonuses, pack capacity with `auto` and `choose`, offers (in order, left, ignored, swapped, discarded at the end), containers (room, and what is lost when one goes), `takeAll`; counted items (slots per stack, give, take and `has` with a count, use, `auto` and `choose` pickup with what fits, lost room, `takeAll`).
-- **Combat:** `opposed`, `vs-defense` and `table` rounds, duels, fights against several at once, armor, luck in fights (lucky, unlucky, when it is not offered, kills, the group total, after armor), fleeing, items in a fight, the wounded and round-limit exits and their order.
+- **Stats and creation:** the rolls of both presets in B8 order, rerolls, ceilings and limits, floors below 0 (`min`), quantities in effects, creation picks.
+- **Items:** usable items, bonuses (of items, and of rules while a condition holds), pack capacity with `auto` and `choose`, offers (in order, left, ignored, swapped, discarded at the end), containers (room, and what is lost when one goes), `takeAll`; counted items (slots per stack, give, take and `has` with a count, use, `auto` and `choose` pickup with what fits, lost room, `takeAll`, a cap per item).
+- **Combat:** `opposed`, `vs-defense` and `table` rounds, duels, fights against several at once, armor, luck in fights (lucky, unlucky, when it is not offered, kills, the group total, after armor), fleeing (free, and at the cost of a round), items in a fight, the wounded and round-limit exits and their order.
 - **The rest:** the journal, page audio, achievements.
 
 Invalid cases cover the schema gate of every version, unknown references, impossible combat rules and the common load errors. Lint cases cover every warning code of B16, translations included.

@@ -1,0 +1,70 @@
+{
+  "description": "A rule bonus adds to item bonuses.",
+  "spec": [
+    "B4",
+    "B5"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "bonuses": [
+        {
+          "if": {
+            "not": {
+              "has": "sword"
+            }
+          },
+          "bonus": {
+            "skill": -4
+          }
+        }
+      ]
+    },
+    "items": {
+      "sword": {
+        "name": "Sword"
+      },
+      "ring": {
+        "name": "Ring",
+        "bonus": {
+          "skill": 1
+        }
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "Skill {skill}.",
+        "once": true,
+        "effects": [
+          {
+            "give": "ring"
+          }
+        ],
+        "choices": [
+          {
+            "text": "On",
+            "to": "a",
+            "effects": []
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [],
+  "actions": [],
+  "expect": {
+    "stats": {
+      "skill": 6
+    }
+  }
+}

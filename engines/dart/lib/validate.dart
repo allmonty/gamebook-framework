@@ -171,6 +171,7 @@ class _Validator {
       error('start', 'unknown node "${story.start}"');
     }
     _creation();
+    _ruleBonuses();
     _image('cover', story.cover);
     for (final MapEntry(:key, :value) in story.items.entries) {
       _image('items.$key.image', value.image);
@@ -201,6 +202,21 @@ class _Validator {
     _summaries();
     _reachability();
     return issues;
+  }
+
+  /// Rule bonuses: conditions and stats checked like any other.
+  void _ruleBonuses() {
+    final bonuses = story.rules.bonuses;
+    for (var i = 0; i < bonuses.length; i++) {
+      _condition('rules.bonuses[$i].if', bonuses[i].condition);
+      for (final stat in bonuses[i].bonus.keys) {
+        final at = 'rules.bonuses[$i].bonus.$stat';
+        _stat(at, stat);
+        if (stat == rules?.health) {
+          error(at, 'a bonus to the health stat is not allowed');
+        }
+      }
+    }
   }
 
   /// The effects of creation picks are checked like any other.
@@ -294,6 +310,9 @@ class _Validator {
       // {name} is the hero's name when the story asks for one.
       if (stat == 'name' && (story.rules.creation?.name ?? false)) continue;
       _stat(where, stat);
+    }
+    for (final item in placeholderItems(text)) {
+      _item(where, item);
     }
   }
 

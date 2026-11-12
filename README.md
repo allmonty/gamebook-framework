@@ -47,7 +47,7 @@ Every gamebook is a **collection of pages** (called *nodes*) connected by **choi
 - A choice can be **hidden** (the player never sees it) or **greyed out with a reason** ("Needs: Rusty key") until the right conditions are met.
 - A choice can be marked **once**: after the player takes it, it disappears for the rest of the game — perfect for clues you can only follow once.
 - **Conditional page text**: different paragraphs are shown or hidden depending on what the player has done or carries. The same page can read differently on a second visit.
-- **Live numbers in text**: write `{gold}` or `{stamina}` anywhere in a page or choice label and the app fills in the player's current value.
+- **Live numbers in text**: write `{gold}` or `{stamina}` anywhere in a page or choice label and the app fills in the player's current value; `{meal.count}` says how many meals the player carries.
 
 ---
 
@@ -55,7 +55,7 @@ Every gamebook is a **collection of pages** (called *nodes*) connected by **choi
 
 - Define any number of **items** (keys, potions, weapons, tools…). Each has a name, an optional description and an optional image, which can be described for players who cannot see it.
 - Items are **unique** by default: the player either holds one or they don't.
-- Some items can be **counted**: ten Provisions, a quiver of arrows. Say how many fit in one pack slot (`stack`), give or take several at once, ask for "at least 2", and each one used is gone.
+- Some items can be **counted**: ten Provisions, a quiver of arrows. Say how many fit in one pack slot (`stack`) and, if you like, how many can be held at most (`max`); give or take several at once, ask for "at least 2", and each one used is gone.
 - Choices and pages can **give** items to the player or **take** them away.
 - A choice can require the player to **hold a specific item** before it's available ("Unlock the door" stays locked until the rusty key is in the bag).
 
@@ -69,6 +69,7 @@ Some items can be **actively used** by the player:
 
 #### Item bonuses
 - An item can give **passive bonuses** while carried: a sword that adds +1 to Skill, a cursed ring that lowers Luck. The bonus is applied automatically everywhere — in checks, combat and displayed stats.
+- A bonus can also depend on a **condition** instead of an item: -4 Skill while the hero has no weapon at all.
 
 #### Carrying limits and containers
 - Optionally, set a **pack capacity**: the player can only carry *N* items at a time.
@@ -85,6 +86,7 @@ Stats are numbers that describe the hero — things like Skill, Stamina, Luck, G
 - **Define any stats** you need with custom names and labels (translated per story file).
 - Each stat is **rolled at the start** using dice notation, or given a fixed starting value.
 - Stats can have a **ceiling**: health that can't go above what it started at; gold that can never exceed 50.
+- Stats can also go **below zero** when you allow it (`min`), for modifiers like "Might -2" under a cursed gauntlet.
 - Effects throughout the story can **raise or lower** any stat, or **set it to a specific value**.
 - A stat can be set to a **dynamic value** ("pay the price stored in another stat"), so prices and costs can be part of the story data.
 
@@ -126,7 +128,7 @@ Pages can be **fight scenes**. The player taps a button to fight round by round.
 
 - Define one or more **enemies**, each with a name, attack score and health.
 - Two combat modes built in: **opposed** (Fighting Fantasy style — both sides roll, highest total wins) and **vs-defense** (d20 style — attacker rolls against the defender's rating).
-- If the player runs low on health they can **flee** to a page you specify (optional).
+- If the player runs low on health they can **flee** to a page you specify (optional). Fleeing can cost a round, Lone Wolf style: the enemy gets a free blow as the hero runs.
 - When all enemies are defeated the story continues on the page you set as the win destination.
 
 #### Advanced combat options

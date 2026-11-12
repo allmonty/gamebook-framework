@@ -1,3 +1,4 @@
+import 'condition.dart';
 import 'effect.dart';
 import 'json_reader.dart';
 
@@ -41,6 +42,7 @@ class RulesSpec {
     this.inventory,
     this.creation,
     this.undo,
+    this.bonuses = const [],
   });
 
   factory RulesSpec.fromJson(JsonObject obj) {
@@ -56,6 +58,7 @@ class RulesSpec {
       inventory: inventory == null ? null : InventorySpec.fromJson(inventory),
       creation: creation == null ? null : CreationSpec.fromJson(creation),
       undo: obj.optInt('undo'),
+      bonuses: obj.list('bonuses', RuleBonus.fromJson, optional: true),
     );
     obj.finish();
     return spec;
@@ -73,6 +76,34 @@ class RulesSpec {
 
   /// How many pages the player can go back (schema 5); null means none.
   final int? undo;
+
+  /// Bonuses that apply while a condition holds (schema 8, B5).
+  final List<RuleBonus> bonuses;
+}
+
+/// A bonus to stats while [condition] holds, like an item's (schema 8).
+class RuleBonus {
+  const RuleBonus(this.condition, this.bonus);
+
+  factory RuleBonus.fromJson(Object? json, String path) {
+    final obj = JsonObject(json, path);
+    final rule = RuleBonus(
+      Condition.fromJson(obj.raw('if'), obj.childPath('if')),
+      obj.idMap('bonus', (_, json, path) {
+        if (json is! int) {
+          throw StoryFormatException(path, 'expected an integer');
+        }
+        return json;
+      }),
+    );
+    obj.finish();
+    return rule;
+  }
+
+  final Condition condition;
+
+  /// By stat id.
+  final Map<String, int> bonus;
 }
 
 /// The `rules.creation` block: whether the hero has a name, and groups of
@@ -177,7 +208,7 @@ class PickOption {
 }
 
 class StatSpec {
-  const StatSpec({this.label, this.roll, this.max, this.limit});
+  const StatSpec({this.label, this.roll, this.max, this.limit, this.min});
 
   factory StatSpec.fromJson(String _, Object? json, String path) {
     final obj = JsonObject(json, path);
@@ -186,6 +217,7 @@ class StatSpec {
       roll: obj.optString('roll'),
       max: obj.has('max') ? obj.optBool('max') : null,
       limit: obj.optInt('limit'),
+      min: obj.optInt('min'),
     );
     if (spec.limit != null && spec.limit! < 1) {
       throw obj.error('limit', 'must be at least 1');
@@ -200,6 +232,9 @@ class StatSpec {
 
   /// A ceiling independent of the roll (schema 5).
   final int? limit;
+
+  /// The floor (schema 8), which may be negative; null is 0.
+  final int? min;
 }
 
 class CombatSpec {

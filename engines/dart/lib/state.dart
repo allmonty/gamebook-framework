@@ -1,14 +1,20 @@
 import 'dart:math';
 
-/// A stat's current value and its ceiling, if it has one.
+/// A stat's current value, its ceiling if it has one, and its floor.
 class StatValue {
-  const StatValue(this.value, [this.max]);
+  const StatValue(this.value, [this.max, this.min = 0]);
 
   factory StatValue.fromJson(Object? json) {
     if (json is Map<String, Object?> &&
         json['value'] is int &&
-        (json['max'] == null || json['max'] is int)) {
-      return StatValue(json['value']! as int, json['max'] as int?);
+        (json['max'] == null || json['max'] is int) &&
+        (json['min'] == null || json['min'] is int)) {
+      return StatValue(
+        json['value']! as int,
+        json['max'] as int?,
+        // Saves from before schema 8 have floors of 0.
+        json['min'] as int? ?? 0,
+      );
     }
     throw const FormatException('state: bad stat');
   }
@@ -16,14 +22,24 @@ class StatValue {
   final int value;
   final int? max;
 
-  /// The stat set to [next], kept within `0..max`.
-  StatValue clampedTo(int next) =>
-      StatValue(next < 0 ? 0 : (max != null && next > max! ? max! : next), max);
+  /// 0, or what the story set (schema 8; may be negative).
+  final int min;
 
-  /// [value] plus [delta], kept within `0..max`.
+  /// The stat set to [next], kept within `min..max`.
+  StatValue clampedTo(int next) => StatValue(
+    next < min ? min : (max != null && next > max! ? max! : next),
+    max,
+    min,
+  );
+
+  /// [value] plus [delta], kept within `min..max`.
   StatValue adjusted(int delta) => clampedTo(value + delta);
 
-  Map<String, Object?> toJson() => {'value': value, 'max': max};
+  Map<String, Object?> toJson() => {
+    'value': value,
+    'max': max,
+    if (min != 0) 'min': min,
+  };
 }
 
 /// Progress through the current fight. See spec/framework.md B11.
@@ -235,8 +251,9 @@ class GameState {
   final String? music;
 
   /// The stat's value now: what it is plus the bonuses of carried items,
-  /// never below 0 (B5).
-  int stat(String id) => max(0, (stats[id]?.value ?? 0) + (statBonus[id] ?? 0));
+  /// never below its floor (B5).
+  int stat(String id) =>
+      max(stats[id]?.min ?? 0, (stats[id]?.value ?? 0) + (statBonus[id] ?? 0));
 
   /// The bonus carried items give to [id] (0 if none).
   int bonusOf(String id) => statBonus[id] ?? 0;

@@ -1,0 +1,114 @@
+{
+  "schema": 8,
+  "id": "unarmed",
+  "lang": "pt",
+  "title": "Desarmado",
+  "rules": {
+    "preset": "fighting-fantasy",
+    "bonuses": [
+      {
+        "if": {
+          "not": {
+            "any": [
+              {
+                "has": "sword"
+              },
+              {
+                "has": "club"
+              }
+            ]
+          }
+        },
+        "bonus": {
+          "skill": -4
+        }
+      }
+    ],
+    "stats": {
+      "skill": {
+        "label": "Habilidade"
+      },
+      "stamina": {
+        "label": "Energia"
+      },
+      "luck": {
+        "label": "Sorte"
+      }
+    }
+  },
+  "items": {
+    "sword": {
+      "name": "Espada"
+    },
+    "club": {
+      "name": "Porrete",
+      "description": "Pesado e tosco, mas é uma arma."
+    }
+  },
+  "start": "bridge",
+  "nodes": {
+    "bridge": {
+      "text": "Com a espada na cintura, você começa a atravessar a velha ponte de cordas. Habilidade {skill}.",
+      "effects": [
+        {
+          "give": "sword"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir em frente",
+          "to": "river"
+        }
+      ]
+    },
+    "river": {
+      "text": "No meio da ponte, uma tábua quebra. Você agarra a corda e se salva, mas a espada gira e cai no rio. Sem arma você luta com -4 de Habilidade: a sua agora é {skill}.",
+      "effects": [
+        {
+          "take": "sword"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Procurar na margem algo para lutar",
+          "to": "bank"
+        },
+        {
+          "text": "Correr para a estrada",
+          "to": "bandit"
+        }
+      ]
+    },
+    "bank": {
+      "text": "Entre os juncos há um porrete pesado, trazido por alguma enchente. Não é uma espada, mas você está armado de novo: Habilidade {skill}.",
+      "effects": [
+        {
+          "give": "club"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Seguir para a estrada",
+          "to": "bandit"
+        }
+      ]
+    },
+    "bandit": {
+      "text": "Uma bandida sai para a estrada, faca em punho. \"Sua bolsa\", diz ela.",
+      "combat": {
+        "enemies": [
+          {
+            "name": "Bandida",
+            "attack": 7,
+            "health": 6
+          }
+        ],
+        "win": "won"
+      }
+    },
+    "won": {
+      "text": "A bandida foge para as árvores. A estrada à frente está livre.",
+      "ending": "victory"
+    }
+  }
+}

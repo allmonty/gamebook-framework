@@ -24,7 +24,7 @@ The survey found no other project with a written spec, a conformance suite, rule
 
 ## How to work
 1. Take the lowest-numbered step below that is not `done`. Do only that step. Set it to `in progress` here.
-2. Work on one branch per step, `step-NN-<name>`, cut from an up-to-date `main`. Push it and open its pull request only when the owner asks.
+2. Work on one branch per step, `step-NN-<name>`, cut from an up-to-date `main`. Push it and open its pull request only when the owner asks. Exception (owner, 2026-11-12): steps 10a to 10d share one branch and pull request (`steps-10a-10d`), and so do 10e and 10f (`steps-10e-10f`), each step still in its own commits.
 3. One step is one commit unless the step says otherwise. Each commit passes on its own (see "Checks").
 4. In the same commit: set the step to `done` here and fill its "Handoff notes" (what you did differently, what the next step should know). The commit hash goes into the table with the next commit.
 5. Stuck: set `blocked`, write why in the handoff notes, ask the owner.
@@ -42,11 +42,11 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 07b | [A picture in an example](steps/07b-example-picture.md) | site | done | f015afc |
 | 08 | [A neutral ending](steps/08-defeat-ending.md) | feature | done | 317c51c, 51be7d1 |
 | 09 | [Fight events](steps/09-fight-events.md) | feature | done | b75ed5c, 06e5fe5 |
-| 10 | [Counted items](steps/10-counted-items.md) | feature | done | |
-| 10a | [A lower limit per stat](steps/10a-stat-min.md) | feature | todo | |
-| 10b | [A bonus that depends on a condition](steps/10b-conditional-bonus.md) | feature | todo | |
-| 10c | [A flee that costs a round](steps/10c-flee-costs-round.md) | feature | todo | |
-| 10d | [Item counts in text, and a cap on a counted item](steps/10d-item-counts-in-text.md) | feature | todo | |
+| 10 | [Counted items](steps/10-counted-items.md) | feature | done | 248705e, 6c11b7d |
+| 10a | [A lower limit per stat](steps/10a-stat-min.md) | feature | done | b0f3f90 |
+| 10b | [A bonus that depends on a condition](steps/10b-conditional-bonus.md) | feature | done | f2d6096 |
+| 10c | [A flee that costs a round](steps/10c-flee-costs-round.md) | feature | done | 3858d96 |
+| 10d | [Item counts in text, and a cap on a counted item](steps/10d-item-counts-in-text.md) | feature | done | a9a50fb |
 | 10e | [Rules on every page](steps/10e-every-page-rules.md) | feature | todo | |
 | 10f | [A page that returns to where the player came from](steps/10f-return-page.md) | feature | todo | |
 | 11 | [The LLM kit names the newest schema](steps/11-llm-kit-schema.md) | fix | todo | |
@@ -120,7 +120,13 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 9. Conditional effects, text emphasis, `{item}` counts in text, a total cap on a countable item (the last two are now step 10d).
 10. **A lower limit per stat** (now step 10a) (say `"min": -5`), so a stat can be a signed modifier as in tabletop RPGs ("Might -1"). Today every stat, item bonuses included, stays at 0 or above (B4, B5; step 03), so a cursed item at -5 Might held at Might 2 gives 0, and in `1d20 + might` the last 3 points of penalty are lost. The default stays 0, so existing stories play the same. No story needs it yet.
 
+## Where things stand (2026-11-12, end of a session)
+- Steps 01 to 10d are done. 01 to 10 are merged into `main`; 10a to 10d are in pull request #15 (branch `steps-10a-10d`), waiting for the owner's review and merge. Check with `gh pr view 15` first.
+- **Next:** once #15 is merged, update `main` and cut `steps-10e-10f`. Write the example story of step 10e (`marsh-fever`), then that of 10f (`the-pedlar`), as files only: the engine cannot play them yet. Then stop and put each step's "Open questions" to the owner, with the proposed answers, before writing any spec.
+- After 10f: steps 11 to 15, back to one branch and pull request per step.
+
 ## Waiting on the owner (outward-facing, never do these unasked)
+- Review and merge pull request #15 (steps 10a to 10d).
 - Enable GitHub Pages (Settings > Pages > Source: "GitHub Actions"; the workflow is already there); step 14's addresses work only once it is on.
 - Tag a release when schema 8 is merged, so stories and engines can cite a fixed version.
 - Decide whether to publish the Dart engine on pub.dev (`publish_to: none` today) and to submit the schema to SchemaStore for editor autocompletion.

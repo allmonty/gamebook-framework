@@ -97,6 +97,8 @@ examples/03-items/provisions
 - `{ "has": "meal", "count": 2 }` needs at least two: the ferryman's choice stays locked, "Needs: 2 × Meal", once you have eaten too much.
 - Using one spends one. The pack shows how many are left, and the item is gone with the last one.
 - `stack` is how many fit in **one slot** of a limited pack: 5 meals fill one slot, the 6th starts a second. With `"stack": 1` every one fills its own slot. Without a `capacity` the pack, and the count, have no limit.
+- `"max": 6` caps the count: the farmer's three meals do not all fit, and the log says how many you left behind.
+- `{meal.count}` in text shows how many are left, as on the night page (chapter 7 has more on numbers in text).
 
 The night page is a classic: "Eat a meal" needs one and takes it; "Go hungry" shows only when you have none, and costs Stamina. Without a `stack` an item stays one of a kind, as before, and a `count` above 1 is an error.
 
@@ -114,5 +116,6 @@ The night page is a classic: "Eat a meal" needs one and takes it; "Go hungry" sh
 | `"capacity": 2` | an item | a container |
 | `"stack": 5` | an item | countable: any number, 5 to a slot (schema 8) |
 | `"count": 2` | a `give`, `take` or `has` | how many (schema 8) |
+| `"max": 6` | a countable item | the most the reader can hold (schema 8) |
 
 Next: the hero's stats, and how to roll them.

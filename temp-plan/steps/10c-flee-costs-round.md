@@ -18,4 +18,10 @@ Spec B11 (and B8 if the order of rolls needs a line), changelog row 8, JSON Sche
 On the site the example's evasion costs a round of blows in both languages, and can kill; checks green.
 
 ## Handoff notes
-(fill in)
+- One commit, on the shared branch `steps-10a-10d`.
+- `Combat.fleeCost` reuses the items' `CombatCost` enum. It stays null when the file has no `fleeCost` (the gate needs to know it was written). Parsing rejects it without `flee`, and any value but `round` or `free`.
+- The strike loop of `useItem` moved into `GameEngine._strikes`, which both `useItem` and `flee` call: the current enemy, or every enemy still standing against several. `flee` does not call `_afterRound`, so the strike is no wound and no round; if it kills, the flee page is not entered.
+- **B8 had no line for the dice of an enemy strike**, not even for items that cost a round. It now has one ("Enemy strikes"), covering both.
+- Cases: `flee-costs-round`, `-kills`, `-vs-defense` (the enemy rolls 1d20 then 1d6), `-group`, and two invalid cases.
+- Site: `CombatView.fleeCostsRound`, and the button reads "Flee (costs a round)" / "Fugir (custa uma rodada)". A VM test plays the example in both languages.
+- Example `examples/06-combat/the-evasion` (a bridge troll; fleeing is a defeat, the troll's free blow can kill): the simulator gives 14% won, 62% fled, 23% dead, nothing stuck. Tutorial "Running costs a round" / "Fugir custa uma rodada" in chapter 6, and a "Try it" line.

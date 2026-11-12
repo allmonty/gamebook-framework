@@ -12,6 +12,7 @@ class StatRules {
     required this.roll,
     required this.max,
     this.limit,
+    this.min = 0,
   });
 
   final String id;
@@ -23,6 +24,9 @@ class StatRules {
 
   /// A fixed ceiling instead (schema 5); never together with [max].
   final int? limit;
+
+  /// The floor (schema 8), 0 unless the story says otherwise.
+  final int min;
 }
 
 enum CombatMode {
@@ -116,6 +120,13 @@ class Rules {
     if (!stats.any((s) => s.id == health)) {
       throw StoryFormatException('rules.health', 'unknown stat "$health"');
     }
+    if (stats.firstWhere((s) => s.id == health).min != 0) {
+      // Health at 0 is death (B4), so it has no other floor.
+      throw StoryFormatException(
+        'rules.stats.$health.min',
+        'the health stat cannot have a min',
+      );
+    }
     final rerolls = spec.rerolls ?? preset?.rerolls ?? 0;
     if (rerolls < 0) {
       throw const StoryFormatException('rules.rerolls', 'must not be negative');
@@ -161,11 +172,12 @@ class Rules {
       stat.id: _rolled(stat, stat.roll.roll(random).total),
   };
 
-  static StatValue _rolled(StatRules stat, int value) {
+  static StatValue _rolled(StatRules stat, int rolled) {
+    final value = max(rolled, stat.min);
     if (stat.limit != null) {
-      return StatValue(min(value, stat.limit!), stat.limit);
+      return StatValue(min(value, stat.limit!), stat.limit, stat.min);
     }
-    return StatValue(value, stat.max ? value : null);
+    return StatValue(value, stat.max ? value : null, stat.min);
   }
 }
 
@@ -235,6 +247,7 @@ List<StatRules> _mergeStats(
             overrides[id]?.max ??
             (overrides[id]?.limit != null ? false : base[id]?.max),
         limit: overrides[id]?.limit ?? base[id]?.limit,
+        min: overrides[id]?.min ?? base[id]?.min,
       ),
   };
   if (merged.isEmpty) {
@@ -248,6 +261,7 @@ List<StatRules> _mergeStats(
         roll: _dice(value.roll, 'rules.stats.$key.roll'),
         max: value.max ?? false,
         limit: _checkedLimit(key, value),
+        min: _checkedMin(key, value),
       ),
   ];
 }
@@ -260,6 +274,17 @@ int? _checkedLimit(String stat, StatSpec spec) {
     );
   }
   return spec.limit;
+}
+
+int _checkedMin(String stat, StatSpec spec) {
+  final floor = spec.min ?? 0;
+  if (spec.limit != null && floor >= spec.limit!) {
+    throw StoryFormatException(
+      'rules.stats.$stat.min',
+      'must be below the limit (${spec.limit})',
+    );
+  }
+  return floor;
 }
 
 CombatRules? _combat(

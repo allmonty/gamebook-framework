@@ -211,6 +211,10 @@
                 "description": "Schema 5. A ceiling that does not depend on the roll (not with max: true)",
                 "type": "integer",
                 "minimum": 1
+              },
+              "min": {
+                "description": "Schema 8. The floor, which may be negative (default 0); not on the health stat",
+                "type": "integer"
               }
             }
           }
@@ -399,6 +403,32 @@
               }
             }
           }
+        },
+        "bonuses": {
+          "description": "Schema 8. Bonuses to stats while a condition holds",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "if",
+              "bonus"
+            ],
+            "properties": {
+              "if": {
+                "$ref": "#/$defs/condition"
+              },
+              "bonus": {
+                "type": "object",
+                "propertyNames": {
+                  "$ref": "#/$defs/id"
+                },
+                "additionalProperties": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -435,6 +465,11 @@
           "type": "integer",
           "minimum": 1
         },
+        "max": {
+          "description": "Schema 8. The most of a countable item the player can hold",
+          "type": "integer",
+          "minimum": 1
+        },
         "bonus": {
           "description": "Schema 5. Added to these stats while the item is carried",
           "type": "object",
@@ -449,6 +484,9 @@
       "dependentRequired": {
         "imageAlt": [
           "image"
+        ],
+        "max": [
+          "stack"
         ]
       },
       "not": {
@@ -902,6 +940,13 @@
         "flee": {
           "$ref": "#/$defs/id"
         },
+        "fleeCost": {
+          "description": "Schema 8. \"round\": fleeing lets the enemies strike first",
+          "enum": [
+            "round",
+            "free"
+          ]
+        },
         "wounded": {
           "description": "Schema 8. Where the fight goes the first time the player is wounded and still alive",
           "$ref": "#/$defs/id"
@@ -932,6 +977,11 @@
           "description": "Schema 5. Resolved by rules.combat.table instead of the combat mode",
           "type": "boolean"
         }
+      },
+      "dependentRequired": {
+        "fleeCost": [
+          "flee"
+        ]
       }
     },
     "node": {
@@ -939,7 +989,7 @@
       "additionalProperties": false,
       "properties": {
         "text": {
-          "description": "A string, or (schema 4) a list of parts. In schema 4, {stat} and {stat.max} are replaced by values; {{ and }} are literal braces.",
+          "description": "A string, or (schema 4) a list of parts. In schema 4, {stat} and {stat.max} are replaced by values (and from schema 8 {item.count} by how many of the item are held); {{ and }} are literal braces.",
           "oneOf": [
             {
               "type": "string"

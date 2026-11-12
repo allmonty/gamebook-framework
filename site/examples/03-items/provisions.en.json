@@ -11,6 +11,7 @@
       "name": "Meal",
       "description": "Bread, cheese and dried fruit. Restores 4 Stamina.",
       "stack": 5,
+      "max": 6,
       "use": {
         "effects": [
           {
@@ -36,6 +37,25 @@
         {
           "stat": "stamina",
           "add": -6
+        }
+      ],
+      "choices": [
+        {
+          "text": "Walk down to the river",
+          "to": "ferry"
+        },
+        {
+          "text": "Visit the farm on the way",
+          "to": "farm"
+        }
+      ]
+    },
+    "farm": {
+      "text": "The farmer's wife presses three more meals on you. Your bag holds six at most; you take what fits and thank her.",
+      "effects": [
+        {
+          "give": "meal",
+          "count": 3
         }
       ],
       "choices": [
@@ -84,7 +104,7 @@
       ]
     },
     "night": {
-      "text": "Night falls on the far bank. Before you sleep, you must eat.",
+      "text": "Night falls on the far bank. You have {meal.count} meals left, and before you sleep, you must eat.",
       "choices": [
         {
           "text": "Eat a meal",

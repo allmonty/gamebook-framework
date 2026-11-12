@@ -22,6 +22,7 @@
       "name": "Refeição",
       "description": "Pão, queijo e frutas secas. Recupera 4 de Energia.",
       "stack": 5,
+      "max": 6,
       "use": {
         "effects": [
           {
@@ -47,6 +48,25 @@
         {
           "stat": "stamina",
           "add": -6
+        }
+      ],
+      "choices": [
+        {
+          "text": "Descer até o rio",
+          "to": "ferry"
+        },
+        {
+          "text": "Passar pela fazenda no caminho",
+          "to": "farm"
+        }
+      ]
+    },
+    "farm": {
+      "text": "A mulher do fazendeiro insiste em lhe dar mais três refeições. Sua bolsa leva seis no máximo; você pega o que cabe e agradece.",
+      "effects": [
+        {
+          "give": "meal",
+          "count": 3
         }
       ],
       "choices": [
@@ -95,7 +115,7 @@
       ]
     },
     "night": {
-      "text": "A noite cai na outra margem. Antes de dormir, você precisa comer.",
+      "text": "A noite cai na outra margem. Restam {meal.count} refeições, e antes de dormir você precisa comer.",
       "choices": [
         {
           "text": "Comer uma refeição",

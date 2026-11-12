@@ -233,7 +233,7 @@ class PlaySession {
     if (id == null) return null;
     return OfferView(
       item: _item(id, count: _engine.offerCount),
-      swapFrom: _engine.canHold(id)
+      swapFrom: !_engine.offerNeedsRoom
           ? const []
           : [
               for (final carried in _engine.state.inventory)
@@ -261,6 +261,7 @@ class PlaySession {
       ],
       pickTarget: fight.simultaneous,
       canFlee: _engine.canFlee,
+      fleeCostsRound: fight.fleeCost == CombatCost.round,
       canTestLuck: _engine.canTestLuck,
     );
   }

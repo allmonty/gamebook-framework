@@ -61,13 +61,31 @@ void main() {
         session.useItem('meal');
         expect(session.view.pack.items.single.count, left, reason: lang);
       }
-      expect(session.view.choices, hasLength(1));
       session
         ..choose(0)
         ..useItem('meal');
       expect(session.view.pack.items, isEmpty, reason: lang);
       // Two meals for the ferry: now locked.
       expect(session.view.choices.first.locked, isTrue, reason: lang);
+    }
+  });
+
+  test('the farm fills the bag to its cap; the night page counts meals', () {
+    for (final lang in ['en', 'pt']) {
+      final session = PlaySession.start(
+        storyFile('examples/03-items/provisions.$lang.json'),
+        random: Random(1),
+      )..choose(1);
+      expect(session.view.pack.items.single.count, 6, reason: lang);
+      final refused = session.view.log.singleWhere(
+        (l) => l.key == 'refusedMany',
+      );
+      expect(refused.args['count'], 2, reason: lang);
+
+      session
+        ..choose(0) // to the ferry
+        ..choose(0); // pay two meals
+      expect(session.view.paragraphs.single, contains(' 4 '), reason: lang);
     }
   });
 

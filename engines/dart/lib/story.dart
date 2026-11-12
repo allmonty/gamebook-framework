@@ -163,6 +163,7 @@ class Item {
     this.use,
     this.capacity,
     this.stack,
+    this.max,
     this.bonus = const {},
   });
 
@@ -180,6 +181,11 @@ class Item {
     if (stack != null && capacity != null) {
       throw obj.error('stack', 'a container cannot be counted');
     }
+    final cap = obj.optInt('max');
+    if (cap != null && stack == null) {
+      throw obj.error('max', 'only applies to a countable item ("stack")');
+    }
+    if (cap != null && cap < 1) throw obj.error('max', 'must be at least 1');
     final image = obj.optString('image');
     final item = Item(
       name: obj.string('name'),
@@ -189,6 +195,7 @@ class Item {
       use: use == null ? null : ItemUse.fromJson(use),
       capacity: capacity,
       stack: stack,
+      max: cap,
       bonus: obj.idMap('bonus', (id, json, path) {
         if (json is! int) {
           throw StoryFormatException(path, 'expected an integer');
@@ -216,6 +223,9 @@ class Item {
   /// How many fit in one pack slot (schema 8). Null: the item is unique, and
   /// the pack holds one at most; otherwise it holds any number.
   final int? stack;
+
+  /// The most of a countable item the player can hold (schema 8).
+  final int? max;
 
   /// Changes to stats while the item is in the pack (schema 5), by stat id.
   final Map<String, int> bonus;
@@ -442,6 +452,7 @@ class Combat {
     required this.enemies,
     required this.win,
     this.flee,
+    this.fleeCost,
     this.wounded,
     this.rounds,
     this.simultaneous = false,
@@ -452,12 +463,21 @@ class Combat {
     final enemies = obj.list('enemies', Enemy.fromJson);
     if (enemies.isEmpty) throw obj.error('enemies', 'needs at least one enemy');
     final flee = obj.optString('flee');
+    final costName = obj.optString('fleeCost');
+    final fleeCost = costName == null
+        ? null
+        : CombatCost.values.where((c) => c.name == costName).firstOrNull ??
+              (throw obj.error('fleeCost', 'expected "round" or "free"'));
+    if (fleeCost != null && flee == null) {
+      throw obj.error('fleeCost', 'only applies to a fight with "flee"');
+    }
     final wounded = obj.optString('wounded');
     final rounds = obj.optObject('rounds');
     final combat = Combat(
       enemies: enemies,
       win: checkId(obj.string('win'), obj.childPath('win')),
       flee: flee == null ? null : checkId(flee, obj.childPath('flee')),
+      fleeCost: fleeCost,
       wounded: wounded == null
           ? null
           : checkId(wounded, obj.childPath('wounded')),
@@ -472,6 +492,10 @@ class Combat {
   final List<Enemy> enemies;
   final String win;
   final String? flee;
+
+  /// As written (schema 8); null is `free`. With `round`, fleeing lets the
+  /// enemies strike first.
+  final CombatCost? fleeCost;
 
   /// Where the fight goes the first time the player is wounded and still
   /// alive (schema 8).

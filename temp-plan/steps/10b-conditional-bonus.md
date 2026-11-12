@@ -20,4 +20,8 @@ Spec B4 (rules table) and B5 ("Item bonuses" becomes "Bonuses"), changelog row 8
 The example's fight shows Skill -4 without a weapon and none with the club, in both languages; checks green.
 
 ## Handoff notes
-(fill in)
+- One commit, on the shared branch `steps-10a-10d`. The design above held up in the example; nothing to ask the owner.
+- `RuleBonus(condition, bonus)` in `rules_spec.dart`; `RulesSpec.bonuses` from `rules.bonuses` (both `if` and `bonus` are required). The engine's `_bonusOf` adds item bonuses, then each rule bonus whose condition holds on the state **with item bonuses only**. Every reader of stats already goes through those bonuses, so nothing else changed.
+- The schema 8 gate reports `rules.bonuses`. The validator checks each rule's condition and stats like any other (so flags and items it reads count for the B16 warnings), and rejects the health stat at `rules.bonuses[i].bonus.<stat>`.
+- `play/rule-bonus-sees-items-only.json` uses "-2 Skill while Skill ≥ 9": an engine that let a rule see its own bonus would switch it off again and get 9, not 7.
+- Example `examples/04-stats-and-hero/unarmed` (a sword lost to a river, -4 Skill until a club turns up, then a bandit); the simulator wins 83%, dies 17%, nothing stuck. Tutorial "Bonuses with a condition" / "Bônus com condição" in chapter 4 and a "Try it" line; a site test plays it in both languages. The site itself needed no change.
