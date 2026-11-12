@@ -405,11 +405,32 @@ class Enemy {
   final int armor;
 }
 
+/// A fight that ends on its own once [after] rounds are played (schema 8).
+class RoundLimit {
+  const RoundLimit({required this.after, required this.to});
+
+  factory RoundLimit.fromJson(JsonObject obj) {
+    final after = obj.integer('after');
+    if (after < 1) throw obj.error('after', 'must be at least 1');
+    final limit = RoundLimit(
+      after: after,
+      to: checkId(obj.string('to'), obj.childPath('to')),
+    );
+    obj.finish();
+    return limit;
+  }
+
+  final int after;
+  final String to;
+}
+
 class Combat {
   const Combat({
     required this.enemies,
     required this.win,
     this.flee,
+    this.wounded,
+    this.rounds,
     this.simultaneous = false,
     this.duel = false,
   });
@@ -418,10 +439,16 @@ class Combat {
     final enemies = obj.list('enemies', Enemy.fromJson);
     if (enemies.isEmpty) throw obj.error('enemies', 'needs at least one enemy');
     final flee = obj.optString('flee');
+    final wounded = obj.optString('wounded');
+    final rounds = obj.optObject('rounds');
     final combat = Combat(
       enemies: enemies,
       win: checkId(obj.string('win'), obj.childPath('win')),
       flee: flee == null ? null : checkId(flee, obj.childPath('flee')),
+      wounded: wounded == null
+          ? null
+          : checkId(wounded, obj.childPath('wounded')),
+      rounds: rounds == null ? null : RoundLimit.fromJson(rounds),
       simultaneous: obj.optBool('simultaneous'),
       duel: obj.optBool('duel'),
     );
@@ -432,6 +459,13 @@ class Combat {
   final List<Enemy> enemies;
   final String win;
   final String? flee;
+
+  /// Where the fight goes the first time the player is wounded and still
+  /// alive (schema 8).
+  final String? wounded;
+
+  /// Where the fight goes when it lasts too long (schema 8).
+  final RoundLimit? rounds;
 
   /// All enemies fight at once and the player picks a target each round
   /// (schema 5).

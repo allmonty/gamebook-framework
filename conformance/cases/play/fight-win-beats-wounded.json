@@ -1,0 +1,206 @@
+{
+  "description": "A round that kills the last enemy and wounds the player is a win: the win comes before the wound.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy",
+      "combat": {
+        "mode": "table",
+        "attackStat": "skill",
+        "roll": "1d10-1",
+        "table": [
+          {
+            "upTo": -3,
+            "results": [
+              [
+                0,
+                4
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ]
+            ]
+          },
+          {
+            "upTo": 3,
+            "results": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                6,
+                0
+              ]
+            ]
+          },
+          {
+            "results": [
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                6,
+                0
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                8,
+                0
+              ],
+              [
+                9,
+                0
+              ],
+              [
+                10,
+                0
+              ],
+              [
+                99,
+                0
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A scorpion.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Scorpion",
+              "attack": 7,
+              "health": 1
+            }
+          ],
+          "win": "won",
+          "wounded": "stung"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      },
+      "stung": {
+        "text": "Stung",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    1
+  ],
+  "actions": [
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "won",
+    "ending": "victory",
+    "stats": {
+      "stamina": 10
+    }
+  }
+}

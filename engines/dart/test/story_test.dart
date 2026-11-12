@@ -299,6 +299,63 @@ void main() {
     });
   });
 
+  group('fight events (schema 8)', () {
+    void scorpion(Map<String, Object?> j, Map<String, Object?> events) =>
+        node(j, 'treasure')
+          ..remove('ending')
+          ..['combat'] = {
+            'enemies': [
+              {'name': 'Scorpion', 'attack': 7, 'health': 6},
+            ],
+            'win': 'cellar',
+            ...events,
+          };
+
+    test('wounded and rounds are read', () {
+      final json = validJson()..['schema'] = 8;
+      scorpion(json, {
+        'wounded': 'foot',
+        'rounds': {'after': 3, 'to': 'door'},
+      });
+      final combat = Story.fromJson(json).nodes['treasure']!.combat!;
+
+      expect(combat.wounded, 'foot');
+      expect((combat.rounds!.after, combat.rounds!.to), (3, 'door'));
+    });
+
+    test('a round limit needs at least one round', () {
+      expect(
+        failure((j) {
+          j['schema'] = 8;
+          scorpion(j, {
+            'rounds': {'after': 0, 'to': 'door'},
+          });
+        }),
+        'nodes.treasure.combat.rounds.after: must be at least 1',
+      );
+    });
+
+    for (final (field, events) in <(String, Map<String, Object?>)>[
+      ('wounded', {'wounded': 'foot'}),
+      (
+        'rounds',
+        {
+          'rounds': {'after': 3, 'to': 'door'},
+        },
+      ),
+    ]) {
+      test('$field needs schema 8', () {
+        expect(
+          failure((j) {
+            j['schema'] = 7;
+            scorpion(j, events);
+          }),
+          'nodes.treasure.combat.$field: needs "schema": 8',
+        );
+      });
+    }
+  });
+
   group('draft pages (schema 6)', () {
     test('a draft may have no text and no way out', () {
       final json = validJson()..['schema'] = 6;

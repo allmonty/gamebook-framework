@@ -324,6 +324,8 @@ class _Validator {
   void _combat(String at, Combat combat) {
     _target('$at.win', combat.win);
     if (combat.flee case final flee?) _target('$at.flee', flee);
+    if (combat.wounded case final wounded?) _target('$at.wounded', wounded);
+    if (combat.rounds case final rounds?) _target('$at.rounds.to', rounds.to);
     final rulesCombat = rules?.combat;
     if (rules != null && rulesCombat == null) {
       error(at, 'the story has a fight but its rules define no combat');
@@ -460,6 +462,8 @@ class _Validator {
         ],
         ?node.combat?.win,
         ?node.combat?.flee,
+        ?node.combat?.wounded,
+        ?node.combat?.rounds?.to,
       ]) {
         if (story.nodes.containsKey(next) && seen.add(next)) queue.add(next);
       }

@@ -44,7 +44,7 @@ Some items can be **used**: a healing potion restores Stamina, and it is used up
 Some choices are a gamble. "Pick the lock" asks the app to roll dice and add your Skill. Success sends you to one page; failure sends you to another. You see the dice roll on the screen, so it feels like rolling at a table.
 
 ### Fights
-Some pages are fights. Each round, you and the monster both roll dice and add your fighting stat. The higher total wounds the other. When someone's health reaches zero the fight ends. If you run out of health, your adventure ends; if the monster does, the story goes on.
+Some pages are fights. Each round, you and the monster both roll dice and add your fighting stat. The higher total wounds the other. When someone's health reaches zero the fight ends. If you run out of health, your adventure ends; if the monster does, the story goes on. A fight can also end another way, as the book says: "if the creature wounds you, turn to the next page", or "if you have not won after three rounds, it gets away".
 
 ### Different rule sets
 Different gamebooks use different rules. One may have Skill, Stamina and Luck (the classic *Fighting Fantasy* style). Another may use a twenty-sided die, like a tabletop roleplaying game. **The rules are written down inside each story**, so the app is one engine that can play many kinds of gamebook. Authors can start from a ready-made rule set (a *preset*) and tweak it.
@@ -80,7 +80,7 @@ The next section shows this same story in the file format.
 
 # Part B. Technical reference
 
-Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6) and a neutral ending (`"ending": "defeat"`, B6). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
+Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6) a neutral ending (`"ending": "defeat"`, B6) and fight events (`wounded`, `rounds`, B11). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
 
 ## B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
@@ -98,7 +98,7 @@ Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Versio
 | Field | Type | Req | Notes |
 |---|---|---|---|
 | `$schema` | string | no | path to `story.schema.json`, an editor hint the engine ignores |
-| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) and the `defeat` ending (B6) |
+| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) and the `defeat` ending (B6), and a fight's `wounded` and `rounds` (B11) |
 | `journal` | object | no | map `entryId -> { title, text }` (schema 5, B6) |
 | `achievements` | object | no | map `achievementId -> { title, description, hidden }` (schema 7, B15) |
 | `chapters` | object | no | map `chapterId -> { title }`, in reading order (schema 6, B13) |
@@ -337,6 +337,8 @@ Engines must roll in this order, so that the same dice give the same game everyw
 - **Several enemies at once**: the player's `attackRoll` once. In `opposed` mode, then for each living enemy in list order: its `attackRoll`, then the damage of the side that won against it (the player deals damage only to the target). In `vs-defense` mode, the player's `damage` on the target if it hits, then for each enemy still living, in list order: its `attackRoll` and, if it hits, its `damage`.
 - **Testing luck in a fight**: the `luck.roll`.
 
+Fight events (`wounded`, `rounds`; B11, schema 8) roll nothing: they only decide where a fight ends.
+
 ## B9. Effects
 An effect is an object with exactly one kind:
 | Kind | Meaning |
@@ -423,6 +425,8 @@ The game starts by entering `start` the same way, after character creation.
 - `enemies`: fought **one at a time, in list order** (unless `simultaneous`, below). Each: `name`, `attack` (number), `health` (number), and for `vs-defense` mode `defense` (number); optional `damage` (dice) overriding the rules default for that enemy; optional `armor` (schema 5): the damage the player deals to this enemy is reduced by `armor`, never below 0.
 - `win`: node entered when the last enemy reaches 0 (the node is entered normally, step 4 above).
 - `flee`: optional node. If present the player may flee after any round (no automatic penalty; put penalties in the flee node's `effects`). If absent, no fleeing.
+- `wounded` (schema 8): optional node. The first time the player loses health in this fight and is still alive, the fight ends and this node is entered.
+- `rounds` (schema 8): optional `{ "after": 3, "to": "it-escapes" }`, `after` an integer of at least 1. When `after` rounds have been played and the fight is not over, it ends and `to` is entered. "Win within 3 rounds" is `after: 3`, with `to` the page for being too slow.
 - Fighting is round by round, driven by the player (a button per round).
 
 **Round, `opposed`**: player total = `attackRoll` + player `attackStat`. Enemy total = `attackRoll` + enemy `attack`. Higher wins: the loser loses `damage` health (the enemy's `damage`, or the rules default, when the enemy wins). Equal: nobody is hurt.
@@ -448,7 +452,9 @@ The **ratio** is the player's `attackStat` minus the enemy's `attack`. The row i
 
 **Using an item** during a fight is allowed for items whose `use.when` includes `"combat"` (B5); depending on `combatCost` it forfeits the round or is free.
 
-When the player's health is 0: **death** (B10 step 5). Mid-fight state (current enemy, enemy health) is part of the saved game state.
+**How a round ends a fight.** After each round, in this order: if the player's health is 0, **death** (B10 step 5); if every enemy is at 0, the **win**; then (schema 8) if the player lost health this round, `wounded`; then, if `after` rounds have now been played, `rounds.to`. Using an item that costs the round (B5) counts as a round, and the enemies' strikes as a wound; a free item counts as neither. In a fight against several enemies at once, the wounds of one round count as one wound. These work in every mode (`opposed`, `vs-defense`, `table`, duels). No luck test is offered after a round that ended the fight, so a wound that leads to `wounded` cannot be softened by luck. The pages are entered normally (B10 step 4).
+
+Mid-fight state (current enemy, enemy health, the open luck test, and the rounds played so far) is part of the saved game state.
 
 ## B12. Complete example
 ```json
@@ -536,7 +542,7 @@ Errors make a story unplayable, and every engine must reject it (B2; conformance
 
 | Code | Path | When |
 |---|---|---|
-| `unreachable` | `nodes.<id>` | no way leads to the node from the start (choices, checks, tables, fight win and flee) |
+| `unreachable` | `nodes.<id>` | no way leads to the node from the start (choices, checks, tables, fight win and flee, and the fight's `wounded` and `rounds.to`) |
 | `no-victory` | `nodes` | no victory ending can be reached |
 | `draft` | `nodes.<id>` | the node is a draft (B13) |
 | `never-earned` | `achievements.<id>` | no `achieve` effect earns it |

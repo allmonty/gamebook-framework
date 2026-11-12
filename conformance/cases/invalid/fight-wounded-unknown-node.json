@@ -1,0 +1,39 @@
+{
+  "description": "A fight's wounded page must exist.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A scorpion.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Scorpion",
+              "attack": 7,
+              "health": 6
+            }
+          ],
+          "win": "won",
+          "wounded": "nowhere"
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      }
+    }
+  },
+  "error": {
+    "path": "nodes.a.combat.wounded"
+  }
+}

@@ -147,6 +147,50 @@ void main() {
     );
   });
 
+  test("a fight's events are exits of their own (schema 8)", () {
+    final story = Story.fromJson({
+      'schema': 8,
+      'id': 'e',
+      'lang': 'en',
+      'title': 'E',
+      'rules': {'preset': 'fighting-fantasy'},
+      'start': 'pit',
+      'nodes': {
+        'pit': {
+          'text': 'A scorpion.',
+          'combat': {
+            'enemies': [
+              {'name': 'Scorpion', 'attack': 7, 'health': 6},
+            ],
+            'win': 'won',
+            'wounded': 'stung',
+            'rounds': {'after': 3, 'to': 'slow'},
+          },
+        },
+        'won': {'text': 'x', 'ending': 'victory'},
+        'stung': {'text': 'x', 'ending': 'defeat'},
+        'slow': {'text': 'x', 'ending': 'defeat'},
+      },
+    });
+    expect(
+      [for (final e in storyEdges(story)) (e.to, e.kind, e.port)],
+      [
+        ('won', EdgeKind.win, 0),
+        ('stung', EdgeKind.wounded, 2),
+        ('slow', EdgeKind.rounds, 3),
+      ],
+    );
+    final dot = toDot(story);
+    expect(
+      dot,
+      contains('"pit" -> "stung" [label="wounded", color="#ef6c00"];'),
+    );
+    expect(
+      dot,
+      contains('"pit" -> "slow" [label="after 3 rounds", color="#ef6c00"];'),
+    );
+  });
+
   test('Mermaid output for the rusty door', () {
     expect(toMermaid(rustyDoor()), mermaid);
   });

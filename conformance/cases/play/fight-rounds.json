@@ -1,0 +1,78 @@
+{
+  "description": "Once the round limit is played and the fight is not over, it ends on the round limit's page.",
+  "spec": [
+    "B11"
+  ],
+  "story": {
+    "schema": 8,
+    "id": "case",
+    "lang": "en",
+    "title": "Case",
+    "rules": {
+      "preset": "fighting-fantasy"
+    },
+    "start": "a",
+    "nodes": {
+      "a": {
+        "text": "A scorpion.",
+        "combat": {
+          "enemies": [
+            {
+              "name": "Scorpion",
+              "attack": 7,
+              "health": 6
+            }
+          ],
+          "win": "won",
+          "rounds": {
+            "after": 2,
+            "to": "slow"
+          }
+        }
+      },
+      "won": {
+        "text": "Won",
+        "ending": "victory"
+      },
+      "slow": {
+        "text": "Gone",
+        "choices": [
+          {
+            "text": "On",
+            "to": "won"
+          }
+        ]
+      }
+    }
+  },
+  "stats": {
+    "skill": 9,
+    "stamina": 12,
+    "luck": 8
+  },
+  "dice": [
+    3,
+    3,
+    4,
+    4,
+    3,
+    3,
+    4,
+    4
+  ],
+  "actions": [
+    {
+      "fight": {}
+    },
+    {
+      "fight": {}
+    }
+  ],
+  "expect": {
+    "node": "slow",
+    "ending": null,
+    "stats": {
+      "stamina": 12
+    }
+  }
+}

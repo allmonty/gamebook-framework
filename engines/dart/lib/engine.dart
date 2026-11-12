@@ -392,6 +392,7 @@ class GameEngine {
         throw StateError('pick a living enemy to attack');
       }
       return _run((events) {
+        final healthBefore = _health;
         final round = groupRound(
           rules: rules,
           combat: fightNode,
@@ -401,10 +402,11 @@ class GameEngine {
         );
         _state = round.state;
         events.add(CombatGroupRound(round));
-        if (round.outcome == CombatOutcome.won) _enter(fightNode.win, events);
+        _afterRound(fightNode, round.outcome, healthBefore, events);
       });
     }
     return _run((events) {
+      final healthBefore = _health;
       final round = fightRound(
         rules: rules,
         combat: fightNode,
@@ -413,8 +415,34 @@ class GameEngine {
       );
       _state = round.state;
       events.add(CombatRound(round));
-      if (round.outcome == CombatOutcome.won) _enter(fightNode.win, events);
+      _afterRound(fightNode, round.outcome, healthBefore, events);
     });
+  }
+
+  int get _health => _state.stats[rules.health]!.value;
+
+  /// What ends a fight after a round, in this order (B11): death (the game
+  /// ends by itself), the win, then the fight events of schema 8: a wound,
+  /// then too many rounds.
+  void _afterRound(
+    Combat fightNode,
+    CombatOutcome outcome,
+    int healthBefore,
+    List<GameEvent> events,
+  ) {
+    if (ending != null) return;
+    if (outcome == CombatOutcome.won) return _enter(fightNode.win, events);
+    final fight = _state.combat!;
+    final round = fight.round + 1;
+    _state = _state.withCombat(
+      CombatState(fight.enemy, fight.enemyHealth, fight.luck, round),
+    );
+    if (fightNode.wounded case final page? when _health < healthBefore) {
+      return _enter(page, events);
+    }
+    if (fightNode.rounds case final limit? when round >= limit.after) {
+      _enter(limit.to, events);
+    }
   }
 
   /// Whether the player may test luck on the last round of the fight.
@@ -463,6 +491,7 @@ class GameEngine {
       if (fightNode != null &&
           use.combatCost == CombatCost.round &&
           ending == null) {
+        final healthBefore = _health;
         // Against several at once every enemy still standing strikes.
         final strikers = fightNode.simultaneous
             ? [
@@ -482,6 +511,8 @@ class GameEngine {
           _state = strike.state;
           events.add(CombatStrike(strike));
         }
+        // It costs the round: it counts as one, and a strike as a wound.
+        _afterRound(fightNode, CombatOutcome.ongoing, healthBefore, events);
       }
     });
     // Using an item spends it; "ItemUsed" already says so.
@@ -668,6 +699,7 @@ bool stateFits(GameState state, Story story, Rules rules) {
     final enemies = current.combat?.enemies;
     bool enemy(int i) => i >= 0 && i < (enemies?.length ?? 0);
     if (enemies == null ||
+        fight.round < 0 ||
         fight.enemyHealth.length != enemies.length ||
         !enemy(fight.enemy)) {
       return false;
