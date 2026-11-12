@@ -1,4 +1,5 @@
 .dart_tool/
 pubspec.lock
 build/
+.venv/
 .DS_Store

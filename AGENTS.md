@@ -73,7 +73,8 @@ The engine (`engines/dart/lib/`) is pure: no I/O, no UI, randomness passed in.
 (cd engines/dart && dart run gamebook_engine:llm_kit --check)                 # the LLM kit is up to date
 (cd engines/dart && dart run gamebook_engine:validate_story <dir|file>... --strict)
 (cd engines/dart && dart run gamebook_engine:simulate_story <story.json>)     # no stuck or endless games
-python3 tools/check_schema.py [story.json...]       # JSON Schema check (pip install jsonschema; CI runs it)
+python3 tools/check_schema.py [story.json...]       # JSON Schema check; needs jsonschema. Where the system Python refuses pip:
+                                                    # python3 -m venv .venv && .venv/bin/pip install jsonschema==4.23.0, then run it with .venv/bin/python
 
 # site
 (cd site && dart pub get && dart format --output=none --set-exit-if-changed . && dart analyze --fatal-infos && dart test && dart test -p chrome test/browser)

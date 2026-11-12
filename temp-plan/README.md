@@ -54,7 +54,7 @@ Steps 01 to 06 and 11 are independent of each other; step 11 is tiny and may be 
 The baseline every step starts from; if your first run of the checks differs, stop and find out why before changing anything.
 - Engine: format and analyze clean, 575 tests pass, the LLM kit check passes.
 - Site: format and analyze clean, 185 VM tests and 5 browser tests pass.
-- The JSON Schema check was not run locally (`jsonschema` not installed); CI runs it.
+- JSON Schema check: 146 stories, 0 not matching.
 - Already done in preparation: the finished site roadmap was retired (its lasting notes are in `../site/README.md`), `../AGENTS.md` points here, an unused `applyEffects` helper was removed from the engine, and `../spec/comparison.md` holds the research behind steps 07 to 14.
 
 ## What every spec change carries (from `../CONTRIBUTING.md`)
@@ -77,9 +77,9 @@ In the same commit:
 (cd engines/dart && dart pub get && dart format --output=none --set-exit-if-changed . && dart analyze --fatal-infos && dart test)
 (cd engines/dart && dart run gamebook_engine:llm_kit --check)
 (cd site && dart pub get && dart format --output=none --set-exit-if-changed . && dart analyze --fatal-infos && dart test && dart test -p chrome test/browser && dart run tool/build.dart)
-python3 tools/check_schema.py site/examples/*/*.json
+.venv/bin/python tools/check_schema.py site/examples/*/*.json
 ```
-The last one needs `pip install jsonschema`, which was not installed on the owner's machine at planning time: ask before installing; CI runs it anyway.
+The last one uses the virtual environment at the repo root (`.venv/`, ignored by git) where `jsonschema` 4.23.0 is installed, the version CI uses. On another machine: `python3 -m venv .venv && .venv/bin/pip install jsonschema==4.23.0`.
 
 For a new example story also run `(cd engines/dart && dart run gamebook_engine:simulate_story <file>)` and expect no stuck and no endless games.
 
