@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/allmonty/gamebook-framework/main/spec/story.schema.json",
+  "schema": 1,
+  "id": "blank",
+  "lang": "en",
+  "title": "Blank",
+  "author": "You",
+  "rules": {
+    "preset": "fighting-fantasy"
+  },
+  "start": "start",
+  "nodes": {
+    "start": {
+      "text": "The first page. Replace this text with the opening of your story.",
+      "choices": [
+        {
+          "text": "Turn the page",
+          "to": "middle"
+        }
+      ]
+    },
+    "middle": {
+      "text": "A page in the middle. Add choices that lead to other pages.",
+      "choices": [
+        {
+          "text": "Go on to the end",
+          "to": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "The end. A page with an ending has no choices.",
+      "ending": "victory"
+    }
+  }
+}

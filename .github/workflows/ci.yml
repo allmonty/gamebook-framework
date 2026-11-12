@@ -49,4 +49,4 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install jsonschema==4.23.0
-      - run: python3 tools/check_schema.py site/examples/*/*.json
+      - run: python3 tools/check_schema.py site/examples/*/*.json starters/*/*.json
