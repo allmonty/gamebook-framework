@@ -17,6 +17,7 @@ Todo exemplo deste tutorial roda o mesmo validador das ferramentas de linha de c
 | `taken-never-given` / `usable-never-given` | um item é tirado ou usável, mas nunca entregue |
 | `flag-never-set` / `flag-never-checked` | um marcador é testado mas nunca ligado, ou ligado mas nunca testado |
 | `journal-never-unlocked` / `never-earned` | uma entrada de diário ou conquista que nada desbloqueia |
+| `return-without-call` | uma página tem um `return`, mas dá para chegar nela sem ter página para onde voltar |
 | `capacity-without-pack` | um recipiente numa história cuja mochila não tem limite |
 | `draft` | uma página ainda marcada como rascunho |
 

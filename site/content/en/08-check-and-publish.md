@@ -17,6 +17,7 @@ Every example in this tutorial runs the same validator the command-line tools us
 | `taken-never-given` / `usable-never-given` | an item is taken or usable, but never given |
 | `flag-never-set` / `flag-never-checked` | a flag is checked but never set, or set but never checked |
 | `journal-never-unlocked` / `never-earned` | a journal entry or achievement nothing unlocks |
+| `return-without-call` | a page has a `return` but can be reached with no page to return to |
 | `capacity-without-pack` | a container in a story whose pack has no limit |
 | `draft` | a page is still marked as a draft |
 
