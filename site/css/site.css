@@ -34,7 +34,8 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 
-html { scroll-behavior: smooth; }
+/* Room for the sticky header, so what gets focus is not hidden under it. */
+html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -99,6 +100,11 @@ code, pre { font-family: var(--font-mono); font-size: 0.9em; }
   background: rgba(11, 14, 21, 0.8);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
+}
+/* On a phone the links wrap to several rows: too tall to keep stuck. */
+@media (max-width: 640px) {
+  html { scroll-padding-top: 0; }
+  .site-header { position: static; }
 }
 .brand { display: flex; align-items: center; gap: var(--s3); color: var(--text); text-decoration: none; }
 .brand img { border-radius: var(--radius); filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.4)); }
