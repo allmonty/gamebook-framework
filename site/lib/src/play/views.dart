@@ -3,8 +3,12 @@
 import 'package:gamebook_engine/condition.dart' show CompareOp;
 import 'package:gamebook_engine/story.dart' show Ending;
 
+import 'log.dart';
+
 export 'package:gamebook_engine/condition.dart' show CompareOp;
 export 'package:gamebook_engine/story.dart' show Ending;
+
+export 'log.dart' show LogLine, Tone;
 
 /// One page as the player sees it.
 class PageView {
@@ -14,6 +18,12 @@ class PageView {
     required this.choices,
     required this.stats,
     required this.pack,
+    this.log = const [],
+    this.journal = const [],
+    this.achievements = const [],
+    this.audio = const AudioCue(),
+    this.canUndo = false,
+    this.combat,
     this.offer,
     this.title,
     this.image,
@@ -29,6 +39,20 @@ class PageView {
   final List<ChoiceItem> choices;
   final List<StatPill> stats;
   final PackView pack;
+
+  /// What the last action did: rolls, wounds, items, stats.
+  final List<LogLine> log;
+
+  /// Unlocked journal entries, newest first.
+  final List<JournalItem> journal;
+
+  /// Achievements earned this visit, in story order.
+  final List<String> achievements;
+  final AudioCue audio;
+  final bool canUndo;
+
+  /// The fight under way on this page, if any.
+  final CombatView? combat;
 
   /// An item found that the player must take or leave before going on.
   final OfferView? offer;
@@ -159,4 +183,57 @@ class OfferView {
   final int more;
 
   bool get needsSwap => swapFrom.isNotEmpty;
+}
+
+class JournalItem {
+  const JournalItem(this.title, this.text);
+  final String title;
+  final String text;
+}
+
+/// What to play: the page's music (null is silence) and the sounds the last
+/// action triggered. Paths are as the story wrote them.
+class AudioCue {
+  const AudioCue({this.music, this.sounds = const []});
+  final String? music;
+  final List<String> sounds;
+}
+
+class CombatView {
+  const CombatView({
+    required this.enemies,
+    this.pickTarget = false,
+    this.canFlee = false,
+    this.canTestLuck = false,
+  });
+
+  final List<EnemyView> enemies;
+
+  /// Several enemies at once: the player picks whom to attack.
+  final bool pickTarget;
+  final bool canFlee;
+  final bool canTestLuck;
+}
+
+class EnemyView {
+  const EnemyView({
+    required this.index,
+    required this.name,
+    required this.health,
+    required this.maxHealth,
+    this.armor = 0,
+    this.current = false,
+  });
+
+  /// Pass to [PlaySession.fight] as the target.
+  final int index;
+  final String name;
+  final int health;
+  final int maxHealth;
+  final int armor;
+
+  /// The one being fought now (one-at-a-time fights).
+  final bool current;
+
+  bool get alive => health > 0;
 }

@@ -50,3 +50,7 @@ String _symbol(CompareOp op) => switch (op) {
 /// The `[01] //` index before a choice.
 String choiceIndex(int position) =>
     '[${(position + 1).toString().padLeft(2, '0')}] //';
+
+/// A log line in words: the string `player.log.<key>` with its arguments.
+String logText(LogLine line, Messages m) =>
+    m('player.log.${line.key}', line.args);

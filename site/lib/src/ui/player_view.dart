@@ -2,7 +2,10 @@ import 'package:web/web.dart';
 
 import '../play/play_session.dart';
 import '../play/views.dart';
+import 'audio.dart';
+import 'combat_panel.dart';
 import 'dom.dart';
+import 'log_panel.dart';
 import 'pack_panel.dart';
 import 'wording.dart';
 
@@ -16,6 +19,7 @@ class PlayerView {
   final HTMLElement host;
   final PlaySession session;
   final Messages m;
+  final _audio = AudioOutput();
 
   void render() {
     final view = session.view;
@@ -29,6 +33,9 @@ class PlayerView {
             m,
             onUse: (id) => _act(() => session.useItem(id)),
           ).element,
+          if (view.journal.isNotEmpty || view.achievements.isNotEmpty)
+            journalPanel(view, m),
+          if (view.log.isNotEmpty) logPanel(view.log, m),
           _page(view),
           if (view.ending != null) _ending(view.ending!),
           if (view.offer != null)
@@ -39,11 +46,39 @@ class PlayerView {
                   _act(() => session.takeOffer(replacing: replacing)),
               onLeave: () => _act(session.leaveOffer),
             ).element,
+          if (view.combat != null)
+            CombatPanel(
+              view.combat!,
+              m,
+              onFight: ({int? target}) =>
+                  _act(() => session.fight(target: target)),
+              onLuck: () => _act(session.testLuck),
+              onFlee: () => _act(session.flee),
+            ).element,
           if (view.choices.isNotEmpty) _choices(view.choices),
+          _controls(view),
         ],
       ),
     );
+    _audio.play(view.audio);
   }
+
+  HTMLElement _controls(PageView view) => el(
+    'div',
+    cls: 'gb-controls',
+    children: [
+      if (view.canUndo)
+        onClick(
+          el('button', cls: 'btn btn-ghost', text: m('player.undo')),
+          () => _act(session.undo),
+        ),
+      if (view.ending == null)
+        onClick(
+          el('button', cls: 'btn btn-ghost', text: m('player.restartNow')),
+          () => _act(session.restart),
+        ),
+    ],
+  );
 
   /// Runs a use case, redraws and moves focus to the new page.
   void _act(void Function() action) {

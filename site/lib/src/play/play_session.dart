@@ -4,6 +4,7 @@ import 'package:gamebook_engine/engine.dart';
 import 'package:gamebook_engine/rules.dart';
 import 'package:gamebook_engine/story.dart';
 
+import 'log.dart';
 import 'views.dart';
 
 /// Plays one story: the use cases the UI calls, and the [view] it draws.
@@ -22,38 +23,70 @@ class PlaySession {
   final Rules rules;
   final Random _random;
   late GameEngine _engine;
+  List<GameEvent> _events = const [];
+  String? _music;
+
+  /// Earned in any game since this session began; ids in earning order.
+  final Set<String> _achievements = {};
 
   /// Starts over from the first page with new stats.
   void restart() {
-    final (engine, _) = GameEngine.newGame(
+    final (engine, events) = GameEngine.newGame(
       story: story,
       rules: rules,
       random: _random,
       stats: rules.rollStats(_random),
     );
     _engine = engine;
+    _music = null;
+    _record(events);
   }
 
   /// Takes the choice at [index] (a [ChoiceItem.index]).
-  void choose(int index) => _engine.choose(index);
+  void choose(int index) => _record(_engine.choose(index));
 
-  /// Uses a carried item (a [PackItem.usable] one).
-  void useItem(String id) => _engine.useItem(id);
+  /// Uses a carried item (a [PackItem.usable] one), on a page or in a fight.
+  void useItem(String id) => _record(_engine.useItem(id));
 
   /// Takes the offered item, leaving [replacing] behind when the pack is full.
   void takeOffer({String? replacing}) =>
-      _engine.resolveOffer(take: true, replacing: replacing);
+      _record(_engine.resolveOffer(take: true, replacing: replacing));
 
   /// Leaves the offered item where it is.
-  void leaveOffer() => _engine.resolveOffer(take: false);
+  void leaveOffer() => _record(_engine.resolveOffer(take: false));
+
+  /// Plays a round of the fight; [target] is an [EnemyView.index] when the
+  /// fight asks to pick one.
+  void fight({int? target}) => _record(_engine.fight(target: target));
+
+  /// Tests luck on the wounds of the last round.
+  void testLuck() => _record(_engine.testLuck());
+
+  void flee() => _record(_engine.flee());
+
+  /// Goes back a page (`rules.undo`).
+  void undo() => _record(_engine.undo());
+
+  void _record(List<GameEvent> events) {
+    _events = events;
+    for (final event in events) {
+      switch (event) {
+        case MusicChanged(:final file):
+          _music = file;
+        case AchievementEarned(:final achievement):
+          _achievements.add(achievement);
+        default:
+      }
+    }
+  }
 
   PageView get view => PageView(
     storyTitle: story.title,
     title: story.showTitles ? _engine.node.title : null,
     image: _engine.node.image,
     paragraphs: _engine.paragraphs,
-    // The engine refuses choices until the offer is settled, so hide them.
-    choices: _engine.offer != null
+    // The engine refuses choices during an offer or a fight, so hide them.
+    choices: _engine.offer != null || _engine.combat != null
         ? const []
         : [for (final c in _engine.choices) _choice(c)],
     stats: [for (final s in rules.stats) _stat(s)],
@@ -63,6 +96,24 @@ class PlaySession {
       capacity: _engine.capacity,
     ),
     offer: _offer(),
+    log: logLines(_events, story: story, statLabel: _label),
+    journal: [
+      for (final id in _engine.state.journal.reversed)
+        if (story.journal[id] case final entry?)
+          JournalItem(entry.title, entry.text),
+    ],
+    achievements: [
+      for (final id in _achievements) story.achievements[id]?.title ?? id,
+    ],
+    audio: AudioCue(
+      music: _music,
+      sounds: [
+        for (final e in _events)
+          if (e is SoundPlayed) e.file,
+      ],
+    ),
+    canUndo: _engine.canUndo,
+    combat: _combat(),
     ending: _engine.ending,
   );
 
@@ -151,6 +202,28 @@ class PlaySession {
                 if (!_engine.isContainer(carried)) _item(carried),
             ],
       more: _engine.moreOffers,
+    );
+  }
+
+  CombatView? _combat() {
+    final fight = _engine.combat;
+    final state = _engine.state.combat;
+    if (fight == null || state == null) return null;
+    return CombatView(
+      enemies: [
+        for (var i = 0; i < fight.enemies.length; i++)
+          EnemyView(
+            index: i,
+            name: fight.enemies[i].name,
+            health: state.enemyHealth[i],
+            maxHealth: fight.enemies[i].health,
+            armor: fight.enemies[i].armor,
+            current: !fight.simultaneous && state.enemy == i,
+          ),
+      ],
+      pickTarget: fight.simultaneous,
+      canFlee: _engine.canFlee,
+      canTestLuck: _engine.canTestLuck,
     );
   }
 

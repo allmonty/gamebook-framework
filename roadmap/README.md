@@ -9,8 +9,8 @@ Status values: `todo`, `in progress`, `done`, `blocked`.
 | 00 | [Project guidance](steps/00-project-guidance.md) | done | 8b94735 |
 | 01 | [Scaffold the site package](steps/01-site-scaffold.md) | done | 441ebed |
 | 02 | [Player: pages, choices, stats, endings](steps/02-player-pages.md) | done | 40d4b45 |
-| 03 | [Player: items, use, offers, containers](steps/03-player-items.md) | done | |
-| 04 | [Player: dice, combat, journal, undo, achievements](steps/04-player-dice-combat.md) | todo | |
+| 03 | [Player: items, use, offers, containers](steps/03-player-items.md) | done | a25e1b5 |
+| 04 | [Player: dice, combat, journal, undo, achievements](steps/04-player-dice-combat.md) | done | |
 | 05 | [Player: character creation](steps/05-player-creation.md) | todo | |
 | 06 | [Editor and playground](steps/06-editor-playground.md) | todo | |
 | 07 | [Showcase story: Escape from the Rune Vault](steps/07-showcase.md) | todo | |

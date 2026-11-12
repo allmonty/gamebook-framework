@@ -13,4 +13,8 @@ VM tests for event formatting and combat views with scripted dice.
 A two-enemy fight with flee and luck works in the browser.
 
 ## Handoff notes
-_(fill in when done: what was built, shortcuts taken, anything the next step must know)_
+- `play/log.dart` maps every engine event to a `LogLine(key, args, tone)`; the UI words it from `player.log.<key>`. The switch over `GameEvent` is exhaustive, so a new engine event fails analysis here until it is handled.
+- `PlaySession` gained `fight({target})`, `testLuck`, `flee`, `undo`; the view gained `log` (last action only), `journal` (newest first), `achievements` (kept across restarts for the session), `audio` (`AudioCue`: music carried over pages, sounds of the last action), `canUndo`, `combat` (`CombatView` with `EnemyView`s). Choices are hidden during a fight.
+- UI: `combat_panel.dart` (enemy rows with health meters; one Attack button, or one per living enemy when `pickTarget`; luck in amber; flee in crimson), `log_panel.dart` (telemetry list and the folding journal), `audio.dart` (`AudioOutput`, swallows missing files and blocked autoplay), Undo/Restart controls under the page.
+- Usable items in a fight are used from the pack panel (it shows Use when `canUse` allows it in combat).
+- Bug found and fixed before commit: a dangling `else` hid the Attack button in one-enemy fights; the browser test covers it.

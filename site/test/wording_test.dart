@@ -42,6 +42,14 @@ void main() {
     expect(m('player.nope'), 'player.nope');
   });
 
+  test('a log line is worded from player.log.<key>', () {
+    const words = Messages({'player.log.used': 'Used {item}'});
+    expect(
+      logText(const LogLine('used', {'item': 'Potion'}), words),
+      'Used Potion',
+    );
+  });
+
   test('choice index is two digits', () {
     expect(choiceIndex(0), '[01] //');
     expect(choiceIndex(11), '[12] //');
