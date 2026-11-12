@@ -33,8 +33,8 @@ The survey found no other project with a written spec, a conformance suite, rule
 | # | Step | Kind | Status | Commit |
 |---|---|---|---|---|
 | 01 | [Limit dice size](steps/01-dice-limits.md) | fix | done | a3f93aa |
-| 02 | [Health at 0 is final](steps/02-death-is-final.md) | fix | done | |
-| 03 | [A bonus never takes a stat below 0](steps/03-bonus-floor.md) | fix | todo | |
+| 02 | [Health at 0 is final](steps/02-death-is-final.md) | fix | done | 9eef2fa |
+| 03 | [A bonus never takes a stat below 0](steps/03-bonus-floor.md) | fix | done | |
 | 04 | [A save with impossible numbers does not fit](steps/04-save-fits.md) | fix | todo | |
 | 05 | [Specify stuck pages and undo after death](steps/05-spec-open-points.md) | docs + cases | todo | |
 | 06 | [Extract the schema gate](steps/06-schema-gate.md) | refactor | todo | |
@@ -49,6 +49,8 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 15 | [A versions page on the site](steps/15-site-versions.md) | docs + site | todo | |
 
 Steps 01 to 06 and 11 are independent of each other; step 11 is tiny and may be done first. Steps 08 to 10 need step 07 (it opens schema 8) and are easier after step 06. Steps 12 to 15 come last so they describe schema 8; 14 links what 12 and 13 add, and 15 is the last of all.
+
+**Checkpoint before step 11 (the owner's request, 2026-11-11):** stop and ask the owner which candidates below join schema 8, each with a short example story. Steps 12 to 15 describe the newest schema, so a feature that joins after them means a schema 9 and redoing those pages. The owner liked four ideas about debuffs: a bonus that depends on a condition (candidate 4, the best fit for schema 8), a debuff that runs out on its own and a loss on every page (both part of candidate 5, to design together), and a lower limit per stat (candidate 10, needed by no story yet). New steps go after step 10 and before step 11.
 
 ## Where things stood when the plan was written (2026-11-11)
 The baseline every step starts from; if your first run of the checks differs, stop and find out why before changing anything.
@@ -103,11 +105,12 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 2. **A `flee` that costs a round** (Lone Wolf: in the evading round only the hero can be hurt).
 3. **Limits per kind of item** (Lone Wolf: 2 weapons next to an 8-item backpack).
 4. **A bonus that depends on a condition** (Lone Wolf: +2 with one weapon, -4 unarmed).
-5. **Rules that apply on every page** (Lone Wolf's Healing: +1 Endurance per page without a fight).
+5. **Rules that apply on every page** (Lone Wolf's Healing: +1 Endurance per page without a fight). The same mechanism gives two debuffs the owner wants, to design together: **a loss on every page** (poison: -1 Stamina per page until cured) and **a debuff that runs out on its own** (a curse that lasts 3 pages or 2 fight rounds, without the story removing it). Open questions: what counts as a page (a fight round? a page entered again?), how undo and saves keep the counter.
 6. **Export to a printable book** of numbered, shuffled sections: a tool, no format change.
 7. **The engine as a tool server (MCP) for AI assistants**: the assistant narrates and the engine owns dice and state. A tool, no format change; fits the goal of being usable by AIs.
 8. **New check kinds**: advantage and disadvantage, dice pools.
 9. Conditional effects, text emphasis, `{item}` counts in text, a total cap on a countable item.
+10. **A lower limit per stat** (say `"min": -5`), so a stat can be a signed modifier as in tabletop RPGs ("Might -1"). Today every stat, item bonuses included, stays at 0 or above (B4, B5; step 03), so a cursed item at -5 Might held at Might 2 gives 0, and in `1d20 + might` the last 3 points of penalty are lost. The default stays 0, so existing stories play the same. No story needs it yet.
 
 ## Waiting on the owner (outward-facing, never do these unasked)
 - Enable GitHub Pages (Settings > Pages > Source: "GitHub Actions"; the workflow is already there); step 14's addresses work only once it is on.

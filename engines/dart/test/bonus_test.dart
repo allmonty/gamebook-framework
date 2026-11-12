@@ -205,6 +205,20 @@ void main() {
       expect(e.paragraphs.single, 'Skill 10. Luck 7.');
     });
 
+    test('a bonus never takes the value below 0, and the base is kept', () {
+      final e = start(s: story(swordBonus: {'luck': -20}));
+
+      e.choose(0);
+
+      expect(e.state.stat('luck'), 0);
+      expect(e.state.stats['luck']!.value, 8);
+      expect(e.paragraphs.single, 'Skill 9. Luck 0.');
+
+      e.choose(2);
+
+      expect(e.state.stat('luck'), 8);
+    });
+
     test('losing the item takes the bonus away', () {
       final e = start();
       e.choose(0);

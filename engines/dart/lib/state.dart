@@ -1,3 +1,5 @@
+import 'dart:math';
+
 /// A stat's current value and its ceiling, if it has one.
 class StatValue {
   const StatValue(this.value, [this.max]);
@@ -204,8 +206,9 @@ class GameState {
   /// resumed game picks it up again.
   final String? music;
 
-  /// The stat's value now: what it is plus the bonuses of carried items.
-  int stat(String id) => (stats[id]?.value ?? 0) + (statBonus[id] ?? 0);
+  /// The stat's value now: what it is plus the bonuses of carried items,
+  /// never below 0 (B5).
+  int stat(String id) => max(0, (stats[id]?.value ?? 0) + (statBonus[id] ?? 0));
 
   /// The bonus carried items give to [id] (0 if none).
   int bonusOf(String id) => statBonus[id] ?? 0;
