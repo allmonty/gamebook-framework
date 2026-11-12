@@ -105,7 +105,7 @@ From the survey (`../spec/comparison.md` section 8). Each needs the owner's yes 
 2. **A `flee` that costs a round** (Lone Wolf: in the evading round only the hero can be hurt).
 3. **Limits per kind of item** (Lone Wolf: 2 weapons next to an 8-item backpack).
 4. **A bonus that depends on a condition** (Lone Wolf: +2 with one weapon, -4 unarmed).
-5. **Rules that apply on every page** (Lone Wolf's Healing: +1 Endurance per page without a fight).
+5. **Rules that apply on every page** (Lone Wolf's Healing: +1 Endurance per page without a fight). The same mechanism gives two debuffs the owner wants, to design together: **a loss on every page** (poison: -1 Stamina per page until cured) and **a debuff that runs out on its own** (a curse that lasts 3 pages or 2 fight rounds, without the story removing it). Open questions: what counts as a page (a fight round? a page entered again?), how undo and saves keep the counter.
 6. **Export to a printable book** of numbered, shuffled sections: a tool, no format change.
 7. **The engine as a tool server (MCP) for AI assistants**: the assistant narrates and the engine owns dice and state. A tool, no format change; fits the goal of being usable by AIs.
 8. **New check kinds**: advantage and disadvantage, dice pools.
