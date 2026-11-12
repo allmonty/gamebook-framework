@@ -273,8 +273,13 @@ String toDot(Story story) {
 String _mermaidEscape(String s) =>
     s.replaceAll('"', '#quot;').replaceAll('\n', '<br/>');
 
+/// [id] in letters Mermaid takes, still different for different ids: `_`
+/// becomes `__` and `-` becomes `_d`, so "a-b" and "a_b" stay two pages.
+String _mermaidName(String id) =>
+    id.replaceAll('_', '__').replaceAll('-', '_d');
+
 // Prefixed so ids such as "end" never collide with Mermaid keywords.
-String _mermaidId(String id) => 'n_${id.replaceAll('-', '_')}';
+String _mermaidId(String id) => 'n_${_mermaidName(id)}';
 
 /// The story as a Mermaid flowchart (paste into any Mermaid viewer or a
 /// GitHub markdown ```mermaid block).
@@ -293,7 +298,7 @@ String toMermaid(Story story) {
   }
   for (final (id, chapter, nodes) in _chapters(story)) {
     out.writeln(
-      '  subgraph c_${id.replaceAll('-', '_')} ["${_mermaidEscape(chapter.title)}"]',
+      '  subgraph c_${_mermaidName(id)} ["${_mermaidEscape(chapter.title)}"]',
     );
     for (final node in nodes) {
       out.writeln('    ${_mermaidId(node)}');

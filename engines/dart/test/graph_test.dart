@@ -355,4 +355,29 @@ void main() {
     expect(label.group(1), endsWith('…'));
     expect(label.group(1), isNot(contains('\n')));
   });
+
+  test('Mermaid keeps pages apart whose ids differ only by - and _', () {
+    final out = toMermaid(
+      Story.fromJson({
+        'schema': 1,
+        'id': 't',
+        'lang': 'en',
+        'title': 'T',
+        'rules': {'preset': 'fighting-fantasy'},
+        'start': 'a-b',
+        'nodes': {
+          'a-b': {
+            'text': 'Dash',
+            'choices': [
+              {'text': 'On', 'to': 'a_b'},
+            ],
+          },
+          'a_b': {'text': 'Underscore', 'ending': 'victory'},
+        },
+      }),
+    );
+    expect(out, contains('n_a_db["a-b<br/>Dash"]'));
+    expect(out, contains('n_a__b(["a_b<br/>Underscore"])'));
+    expect(out, contains('n_a_db -->|"On"| n_a__b'));
+  });
 }
