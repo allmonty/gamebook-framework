@@ -37,8 +37,9 @@ The survey found no other project with a written spec, a conformance suite, rule
 | 03 | [A bonus never takes a stat below 0](steps/03-bonus-floor.md) | fix | done | 3faeb48 |
 | 04 | [A save with impossible numbers does not fit](steps/04-save-fits.md) | fix | done | 7a45bac |
 | 05 | [Specify stuck pages and undo after death](steps/05-spec-open-points.md) | docs + cases | done | 7460561 |
-| 06 | [Extract the schema gate](steps/06-schema-gate.md) | refactor | done | |
-| 07 | [Schema 8 and image alt text](steps/07-image-alt.md) | feature | todo | |
+| 06 | [Extract the schema gate](steps/06-schema-gate.md) | refactor | done | a450b69 |
+| 07 | [Schema 8 and image alt text](steps/07-image-alt.md) | feature | done | |
+| 07b | [A picture in an example](steps/07b-example-picture.md) | site | todo | |
 | 08 | [A neutral ending](steps/08-defeat-ending.md) | feature | todo | |
 | 09 | [Fight events](steps/09-fight-events.md) | feature | todo | |
 | 10 | [Counted items](steps/10-counted-items.md) | feature | todo | |

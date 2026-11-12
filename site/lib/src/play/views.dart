@@ -27,6 +27,7 @@ class PageView {
     this.offer,
     this.heading,
     this.image,
+    this.imageAlt,
     this.ending,
   });
 
@@ -36,6 +37,10 @@ class PageView {
   /// page's own title (none when the page has no title, spec B13).
   final String? heading;
   final String? image;
+
+  /// What [image] shows, for players who cannot see it (schema 8); without
+  /// it the image is decoration.
+  final String? imageAlt;
   final List<String> paragraphs;
   final List<ChoiceItem> choices;
   final List<StatPill> stats;

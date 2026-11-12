@@ -13,7 +13,7 @@ Why a new format instead of Ink, Twine or ChoiceScript: [comparison.md](comparis
 ## What is a gamebook?
 A gamebook is a book you play. You read a short passage, then choose what to do: "If you open the door, go to page 12. If you walk away, go to page 30." Each page leads to other pages, so the book is really a **map of pages joined by choices**. Different choices lead to different adventures and different endings.
 
-A gamebook app is the same thing on your phone: a **page** shows a picture and some text, and **buttons** are the choices. Tap one and you land on another page.
+A gamebook app is the same thing on your phone: a **page** shows a picture and some text, and **buttons** are the choices. Tap one and you land on another page. A picture can come with a short description of what it shows, so a player who cannot see it (with a screen reader, say) still gets it.
 
 ## The five ingredients
 
@@ -80,7 +80,7 @@ The next section shows this same story in the file format.
 
 # Part B. Technical reference
 
-Schema versions: **1** to **7**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
+Schema versions: **1** to **8**. Version 2 adds usable items (`use`, B5). Version 3 adds a limited pack (`rules.inventory`, item `capacity`, the `takeAll` effect). Version 4 adds writing features: once-only choices, visit counts, random outcome tables, conditional page text and `{stat}` placeholders (B6, B7, B10). Version 5 adds richer rules and presentation: stat limits and quantities, item bonuses, character creation choices, combat extensions and the results-table mode, undo, a journal, and page audio (B4, B5, B6, B7, B9, B11). Version 6 adds authoring fields for the Builder: page titles, author notes, chapters and draft pages (B13). Version 7 adds achievements (B15). Version 8 adds descriptions of pictures for players who cannot see them (`imageAlt`, `coverAlt`; B3, B5, B6). B16 lists the validator's warnings, which tools may report. Game packages (B14) are not a schema feature: any version can be packed. Everything else is the same, so an older story is also valid in a newer version once its `schema` says so.
 
 ## B1. Files and languages
 - A game is a folder: `games/<slug>/`. Stories are `games/<slug>/story.<lang>.json` (`story.en.json`, `story.pt.json`). Images live in `games/<slug>/images/` and are referenced by a path relative to the folder.
@@ -98,7 +98,7 @@ Schema versions: **1** to **7**. Version 2 adds usable items (`use`, B5). Versio
 | Field | Type | Req | Notes |
 |---|---|---|---|
 | `$schema` | string | no | path to `story.schema.json`, an editor hint the engine ignores |
-| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15) |
+| `schema` | int | yes | `1`; `2` if any item has `use`; `3` if the story uses a limited pack (`rules.inventory`, item `capacity`, `takeAll`); `4` for choice `once`, `visits` conditions, `table` choices, and list or `{placeholder}` text; `5` for any of the schema 5 features above; `6` for `title`, `showTitles`, `note`, `chapter`, `chapters` or `draft` (B13); `7` for `achievements` and the `achieve` effect (B15); `8` for `imageAlt` and `coverAlt` (B3, B5, B6) |
 | `journal` | object | no | map `entryId -> { title, text }` (schema 5, B6) |
 | `achievements` | object | no | map `achievementId -> { title, description, hidden }` (schema 7, B15) |
 | `chapters` | object | no | map `chapterId -> { title }`, in reading order (schema 6, B13) |
@@ -109,6 +109,7 @@ Schema versions: **1** to **7**. Version 2 adds usable items (`use`, B5). Versio
 | `author` | string | no | |
 | `description` | string | no | shown on the game detail screen |
 | `cover` | string | no | image path |
+| `coverAlt` | string | no | what the cover shows, for players who cannot see it; only next to `cover`, like a page's `imageAlt` (schema 8, B6) |
 | `rules` | object | yes | see B4 |
 | `items` | object | no | map `itemId -> Item` (B5) |
 | `start` | string | yes | id of the first node |
@@ -232,7 +233,7 @@ Without an `inventory` block the pack is unlimited and every `give` just adds th
 ```json
 "items": { "rusty-key": { "name": "Rusty key", "description": "Opens something old.", "image": "images/key.webp" } }
 ```
-Items are **unique**: the inventory is a set. Giving an item you hold changes nothing. `name` is required; `description` and `image` optional.
+Items are **unique**: the inventory is a set. Giving an item you hold changes nothing. `name` is required; `description` and `image` optional. `imageAlt` (schema 8) says what the image shows, as for a page (B6).
 
 ### Usable items (schema 2)
 ```json
@@ -281,6 +282,7 @@ While the item is in the pack, each stat in `bonus` is higher (or lower, with a 
 |---|---|
 | `text` | required: a string, or (schema 4) a list of parts. Shown with the image. `\n\n` separates paragraphs. See below. |
 | `image` | optional path. A missing file at runtime shows nothing; the validator flags it. |
+| `imageAlt` | optional (schema 8), only next to `image`: a short text saying what the picture shows, for players who cannot see it. A player that shows the image gives this text to assistive technology (a screen reader); without it the image is treated as decoration. Must not be empty. It is text, so each translation words it freely. |
 | `effects` | optional list applied on **entering** the node (B9). |
 | `once` | optional bool, default false. If true, `effects` apply only the first time the node is entered. Use for pickups and healing so revisiting cannot be exploited. |
 | `choices` | list of choices (B10). |

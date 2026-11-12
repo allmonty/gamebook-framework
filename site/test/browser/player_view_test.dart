@@ -57,4 +57,37 @@ void main() {
     expect(host.querySelectorAll('.gb-choice').length, 0);
     host.remove();
   });
+
+  test('the page image carries its description as alt text', () {
+    final host = el('div');
+    document.body!.append(host);
+    PlayerView(
+      host,
+      PlaySession.start(
+        Story.fromJson({
+          'schema': 8,
+          'id': 't',
+          'lang': 'en',
+          'title': 'Pictures',
+          'rules': {'preset': 'fighting-fantasy'},
+          'start': 'a',
+          'nodes': {
+            'a': {
+              'text': 'A.',
+              'image': 'images/gate.webp',
+              'imageAlt': 'An iron gate in the fog.',
+              'ending': 'victory',
+            },
+          },
+        }),
+        random: Random(1),
+      ),
+      const Messages({}),
+    );
+    expect(
+      host.querySelector('.gb-page img')!.getAttribute('alt'),
+      'An iron gate in the fog.',
+    );
+    host.remove();
+  });
 }

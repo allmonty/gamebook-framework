@@ -30,6 +30,21 @@ Uma página pode mostrar uma imagem acima do texto:
 
 O caminho é relativo à pasta da história, então `images/hall.webp` fica ao lado de `story.pt.json`. `.webp`, `.png` e `.jpg` funcionam. O validador de linha de comando avisa se o arquivo não existir. (Os exemplos deste site não têm imagens, para ficarem curtos.)
 
+### Descreva suas imagens
+
+Alguns leitores não conseguem ver a imagem: leem com um leitor de tela, ou a imagem não carregou. Dê a imagem a eles em palavras com `imageAlt` (schema 8):
+
+```json
+"hall": {
+  "text": "...",
+  "image": "images/hall.webp",
+  "imageAlt": "Um corredor comprido iluminado por uma lâmpada que pisca, com duas portas no fundo.",
+  "choices": [ ... ]
+}
+```
+
+Diga o que o leitor notaria, em uma frase; não precisa começar com "Uma imagem de". O jogo passa esse texto ao leitor de tela. Sem ele, a imagem conta como decoração e é pulada. `imageAlt` só vai ao lado de uma `image`, e a imagem de um item recebe uma do mesmo jeito. Cada tradução escreve a sua.
+
 ## Escolhas que esperam
 
 Algumas escolhas só devem funcionar depois que o leitor fez alguma coisa. Dê à escolha um `if` com uma **condição**:
@@ -56,6 +71,7 @@ A terceira escolha, a escotilha de manutenção, tem `"hideIfLocked": true`: enq
 |---|---|---|
 | `text` | página, escolha | O que o leitor vê. `\n\n` começa um parágrafo. |
 | `image` | página | Uma imagem acima do texto. |
+| `imageAlt` | página, item | O que a imagem mostra, para leitores que não conseguem vê-la (schema 8). |
 | `choices` | página | Os botões. |
 | `to` | escolha | A página para onde a escolha leva. |
 | `ending` | página | `"victory"` ou `"death"`: o jogo acabou. |

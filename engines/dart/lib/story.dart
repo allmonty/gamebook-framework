@@ -14,7 +14,7 @@ export 'json_reader.dart' show StoryFormatException;
 export 'rules_spec.dart';
 
 /// The schema versions this engine can read.
-const supportedSchemas = {1, 2, 3, 4, 5, 6, 7};
+const supportedSchemas = {1, 2, 3, 4, 5, 6, 7, 8};
 
 enum Ending { victory, death }
 
@@ -158,6 +158,7 @@ class Item {
     required this.name,
     this.description,
     this.image,
+    this.imageAlt,
     this.use,
     this.capacity,
     this.bonus = const {},
@@ -170,10 +171,12 @@ class Item {
     if (capacity != null && capacity < 1) {
       throw obj.error('capacity', 'must be at least 1');
     }
+    final image = obj.optString('image');
     final item = Item(
       name: obj.string('name'),
       description: obj.optString('description'),
-      image: obj.optString('image'),
+      image: image,
+      imageAlt: _altText(obj, 'imageAlt', image),
       use: use == null ? null : ItemUse.fromJson(use),
       capacity: capacity,
       bonus: obj.idMap('bonus', (id, json, path) {
@@ -190,6 +193,9 @@ class Item {
   final String name;
   final String? description;
   final String? image;
+
+  /// What [image] shows, for players who cannot see it (schema 8).
+  final String? imageAlt;
 
   /// Null for an item that is only held.
   final ItemUse? use;
@@ -462,6 +468,7 @@ class Node {
     required this.parts,
     this.textIsList = false,
     this.image,
+    this.imageAlt,
     this.music,
     this.sound,
     this.effects = const [],
@@ -518,6 +525,7 @@ class Node {
       throw obj.error('title', 'must not be empty');
     }
     final chapter = obj.optString('chapter');
+    final image = obj.optString('image');
     final node = Node(
       id: id,
       title: title,
@@ -528,7 +536,8 @@ class Node {
           : checkId(chapter, obj.childPath('chapter')),
       parts: parts,
       textIsList: rawText is List,
-      image: obj.optString('image'),
+      image: image,
+      imageAlt: _altText(obj, 'imageAlt', image),
       music: obj.optString('music'),
       sound: obj.optString('sound'),
       effects: obj.list('effects', Effect.fromJson, optional: true),
@@ -549,6 +558,9 @@ class Node {
   /// Whether the story wrote `text` as a list (schema 4).
   final bool textIsList;
   final String? image;
+
+  /// What [image] shows, for players who cannot see it (schema 8).
+  final String? imageAlt;
 
   /// A music file that loops from this page on, or [stopMusic] (schema 5).
   final String? music;
@@ -579,6 +591,16 @@ class Node {
   final bool draft;
 }
 
+/// The text [key] that describes [image] (schema 8, B6): optional, not
+/// empty, and only next to a picture.
+String? _altText(JsonObject obj, String key, String? image) {
+  final alt = obj.optString(key);
+  if (alt == null) return null;
+  if (alt.trim().isEmpty) throw obj.error(key, 'must not be empty');
+  if (image == null) throw obj.error(key, 'needs an image next to it');
+  return alt;
+}
+
 /// A whole story file. See spec/framework.md B3.
 class Story {
   const Story({
@@ -589,6 +611,7 @@ class Story {
     this.author,
     this.description,
     this.cover,
+    this.coverAlt,
     required this.rules,
     required this.items,
     this.journal = const {},
@@ -621,6 +644,7 @@ class Story {
       throw obj.error('id', 'expected a slug (lowercase letters, digits, "-")');
     }
     final usesShowTitles = obj.has('showTitles');
+    final cover = obj.optString('cover');
     final story = Story(
       schema: schema,
       chapters: obj.idMap('chapters', Chapter.fromJson, optional: true),
@@ -635,7 +659,8 @@ class Story {
       title: obj.string('title'),
       author: obj.optString('author'),
       description: obj.optString('description'),
-      cover: obj.optString('cover'),
+      cover: cover,
+      coverAlt: _altText(obj, 'coverAlt', cover),
       rules: RulesSpec.fromJson(obj.object('rules')),
       items: obj.idMap('items', Item.fromJson, optional: true),
       journal: obj.idMap('journal', JournalEntry.fromJson, optional: true),
@@ -722,6 +747,9 @@ class Story {
   final String? author;
   final String? description;
   final String? cover;
+
+  /// What [cover] shows, for players who cannot see it (schema 8).
+  final String? coverAlt;
   final RulesSpec rules;
   final Map<String, Item> items;
 

@@ -188,6 +188,99 @@ void main() {
     }
   });
 
+  group('image alt text (schema 8)', () {
+    Map<String, Object?> pictured() => validJson()
+      ..['schema'] = 8
+      ..['cover'] = 'images/cover.webp'
+      ..['coverAlt'] = 'A rusty door in a stone wall.';
+    Map<String, Object?> key(Map<String, Object?> json) =>
+        (json['items']! as Map<String, Object?>)['rusty-key']!
+            as Map<String, Object?>;
+
+    test('pages, items and the cover can describe their picture', () {
+      final json = pictured();
+      node(json, 'door')
+        ..['image'] = 'images/door.webp'
+        ..['imageAlt'] = 'The door, its lock eaten by rust.';
+      key(json)
+        ..['image'] = 'images/key.webp'
+        ..['imageAlt'] = 'An old iron key.';
+      final story = Story.fromJson(json);
+
+      expect(story.coverAlt, 'A rusty door in a stone wall.');
+      expect(
+        story.nodes['door']!.imageAlt,
+        'The door, its lock eaten by rust.',
+      );
+      expect(story.items['rusty-key']!.imageAlt, 'An old iron key.');
+      expect(story.nodes['cellar']!.imageAlt, isNull);
+    });
+
+    for (final (field, mutate)
+        in <(String, void Function(Map<String, Object?>))>[
+          ('coverAlt', (j) => j.remove('cover')),
+          ('nodes.door.imageAlt', (j) => node(j, 'door')['imageAlt'] = 'x'),
+          ('items.rusty-key.imageAlt', (j) => key(j)['imageAlt'] = 'x'),
+        ]) {
+      test('$field needs its picture', () {
+        expect(
+          failure((j) {
+            j.addAll(pictured());
+            mutate(j);
+          }),
+          '$field: needs an image next to it',
+        );
+      });
+    }
+
+    test('alt text must not be empty', () {
+      expect(
+        failure((j) {
+          j.addAll(pictured());
+          j['coverAlt'] = ' ';
+        }),
+        'coverAlt: must not be empty',
+      );
+    });
+
+    for (final (field, mutate)
+        in <(String, void Function(Map<String, Object?>))>[
+          (
+            'coverAlt',
+            (j) {
+              j['cover'] = 'images/cover.webp';
+              j['coverAlt'] = 'x';
+            },
+          ),
+          (
+            'nodes.door.imageAlt',
+            (j) {
+              node(j, 'door')
+                ..['image'] = 'images/door.webp'
+                ..['imageAlt'] = 'x';
+            },
+          ),
+          (
+            'items.rusty-key.imageAlt',
+            (j) {
+              key(j)
+                ..['image'] = 'images/key.webp'
+                ..['imageAlt'] = 'x';
+            },
+          ),
+        ]) {
+      test('$field needs schema 8', () {
+        expect(
+          failure((j) {
+            j['schema'] = 7;
+            mutate(j);
+          }),
+          '$field: needs "schema": 8',
+        );
+      });
+    }
+  });
+
   group('draft pages (schema 6)', () {
     test('a draft may have no text and no way out', () {
       final json = validJson()..['schema'] = 6;
@@ -962,7 +1055,7 @@ void main() {
 
   group('errors name the JSON path', () {
     test('unsupported schema', () {
-      expect(failure((j) => j['schema'] = 8), startsWith('schema:'));
+      expect(failure((j) => j['schema'] = 9), startsWith('schema:'));
     });
 
     test('unknown top-level key', () {

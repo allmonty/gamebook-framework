@@ -119,6 +119,7 @@ class PlaySession {
     storyTitle: story.title,
     heading: story.showTitles ? _engine.node.title : story.title,
     image: _engine.node.image,
+    imageAlt: _engine.node.imageAlt,
     paragraphs: _engine.paragraphs,
     // The engine refuses choices during an offer or a fight, so hide them.
     choices: _engine.offer != null || _engine.combat != null
