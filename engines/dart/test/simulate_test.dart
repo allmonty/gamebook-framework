@@ -32,6 +32,36 @@ void main() {
     expect(report.outcomes[Outcome.stuck], 0);
   });
 
+  test('minutes come from the words read and the actions taken', () {
+    final report = simulate(
+      story({
+        'a': {
+          'text': List.filled(398, 'word').join(' '),
+          'choices': [
+            {'text': 'Go on', 'to': 'b'},
+          ],
+        },
+        'b': {'text': List.filled(200, 'word').join(' '), 'ending': 'victory'},
+      }),
+      games: 3,
+      random: Random(1),
+    );
+    // 600 words at 200 a minute, and one action of 5 seconds.
+    expect(report.minutes, closeTo(3 + 5 / 60, 1e-9));
+    expect('$report', contains('about 3 min per game'));
+  });
+
+  test('minutes fall back to every ended game when none is won', () {
+    final report = simulate(
+      story({
+        'a': {'text': List.filled(400, 'word').join(' '), 'ending': 'death'},
+      }),
+      games: 2,
+      random: Random(1),
+    );
+    expect(report.minutes, closeTo(2, 1e-9));
+  });
+
   test('the same seed gives the same report', () {
     String run() => '${simulate(rusty(), games: 50, random: Random(7))}';
     expect(run(), run());
