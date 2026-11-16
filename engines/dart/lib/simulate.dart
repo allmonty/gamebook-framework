@@ -26,6 +26,13 @@ enum Outcome { victory, defeat, death, stuck, endless }
 /// than it is, and a page whose only way on is undo reads as stuck. It finds
 /// what no static check can: dead ends that depend on state, endings that
 /// are never reached, stories that are much too hard or too easy.
+///
+/// It also estimates how long a game takes ([minutes]): every page it enters
+/// is read at 200 words a minute (the text shown and its choices), and every
+/// action (a choice, a round of a fight, an offer) takes 5 seconds. A page
+/// seen before in the same game counts a quarter of its words: a reader back
+/// at a hub looks for what changed and does not read it all again. The
+/// numbers are guesses for an unhurried reader, so the result is "about".
 class SimulationReport {
   SimulationReport._(this.story, this.games);
 
@@ -43,6 +50,19 @@ class SimulationReport {
   /// Every page some game entered.
   final visited = <String>{};
   int _steps = 0;
+  final _wonMinutes = <double>[];
+  final _endedMinutes = <double>[];
+
+  /// About how many minutes one game takes: the median of the games that
+  /// reached a victory, or of every game that reached an ending when none
+  /// won. The median, because a few random games wander far longer than a
+  /// person would. 0 when no game reached an ending.
+  double get minutes {
+    final of = _wonMinutes.isEmpty ? _endedMinutes : _wonMinutes;
+    if (of.isEmpty) return 0;
+    final sorted = [...of]..sort();
+    return sorted[sorted.length ~/ 2];
+  }
 
   /// Ending pages no game reached.
   List<String> get unreachedEndings => [
@@ -69,7 +89,8 @@ class SimulationReport {
           'victory ${pct(Outcome.victory)}, defeat ${pct(Outcome.defeat)}, '
           'death ${pct(Outcome.death)}, '
           'stuck ${pct(Outcome.stuck)}, endless ${pct(Outcome.endless)}; '
-          '${averageSteps.toStringAsFixed(1)} steps on average.',
+          '${averageSteps.toStringAsFixed(1)} steps on average, '
+          'about ${minutes.round()} min per game.',
       'Endings reached: ${list([for (final e in endings.entries) '${e.key} ${e.value}'])}.',
       'Endings never reached: ${list(unreachedEndings)}.',
       'Pages never entered: ${list(unvisited)}.',
@@ -134,9 +155,19 @@ Outcome _play(
   SimulationReport report,
 ) {
   final seen = <String>{engine.node.id};
+  int words(Iterable<String> texts) => texts.fold(
+    0,
+    (n, t) => n + t.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length,
+  );
+  int read() =>
+      words(engine.paragraphs) + words(engine.choices.map((c) => c.text));
+  var wordsRead = read().toDouble();
   for (var step = 0; step < maxSteps; step++) {
     report._steps++;
     if (engine.ending case final ending?) {
+      final minutes = wordsRead / 200 + step * 5 / 60;
+      report._endedMinutes.add(minutes);
+      if (ending == Ending.victory) report._wonMinutes.add(minutes);
       return switch (ending) {
         Ending.victory => Outcome.victory,
         Ending.defeat => Outcome.defeat,
@@ -162,6 +193,8 @@ Outcome _play(
       }
       continue;
     }
+    final before = engine.node.id;
+    final choosing = engine.combat == null;
     if (engine.combat case final fight?) {
       if (engine.canTestLuck && rng.nextBool()) {
         engine.testLuck();
@@ -192,7 +225,10 @@ Outcome _play(
       }
       engine.choose(pool[rng.nextInt(pool.length)].index);
     }
-    seen.add(engine.node.id);
+    // A choice shows a page again even when it leads back to the same one.
+    if (choosing || engine.node.id != before) {
+      wordsRead += seen.add(engine.node.id) ? read() : read() / 4;
+    }
     report.visited.add(engine.node.id);
   }
   return Outcome.endless;
