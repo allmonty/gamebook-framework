@@ -29,7 +29,9 @@ enum Outcome { victory, defeat, death, stuck, endless }
 ///
 /// It also estimates how long a game takes ([minutes]): every page it enters
 /// is read at 200 words a minute (the text shown and its choices), and every
-/// action (a choice, a round of a fight, an offer) takes 5 seconds. Both
+/// action (a choice, a round of a fight, an offer) takes 5 seconds. A page
+/// seen before in the same game counts a quarter of its words: a reader back
+/// at a hub looks for what changed and does not read it all again. The
 /// numbers are guesses for an unhurried reader, so the result is "about".
 class SimulationReport {
   SimulationReport._(this.story, this.games);
@@ -159,7 +161,7 @@ Outcome _play(
   );
   int read() =>
       words(engine.paragraphs) + words(engine.choices.map((c) => c.text));
-  var wordsRead = read();
+  var wordsRead = read().toDouble();
   for (var step = 0; step < maxSteps; step++) {
     report._steps++;
     if (engine.ending case final ending?) {
@@ -224,8 +226,9 @@ Outcome _play(
       engine.choose(pool[rng.nextInt(pool.length)].index);
     }
     // A choice shows a page again even when it leads back to the same one.
-    if (choosing || engine.node.id != before) wordsRead += read();
-    seen.add(engine.node.id);
+    if (choosing || engine.node.id != before) {
+      wordsRead += seen.add(engine.node.id) ? read() : read() / 4;
+    }
     report.visited.add(engine.node.id);
   }
   return Outcome.endless;
