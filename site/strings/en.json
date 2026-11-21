@@ -1,6 +1,7 @@
 {
   "page.title": "Gamebook Framework: write gamebooks, play anywhere",
   "page.description": "An open JSON format for gamebooks with stats, dice, items and combat built in. Play and edit stories right in your browser.",
+  "social.image.alt": "Gamebook Framework emblem and callout: Write Gamebook, Play Everywhere — an open format for interactive adventures with stats, dice, inventory, and combat built in.",
   "nav.skip": "Skip to content",
   "nav.coffee": "☕ Buy me a coffee",
   "nav.noscript": "Turn on JavaScript to play the examples on this page.",

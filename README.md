@@ -1,3 +1,5 @@
+![Gamebook Framework — Write Gamebook, Play Everywhere](site/assets/social-preview.png)
+
 # Gamebook Framework
 
 An open format for **gamebooks**: stories you play by reading a page, choosing what to do, collecting items and rolling dice against your stats. A story is one JSON file. Its **rules are data** inside the story (stats, dice, checks, combat), with presets for Fighting Fantasy and a d20-lite, so one engine plays many kinds of gamebook.

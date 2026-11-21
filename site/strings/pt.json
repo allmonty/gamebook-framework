@@ -1,6 +1,7 @@
 {
   "page.title": "Gamebook Framework: escreva livros-jogo, jogue em qualquer lugar",
   "page.description": "Um formato JSON aberto para livros-jogo com atributos, dados, itens e combate. Jogue e edite histórias no navegador.",
+  "social.image.alt": "Emblema do Gamebook Framework e chamada: Write Gamebook, Play Everywhere — um formato aberto para aventuras interativas com atributos, dados, inventário e combate.",
   "nav.skip": "Pular para o conteúdo",
   "nav.coffee": "☕ Me pague um café",
   "nav.noscript": "Ative o JavaScript para jogar os exemplos desta página.",
