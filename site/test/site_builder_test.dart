@@ -26,6 +26,29 @@ void main() {
     }
     expect(File('${output.path}/index.html').existsSync(), isTrue);
     expect(File('${output.path}/css/site.css').existsSync(), isTrue);
+    expect(
+      File('${output.path}/assets/social-preview.png').existsSync(),
+      isTrue,
+    );
+    const preview = '${SiteBuilder.url}assets/social-preview.png';
+    for (final path in ['index.html', 'en/index.html', 'pt/index.html']) {
+      final html = File('${output.path}/$path').readAsStringSync();
+      expect(
+        html,
+        contains('<meta property="og:image" content="$preview">'),
+        reason: path,
+      );
+      expect(
+        html,
+        contains('<meta name="twitter:card" content="summary_large_image">'),
+        reason: path,
+      );
+      expect(
+        html,
+        contains('<meta name="twitter:image" content="$preview">'),
+        reason: path,
+      );
+    }
   });
 
   test('publishes the format files, and every site link in llms.txt '
